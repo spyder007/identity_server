@@ -34,3 +34,5 @@ PackageOutput/*
 *.nupkg
 project.lock.json
 **/.vs/*
+**/wwwroot/lib/*
+_references.js
