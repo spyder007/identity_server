@@ -15,13 +15,32 @@ using one.Identity.Models;
 using one.Identity.Services;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Mappers;
+using Serilog;
 
 namespace one.Identity
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(ILoggerFactory loggerFactory, IHostingEnvironment env)
         {
+            var serilog = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.FromLogContext()
+                .WriteTo.File(@"identityserver4_log.txt");
+
+            if (env.IsDevelopment())
+            {
+                serilog.WriteTo.LiterateConsole(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message}{NewLine}{Exception}{NewLine}");
+            }
+
+            loggerFactory.WithFilter(new FilterLoggerSettings
+                {
+                    { "IdentityServer", LogLevel.Debug },
+                    { "Microsoft", LogLevel.Information },
+                    { "System", LogLevel.Error },
+                })
+                .AddSerilog(serilog.CreateLogger());
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
