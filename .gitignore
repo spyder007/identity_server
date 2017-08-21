@@ -37,3 +37,6 @@ project.lock.json
 **/wwwroot/lib/*
 _references.js
 **/.vscode/*
+**/PublishProfiles/*
+**/PublishOutput/*
+identityserver4_log.txt
