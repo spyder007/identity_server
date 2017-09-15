@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Styles\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
