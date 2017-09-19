@@ -45,13 +45,8 @@
 
     <!-- Main content -->
     <main class="main">
-
-
         <div class="container-fluid">
             @RenderBody()
-
-
-
         </div>
         <!-- /.conainer-fluid -->
     </main>
@@ -59,29 +54,23 @@
 
 </div>
 
-
-
-
-        <footer class="app-footer">
-            <a href="http://coreui.io">CoreUI</a> © 2017 creativeLabs.
-            <span class="float-right">Powered by <a href="http://coreui.io">CoreUI</a>
-            </span>
-        </footer>
+    <footer class="app-footer">
+        <a href="http://coreui.io">CoreUI</a> © 2017 creativeLabs.
+        <span class="float-right">Powered by <a href="http://coreui.io">CoreUI</a>
+        </span>
+    </footer>
 
 <environment names="Development">
     <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/tether/dist/js/tether.js"></script>
     <script src="~/lib/popper.js/dist/umd/popper.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <script src="~/js/app.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
 </environment>
     <environment names="Staging,Production">
         <script src="~/lib/jquery/dist/jquery.min.js"></script>
         <script src="~/lib/popper.js/dist/umd/popper.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="~/js/app.js"></script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
 
     @RenderSection("scripts", required: false)

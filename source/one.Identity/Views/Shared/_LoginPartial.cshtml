@@ -10,7 +10,7 @@
        
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <img src="img/avatars/6.jpg" class="img-avatar" alt="@UserManager.GetUserName(User)">
+                    <img gravatar-email="@UserManager.GetUserName(User)" gravatar-size="80" alt="My Gravatar" class="img-avatar" />
                     <span class="d-md-down-none">@UserManager.GetUserName(User)</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
@@ -18,7 +18,7 @@
                         <strong>Account</strong>
                     </div>
                     <a class="dropdown-item" asp-area="" asp-controller="Manage" asp-action="Index"><i class="fa fa-shield"></i> Manage</a>
-                    <button type="submit" class="dropdown-item"><i class="fa fa-lock"></i> Logout</button>
+                    <button type="submit" class="dropdown-item"><i class="fa fa-sign-out"></i> Logout</button>
                 </div>
             </li>
 </ul>
@@ -26,12 +26,19 @@
 }
 else
 {
-    <ul class="nav navbar-nav ml-auto">
-        <li class="nav-item d-md-down-none">
-            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register"><i class="icon-list"></i>Register</a>
+    <ul class="nav">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >
+                <img gravatar-email="@UserManager.GetUserName(User)" gravatar-size="80" alt="My Gravatar" class="img-avatar" />
+                <span class="d-md-down-none">@UserManager.GetUserName(User)</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <div class="dropdown-header text-center">
+                    <strong>Account</strong>
+                </div>
+                <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Register"><i class="fa fa-user-plus"></i>Register</a>
+                <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Login"><i class="fa fa-sign-in"></i>Login</a>
+            </div>
         </li>
-        <li class="nav-item d-md-down-none">
-            <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login"><i class="icon-location-pin"></i>Login</a>
-        </li>
-    </ul>   
+    </ul>
 }
