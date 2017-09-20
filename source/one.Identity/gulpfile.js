@@ -32,12 +32,17 @@ gulp.task('copy:fonts', function () {
         .pipe(gulp.dest(destination + '/fonts'));
 });
 
-gulp.task('copy:js', function () {
+gulp.task('copy:style-js', function () {
     return gulp.src(stylePath + 'js/**/*')
+        .pipe(gulp.dest(destination + '/js'));
+});
+
+gulp.task('copy:js', function () {
+    return gulp.src('Scripts/**/*.js')
         .pipe(gulp.dest(destination + '/js'));
 });
 
 
 gulp.task('build:dist', function (callback) {
-    runSequence('sass', 'copy:css', 'copy:img', 'copy:fonts', 'copy:js', callback);
+    runSequence('sass', 'copy:css', 'copy:img', 'copy:fonts', 'copy:js', 'copy:style-js', callback);
 });
