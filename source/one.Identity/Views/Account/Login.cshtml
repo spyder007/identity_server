@@ -17,14 +17,14 @@
                 <hr />
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <div class="form-group">
-                    <label asp-for="Email" class="col-md-2 control-label"></label>
+                    <label asp-for="Email" class="col-md-2 form-control-label"></label>
                     <div class="col-md-10">
                         <input asp-for="Email" class="form-control" />
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Password" class="col-md-2 control-label"></label>
+                    <label asp-for="Password" class="col-md-2 form-control-label"></label>
                     <div class="col-md-10">
                         <input asp-for="Password" class="form-control" type="password" />
                         <span asp-validation-for="Password" class="text-danger"></span>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-default">Log in</button>
+                        <button type="submit" class="btn btn-primary">Log in</button>
                     </div>
                 </div>
                 <p>
@@ -76,7 +76,7 @@
                             <p>
                                 @foreach (var provider in loginProviders)
                                 {
-                                    <button type="submit" class="btn btn-default" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
                                 }
                             </p>
                         </div>
