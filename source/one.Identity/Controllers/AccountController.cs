@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using IdentityServer4.Services;
+using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using one.Identity.Models;
 using one.Identity.Models.AccountViewModels;
-using one.Identity.Services;
-using IdentityServer4.Quickstart.UI;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
-using Microsoft.AspNetCore.Http;
 using one.Identity.Quickstart;
+using one.Identity.Services;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace one.Identity.Controllers
 {
@@ -480,7 +475,6 @@ namespace one.Identity.Controllers
             return View();
         }
 
-
         [HttpGet]
         public IActionResult AccessDenied()
         {
@@ -509,6 +503,6 @@ namespace one.Identity.Controllers
             }
         }
 
-        #endregion
+        #endregion Helpers
     }
 }

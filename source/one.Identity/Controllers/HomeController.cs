@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using IdentityServer4.Services;
 using Microsoft.AspNetCore.Mvc;
-using one.Identity.Models;
-using IdentityServer4.Services;
-using IdentityServer4.Quickstart.UI;
 using one.Identity.Quickstart;
+using System.Threading.Tasks;
 
 namespace one.Identity.Controllers
 {
