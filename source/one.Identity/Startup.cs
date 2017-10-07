@@ -29,12 +29,6 @@ namespace one.Identity
             var connString = Configuration.GetConnectionString("IdentityConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
-            // TODO:  should only migrate if necessary here
-            var dbOptionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            dbOptionsBuilder.UseSqlServer(connString);
-            var applicationDbContext = new ApplicationDbContext(dbOptionsBuilder.Options);
-            applicationDbContext.Database.Migrate();
-
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
 
@@ -82,12 +76,12 @@ namespace one.Identity
         {
             // this will do the initial DB population, but we only need to do it once
             // this is just in here as a easy, yet hacky, way to get our DB created/populated
-            //InitializeDatabase(app);
+            InitializeDatabase(app);
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
+                //app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
             }
             else
@@ -104,7 +98,8 @@ namespace one.Identity
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new { controller = "Home", action = "Index"});
             });
         }
 
@@ -112,38 +107,48 @@ namespace one.Identity
         {
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
-                serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
-                serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-
-                var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-                context.Database.Migrate();
-                if (!context.Clients.Any())
-                {
-                    foreach (var client in Config.GetClients())
-                    {
-                        context.Clients.Add(client.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
-
-                if (!context.IdentityResources.Any())
-                {
-                    foreach (var resource in Config.GetIdentityResources())
-                    {
-                        context.IdentityResources.Add(resource.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
-
-                if (!context.ApiResources.Any())
-                {
-                    foreach (var resource in Config.GetApiResources())
-                    {
-                        context.ApiResources.Add(resource.ToEntity());
-                    }
-                    context.SaveChanges();
-                }
+                PerformDatabaseMigrations(serviceScope);
+                SeedDatabase(serviceScope);
             }
+        }
+
+        private void SeedDatabase(IServiceScope serviceScope)
+        {
+            ConfigurationDbContext context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+            
+            if (!context.Clients.Any())
+            {
+                foreach (var client in Config.GetClients())
+                {
+                    context.Clients.Add(client.ToEntity());
+                }
+                context.SaveChanges();
+            }
+
+            if (!context.IdentityResources.Any())
+            {
+                foreach (var resource in Config.GetIdentityResources())
+                {
+                    context.IdentityResources.Add(resource.ToEntity());
+                }
+                context.SaveChanges();
+            }
+
+            if (!context.ApiResources.Any())
+            {
+                foreach (var resource in Config.GetApiResources())
+                {
+                    context.ApiResources.Add(resource.ToEntity());
+                }
+                context.SaveChanges();
+            }
+        }
+
+        private void PerformDatabaseMigrations(IServiceScope serviceScope)
+        {
+            serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
+            serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
+            serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
         }
     }
 }
