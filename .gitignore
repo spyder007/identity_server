@@ -42,3 +42,4 @@ _references.js
 identityserver4_log.txt
 **/wwwroot/**
 **/node_modules/**
+*.rsa
