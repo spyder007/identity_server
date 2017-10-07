@@ -16,7 +16,8 @@ using IdentityServer4.Stores;
 using IdentityServer4.Models;
 using IdentityModel;
 using IdentityServer4;
-using Microsoft.AspNetCore.Http.Authentication;
+using Microsoft.AspNetCore.Authentication;
+using AuthenticationProperties = Microsoft.AspNetCore.Http.Authentication.AuthenticationProperties;
 
 namespace one.Identity.Controllers
 {
@@ -30,6 +31,7 @@ namespace one.Identity.Controllers
         private readonly ILogger _logger;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
+        private IAuthenticationSchemeProvider _authenticationSchemeProvider;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -38,7 +40,8 @@ namespace one.Identity.Controllers
             ISmsSender smsSender,
             ILoggerFactory loggerFactory,
             IIdentityServerInteractionService interaction,
-            IClientStore clientStore)
+            IClientStore clientStore,
+            IAuthenticationSchemeProvider authenticationSchemeProvider)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -47,6 +50,7 @@ namespace one.Identity.Controllers
             _logger = loggerFactory.CreateLogger<AccountController>();
             _interaction = interaction;
             _clientStore = clientStore;
+            _authenticationSchemeProvider = authenticationSchemeProvider;
         }
 
         //
@@ -115,12 +119,12 @@ namespace one.Identity.Controllers
 
         async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl, AuthorizationRequest context)
         {
-            var providers = HttpContext.Authentication.GetAuthenticationSchemes()
-                .Where(x => x.DisplayName != null)
+            var schemes = _authenticationSchemeProvider.GetAllSchemesAsync().Result;
+            var providers = schemes.Where(x => x.DisplayName != null)
                 .Select(x => new ExternalProvider
                 {
                     DisplayName = x.DisplayName,
-                    AuthenticationScheme = x.AuthenticationScheme
+                    AuthenticationScheme = x.Name
                 });
 
             var allowLocal = true;
@@ -208,8 +212,9 @@ namespace one.Identity.Controllers
                 string url = "/Account/Logout?logoutId=" + model.LogoutId;
                 try
                 {
+                    await HttpContext.SignOutAsync();
                     // hack: try/catch to handle social providers that throw
-                    await HttpContext.Authentication.SignOutAsync(idp, new AuthenticationProperties { RedirectUri = url });
+                    //await HttpContext.Authentication.SignOutAsync(idp, new AuthenticationProperties { RedirectUri = url });
                 }
                 catch(NotSupportedException)
                 {

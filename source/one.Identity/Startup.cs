@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Mappers;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,9 +11,9 @@ using Microsoft.Extensions.Logging;
 using one.Identity.Data;
 using one.Identity.Models;
 using one.Identity.Services;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Mappers;
 using Serilog;
+using System.Linq;
+using System.Reflection;
 
 namespace one.Identity
 {
@@ -56,7 +54,6 @@ namespace one.Identity
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-
             var connString = Configuration.GetConnectionString("IdentityConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
@@ -73,19 +70,32 @@ namespace one.Identity
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();
-
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             services.AddIdentityServer()
-                .AddTemporarySigningCredential()
-                .AddConfigurationStore(builder => builder.UseSqlServer(connString, options => options.MigrationsAssembly(migrationsAssembly)))
-                .AddOperationalStore(builder =>
-                    builder.UseSqlServer(connString, options =>
-                        options.MigrationsAssembly(migrationsAssembly)))
+                .AddDeveloperSigningCredential()
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = builder => builder.UseSqlServer(connString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                })
+                .AddOperationalStore(options =>
+                {
+                    options.ConfigureDbContext = builder => builder.UseSqlServer(connString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                    options.EnableTokenCleanup = true;
+                    options.TokenCleanupInterval = 30;
+                })
                 .AddAspNetIdentity<ApplicationUser>();
+
+            services.AddAuthentication()
+                .AddGoogle(option =>
+                {
+                    option.ClientId = "GoogleClientId";
+                    option.ClientSecret = "GoogleClientSecret";
+                });
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,17 +120,8 @@ namespace one.Identity
 
             app.UseStaticFiles();
 
-            app.UseIdentity();
+            //app.UseAuthentication();
             app.UseIdentityServer();
-
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-            app.UseGoogleAuthentication(new GoogleOptions
-            {
-                AuthenticationScheme = "Google",
-                SignInScheme = "Identity.External", // this is the name of the cookie middleware registered by UseIdentity()
-                ClientId = "998042782978-s07498t8i8jas7npj4crve1skpromf37.apps.googleusercontent.com",
-                ClientSecret = "HsnwJri_53zn7VcO1Fm7THBb",
-            });
 
             app.UseMvc(routes =>
             {
