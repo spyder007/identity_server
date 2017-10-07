@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using IdentityServer4.Services;
 using one.Identity.Models;
+using IdentityServer4.Services;
+using IdentityServer4.Quickstart.UI;
+using one.Identity.Quickstart;
 
 namespace one.Identity.Controllers
 {
@@ -36,6 +39,9 @@ namespace one.Identity.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Shows the error page
+        /// </summary>
         public async Task<IActionResult> Error(string errorId)
         {
             var vm = new ErrorViewModel();
