@@ -1,0 +1,36 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@using one.Identity.Admin.Client
+@model ClientsViewModel
+@{
+        ViewData["Title"] = "Registered Clients";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Client Id</th>
+                <th>Client Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+
+        @foreach (var client in Model.Clients)
+    {
+            <tr>
+                <td></td>
+                <td>@client.ClientId</td>
+                <td>@client.ClientName</td>
+                <td><p data-placement="top" data-toggle="tooltip" title="Edit"><span class="fa fa-edit"></span></p></td>
+                <td><p data-placement="top" data-toggle="tooltip" title="Delete"><span class="fa fa-trash"></span></p></td>
+            </tr>
+    }
+    </table>
+</div>
