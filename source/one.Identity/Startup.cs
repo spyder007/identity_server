@@ -11,6 +11,7 @@ using one.Identity.Models;
 using one.Identity.Services;
 using System.Linq;
 using System.Reflection;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace one.Identity
 {
@@ -90,6 +91,14 @@ namespace one.Identity
             }
 
             app.UseStaticFiles();
+            var fordwardedHeaderOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+            fordwardedHeaderOptions.KnownNetworks.Clear();
+            fordwardedHeaderOptions.KnownProxies.Clear();
+
+            app.UseForwardedHeaders(fordwardedHeaderOptions);
 
             // app.UseIdentity(); // not needed, since UseIdentityServer adds the authentication middleware
             app.UseIdentityServer();
