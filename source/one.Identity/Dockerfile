@@ -7,14 +7,14 @@ EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0-nanoserver-sac2016 AS build
 WORKDIR /src
-COPY ["one.Identity/one.Identity.csproj", "one.Identity/"]
-RUN dotnet restore "one.Identity/one.Identity.csproj"
+COPY ["source/one.Identity/one.Identity.csproj", "one.Identity/"]
+RUN dotnet restore "source/one.Identity/one.Identity.csproj"
 COPY . .
 WORKDIR "/src/one.Identity"
-RUN dotnet build "one.Identity.csproj" -c Release -o /app
+RUN dotnet build "source/one.Identity/one.Identity.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "one.Identity.csproj" -c Release -o /app
+RUN dotnet publish "source/one.Identity/one.Identity.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
