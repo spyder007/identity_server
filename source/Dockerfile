@@ -11,7 +11,7 @@ COPY ["one.Identity/one.Identity.csproj", "one.Identity/"]
 RUN dotnet restore "one.Identity/one.Identity.csproj"
 COPY . .
 WORKDIR "/src/one.Identity"
-RUN dotnet build "one.Identity/one.Identity.csproj" -c Release -o /app
+RUN dotnet build "one.Identity.csproj" -c Release -o /app
 
 FROM build AS publish
 RUN dotnet publish "one.Identity.csproj" -c Release -o /app
