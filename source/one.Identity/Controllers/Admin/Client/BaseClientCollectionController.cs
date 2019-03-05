@@ -1,39 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
-using IdentityServer4.EntityFramework.DbContexts;
+﻿using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using one.Identity.Models.ClientViewModels;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace one.Identity.Controllers.Admin.Client
 {
-    public abstract class BaseClientCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity> : BaseClientController 
+    public abstract class BaseClientCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity> : BaseClientController
         where TSingleViewModel : BaseClientChildItemViewModel, new()
         where TCollectionViewModel : BaseClientCollectionViewModel<TSingleViewModel>, new()
-
     {
+        #region Constructor
+
         protected BaseClientCollectionController(ConfigurationDbContext context) : base(context)
         {
-
         }
 
+        #endregion Constructor
+
+        #region BaseClientCollectionController Interface
+
         protected abstract IEnumerable<TSingleViewModel> PopulateItemList(
-            IdentityServer4.EntityFramework.Entities.Client client);
+            IS4Entities.Client client);
 
-        protected abstract Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<TChildEntity>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query);
+        protected abstract Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IS4Entities.Client, List<TChildEntity>> AddIncludes(DbSet<IS4Entities.Client> query);
 
-        protected abstract void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id);
+        protected abstract void RemoveObject(IS4Entities.Client client, int id);
 
-        protected abstract void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId,
+        protected abstract void AddObject(IS4Entities.Client client, int clientId,
             TSingleViewModel newItem);
 
-        protected abstract IActionResult GetView(TCollectionViewModel model);
+        protected virtual IActionResult GetView(TCollectionViewModel model)
+        {
+            return View(nameof(Edit), model);
+        }
 
-        protected abstract IActionResult GetEditRedirect(object routeValues);
+        protected virtual IActionResult GetEditRedirect(object routeValues)
+        {
+            return RedirectToAction(nameof(Edit), routeValues);
+        }
+
+        #endregion BaseClientCollectionController Interface
+
+        #region Controller Actions
 
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -43,7 +55,7 @@ namespace one.Identity.Controllers.Admin.Client
             {
                 collectionViewModel.SetId(id.Value);
 
-                IdentityServer4.EntityFramework.Entities.Client client = GetClient(id.Value);
+                IS4Entities.Client client = GetClient(id.Value);
                 if (client == null)
                 {
                     return GetErrorAction("Could not load client");
@@ -62,7 +74,7 @@ namespace one.Identity.Controllers.Admin.Client
             {
                 return GetErrorAction("No Client ID Supplied");
             }
-            IdentityServer4.EntityFramework.Entities.Client client = GetClient(id.Value);
+            IS4Entities.Client client = GetClient(id.Value);
             if (client == null)
             {
                 return GetErrorAction("Could not load client");
@@ -88,7 +100,7 @@ namespace one.Identity.Controllers.Admin.Client
         {
             if (!id.HasValue)
             {
-                return GetErrorAction("No Scope ID Supplied");
+                return GetErrorAction("No Item ID Supplied");
             }
 
             if (!clientId.HasValue)
@@ -96,26 +108,32 @@ namespace one.Identity.Controllers.Admin.Client
                 return GetErrorAction("No Client ID Supplied");
             }
 
-            IdentityServer4.EntityFramework.Entities.Client client = GetClient(clientId.Value);
+            IS4Entities.Client client = GetClient(clientId.Value);
             if (client == null)
             {
                 return GetErrorAction("Could not load client");
             }
 
             RemoveObject(client, id.Value);
-            
+
             ConfigDbContext.Clients.Update(client);
             await ConfigDbContext.SaveChangesAsync();
 
             return GetEditRedirect(new { id = clientId.Value });
         }
 
-        private IdentityServer4.EntityFramework.Entities.Client GetClient(int id)
+        #endregion Controller Actions
+
+        #region Private Methods
+
+        private IS4Entities.Client GetClient(int id)
         {
             var query = ConfigDbContext.Clients;
             var includeQuery = AddIncludes(query);
 
             return includeQuery.FirstOrDefault(c => c.Id == id);
         }
+
+        #endregion Private Methods
     }
 }

@@ -7,5 +7,6 @@
     {
         <a class="nav-link @Model.ScopesActive" asp-area="" asp-controller="ClientScopes" asp-action="Edit" asp-route-id="@Model.Id">Allowed Scopes</a>
         <a class="nav-link @Model.RedirectActive" asp-area="" asp-controller="ClientRedirects" asp-action="Edit" asp-route-id="@Model.Id">Redirect URIs</a>
+        <a class="nav-link @Model.ClaimsActive" asp-area="" asp-controller="ClientClaims" asp-action="Edit" asp-route-id="@Model.Id">Claims</a>
     }
 </nav>

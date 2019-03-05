@@ -7,6 +7,7 @@
         public string MainActive { get; private set; }
         public string ScopesActive { get; private set; }
         public string RedirectActive { get; private set; }
+        public string ClaimsActive { get; private set; }
 
         public void SetActive(object model)
         {
@@ -26,6 +27,11 @@
             if (model is ClientRedirectsViewModel)
             {
                 RedirectActive = "active";
+            }
+
+            if (model is ClientClaimsViewModel)
+            {
+                ClaimsActive = "active";
             }
         }
 

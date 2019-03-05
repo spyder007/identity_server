@@ -46,16 +46,6 @@ namespace one.Identity.Controllers.Admin.Client
             });
         }
 
-        protected override IActionResult GetView(ClientScopesViewModel model)
-        {
-            return View(nameof(Edit), model);
-        }
-
-        protected override IActionResult GetEditRedirect(object routeValues)
-        {
-            return RedirectToAction(nameof(Edit), routeValues);
-        }
-
         #endregion BaseClientCollectionController Implementation
     }
 }
