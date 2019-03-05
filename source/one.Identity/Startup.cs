@@ -11,11 +11,7 @@ using one.Identity.Models;
 using one.Identity.Services;
 using System.Linq;
 using System.Reflection;
-using System.ServiceProcess;
-using AutoMapper;
-using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.HttpOverrides;
-using one.Identity.Admin.Client;
 
 namespace one.Identity
 {
@@ -75,14 +71,6 @@ namespace one.Identity
                     option.ClientSecret = "GoogleClientSecret";
                 });
 
-            services.AddAutoMapper(typeof(Startup));
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<Client, ClientViewModel>().ReverseMap().ForMember(d => d.Id, opt => opt.Ignore());
-                cfg.CreateMap<ClientScope, ClientScopeViewModel>().ReverseMap()
-                    .ForMember(d => d.Id, opt => opt.Ignore());
-            });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -91,6 +79,7 @@ namespace one.Identity
             // this will do the initial DB population, but we only need to do it once
             // this is just in here as a easy, yet hacky, way to get our DB created/populated
             InitializeDatabase(app);
+            Data.AutoMapper.Initialize();
 
             if (env.IsDevelopment())
             {

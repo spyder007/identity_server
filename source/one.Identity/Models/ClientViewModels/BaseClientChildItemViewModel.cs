@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace one.Identity.Admin.Client
+namespace one.Identity.Models.ClientViewModels
 {
-    public class ClientScopeViewModel
+    public class BaseClientChildItemViewModel : BaseViewModel, IClientCollectionViewModel
     {
-        public string Scope { get; set; }
         public int ClientId { get; set; }
-        public int Id { get; set; }
     }
 }

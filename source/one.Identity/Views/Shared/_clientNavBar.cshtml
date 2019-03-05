@@ -1,0 +1,11 @@
+﻿@using one.Identity.Models.ClientViewModels
+@model NavBarViewModel
+
+<nav class="nav nav-pills">
+    <a class="nav-link @Model.MainActive" asp-area="" asp-controller="Client" asp-action="Edit" asp-route-id="@Model.Id">Main</a>
+    @if (Model.Id > 0)
+    {
+        <a class="nav-link @Model.ScopesActive" asp-area="" asp-controller="ClientScopes" asp-action="Edit" asp-route-id="@Model.Id">Allowed Scopes</a>
+        <a class="nav-link @Model.RedirectActive" asp-area="" asp-controller="ClientRedirects" asp-action="Edit" asp-route-id="@Model.Id">Redirect URIs</a>
+    }
+</nav>

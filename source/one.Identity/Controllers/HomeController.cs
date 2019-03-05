@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using one.Identity.Quickstart;
 using System.Threading.Tasks;
+using IdentityServer4.Models;
 
 namespace one.Identity.Controllers
 {
@@ -45,6 +46,13 @@ namespace one.Identity.Controllers
             if (message != null)
             {
                 vm.Error = message;
+            }
+            else
+            {
+                vm.Error = new ErrorMessage()
+                {
+                    Error = errorId
+                };
             }
 
             return View("Error", vm);
