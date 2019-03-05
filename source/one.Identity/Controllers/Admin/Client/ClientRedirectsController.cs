@@ -4,97 +4,56 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
+using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using one.Identity.Models.ClientViewModels;
 
 namespace one.Identity.Controllers.Admin.Client
 {
-    public class ClientRedirectsController : BaseClientController
+    public class ClientRedirectsController : BaseClientCollectionController<ClientRedirectViewModel, ClientRedirectsViewModel, ClientRedirectUri>
     {
 
         public ClientRedirectsController(ConfigurationDbContext context) : base(context)
         {
         }
 
-        [HttpGet]
-        public IActionResult Edit(int? id)
+
+        protected override IEnumerable<ClientRedirectViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
         {
-            var clientRedirectsViewModel = new ClientRedirectsViewModel();
-            if (id.HasValue)
-            {
-                clientRedirectsViewModel.SetId(id.Value);
-
-                var client = ConfigDbContext.Clients.Include(c => c.RedirectUris).FirstOrDefault(c => c.Id == id.Value);
-                if (client == null)
-                {
-                    return GetErrorAction("Could not load client");
-                }
-
-                clientRedirectsViewModel.ItemsList.AddRange(client.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>());
-            }
-
-            return View(clientRedirectsViewModel);
+            return client.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Save(int? id, ClientRedirectsViewModel clientRedirects)
+        protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientRedirectUri>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
         {
-            if (!id.HasValue)
-            {
-                return GetErrorAction("No Client ID Supplied");
-            }
-
-            var client = ConfigDbContext.Clients.Include(c => c.RedirectUris).FirstOrDefault(c => c.Id == id.Value);
-            if (client == null)
-            {
-                return GetErrorAction("Could not load client");
-            }
-
-            if (ModelState.IsValid)
-            {
-                client.RedirectUris.Add(new IdentityServer4.EntityFramework.Entities.ClientRedirectUri()
-                {
-                    ClientId = id.Value,
-                    RedirectUri = clientRedirects.NewItem.RedirectUri
-                });
-                ConfigDbContext.Clients.Update(client);
-                await ConfigDbContext.SaveChangesAsync();
-                return RedirectToAction(nameof(Edit), new { id = id.Value });
-            }
-
-            clientRedirects.SetId(id.Value);
-            clientRedirects.ItemsList.AddRange(client.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>());
-
-            return View(nameof(Edit), clientRedirects);
+            return query.Include(c => c.RedirectUris);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id, int? clientId)
+        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
         {
-            if (!id.HasValue)
-            {
-                return GetErrorAction("No Scope ID Supplied");
-            }
-
-            if (!clientId.HasValue)
-            {
-                return GetErrorAction("No Client ID Supplied");
-            }
-
-            var client = ConfigDbContext.Clients.Include(c => c.RedirectUris).FirstOrDefault(c => c.Id == clientId.Value);
-            if (client == null)
-            {
-                return GetErrorAction("Could not load client");
-            }
-
-            var redirectToDelete = client.RedirectUris.FirstOrDefault(s => s.Id == id.Value);
+            var redirectToDelete = client.RedirectUris.FirstOrDefault(s => s.Id == id);
             client.RedirectUris.Remove(redirectToDelete);
-            ConfigDbContext.Clients.Update(client);
-            await ConfigDbContext.SaveChangesAsync();
+        }
 
-            return RedirectToAction(nameof(Edit), new { id = clientId.Value });
+        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientRedirectViewModel newItem)
+        {
+            client.RedirectUris.Add(new IdentityServer4.EntityFramework.Entities.ClientRedirectUri()
+            {
+                ClientId = clientId,
+                RedirectUri = newItem.RedirectUri
+            });
+        }
+
+        protected override IActionResult GetView(ClientRedirectsViewModel model)
+        {
+            return View(nameof(Edit), model);
+        }
+
+        protected override IActionResult GetEditRedirect(object routeValues)
+        {
+            return RedirectToAction(nameof(Edit), routeValues);
         }
     }
 }

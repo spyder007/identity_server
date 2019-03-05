@@ -24,19 +24,16 @@ namespace one.Identity.Controllers.Admin.Client
         protected abstract IEnumerable<TSingleViewModel> PopulateItemList(
             IdentityServer4.EntityFramework.Entities.Client client);
 
-        protected abstract Expression<Func<IdentityServer4.EntityFramework.Entities.Client, TChildEntity>> IncludeExpression
-        {
-            get;
-        }
+        protected abstract Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<TChildEntity>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query);
 
         protected abstract void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id);
 
-        protected abstract void AddObject(IdentityServer4.EntityFramework.Entities.Client client,
+        protected abstract void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId,
             TSingleViewModel newItem);
 
-        protected abstract IActionResult GetView();
+        protected abstract IActionResult GetView(TCollectionViewModel model);
 
-        protected abstract IActionResult GetEditRedirect();
+        protected abstract IActionResult GetEditRedirect(object routeValues);
 
         [HttpGet]
         public IActionResult Edit(int? id)
@@ -46,7 +43,7 @@ namespace one.Identity.Controllers.Admin.Client
             {
                 collectionViewModel.SetId(id.Value);
 
-                var client = ConfigDbContext.Clients.Include(IncludeExpression).FirstOrDefault(c => c.Id == id.Value);
+                IdentityServer4.EntityFramework.Entities.Client client = GetClient(id.Value);
                 if (client == null)
                 {
                     return GetErrorAction("Could not load client");
@@ -65,8 +62,7 @@ namespace one.Identity.Controllers.Admin.Client
             {
                 return GetErrorAction("No Client ID Supplied");
             }
-
-            var client = ConfigDbContext.Clients.Include(c => c.RedirectUris).FirstOrDefault(c => c.Id == id.Value);
+            IdentityServer4.EntityFramework.Entities.Client client = GetClient(id.Value);
             if (client == null)
             {
                 return GetErrorAction("Could not load client");
@@ -74,17 +70,17 @@ namespace one.Identity.Controllers.Admin.Client
 
             if (ModelState.IsValid)
             {
-                AddObject(client, collectionViewModel.NewItem);
+                AddObject(client, id.Value, collectionViewModel.NewItem);
 
                 ConfigDbContext.Clients.Update(client);
                 await ConfigDbContext.SaveChangesAsync();
-                return RedirectToAction(nameof(Edit), new { id = id.Value });
+                return GetEditRedirect(new { id = id.Value });
             }
 
             collectionViewModel.SetId(id.Value);
             collectionViewModel.ItemsList.AddRange(PopulateItemList(client));
 
-            return View(nameof(Edit), collectionViewModel);
+            return GetView(collectionViewModel);
         }
 
         [HttpGet]
@@ -100,7 +96,7 @@ namespace one.Identity.Controllers.Admin.Client
                 return GetErrorAction("No Client ID Supplied");
             }
 
-            var client = ConfigDbContext.Clients.Include(IncludeExpression).FirstOrDefault(c => c.Id == clientId.Value);
+            IdentityServer4.EntityFramework.Entities.Client client = GetClient(clientId.Value);
             if (client == null)
             {
                 return GetErrorAction("Could not load client");
@@ -111,7 +107,15 @@ namespace one.Identity.Controllers.Admin.Client
             ConfigDbContext.Clients.Update(client);
             await ConfigDbContext.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Edit), new { id = clientId.Value });
+            return GetEditRedirect(new { id = clientId.Value });
+        }
+
+        private IdentityServer4.EntityFramework.Entities.Client GetClient(int id)
+        {
+            var query = ConfigDbContext.Clients;
+            var includeQuery = AddIncludes(query);
+
+            return includeQuery.FirstOrDefault(c => c.Id == id);
         }
     }
 }

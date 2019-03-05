@@ -1,15 +1,15 @@
 ﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Authorization;
+using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using one.Identity.Models.ClientViewModels;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace one.Identity.Controllers.Admin.Client
 {
-    public class ClientScopesController : BaseClientController
+    public class ClientScopesController : BaseClientCollectionController<ClientScopeViewModel, ClientScopesViewModel, ClientScope>
     {
         #region Constructor
 
@@ -19,83 +19,43 @@ namespace one.Identity.Controllers.Admin.Client
 
         #endregion Constructor
 
-        [HttpGet]
-        public IActionResult Edit(int? id)
+        #region BaseClientCollectionController Implementation
+
+        protected override IEnumerable<ClientScopeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
         {
-            ClientScopesViewModel scopesViewModel = new ClientScopesViewModel();
-            if (id.HasValue)
-            {
-                scopesViewModel.SetId(id.Value);
-
-                var client = ConfigDbContext.Clients.Include(c => c.AllowedScopes).FirstOrDefault(c => c.Id == id.Value);
-                if (client == null)
-                {
-                    return GetErrorAction("Could not load client");
-                }
-
-                scopesViewModel.ItemsList.AddRange(client.AllowedScopes.AsQueryable().ProjectTo<ClientScopeViewModel>());
-            }
-
-            return View(scopesViewModel);
+            return client.AllowedScopes.AsQueryable().ProjectTo<ClientScopeViewModel>();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Save(int? id, ClientScopesViewModel clientScopes)
+        protected override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientScope>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
         {
-            if (!id.HasValue)
-            {
-                return GetErrorAction("No Client ID Supplied");
-            }
-
-            var client = ConfigDbContext.Clients.Include(c => c.AllowedScopes).FirstOrDefault(c => c.Id == id.Value);
-            if (client == null)
-            {
-                return GetErrorAction("Could not load client");
-            }
-
-            if (ModelState.IsValid)
-            {
-                client.AllowedScopes.Add(new IdentityServer4.EntityFramework.Entities.ClientScope()
-                {
-                    ClientId = id.Value,
-                    Scope = clientScopes.NewItem.Scope
-                });
-                ConfigDbContext.Clients.Update(client);
-                await ConfigDbContext.SaveChangesAsync();
-                return RedirectToAction(nameof(Edit), new { id = id.Value });
-            }
-
-            clientScopes.ItemsList.AddRange(client.AllowedScopes.AsQueryable().ProjectTo<ClientScopeViewModel>());
-            clientScopes.SetId(id.Value);
-
-            return View(nameof(Edit), clientScopes);
+            return query.Include(c => c.AllowedScopes);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id, int? clientId)
+        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
         {
-            if (!id.HasValue)
-            {
-                return GetErrorAction("No Scope ID Supplied");
-            }
-
-            if (!clientId.HasValue)
-            {
-                return GetErrorAction("No Client ID Supplied");
-            }
-
-            var client = ConfigDbContext.Clients.Include(c => c.AllowedScopes).FirstOrDefault(c => c.Id == clientId.Value);
-            if (client == null)
-            {
-                return GetErrorAction("Could not load client");
-            }
-
-            var scopeToDelete = client.AllowedScopes.FirstOrDefault(s => s.Id == id.Value);
+            var scopeToDelete = client.AllowedScopes.FirstOrDefault(s => s.Id == id);
             client.AllowedScopes.Remove(scopeToDelete);
-            ConfigDbContext.Clients.Update(client);
-            await ConfigDbContext.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Edit), new { id = clientId.Value });
         }
+
+        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientScopeViewModel newItem)
+        {
+            client.AllowedScopes.Add(new ClientScope()
+            {
+                ClientId = clientId,
+                Scope = newItem.Scope
+            });
+        }
+
+        protected override IActionResult GetView(ClientScopesViewModel model)
+        {
+            return View(nameof(Edit), model);
+        }
+
+        protected override IActionResult GetEditRedirect(object routeValues)
+        {
+            return RedirectToAction(nameof(Edit), routeValues);
+        }
+
+        #endregion BaseClientCollectionController Implementation
     }
 }
