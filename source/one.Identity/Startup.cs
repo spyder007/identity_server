@@ -11,7 +11,11 @@ using one.Identity.Models;
 using one.Identity.Services;
 using System.Linq;
 using System.Reflection;
+using System.ServiceProcess;
+using AutoMapper;
+using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.HttpOverrides;
+using one.Identity.Admin.Client;
 
 namespace one.Identity
 {
@@ -70,6 +74,15 @@ namespace one.Identity
                     option.ClientId = "GoogleClientId";
                     option.ClientSecret = "GoogleClientSecret";
                 });
+
+            services.AddAutoMapper(typeof(Startup));
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Client, ClientViewModel>().ReverseMap().ForMember(d => d.Id, opt => opt.Ignore());
+                cfg.CreateMap<ClientScope, ClientScopeViewModel>().ReverseMap()
+                    .ForMember(d => d.Id, opt => opt.Ignore());
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,7 +121,7 @@ namespace one.Identity
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index"});
+                    defaults: new { controller = "Home", action = "Index" });
             });
         }
 
@@ -124,7 +137,7 @@ namespace one.Identity
         private void SeedDatabase(IServiceScope serviceScope)
         {
             ConfigurationDbContext context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-            
+
             if (!context.Clients.Any())
             {
                 foreach (var client in Config.GetClients())

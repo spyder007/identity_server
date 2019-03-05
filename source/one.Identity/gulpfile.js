@@ -11,15 +11,17 @@ var destination = "wwwroot";
 var sassFiles = 'Styles/**/*.scss',
     cssDest = 'wwwroot/css/';
 
-gulp.task('sass', function () {
+gulp.task('sass', function (done) {
     gulp.src(stylePath + 'scss/style.scss', {base: 'Styles/scss'})
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest(cssDest));
+    done();
 });
 
-gulp.task('copy:css', function () {
+gulp.task('copy:css', function (done) {
     gulp.src(stylePath + 'css/**/*')
         .pipe(gulp.dest(destination + '/css'));
+    done();
 });
 
 gulp.task('copy:img', function () {
@@ -43,6 +45,7 @@ gulp.task('copy:js', function () {
 });
 
 
-gulp.task('build:dist', function (callback) {
-    runSequence('sass', 'copy:css', 'copy:img', 'copy:fonts', 'copy:js', 'copy:style-js', callback);
+gulp.task('build:dist', function (done) {
+    gulp.series('sass', 'copy:css', 'copy:img', 'copy:fonts', 'copy:js', 'copy:style-js', done);
+    done();
 });
