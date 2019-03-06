@@ -13,6 +13,8 @@
 
 <h2>@ViewData["Title"]</h2>
 
+@await Html.PartialAsync("_identityResourceNavBar", Model.NavBar)
+
 <form asp-action="Edit">
 
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

@@ -44,7 +44,7 @@ namespace one.Identity.Controllers.Admin.Identity
                     return GetErrorAction("Could not load identity resource");
                 }
 
-                identityResourceViewModel = new IdentityResourceViewModel();
+                identityResourceViewModel = new IdentityResourceViewModel(id.Value);
                 Mapper.Map(identityResource, identityResourceViewModel);
                 identityResourceViewModel.Id = id.Value;
             }

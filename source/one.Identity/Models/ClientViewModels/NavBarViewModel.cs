@@ -17,9 +17,6 @@
 
         public void SetActive(object model)
         {
-            MainActive = string.Empty;
-            ScopesActive = string.Empty;
-
             if (model is ClientViewModel)
             {
                 MainActive = "active";
