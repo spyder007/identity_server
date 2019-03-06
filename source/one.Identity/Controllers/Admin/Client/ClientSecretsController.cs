@@ -18,9 +18,9 @@ namespace one.Identity.Controllers.Admin.Client
         {
         }
 
-        protected override IEnumerable<ClientSecretViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        protected override IEnumerable<ClientSecretViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.ClientSecrets.AsQueryable().ProjectTo<ClientSecretViewModel>();
+            return mainEntity.ClientSecrets.AsQueryable().ProjectTo<ClientSecretViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientSecret>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -28,17 +28,17 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.ClientSecrets);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
         {
-            var secret = client.ClientSecrets.FirstOrDefault(s => s.Id == id);
-            client.ClientSecrets.Remove(secret);
+            var secret = mainEntity.ClientSecrets.FirstOrDefault(s => s.Id == id);
+            mainEntity.ClientSecrets.Remove(secret);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientSecretViewModel newItem)
+        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientSecretViewModel newItem)
         {
-            client.ClientSecrets.Add(new ClientSecret()
+            mainEntity.ClientSecrets.Add(new ClientSecret()
             {
-                ClientId = clientId,
+                ClientId = parentId,
                 Created = DateTime.UtcNow,
                 Description = newItem.Description,
                 Expiration = newItem.Expiration,

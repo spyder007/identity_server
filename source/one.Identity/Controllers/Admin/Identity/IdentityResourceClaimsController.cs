@@ -18,9 +18,9 @@ namespace one.Identity.Controllers.Admin.Identity.IdentityResourceViewModels
         {
         }
 
-        protected override IEnumerable<IdentityResourceClaimViewModel> PopulateItemList(IdentityResource identityResource)
+        protected override IEnumerable<IdentityResourceClaimViewModel> PopulateItemList(IdentityResource mainEntity)
         {
-            return identityResource.UserClaims.AsQueryable().ProjectTo<IdentityResourceClaimViewModel>();
+            return mainEntity.UserClaims.AsQueryable().ProjectTo<IdentityResourceClaimViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityResource, List<IdentityClaim>> AddIncludes(DbSet<IdentityResource> query)
@@ -28,17 +28,17 @@ namespace one.Identity.Controllers.Admin.Identity.IdentityResourceViewModels
             return query.Include(ir => ir.UserClaims);
         }
 
-        protected override void RemoveObject(IdentityResource identityResource, int id)
+        protected override void RemoveObject(IdentityResource mainEntity, int id)
         {
-            var claim = identityResource.UserClaims.FirstOrDefault(uc => uc.Id == id);
-            identityResource.UserClaims.Remove(claim);
+            var claim = mainEntity.UserClaims.FirstOrDefault(uc => uc.Id == id);
+            mainEntity.UserClaims.Remove(claim);
         }
 
-        protected override void AddObject(IdentityResource identityResource, int identityResourceId, IdentityResourceClaimViewModel newItem)
+        protected override void AddObject(IdentityResource mainEntity, int parentId, IdentityResourceClaimViewModel newItem)
         {
-            identityResource.UserClaims.Add(new IdentityClaim()
+            mainEntity.UserClaims.Add(new IdentityClaim()
             {
-                IdentityResourceId = identityResourceId,
+                IdentityResourceId = parentId,
                 Type = newItem.Type
             });
         }

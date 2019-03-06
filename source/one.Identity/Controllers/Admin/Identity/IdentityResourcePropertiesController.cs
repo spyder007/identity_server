@@ -17,9 +17,9 @@ namespace one.Identity.Controllers.Admin.Identity
 
         #region BaseIdentityResourceCollectionController Implementation
 
-        protected override IEnumerable<IdentityResourcePropertyViewModel> PopulateItemList(IdentityResource identityResource)
+        protected override IEnumerable<IdentityResourcePropertyViewModel> PopulateItemList(IdentityResource mainEntity)
         {
-            return identityResource.Properties.AsQueryable().ProjectTo<IdentityResourcePropertyViewModel>();
+            return mainEntity.Properties.AsQueryable().ProjectTo<IdentityResourcePropertyViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityResource, List<IdentityResourceProperty>> AddIncludes(DbSet<IdentityResource> query)
@@ -27,17 +27,17 @@ namespace one.Identity.Controllers.Admin.Identity
             return query.Include(ir => ir.Properties);
         }
 
-        protected override void RemoveObject(IdentityResource identityResource, int id)
+        protected override void RemoveObject(IdentityResource mainEntity, int id)
         {
-            var prop = identityResource.Properties.FirstOrDefault(p => p.Id == id);
-            identityResource.Properties.Remove(prop);
+            var prop = mainEntity.Properties.FirstOrDefault(p => p.Id == id);
+            mainEntity.Properties.Remove(prop);
         }
 
-        protected override void AddObject(IdentityResource identityResource, int identityResourceId, IdentityResourcePropertyViewModel newItem)
+        protected override void AddObject(IdentityResource mainEntity, int parentId, IdentityResourcePropertyViewModel newItem)
         {
-            identityResource.Properties.Add(new IdentityResourceProperty()
+            mainEntity.Properties.Add(new IdentityResourceProperty()
             {
-                IdentityResourceId = identityResourceId,
+                IdentityResourceId = parentId,
                 Key = newItem.Key,
                 Value = newItem.Value
             });

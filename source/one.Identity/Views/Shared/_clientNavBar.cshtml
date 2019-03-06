@@ -2,7 +2,7 @@
 @model NavBarViewModel
 
 <nav class="nav nav-pills">
-    <a class="nav-link @Model.MainActive" asp-area="" asp-controller="Client" asp-action="Edit" asp-route-id="@Model.Id">Main</a>
+    <a class="nav-link @Model.MainActive" asp-area="" asp-controller="Clients" asp-action="Edit" asp-route-id="@Model.Id">Main</a>
     @if (Model.Id > 0)
     {
         <a class="nav-link @Model.ScopesActive" asp-area="" asp-controller="ClientScopes" asp-action="Edit" asp-route-id="@Model.Id">Allowed Scopes</a>

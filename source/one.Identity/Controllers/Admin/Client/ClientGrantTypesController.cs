@@ -17,9 +17,9 @@ namespace one.Identity.Controllers.Admin.Client
         {
         }
 
-        protected override IEnumerable<ClientGrantTypeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        protected override IEnumerable<ClientGrantTypeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.AllowedGrantTypes.AsQueryable().ProjectTo<ClientGrantTypeViewModel>();
+            return mainEntity.AllowedGrantTypes.AsQueryable().ProjectTo<ClientGrantTypeViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientGrantType>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -27,17 +27,17 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.AllowedGrantTypes);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
         {
-            var grantToRemove = client.AllowedGrantTypes.FirstOrDefault(g => g.Id == id);
-            client.AllowedGrantTypes.Remove(grantToRemove);
+            var grantToRemove = mainEntity.AllowedGrantTypes.FirstOrDefault(g => g.Id == id);
+            mainEntity.AllowedGrantTypes.Remove(grantToRemove);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientGrantTypeViewModel newItem)
+        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientGrantTypeViewModel newItem)
         {
-            client.AllowedGrantTypes.Add(new ClientGrantType()
+            mainEntity.AllowedGrantTypes.Add(new ClientGrantType()
             {
-                ClientId = clientId,
+                ClientId = parentId,
                 GrantType = newItem.GrantType
             });
         }

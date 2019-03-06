@@ -17,9 +17,9 @@ namespace one.Identity.Controllers.Admin.Client
         {
         }
 
-        protected override IEnumerable<ClientIdpRestrictionViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        protected override IEnumerable<ClientIdpRestrictionViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.IdentityProviderRestrictions.AsQueryable().ProjectTo<ClientIdpRestrictionViewModel>();
+            return mainEntity.IdentityProviderRestrictions.AsQueryable().ProjectTo<ClientIdpRestrictionViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientIdPRestriction>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -27,17 +27,17 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.IdentityProviderRestrictions);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
         {
-            var idpToRemove = client.IdentityProviderRestrictions.FirstOrDefault(idp => idp.Id == id);
-            client.IdentityProviderRestrictions.Remove(idpToRemove);
+            var idpToRemove = mainEntity.IdentityProviderRestrictions.FirstOrDefault(idp => idp.Id == id);
+            mainEntity.IdentityProviderRestrictions.Remove(idpToRemove);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientIdpRestrictionViewModel newItem)
+        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientIdpRestrictionViewModel newItem)
         {
-            client.IdentityProviderRestrictions.Add(new ClientIdPRestriction()
+            mainEntity.IdentityProviderRestrictions.Add(new ClientIdPRestriction()
             {
-                ClientId = clientId,
+                ClientId = parentId,
                 Provider = newItem.Provider
             });
         }

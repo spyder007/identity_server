@@ -9,9 +9,9 @@ using IdentityServer4.EntityFramework.Mappers;
 
 namespace one.Identity.Controllers.Admin.Client
 {
-    public class ClientController : BaseAdminController
+    public class ClientsController : BaseAdminController
     {
-        public ClientController(ConfigurationDbContext dbContext) : base(dbContext)
+        public ClientsController(ConfigurationDbContext dbContext) : base(dbContext)
         {
         }
 

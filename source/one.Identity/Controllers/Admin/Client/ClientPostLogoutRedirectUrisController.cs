@@ -17,9 +17,9 @@ namespace one.Identity.Controllers.Admin.Client
         {
         }
 
-        protected override IEnumerable<ClientPostLogoutRedirectUriViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        protected override IEnumerable<ClientPostLogoutRedirectUriViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.PostLogoutRedirectUris.AsQueryable().ProjectTo<ClientPostLogoutRedirectUriViewModel>();
+            return mainEntity.PostLogoutRedirectUris.AsQueryable().ProjectTo<ClientPostLogoutRedirectUriViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientPostLogoutRedirectUri>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -27,17 +27,17 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.PostLogoutRedirectUris);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
         {
-            var uriToDelete = client.PostLogoutRedirectUris.FirstOrDefault(uri => uri.Id == id);
-            client.PostLogoutRedirectUris.Remove(uriToDelete);
+            var uriToDelete = mainEntity.PostLogoutRedirectUris.FirstOrDefault(uri => uri.Id == id);
+            mainEntity.PostLogoutRedirectUris.Remove(uriToDelete);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientPostLogoutRedirectUriViewModel newItem)
+        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientPostLogoutRedirectUriViewModel newItem)
         {
-            client.PostLogoutRedirectUris.Add(new ClientPostLogoutRedirectUri()
+            mainEntity.PostLogoutRedirectUris.Add(new ClientPostLogoutRedirectUri()
             {
-                ClientId = clientId,
+                ClientId = parentId,
                 PostLogoutRedirectUri = newItem.PostLogoutRedirectUri
             });
         }

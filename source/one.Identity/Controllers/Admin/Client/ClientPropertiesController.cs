@@ -17,9 +17,9 @@ namespace one.Identity.Controllers.Admin.Client
         {
         }
 
-        protected override IEnumerable<ClientPropertyViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        protected override IEnumerable<ClientPropertyViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.Properties.AsQueryable().ProjectTo<ClientPropertyViewModel>();
+            return mainEntity.Properties.AsQueryable().ProjectTo<ClientPropertyViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientProperty>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -27,17 +27,17 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.Properties);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
         {
-            var prop = client.Properties.FirstOrDefault(p => p.Id == id);
-            client.Properties.Remove(prop);
+            var prop = mainEntity.Properties.FirstOrDefault(p => p.Id == id);
+            mainEntity.Properties.Remove(prop);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientPropertyViewModel newItem)
+        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientPropertyViewModel newItem)
         {
-            client.Properties.Add(new ClientProperty()
+            mainEntity.Properties.Add(new ClientProperty()
             {
-                ClientId = clientId,
+                ClientId = parentId,
                 Key = newItem.Key,
                 Value = newItem.Value
             });

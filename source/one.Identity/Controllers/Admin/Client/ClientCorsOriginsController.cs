@@ -17,9 +17,9 @@ namespace one.Identity.Controllers.Admin.Client
         {
         }
 
-        protected override IEnumerable<ClientCorsOriginViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        protected override IEnumerable<ClientCorsOriginViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.AllowedCorsOrigins.AsQueryable().ProjectTo<ClientCorsOriginViewModel>();
+            return mainEntity.AllowedCorsOrigins.AsQueryable().ProjectTo<ClientCorsOriginViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientCorsOrigin>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -27,17 +27,17 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.AllowedCorsOrigins);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
         {
-            var originToDelete = client.AllowedCorsOrigins.FirstOrDefault(o => o.Id == id);
-            client.AllowedCorsOrigins.Remove(originToDelete);
+            var originToDelete = mainEntity.AllowedCorsOrigins.FirstOrDefault(o => o.Id == id);
+            mainEntity.AllowedCorsOrigins.Remove(originToDelete);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientCorsOriginViewModel newItem)
+        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientCorsOriginViewModel newItem)
         {
-            client.AllowedCorsOrigins.Add(new ClientCorsOrigin()
+            mainEntity.AllowedCorsOrigins.Add(new ClientCorsOrigin()
             {
-                ClientId = clientId,
+                ClientId = parentId,
                 Origin = newItem.Origin
             });
         }

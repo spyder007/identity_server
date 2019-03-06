@@ -26,13 +26,13 @@ namespace one.Identity.Controllers.Admin.Identity
 
         #region BaseIdentityResourceCollectionController Interface
 
-        protected abstract override IEnumerable<TSingleViewModel> PopulateItemList(IS4Entities.IdentityResource identityResource);
+        protected abstract override IEnumerable<TSingleViewModel> PopulateItemList(IS4Entities.IdentityResource mainEntity);
 
         protected abstract override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IS4Entities.IdentityResource, List<TChildEntity>> AddIncludes(DbSet<IS4Entities.IdentityResource> query);
 
-        protected abstract override void RemoveObject(IS4Entities.IdentityResource identityResource, int id);
+        protected abstract override void RemoveObject(IS4Entities.IdentityResource mainEntity, int id);
 
-        protected abstract override void AddObject(IS4Entities.IdentityResource identityResource, int identityResourceId,
+        protected abstract override void AddObject(IS4Entities.IdentityResource mainEntity, int parentId,
             TSingleViewModel newItem);
 
         #endregion BaseIdentityResourceCollectionController Interface

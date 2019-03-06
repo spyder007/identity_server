@@ -24,13 +24,13 @@ namespace one.Identity.Controllers.Admin
 
         #region BaseClientCollectionController Interface
 
-        protected abstract IEnumerable<TSingleViewModel> PopulateItemList(TEntity entity);
+        protected abstract IEnumerable<TSingleViewModel> PopulateItemList(TEntity mainEntity);
 
         protected abstract Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<TEntity, List<TChildEntity>> AddIncludes(DbSet<TEntity> query);
 
-        protected abstract void RemoveObject(TEntity client, int id);
+        protected abstract void RemoveObject(TEntity mainEntity, int id);
 
-        protected abstract void AddObject(TEntity client, int clientId, TSingleViewModel newItem);
+        protected abstract void AddObject(TEntity mainEntity, int parentId, TSingleViewModel newItem);
 
         protected virtual IActionResult GetView(TCollectionViewModel model)
         {
@@ -60,7 +60,7 @@ namespace one.Identity.Controllers.Admin
 
                 if (entity == null)
                 {
-                    return GetErrorAction("Could not load entity");
+                    return GetErrorAction("Could not load mainEntity");
                 }
 
                 collectionViewModel.ItemsList.AddRange(PopulateItemList(entity));
@@ -79,7 +79,7 @@ namespace one.Identity.Controllers.Admin
             TEntity entity = GetMainEntity(id.Value);
             if (entity == null)
             {
-                return GetErrorAction("Could not load main entity");
+                return GetErrorAction("Could not load main mainEntity");
             }
 
             if (ModelState.IsValid)
@@ -106,13 +106,13 @@ namespace one.Identity.Controllers.Admin
 
             if (!parentId.HasValue)
             {
-                return GetErrorAction("No main entity ID supplied");
+                return GetErrorAction("No main mainEntity ID supplied");
             }
 
             TEntity entity = GetMainEntity(parentId.Value);
             if (entity == null)
             {
-                return GetErrorAction("Could not main entity");
+                return GetErrorAction("Could not main mainEntity");
             }
 
             RemoveObject(entity, id.Value);

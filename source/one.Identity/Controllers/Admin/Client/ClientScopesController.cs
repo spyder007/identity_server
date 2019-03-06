@@ -21,9 +21,9 @@ namespace one.Identity.Controllers.Admin.Client
 
         #region BaseClientCollectionController Implementation
 
-        protected override IEnumerable<ClientScopeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        protected override IEnumerable<ClientScopeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.AllowedScopes.AsQueryable().ProjectTo<ClientScopeViewModel>();
+            return mainEntity.AllowedScopes.AsQueryable().ProjectTo<ClientScopeViewModel>();
         }
 
         protected override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientScope>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -31,17 +31,17 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.AllowedScopes);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
         {
-            var scopeToDelete = client.AllowedScopes.FirstOrDefault(s => s.Id == id);
-            client.AllowedScopes.Remove(scopeToDelete);
+            var scopeToDelete = mainEntity.AllowedScopes.FirstOrDefault(s => s.Id == id);
+            mainEntity.AllowedScopes.Remove(scopeToDelete);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientScopeViewModel newItem)
+        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientScopeViewModel newItem)
         {
-            client.AllowedScopes.Add(new ClientScope()
+            mainEntity.AllowedScopes.Add(new ClientScope()
             {
-                ClientId = clientId,
+                ClientId = parentId,
                 Scope = newItem.Scope
             });
         }

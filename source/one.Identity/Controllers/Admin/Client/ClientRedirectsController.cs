@@ -18,9 +18,9 @@ namespace one.Identity.Controllers.Admin.Client
 
         #region BaseClientCollectinoController Implementation
 
-        protected override IEnumerable<ClientRedirectViewModel> PopulateItemList(IS4Entities.Client client)
+        protected override IEnumerable<ClientRedirectViewModel> PopulateItemList(IS4Entities.Client mainEntity)
         {
-            return client.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>();
+            return mainEntity.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>();
         }
 
         protected override IIncludableQueryable<IS4Entities.Client, List<IS4Entities.ClientRedirectUri>> AddIncludes(DbSet<IS4Entities.Client> query)
@@ -28,17 +28,17 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.RedirectUris);
         }
 
-        protected override void RemoveObject(IS4Entities.Client client, int id)
+        protected override void RemoveObject(IS4Entities.Client mainEntity, int id)
         {
-            var redirectToDelete = client.RedirectUris.FirstOrDefault(s => s.Id == id);
-            client.RedirectUris.Remove(redirectToDelete);
+            var redirectToDelete = mainEntity.RedirectUris.FirstOrDefault(s => s.Id == id);
+            mainEntity.RedirectUris.Remove(redirectToDelete);
         }
 
-        protected override void AddObject(IS4Entities.Client client, int clientId, ClientRedirectViewModel newItem)
+        protected override void AddObject(IS4Entities.Client mainEntity, int parentId, ClientRedirectViewModel newItem)
         {
-            client.RedirectUris.Add(new IS4Entities.ClientRedirectUri()
+            mainEntity.RedirectUris.Add(new IS4Entities.ClientRedirectUri()
             {
-                ClientId = clientId,
+                ClientId = parentId,
                 RedirectUri = newItem.RedirectUri
             });
         }
