@@ -1,9 +1,7 @@
 ﻿namespace one.Identity.Models.ClientViewModels
 {
-    public class NavBarViewModel
+    public class NavBarViewModel : BaseAdminNavBar
     {
-        public int Id { get; set; }
-
         public string MainActive { get; private set; }
         public string ScopesActive { get; private set; }
         public string RedirectActive { get; private set; }
@@ -15,7 +13,7 @@
         public string PropertiesActive { get; private set; }
         public string ClientSecretActive { get; private set; }
 
-        public void SetActive(object model)
+        public override void SetActive(object model)
         {
             if (model is ClientViewModel)
             {

@@ -107,6 +107,11 @@ namespace one.Identity.Controllers.Admin.Client
                 return (isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index)));
             }
 
+            if (id.HasValue)
+            {
+                client.Id = id.Value;
+            }
+
             return View(client);
         }
 

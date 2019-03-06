@@ -10,7 +10,7 @@ namespace one.Identity.Models.ClientViewModels
     {
     }
 
-    public class ClientPostLogoutRedirectUriViewModel : BaseClientChildItemViewModel
+    public class ClientPostLogoutRedirectUriViewModel : BaseAdminChildItemViewModel
     {
         [Required]
         [Url]

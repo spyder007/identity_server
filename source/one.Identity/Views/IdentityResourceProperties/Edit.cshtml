@@ -24,7 +24,7 @@
                 <tr>
                     <td>@identityResource.Key</td>
                     <td>@identityResource.Value</td>
-                    <td><a asp-action="Delete" asp-route-id="@identityResource.Id" asp-route-clientid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                    <td><a asp-action="Delete" asp-route-id="@identityResource.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
                 </tr>
             }
             <tr>

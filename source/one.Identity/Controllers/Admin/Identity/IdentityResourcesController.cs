@@ -108,6 +108,11 @@ namespace one.Identity.Controllers.Admin.Identity
                 return (isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index)));
             }
 
+            if (id.HasValue)
+            {
+                identityResource.Id = id.Value;
+            }
+
             return View(identityResource);
         }
     }

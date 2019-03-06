@@ -10,7 +10,7 @@ namespace one.Identity.Models.IdentityResourceViewModels
     {
     }
 
-    public class IdentityResourceClaimViewModel : BaseIdentityResourceChildItemViewModel
+    public class IdentityResourceClaimViewModel : BaseAdminChildItemViewModel
     {
         [Required]
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",

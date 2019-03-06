@@ -6,7 +6,7 @@ namespace one.Identity.Models.ClientViewModels
     {
     }
 
-    public class ClientClaimViewModel : BaseClientChildItemViewModel
+    public class ClientClaimViewModel : BaseAdminChildItemViewModel
     {
         [Required]
         [StringLength(250, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",

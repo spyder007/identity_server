@@ -6,26 +6,11 @@ using one.Identity.Models.ClientViewModels;
 
 namespace one.Identity.Models.IdentityResourceViewModels
 {
-    public class BaseIdentityResourceCollectionViewModel<T> where T : BaseViewModel, IIdentityResourceCollectionViewModel, new()
+    public class BaseIdentityResourceCollectionViewModel<T> : BaseAdminChildCollectionViewModel<T> where T : BaseAdminChildItemViewModel, new()
     {
-        public BaseIdentityResourceCollectionViewModel()
+        public override BaseAdminNavBar GetNavBar()
         {
-            ItemsList = new List<T>();
-            NavBar = new IdentityResourceNavBarViewModel();
-            NavBar.SetActive(this);
-            NewItem = new T();
-        }
-
-        public IdentityResourceNavBarViewModel NavBar { get; set; }
-        public List<T> ItemsList { get; set; }
-        public T NewItem { get; set; }
-        public int Id { get; private set; }
-
-        public virtual void SetId(int id)
-        {
-            NavBar.Id = id;
-            NewItem.IdentityResourceId = id;
-            Id = id;
+            return new IdentityResourceNavBarViewModel();
         }
     }
 }

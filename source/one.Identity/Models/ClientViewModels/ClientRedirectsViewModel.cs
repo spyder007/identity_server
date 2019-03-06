@@ -10,7 +10,7 @@ namespace one.Identity.Models.ClientViewModels
     {
     }
 
-    public class ClientRedirectViewModel : BaseClientChildItemViewModel
+    public class ClientRedirectViewModel : BaseAdminChildItemViewModel
     {
         [Required]
         [Url]
