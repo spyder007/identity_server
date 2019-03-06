@@ -7,6 +7,7 @@ namespace one.Identity.Models.ClientViewModels
 {
     public class BaseClientChildItemViewModel : BaseViewModel, IClientCollectionViewModel
     {
+        public int Id { get; set; }
         public int ClientId { get; set; }
     }
 }

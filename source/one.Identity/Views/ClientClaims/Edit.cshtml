@@ -24,7 +24,7 @@
                 <tr>
                     <td>@clientClaim.Type</td>
                     <td>@clientClaim.Value</td>
-                    <td><a asp-controller="ClientClaims" asp-action="Delete" asp-route-id="@clientClaim.Id" asp-route-clientid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                    <td><a asp-action="Delete" asp-route-id="@clientClaim.Id" asp-route-clientid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
                 </tr>
             }
             <tr>

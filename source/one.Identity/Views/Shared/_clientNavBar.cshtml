@@ -10,5 +10,7 @@
         <a class="nav-link @Model.ClaimsActive" asp-area="" asp-controller="ClientClaims" asp-action="Edit" asp-route-id="@Model.Id">Claims</a>
         <a class="nav-link @Model.CorsOriginsActive" asp-area="" asp-controller="ClientCorsOrigins" asp-action="Edit" asp-route-id="@Model.Id">Cors Origins</a>
         <a class="nav-link @Model.GrantTypesActive" asp-area="" asp-controller="ClientGrantTypes" asp-action="Edit" asp-route-id="@Model.Id">Grant Types</a>
+        <a class="nav-link @Model.IdpRestrictionsActive" asp-area="" asp-controller="ClientIdpRestrictions" asp-action="Edit" asp-route-id="@Model.Id">IDP Restrictions</a>
+        <a class="nav-link @Model.PostLogoutActive" asp-area="" asp-controller="ClientPostLogoutRedirectUris" asp-action="Edit" asp-route-id="@Model.Id">Post Logout URIs</a>
     }
 </nav>

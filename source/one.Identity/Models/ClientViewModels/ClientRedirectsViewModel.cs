@@ -16,7 +16,5 @@ namespace one.Identity.Models.ClientViewModels
         [Url]
         [Display(Name = "Redirect Uri")]
         public string RedirectUri { get; set; }
-
-        public int Id { get; set; }
     }
 }

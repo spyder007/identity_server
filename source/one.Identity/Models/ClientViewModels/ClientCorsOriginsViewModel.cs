@@ -17,7 +17,5 @@ namespace one.Identity.Models.ClientViewModels
             MinimumLength = 1)]
         [Display(Name = "Origin")]
         public string Origin { get; set; }
-        
-        public int Id { get; set; }
     }
 }

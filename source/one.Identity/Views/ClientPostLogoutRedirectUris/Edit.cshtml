@@ -1,5 +1,5 @@
 ﻿@using one.Identity.Models.ClientViewModels
-@model ClientRedirectsViewModel
+@model ClientPostLogoutRedirectUrisViewModel
 @{
     ViewData["Title"] = "Edit Client";
 }
@@ -14,7 +14,7 @@
         <table class="table table-bordered table-striped">
             <thead>
             <tr>
-                <th>@Html.LabelFor(model => model.NewItem.RedirectUri)</th>
+                <th>@Html.LabelFor(model => model.NewItem.PostLogoutRedirectUri)</th>
                 <th>Delete</th>
             </tr>
             </thead>
@@ -22,15 +22,15 @@
             @foreach (var redirectViewModel in Model.ItemsList)
             {
                 <tr>
-                    <td>@redirectViewModel.RedirectUri</td>
+                    <td>@redirectViewModel.PostLogoutRedirectUri</td>
                     <td><a asp-action="Delete" asp-route-id="@redirectViewModel.Id" asp-route-clientid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
                 </tr>
             }
             <tr>
                 <td>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.RedirectUri" pf-validation-for="NewItem.RedirectUri" pf-validationerror-class="is-invalid" />
-                        <span asp-validation-for="NewItem.RedirectUri" class="invalid-feedback"></span>
+                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.PostLogoutRedirectUri" pf-validation-for="NewItem.PostLogoutRedirectUri" pf-validationerror-class="is-invalid" />
+                        <span asp-validation-for="NewItem.PostLogoutRedirectUri" class="invalid-feedback"></span>
                     </div>
                 </td>
                 <td>

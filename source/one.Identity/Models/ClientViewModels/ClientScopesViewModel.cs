@@ -14,6 +14,5 @@ namespace one.Identity.Models.ClientViewModels
             MinimumLength = 2)]
         [Display(Name = "Scope")]
         public string Scope { get; set; }
-        public int Id { get; set; }
     }
 }

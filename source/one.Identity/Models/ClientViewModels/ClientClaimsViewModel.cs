@@ -19,7 +19,5 @@ namespace one.Identity.Models.ClientViewModels
             MinimumLength = 2)]
         [Display(Name = "Value")]
         public string Value { get; set; }
-
-        public int Id { get; set; }
     }
 }

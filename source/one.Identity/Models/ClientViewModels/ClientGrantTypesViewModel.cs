@@ -17,7 +17,5 @@ namespace one.Identity.Models.ClientViewModels
             MinimumLength = 2)]
         [Display(Name = "Grant Type")]
         public string GrantType { get; set; }
-
-        public int Id { get; set; }
     }
 }

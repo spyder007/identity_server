@@ -10,6 +10,8 @@
         public string ClaimsActive { get; private set; }
         public string CorsOriginsActive { get; private set; }
         public string GrantTypesActive { get; private set; }
+        public string IdpRestrictionsActive { get; private set; }
+        public string PostLogoutActive { get; private set; }
 
         public void SetActive(object model)
         {
@@ -44,6 +46,16 @@
             if (model is ClientGrantTypesViewModel)
             {
                 GrantTypesActive = "active";
+            }
+
+            if (model is ClientIdpRestrictionsViewModel)
+            {
+                IdpRestrictionsActive = "active";
+            }
+
+            if (model is ClientPostLogoutRedirectUrisViewModel)
+            {
+                PostLogoutActive = "active";
             }
         }
 
