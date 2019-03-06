@@ -8,5 +8,7 @@
         <a class="nav-link @Model.ScopesActive" asp-area="" asp-controller="ClientScopes" asp-action="Edit" asp-route-id="@Model.Id">Allowed Scopes</a>
         <a class="nav-link @Model.RedirectActive" asp-area="" asp-controller="ClientRedirects" asp-action="Edit" asp-route-id="@Model.Id">Redirect URIs</a>
         <a class="nav-link @Model.ClaimsActive" asp-area="" asp-controller="ClientClaims" asp-action="Edit" asp-route-id="@Model.Id">Claims</a>
+        <a class="nav-link @Model.CorsOriginsActive" asp-area="" asp-controller="ClientCorsOrigins" asp-action="Edit" asp-route-id="@Model.Id">Cors Origins</a>
+        <a class="nav-link @Model.GrantTypesActive" asp-area="" asp-controller="ClientGrantTypes" asp-action="Edit" asp-route-id="@Model.Id">Grant Types</a>
     }
 </nav>

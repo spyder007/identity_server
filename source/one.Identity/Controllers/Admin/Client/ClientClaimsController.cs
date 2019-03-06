@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using one.Identity.Models.ClientViewModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace one.Identity.Controllers.Admin.Client
 {
@@ -43,6 +40,5 @@ namespace one.Identity.Controllers.Admin.Client
                 Value = newItem.Value
             });
         }
-
     }
 }

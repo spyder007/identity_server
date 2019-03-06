@@ -1,5 +1,5 @@
 ﻿@using one.Identity.Models.ClientViewModels
-@model ClientRedirectsViewModel
+@model ClientGrantTypesViewModel
 @{
     ViewData["Title"] = "Edit Client";
 }
@@ -9,28 +9,27 @@
 <form asp-action="Save" asp-route-id="@Model.Id">
 
     @await Html.PartialAsync("_clientNavBar", Model.NavBar)
-
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
-            <tr>
-                <th>@Html.LabelFor(model => model.NewItem.RedirectUri)</th>
-                <th>Delete</th>
-            </tr>
+                <tr>
+                    <th>@Html.LabelFor(model => model.NewItem.GrantType)</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
 
-            @foreach (var redirectViewModel in Model.ItemsList)
+            @foreach (var clientClaim in Model.ItemsList)
             {
                 <tr>
-                    <td>@redirectViewModel.RedirectUri</td>
-                    <td><a asp-controller="ClientRedirects" asp-action="Delete" asp-route-id="@redirectViewModel.Id" asp-route-clientid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                    <td>@clientClaim.GrantType</td>
+                    <td><a asp-controller="ClientGrantTypes" asp-action="Delete" asp-route-id="@clientClaim.Id" asp-route-clientid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
                 </tr>
             }
             <tr>
                 <td>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.RedirectUri" pf-validation-for="NewItem.RedirectUri" pf-validationerror-class="is-invalid" />
-                        <span asp-validation-for="NewItem.RedirectUri" class="invalid-feedback"></span>
+                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.GrantType" pf-validation-for="NewItem.GrantType" pf-validationerror-class="is-invalid" />
+                        <span asp-validation-for="NewItem.GrantType" class="invalid-feedback"></span>
                     </div>
                 </td>
                 <td>

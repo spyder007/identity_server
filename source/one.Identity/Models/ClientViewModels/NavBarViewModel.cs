@@ -8,6 +8,8 @@
         public string ScopesActive { get; private set; }
         public string RedirectActive { get; private set; }
         public string ClaimsActive { get; private set; }
+        public string CorsOriginsActive { get; private set; }
+        public string GrantTypesActive { get; private set; }
 
         public void SetActive(object model)
         {
@@ -32,6 +34,16 @@
             if (model is ClientClaimsViewModel)
             {
                 ClaimsActive = "active";
+            }
+
+            if (model is ClientCorsOriginsViewModel)
+            {
+                CorsOriginsActive = "active";
+            }
+
+            if (model is ClientGrantTypesViewModel)
+            {
+                GrantTypesActive = "active";
             }
         }
 

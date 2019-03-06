@@ -1,8 +1,17 @@
 ﻿@using one.Identity.Models.ClientViewModels
 @model ClientViewModel
 @{
-    ViewData["Title"] = "Edit Client";
+    if (Model.Id > 0)
+    {
+        ViewData["Title"] = "Edit Client";
+    }
+    else
+    {
+        ViewData["Title"] = "New Client";
+    }
 }
+
+<h2>@ViewData["Title"]</h2>
 
 <form asp-action="Edit">
 
