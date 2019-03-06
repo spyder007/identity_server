@@ -13,6 +13,7 @@
         public string IdpRestrictionsActive { get; private set; }
         public string PostLogoutActive { get; private set; }
         public string PropertiesActive { get; private set; }
+        public string ClientSecretActive { get; private set; }
 
         public void SetActive(object model)
         {
@@ -62,6 +63,11 @@
             if (model is ClientPropertiesViewModel)
             {
                 PropertiesActive = "active";
+            }
+
+            if (model is ClientSecretsViewModel)
+            {
+                ClientSecretActive = "active";
             }
         }
 
