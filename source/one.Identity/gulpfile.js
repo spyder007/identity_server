@@ -45,7 +45,4 @@ gulp.task('copy:js', function () {
 });
 
 
-gulp.task('build:dist', function (done) {
-    gulp.series('sass', 'copy:css', 'copy:img', 'copy:fonts', 'copy:js', 'copy:style-js', done);
-    done();
-});
+gulp.task('build:dist', gulp.series('sass', 'copy:css', 'copy:img', 'copy:fonts', 'copy:js', 'copy:style-js'));
