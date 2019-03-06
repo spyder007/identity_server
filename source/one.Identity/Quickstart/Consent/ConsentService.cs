@@ -7,6 +7,7 @@ using IdentityServer4.Stores;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
+using one.Identity.Models;
 
 namespace one.Identity.Quickstart
 {

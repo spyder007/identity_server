@@ -1,0 +1,44 @@
+﻿@using one.Identity.Models.ClientViewModels
+@model ClientCorsOriginsViewModel
+@{
+    ViewData["Title"] = "Edit Client";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Save" asp-route-id="@Model.Id">
+
+    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(model => model.NewItem.Origin)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            @foreach (var origin in Model.ItemsList)
+            {
+                <tr>
+                    <td>@origin.Origin</td>
+                    <td><a asp-action="Delete" asp-route-id="@origin.Id" asp-route-clientid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                </tr>
+            }
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Origin" pf-validation-for="NewItem.Origin" pf-validationerror-class="is-invalid" />
+                            <span asp-validation-for="NewItem.Origin" class="invalid-feedback"></span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <input type="submit" value="Add" class="btn btn-primary" />
+                        </div>
+                    </td>
+
+                </tr>
+        </table>
+    </div>
+</form>

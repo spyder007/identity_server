@@ -3,11 +3,11 @@
   "name": "asp.net",
   "private": true,
   "devDependencies": {
-    "gulp": "3.9.1",
-    "gulp-sass": "3.1.0",
-    "run-sequence": "^2.1.0"
+    "gulp": "4.0.0",
+    "gulp-sass": "^4.0.2",
+    "run-sequence": "^2.2.1"
   },
   "dependencies": {
-    "popper.js": "^1.12.5"
+    "popper.js": "^1.14.4"
   }
 }
