@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
 using one.Identity.Models.ClientViewModels;
+using one.Identity.Models.IdentityResourceViewModels;
 
 namespace one.Identity.Data
 {
@@ -20,7 +21,13 @@ namespace one.Identity.Data
                     .ForMember(d => d.PostLogoutRedirectUris, opt => opt.Ignore())
                     .ForMember(d => d.Properties, opt => opt.Ignore())
                     .ForMember(d => d.RedirectUris, opt => opt.Ignore())
-                    .ReverseMap().ForMember(d => d.Id, opt => opt.Ignore());
+                    .ReverseMap()
+                    .ForMember(d => d.Id, opt => opt.Ignore());
+
+                cfg.CreateMap<IdentityResourceViewModel, IdentityResource>()
+                    .ForMember(d => d.Properties, opt => opt.Ignore())
+                    .ForMember(d => d.UserClaims, opt => opt.Ignore())
+                    .ReverseMap();
             });
         }
     }

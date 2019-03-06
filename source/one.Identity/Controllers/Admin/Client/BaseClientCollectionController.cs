@@ -9,7 +9,7 @@ using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace one.Identity.Controllers.Admin.Client
 {
-    public abstract class BaseClientCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity> : BaseClientController
+    public abstract class BaseClientCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity> : BaseAdminController
         where TSingleViewModel : BaseClientChildItemViewModel, new()
         where TCollectionViewModel : BaseClientCollectionViewModel<TSingleViewModel>, new()
     {

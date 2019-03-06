@@ -5,17 +5,16 @@ using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Authorization;
 
-namespace one.Identity.Controllers.Admin.Client
+namespace one.Identity.Controllers.Admin
 {
     [Authorize(Roles = "admin")]
-    public class BaseClientController : BaseController
+    public class BaseAdminController : BaseController
     {
-        public BaseClientController(ConfigurationDbContext context)
+        public BaseAdminController(ConfigurationDbContext context)
         {
             ConfigDbContext = context;
         }
 
         protected ConfigurationDbContext ConfigDbContext { get; set; }
-
     }
 }

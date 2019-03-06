@@ -1,19 +1,15 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using one.Identity.Controllers;
+using one.Identity.Models.ClientViewModels;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Differencing;
-using one.Identity.Models.ClientViewModels;
+using IdentityServer4.EntityFramework.Mappers;
 
 namespace one.Identity.Controllers.Admin.Client
 {
-    
-    public class ClientController : BaseClientController
+    public class ClientController : BaseAdminController
     {
         public ClientController(ConfigurationDbContext dbContext) : base(dbContext)
         {
@@ -115,6 +111,5 @@ namespace one.Identity.Controllers.Admin.Client
         }
 
         #endregion Main Tab
-
     }
 }

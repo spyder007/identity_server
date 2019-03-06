@@ -1,0 +1,34 @@
+﻿@using one.Identity.Models.IdentityResourceViewModels
+@model IdentityResourcesViewModel
+@{
+    ViewData["Title"] = "Identity Resources";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Display Name</th>
+            <th>Description</th>
+            <th>Actions&nbsp;<a asp-controller="Client" asp-action="Edit"><span class="fa fa-plus"></span></a></th>
+        </tr>
+        </thead>
+
+        @foreach (var identityResource in Model.IdentityResources)
+        {
+        <tr>
+            <td>@identityResource.DisplayName</td>
+            <td>@identityResource.DisplayName</td>
+            <td>@identityResource.Description</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@identityResource.Id"><span class="fa fa-edit"></span></a>
+                <a asp-action="Delete" asp-route-id="@identityResource.Id" title="Delete"><span class="fa fa-trash"></span></a>
+            </td>
+        </tr>
+        }
+    </table>
+    
+</div>
