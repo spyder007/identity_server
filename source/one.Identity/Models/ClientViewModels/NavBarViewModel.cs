@@ -12,6 +12,7 @@
         public string GrantTypesActive { get; private set; }
         public string IdpRestrictionsActive { get; private set; }
         public string PostLogoutActive { get; private set; }
+        public string PropertiesActive { get; private set; }
 
         public void SetActive(object model)
         {
@@ -56,6 +57,11 @@
             if (model is ClientPostLogoutRedirectUrisViewModel)
             {
                 PostLogoutActive = "active";
+            }
+
+            if (model is ClientPropertiesViewModel)
+            {
+                PropertiesActive = "active";
             }
         }
 
