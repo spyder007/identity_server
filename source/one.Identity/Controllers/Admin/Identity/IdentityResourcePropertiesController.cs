@@ -3,10 +3,10 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using one.Identity.Models.IdentityResourceViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using one.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace one.Identity.Controllers.Admin.Identity
 {

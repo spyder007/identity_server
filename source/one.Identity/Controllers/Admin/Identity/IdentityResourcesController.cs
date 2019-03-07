@@ -2,10 +2,10 @@
 using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
-using one.Identity.Models.IdentityResourceViewModels;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using one.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace one.Identity.Controllers.Admin.Identity
 {

@@ -3,11 +3,11 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using one.Identity.Models.ClientViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using IdentityServer4.Models;
+using one.Identity.Models.Admin.ClientViewModels;
 
 namespace one.Identity.Controllers.Admin.Client
 {

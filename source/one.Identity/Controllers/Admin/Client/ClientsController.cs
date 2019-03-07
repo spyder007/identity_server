@@ -2,9 +2,9 @@
 using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
-using one.Identity.Models.ClientViewModels;
 using System.Linq;
 using System.Threading.Tasks;
+using one.Identity.Models.Admin.ClientViewModels;
 
 namespace one.Identity.Controllers.Admin.Client
 {

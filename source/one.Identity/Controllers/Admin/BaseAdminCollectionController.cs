@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using one.Identity.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using one.Identity.Models.Admin;
 
 namespace one.Identity.Controllers.Admin
 {

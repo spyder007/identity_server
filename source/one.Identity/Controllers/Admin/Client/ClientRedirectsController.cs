@@ -2,9 +2,9 @@
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using one.Identity.Models.ClientViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using one.Identity.Models.Admin.ClientViewModels;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace one.Identity.Controllers.Admin.Client

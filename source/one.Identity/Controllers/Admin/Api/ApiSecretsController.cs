@@ -4,10 +4,10 @@ using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using one.Identity.Models.ApiViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using one.Identity.Models.Admin.ApiViewModels;
 using ApiResource = IdentityServer4.EntityFramework.Entities.ApiResource;
 
 namespace one.Identity.Controllers.Admin.Api

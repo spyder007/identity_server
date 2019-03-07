@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
-using one.Identity.Models.ApiViewModels;
-using one.Identity.Models.ClientViewModels;
-using one.Identity.Models.IdentityResourceViewModels;
+using one.Identity.Models.Admin.ApiViewModels;
+using one.Identity.Models.Admin.ClientViewModels;
+using one.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace one.Identity.Data
 {

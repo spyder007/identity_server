@@ -1,9 +1,9 @@
 ﻿using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using one.Identity.Models;
-using one.Identity.Models.IdentityResourceViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using one.Identity.Models.Admin.IdentityResourceViewModels;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace one.Identity.Controllers.Admin.Identity

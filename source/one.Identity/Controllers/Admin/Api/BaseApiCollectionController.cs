@@ -1,10 +1,10 @@
 ﻿using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.EntityFrameworkCore;
-using one.Identity.Models.ApiViewModels;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using one.Identity.Models;
+using one.Identity.Models.Admin.ApiViewModels;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace one.Identity.Controllers.Admin.Api
