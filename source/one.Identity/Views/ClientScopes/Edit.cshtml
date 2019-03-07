@@ -1,5 +1,5 @@
-﻿@using one.Identity.Models.ClientViewModels
-@model ClientScopesViewModel
+﻿@using one.Identity.Models.Admin.ClientViewModels
+@model one.Identity.Models.Admin.ClientViewModels.ClientScopesViewModel
 @{
     ViewData["Title"] = "Edit Client";
 }
@@ -23,7 +23,7 @@
             {
                 <tr>
                     <td>@scope.Scope</td>
-                    <td><a asp-action="Delete" asp-route-id="@scope.Id" asp-route-clientid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                    <td><a asp-action="Delete" asp-route-id="@scope.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
                 </tr>
             }
             <tr>

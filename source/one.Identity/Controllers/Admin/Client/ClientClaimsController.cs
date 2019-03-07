@@ -3,9 +3,9 @@ using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using one.Identity.Models.ClientViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using one.Identity.Models.Admin.ClientViewModels;
 
 namespace one.Identity.Controllers.Admin.Client
 {
@@ -15,9 +15,11 @@ namespace one.Identity.Controllers.Admin.Client
         {
         }
 
-        protected override IEnumerable<ClientClaimViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        #region BaseClientCollectionController Implementation
+
+        protected override IEnumerable<ClientClaimViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.Claims.AsQueryable().ProjectTo<ClientClaimViewModel>();
+            return mainEntity.Claims.AsQueryable().ProjectTo<ClientClaimViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientClaim>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -25,20 +27,16 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.Claims);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override ClientClaim FindItemInCollection(List<ClientClaim> collection, int id)
         {
-            var claimToDelete = client.Claims.FirstOrDefault(s => s.Id == id);
-            client.Claims.Remove(claimToDelete);
+            return collection.FirstOrDefault(c => c.Id == id);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientClaimViewModel newItem)
+        protected override List<ClientClaim> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            client.Claims.Add(new ClientClaim()
-            {
-                ClientId = clientId,
-                Type = newItem.Type,
-                Value = newItem.Value
-            });
+            return mainEntity.Claims;
         }
+
+        #endregion BaseClientCollectionController Implementation
     }
 }

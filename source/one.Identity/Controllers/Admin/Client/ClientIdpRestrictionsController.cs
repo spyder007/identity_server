@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using one.Identity.Models.ClientViewModels;
+using System.Collections.Generic;
+using System.Linq;
+using one.Identity.Models.Admin.ClientViewModels;
 
 namespace one.Identity.Controllers.Admin.Client
 {
@@ -17,9 +15,11 @@ namespace one.Identity.Controllers.Admin.Client
         {
         }
 
-        protected override IEnumerable<ClientIdpRestrictionViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        #region BaseClientCollectionController Implementation
+
+        protected override IEnumerable<ClientIdpRestrictionViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.IdentityProviderRestrictions.AsQueryable().ProjectTo<ClientIdpRestrictionViewModel>();
+            return mainEntity.IdentityProviderRestrictions.AsQueryable().ProjectTo<ClientIdpRestrictionViewModel>();
         }
 
         protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientIdPRestriction>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -27,19 +27,16 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.IdentityProviderRestrictions);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override ClientIdPRestriction FindItemInCollection(List<ClientIdPRestriction> collection, int id)
         {
-            var idpToRemove = client.IdentityProviderRestrictions.FirstOrDefault(idp => idp.Id == id);
-            client.IdentityProviderRestrictions.Remove(idpToRemove);
+            return collection.FirstOrDefault(idp => idp.Id == id);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientIdpRestrictionViewModel newItem)
+        protected override List<ClientIdPRestriction> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            client.IdentityProviderRestrictions.Add(new ClientIdPRestriction()
-            {
-                ClientId = clientId,
-                Provider = newItem.Provider
-            });
+            return mainEntity.IdentityProviderRestrictions;
         }
+
+        #endregion BaseClientCollectionController Implementation
     }
 }

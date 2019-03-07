@@ -1,21 +1,16 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using one.Identity.Controllers;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.Differencing;
-using one.Identity.Models.ClientViewModels;
+using one.Identity.Models.Admin.ClientViewModels;
 
 namespace one.Identity.Controllers.Admin.Client
 {
-    
-    public class ClientController : BaseClientController
+    public class ClientsController : BaseAdminController
     {
-        public ClientController(ConfigurationDbContext dbContext) : base(dbContext)
+        public ClientsController(ConfigurationDbContext dbContext) : base(dbContext)
         {
         }
 
@@ -111,10 +106,14 @@ namespace one.Identity.Controllers.Admin.Client
                 return (isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index)));
             }
 
+            if (id.HasValue)
+            {
+                client.Id = id.Value;
+            }
+
             return View(client);
         }
 
         #endregion Main Tab
-
     }
 }

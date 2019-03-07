@@ -1,11 +1,10 @@
 ﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using one.Identity.Models.ClientViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using one.Identity.Models.Admin.ClientViewModels;
 
 namespace one.Identity.Controllers.Admin.Client
 {
@@ -21,9 +20,9 @@ namespace one.Identity.Controllers.Admin.Client
 
         #region BaseClientCollectionController Implementation
 
-        protected override IEnumerable<ClientScopeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client client)
+        protected override IEnumerable<ClientScopeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return client.AllowedScopes.AsQueryable().ProjectTo<ClientScopeViewModel>();
+            return mainEntity.AllowedScopes.AsQueryable().ProjectTo<ClientScopeViewModel>();
         }
 
         protected override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientScope>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
@@ -31,19 +30,14 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.AllowedScopes);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client client, int id)
+        protected override ClientScope FindItemInCollection(List<ClientScope> collection, int id)
         {
-            var scopeToDelete = client.AllowedScopes.FirstOrDefault(s => s.Id == id);
-            client.AllowedScopes.Remove(scopeToDelete);
+            return collection.FirstOrDefault(s => s.Id == id);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client client, int clientId, ClientScopeViewModel newItem)
+        protected override List<ClientScope> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            client.AllowedScopes.Add(new ClientScope()
-            {
-                ClientId = clientId,
-                Scope = newItem.Scope
-            });
+            return mainEntity.AllowedScopes;
         }
 
         #endregion BaseClientCollectionController Implementation

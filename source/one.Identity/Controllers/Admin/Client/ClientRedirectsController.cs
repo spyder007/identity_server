@@ -1,11 +1,10 @@
 ﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using one.Identity.Models.ClientViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using one.Identity.Models.Admin.ClientViewModels;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace one.Identity.Controllers.Admin.Client
@@ -18,9 +17,9 @@ namespace one.Identity.Controllers.Admin.Client
 
         #region BaseClientCollectinoController Implementation
 
-        protected override IEnumerable<ClientRedirectViewModel> PopulateItemList(IS4Entities.Client client)
+        protected override IEnumerable<ClientRedirectViewModel> PopulateItemList(IS4Entities.Client mainEntity)
         {
-            return client.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>();
+            return mainEntity.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>();
         }
 
         protected override IIncludableQueryable<IS4Entities.Client, List<IS4Entities.ClientRedirectUri>> AddIncludes(DbSet<IS4Entities.Client> query)
@@ -28,19 +27,14 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.RedirectUris);
         }
 
-        protected override void RemoveObject(IS4Entities.Client client, int id)
+        protected override IS4Entities.ClientRedirectUri FindItemInCollection(List<IS4Entities.ClientRedirectUri> collection, int id)
         {
-            var redirectToDelete = client.RedirectUris.FirstOrDefault(s => s.Id == id);
-            client.RedirectUris.Remove(redirectToDelete);
+            return collection.FirstOrDefault(r => r.Id == id);
         }
 
-        protected override void AddObject(IS4Entities.Client client, int clientId, ClientRedirectViewModel newItem)
+        protected override List<IS4Entities.ClientRedirectUri> GetCollection(IS4Entities.Client mainEntity)
         {
-            client.RedirectUris.Add(new IS4Entities.ClientRedirectUri()
-            {
-                ClientId = clientId,
-                RedirectUri = newItem.RedirectUri
-            });
+            return mainEntity.RedirectUris;
         }
 
         #endregion BaseClientCollectinoController Implementation
