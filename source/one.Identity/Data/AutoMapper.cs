@@ -31,6 +31,16 @@ namespace one.Identity.Data
                     .ReverseMap()
                     .ForMember(d => d.Id, opt => opt.Ignore());
 
+                cfg.CreateMap<IdentityResourceClaimViewModel, IdentityClaim>()
+                    .ForMember(d => d.IdentityResource, opt => opt.Ignore())
+                    .ReverseMap()
+                    .ForMember(d => d.Id, opt => opt.Ignore());
+
+                cfg.CreateMap<IdentityResourcePropertyViewModel, IdentityResourceProperty>()
+                    .ForMember(d => d.IdentityResource, opt => opt.Ignore())
+                    .ReverseMap()
+                    .ForMember(d => d.Id, opt => opt.Ignore());
+
                 cfg.CreateMap<ApiViewModel, ApiResource>()
                     .ForMember(d => d.UserClaims, opt => opt.Ignore())
                     .ForMember(d => d.Properties, opt => opt.Ignore())
@@ -42,18 +52,22 @@ namespace one.Identity.Data
                 cfg.CreateMap<ApiScopeViewModel, ApiScope>()
                     .ForMember(d => d.UserClaims, opt => opt.Ignore())
                     .ForMember(d => d.ApiResource, opt => opt.Ignore())
+                    .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                     .ReverseMap();
 
                 cfg.CreateMap<ApiPropertyViewModel, ApiResourceProperty>()
                     .ForMember(d => d.ApiResource, opt => opt.Ignore())
+                    .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                     .ReverseMap();
 
                 cfg.CreateMap<ApiClaimViewModel, ApiResourceClaim>()
                     .ForMember(d => d.ApiResource, opt => opt.Ignore())
+                    .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                     .ReverseMap();
 
                 cfg.CreateMap<ApiSecretViewModel, ApiSecret>()
                     .ForMember(d => d.ApiResource, opt => opt.Ignore())
+                    .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                     .ReverseMap();
             });
         }

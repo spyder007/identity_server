@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using one.Identity.Controllers.Admin.Identity;
 using one.Identity.Models.IdentityResourceViewModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace one.Identity.Controllers.Admin.Identity.IdentityResourceViewModels
 {
@@ -17,6 +15,8 @@ namespace one.Identity.Controllers.Admin.Identity.IdentityResourceViewModels
         public IdentityResourceClaimsController(ConfigurationDbContext context) : base(context)
         {
         }
+
+        #region BaseIdentityResourceCollectionController Implementation
 
         protected override IEnumerable<IdentityResourceClaimViewModel> PopulateItemList(IdentityResource mainEntity)
         {
@@ -36,11 +36,11 @@ namespace one.Identity.Controllers.Admin.Identity.IdentityResourceViewModels
 
         protected override void AddObject(IdentityResource mainEntity, int parentId, IdentityResourceClaimViewModel newItem)
         {
-            mainEntity.UserClaims.Add(new IdentityClaim()
-            {
-                IdentityResourceId = parentId,
-                Type = newItem.Type
-            });
+            IdentityClaim ic = Mapper.Map<IdentityClaim>(newItem);
+            ic.IdentityResourceId = parentId;
+            mainEntity.UserClaims.Add(ic);
         }
+
+        #endregion BaseIdentityResourceCollectionController Implementation
     }
 }

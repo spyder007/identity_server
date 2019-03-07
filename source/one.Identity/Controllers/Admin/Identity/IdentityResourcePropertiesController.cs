@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using one.Identity.Models.IdentityResourceViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 
 namespace one.Identity.Controllers.Admin.Identity
 {
@@ -35,12 +36,9 @@ namespace one.Identity.Controllers.Admin.Identity
 
         protected override void AddObject(IdentityResource mainEntity, int parentId, IdentityResourcePropertyViewModel newItem)
         {
-            mainEntity.Properties.Add(new IdentityResourceProperty()
-            {
-                IdentityResourceId = parentId,
-                Key = newItem.Key,
-                Value = newItem.Value
-            });
+            var identityResource = Mapper.Map<IdentityResourceProperty>(newItem);
+            identityResource.IdentityResourceId = parentId;
+            mainEntity.Properties.Add(identityResource);
         }
 
         #endregion BaseIdentityResourceCollectionController Implementation

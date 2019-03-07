@@ -84,6 +84,7 @@ namespace one.Identity.Controllers.Admin
 
             if (ModelState.IsValid)
             {
+                collectionViewModel.NewItem.ParentId = id.Value;
                 AddObject(entity, id.Value, collectionViewModel.NewItem);
                 ConfigDbContext.Update(entity);
                 await ConfigDbContext.SaveChangesAsync();

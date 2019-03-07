@@ -28,17 +28,14 @@ namespace one.Identity.Controllers.Admin.Api
             return query.Include(api => api.Properties);
         }
 
-        protected override void RemoveObject(ApiResource mainEntity, int id)
+        protected override ApiResourceProperty FindItemInCollection(List<ApiResourceProperty> collection, int id)
         {
-            var prop = mainEntity.Properties.FirstOrDefault(p => p.Id == id);
-            mainEntity.Properties.Remove(prop);
+            return collection.FirstOrDefault(c => c.Id == id);
         }
 
-        protected override void AddObject(ApiResource mainEntity, int parentId, ApiPropertyViewModel newItem)
+        protected override List<ApiResourceProperty> GetCollection(ApiResource mainEntity)
         {
-            ApiResourceProperty newProp = Mapper.Map<ApiResourceProperty>(newItem);
-            newProp.ApiResourceId = parentId;
-            mainEntity.Properties.Add(newProp);
+            return mainEntity.Properties;
         }
     }
 }

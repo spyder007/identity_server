@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
@@ -27,19 +28,14 @@ namespace one.Identity.Controllers.Admin.Api
             return query.Include(c => c.UserClaims);
         }
 
-        protected override void RemoveObject(ApiResource mainEntity, int id)
+        protected override ApiResourceClaim FindItemInCollection(List<ApiResourceClaim> collection, int id)
         {
-            var claim = mainEntity.UserClaims.FirstOrDefault(uc => uc.Id == id);
-            mainEntity.UserClaims.Remove(claim);
+            return collection.FirstOrDefault(c => c.Id == id);
         }
 
-        protected override void AddObject(ApiResource mainEntity, int parentId, ApiClaimViewModel newItem)
+        protected override List<ApiResourceClaim> GetCollection(ApiResource mainEntity)
         {
-            mainEntity.UserClaims.Add(new ApiResourceClaim()
-            {
-                ApiResourceId = parentId,
-                Type = newItem.Type
-            });
+            return mainEntity.UserClaims;
         }
     }
 }

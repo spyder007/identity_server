@@ -28,17 +28,14 @@ namespace one.Identity.Controllers.Admin.Api
             return query.Include(c => c.Scopes);
         }
 
-        protected override void RemoveObject(ApiResource mainEntity, int id)
+        protected override ApiScope FindItemInCollection(List<ApiScope> collection, int id)
         {
-            var scope = mainEntity.Scopes.FirstOrDefault(s => s.Id == id);
-            mainEntity.Scopes.Remove(scope);
+            return collection.Find(s => s.Id == id);
         }
 
-        protected override void AddObject(ApiResource mainEntity, int parentId, ApiScopeViewModel newItem)
+        protected override List<ApiScope> GetCollection(ApiResource mainEntity)
         {
-            ApiScope newScope = Mapper.Map<ApiScope>(newItem);
-            newScope.ApiResourceId = parentId;
-            mainEntity.Scopes.Add(newScope);
+            return mainEntity.Scopes;
         }
     }
 }

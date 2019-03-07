@@ -30,19 +30,21 @@ namespace one.Identity.Controllers.Admin.Api
             return query.Include(api => api.Secrets);
         }
 
-        protected override void RemoveObject(ApiResource mainEntity, int id)
+        protected override void SetAdditionalProperties(ApiSecret newItem)
         {
-            var secret = mainEntity.Secrets.FirstOrDefault(s => s.Id == id);
-            mainEntity.Secrets.Remove(secret);
+            base.SetAdditionalProperties(newItem);
+            newItem.Created = DateTime.UtcNow;
+            newItem.Value = newItem.Value.Sha256();
         }
 
-        protected override void AddObject(ApiResource mainEntity, int parentId, ApiSecretViewModel newItem)
+        protected override ApiSecret FindItemInCollection(List<ApiSecret> collection, int id)
         {
-            ApiSecret secret = Mapper.Map<ApiSecret>(newItem);
-            secret.ApiResourceId = parentId;
-            secret.Created = DateTime.UtcNow;
-            secret.Value = secret.Value.Sha256();
-            mainEntity.Secrets.Add(secret);
+            return collection.FirstOrDefault(s => s.Id == id);
+        }
+
+        protected override List<ApiSecret> GetCollection(ApiResource mainEntity)
+        {
+            return mainEntity.Secrets;
         }
     }
 }
