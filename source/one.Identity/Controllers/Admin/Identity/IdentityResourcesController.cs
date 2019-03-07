@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Mvc;
-using one.Identity.Models.ClientViewModels;
 using one.Identity.Models.IdentityResourceViewModels;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace one.Identity.Controllers.Admin.Identity
 {
@@ -17,6 +14,8 @@ namespace one.Identity.Controllers.Admin.Identity
         public IdentityResourcesController(ConfigurationDbContext dbContext) : base(dbContext)
         {
         }
+
+        #region Controller Actions
 
         public IActionResult Index()
         {
@@ -102,7 +101,7 @@ namespace one.Identity.Controllers.Admin.Identity
                 {
                     ConfigDbContext.Update(dbEntity);
                 }
-                
+
                 await ConfigDbContext.SaveChangesAsync();
 
                 return (isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index)));
@@ -114,6 +113,8 @@ namespace one.Identity.Controllers.Admin.Identity
             }
 
             return View(identityResource);
+
+            #endregion Controller Actions
         }
     }
 }

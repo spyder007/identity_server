@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using one.Identity.Models.ClientViewModels;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityServer4.EntityFramework.Mappers;
 
 namespace one.Identity.Controllers.Admin.Client
 {

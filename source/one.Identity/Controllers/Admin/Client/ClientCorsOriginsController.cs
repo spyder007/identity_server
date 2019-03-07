@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using one.Identity.Models.ClientViewModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace one.Identity.Controllers.Admin.Client
 {
@@ -16,6 +14,8 @@ namespace one.Identity.Controllers.Admin.Client
         public ClientCorsOriginsController(ConfigurationDbContext context) : base(context)
         {
         }
+
+        #region BaseClientCollectionController Implementation
 
         protected override IEnumerable<ClientCorsOriginViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
@@ -27,19 +27,16 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.AllowedCorsOrigins);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
+        protected override ClientCorsOrigin FindItemInCollection(List<ClientCorsOrigin> collection, int id)
         {
-            var originToDelete = mainEntity.AllowedCorsOrigins.FirstOrDefault(o => o.Id == id);
-            mainEntity.AllowedCorsOrigins.Remove(originToDelete);
+            return collection.FirstOrDefault(cors => cors.Id == id);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientCorsOriginViewModel newItem)
+        protected override List<ClientCorsOrigin> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            mainEntity.AllowedCorsOrigins.Add(new ClientCorsOrigin()
-            {
-                ClientId = parentId,
-                Origin = newItem.Origin
-            });
+            return mainEntity.AllowedCorsOrigins;
         }
+
+        #endregion BaseClientCollectionController Implementation
     }
 }

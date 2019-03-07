@@ -28,35 +28,9 @@ namespace one.Identity.Controllers.Admin.Api
 
         protected abstract override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IS4Entities.ApiResource, List<TChildEntity>> AddIncludes(DbSet<IS4Entities.ApiResource> query);
 
-        protected abstract List<TChildEntity> GetCollection(IS4Entities.ApiResource mainEntity);
-
-        protected abstract TChildEntity FindItemInCollection(List<TChildEntity> collection, int id);
-
         #endregion BaseClientCollectionController Interface
 
         #region BaseAdminCollectionController Implementation
-
-        protected virtual void SetAdditionalProperties(TChildEntity newItem)
-        {
-
-        }
-
-        protected override void RemoveObject(IS4Entities.ApiResource mainEntity, int id)
-        {
-            List<TChildEntity> collection = GetCollection(mainEntity);
-            var prop = FindItemInCollection(collection, id);
-            if (prop != null)
-            {
-                collection.Remove(prop);
-            }
-        }
-
-        protected override void AddObject(IS4Entities.ApiResource mainEntity, int parentId, TSingleViewModel newItem)
-        {
-            var newEntity = Mapper.Map<TChildEntity>(newItem);
-            SetAdditionalProperties(newEntity);
-            GetCollection(mainEntity).Add(newEntity);
-        }
         
         protected override IS4Entities.ApiResource GetMainEntity(int id)
         {

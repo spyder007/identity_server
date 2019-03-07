@@ -28,17 +28,14 @@ namespace one.Identity.Controllers.Admin.Identity
             return query.Include(ir => ir.Properties);
         }
 
-        protected override void RemoveObject(IdentityResource mainEntity, int id)
+        protected override List<IdentityResourceProperty> GetCollection(IdentityResource mainEntity)
         {
-            var prop = mainEntity.Properties.FirstOrDefault(p => p.Id == id);
-            mainEntity.Properties.Remove(prop);
+            return mainEntity.Properties;
         }
 
-        protected override void AddObject(IdentityResource mainEntity, int parentId, IdentityResourcePropertyViewModel newItem)
+        protected override IdentityResourceProperty FindItemInCollection(List<IdentityResourceProperty> collection, int id)
         {
-            var identityResource = Mapper.Map<IdentityResourceProperty>(newItem);
-            identityResource.IdentityResourceId = parentId;
-            mainEntity.Properties.Add(identityResource);
+            return collection.FirstOrDefault(prop => prop.Id == id);
         }
 
         #endregion BaseIdentityResourceCollectionController Implementation

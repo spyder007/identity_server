@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
-using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using one.Identity.Models.ClientViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using IdentityServer4.Models;
 
 namespace one.Identity.Controllers.Admin.Client
 {
@@ -17,6 +16,8 @@ namespace one.Identity.Controllers.Admin.Client
         public ClientSecretsController(ConfigurationDbContext context) : base(context)
         {
         }
+
+        #region BaseClientCollectionController Implementation
 
         protected override IEnumerable<ClientSecretViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
@@ -28,23 +29,23 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.ClientSecrets);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
+        protected override ClientSecret FindItemInCollection(List<ClientSecret> collection, int id)
         {
-            var secret = mainEntity.ClientSecrets.FirstOrDefault(s => s.Id == id);
-            mainEntity.ClientSecrets.Remove(secret);
+            return collection.FirstOrDefault(s => s.Id == id);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientSecretViewModel newItem)
+        protected override List<ClientSecret> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            mainEntity.ClientSecrets.Add(new ClientSecret()
-            {
-                ClientId = parentId,
-                Created = DateTime.UtcNow,
-                Description = newItem.Description,
-                Expiration = newItem.Expiration,
-                Type = newItem.Type,
-                Value = newItem.Value.Sha256()
-            });
+            return mainEntity.ClientSecrets;
         }
+
+        protected override void SetAdditionalProperties(ClientSecret newItem)
+        {
+            base.SetAdditionalProperties(newItem);
+            newItem.Created = DateTime.UtcNow;
+            newItem.Value = newItem.Value.Sha256();
+        }
+
+        #endregion BaseClientCollectionController Implementation
     }
 }

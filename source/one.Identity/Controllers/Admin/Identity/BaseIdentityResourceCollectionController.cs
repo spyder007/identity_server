@@ -1,17 +1,14 @@
 ﻿using IdentityServer4.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using one.Identity.Models.ClientViewModels;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using one.Identity.Models;
 using one.Identity.Models.IdentityResourceViewModels;
+using System.Collections.Generic;
+using System.Linq;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace one.Identity.Controllers.Admin.Identity
 {
-    public abstract class BaseIdentityResourceCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity> 
+    public abstract class BaseIdentityResourceCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity>
         : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, IS4Entities.IdentityResource, TChildEntity>
         where TSingleViewModel : BaseAdminChildItemViewModel, new()
         where TCollectionViewModel : BaseIdentityResourceCollectionViewModel<TSingleViewModel>, new()
@@ -30,15 +27,9 @@ namespace one.Identity.Controllers.Admin.Identity
 
         protected abstract override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IS4Entities.IdentityResource, List<TChildEntity>> AddIncludes(DbSet<IS4Entities.IdentityResource> query);
 
-        protected abstract override void RemoveObject(IS4Entities.IdentityResource mainEntity, int id);
-
-        protected abstract override void AddObject(IS4Entities.IdentityResource mainEntity, int parentId,
-            TSingleViewModel newItem);
-
         #endregion BaseIdentityResourceCollectionController Interface
 
-        
-        #region Private Methods
+        #region BaseAdminCollectionController Implementation
 
         protected override IS4Entities.IdentityResource GetMainEntity(int id)
         {
@@ -48,6 +39,6 @@ namespace one.Identity.Controllers.Admin.Identity
             return includeQuery.FirstOrDefault(ir => ir.Id == id);
         }
 
-        #endregion Private Methods
+        #endregion BaseAdminCollectionController Implementation
     }
 }

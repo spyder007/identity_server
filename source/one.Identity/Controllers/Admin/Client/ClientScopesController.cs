@@ -1,7 +1,6 @@
 ﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using one.Identity.Models.ClientViewModels;
 using System.Collections.Generic;
@@ -31,19 +30,14 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.AllowedScopes);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
+        protected override ClientScope FindItemInCollection(List<ClientScope> collection, int id)
         {
-            var scopeToDelete = mainEntity.AllowedScopes.FirstOrDefault(s => s.Id == id);
-            mainEntity.AllowedScopes.Remove(scopeToDelete);
+            return collection.FirstOrDefault(s => s.Id == id);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientScopeViewModel newItem)
+        protected override List<ClientScope> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            mainEntity.AllowedScopes.Add(new ClientScope()
-            {
-                ClientId = parentId,
-                Scope = newItem.Scope
-            });
+            return mainEntity.AllowedScopes;
         }
 
         #endregion BaseClientCollectionController Implementation

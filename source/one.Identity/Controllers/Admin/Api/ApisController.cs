@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using one.Identity.Models.ApiViewModels;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace one.Identity.Controllers.Admin.Api
 {

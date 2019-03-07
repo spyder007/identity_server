@@ -1,11 +1,10 @@
-﻿using IdentityServer4.EntityFramework.DbContexts;
+﻿using AutoMapper;
+using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using one.Identity.Models.ClientViewModels;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using one.Identity.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace one.Identity.Controllers.Admin
 {
@@ -28,9 +27,9 @@ namespace one.Identity.Controllers.Admin
 
         protected abstract Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<TEntity, List<TChildEntity>> AddIncludes(DbSet<TEntity> query);
 
-        protected abstract void RemoveObject(TEntity mainEntity, int id);
+        protected abstract List<TChildEntity> GetCollection(TEntity mainEntity);
 
-        protected abstract void AddObject(TEntity mainEntity, int parentId, TSingleViewModel newItem);
+        protected abstract TChildEntity FindItemInCollection(List<TChildEntity> collection, int id);
 
         protected virtual IActionResult GetView(TCollectionViewModel model)
         {
@@ -43,6 +42,10 @@ namespace one.Identity.Controllers.Admin
         }
 
         protected abstract TEntity GetMainEntity(int id);
+
+        protected virtual void SetAdditionalProperties(TChildEntity newItem)
+        {
+        }
 
         #endregion BaseClientCollectionController Interface
 
@@ -85,7 +88,7 @@ namespace one.Identity.Controllers.Admin
             if (ModelState.IsValid)
             {
                 collectionViewModel.NewItem.ParentId = id.Value;
-                AddObject(entity, id.Value, collectionViewModel.NewItem);
+                AddObject(entity, collectionViewModel.NewItem);
                 ConfigDbContext.Update(entity);
                 await ConfigDbContext.SaveChangesAsync();
                 return GetEditRedirect(new { id = id.Value });
@@ -125,5 +128,26 @@ namespace one.Identity.Controllers.Admin
         }
 
         #endregion Controller Actions
+
+        #region Private Methods
+
+        private void RemoveObject(TEntity mainEntity, int id)
+        {
+            List<TChildEntity> collection = GetCollection(mainEntity);
+            var prop = FindItemInCollection(collection, id);
+            if (prop != null)
+            {
+                collection.Remove(prop);
+            }
+        }
+
+        private void AddObject(TEntity mainEntity, TSingleViewModel newItem)
+        {
+            var newEntity = Mapper.Map<TChildEntity>(newItem);
+            SetAdditionalProperties(newEntity);
+            GetCollection(mainEntity).Add(newEntity);
+        }
+
+        #endregion Private Methods
     }
 }

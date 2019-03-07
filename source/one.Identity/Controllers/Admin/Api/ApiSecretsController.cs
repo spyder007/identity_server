@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using one.Identity.Models.ApiViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ApiResource = IdentityServer4.EntityFramework.Entities.ApiResource;
 
 namespace one.Identity.Controllers.Admin.Api
@@ -19,6 +17,8 @@ namespace one.Identity.Controllers.Admin.Api
         public ApiSecretsController(ConfigurationDbContext context) : base(context)
         {
         }
+
+        #region BaseApiCollectionController Implementation
 
         protected override IEnumerable<ApiSecretViewModel> PopulateItemList(ApiResource mainEntity)
         {
@@ -46,5 +46,7 @@ namespace one.Identity.Controllers.Admin.Api
         {
             return mainEntity.Secrets;
         }
+
+        #endregion BaseApiCollectionController Implementation
     }
 }

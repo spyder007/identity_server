@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using one.Identity.Models.ClientViewModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace one.Identity.Controllers.Admin.Client
 {
@@ -16,6 +14,8 @@ namespace one.Identity.Controllers.Admin.Client
         public ClientPropertiesController(ConfigurationDbContext context) : base(context)
         {
         }
+
+        #region BaseClientCollectionController Implementation
 
         protected override IEnumerable<ClientPropertyViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
@@ -27,20 +27,16 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.Properties);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
+        protected override ClientProperty FindItemInCollection(List<ClientProperty> collection, int id)
         {
-            var prop = mainEntity.Properties.FirstOrDefault(p => p.Id == id);
-            mainEntity.Properties.Remove(prop);
+            return collection.FirstOrDefault(p => p.Id == id);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientPropertyViewModel newItem)
+        protected override List<ClientProperty> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            mainEntity.Properties.Add(new ClientProperty()
-            {
-                ClientId = parentId,
-                Key = newItem.Key,
-                Value = newItem.Value
-            });
+            return mainEntity.Properties;
         }
+
+        #endregion BaseClientCollectionController Implementation
     }
 }

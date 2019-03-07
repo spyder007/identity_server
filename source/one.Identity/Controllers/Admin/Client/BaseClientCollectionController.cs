@@ -1,9 +1,9 @@
 ﻿using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.EntityFrameworkCore;
+using one.Identity.Models;
 using one.Identity.Models.ClientViewModels;
 using System.Collections.Generic;
 using System.Linq;
-using one.Identity.Models;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace one.Identity.Controllers.Admin.Client
@@ -26,10 +26,6 @@ namespace one.Identity.Controllers.Admin.Client
         protected abstract override IEnumerable<TSingleViewModel> PopulateItemList(IS4Entities.Client mainEntity);
 
         protected abstract override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IS4Entities.Client, List<TChildEntity>> AddIncludes(DbSet<IS4Entities.Client> query);
-
-        protected abstract override void RemoveObject(IS4Entities.Client mainEntity, int id);
-
-        protected abstract override void AddObject(IS4Entities.Client mainEntity, int parentId, TSingleViewModel newItem);
 
         #endregion BaseClientCollectionController Interface
 

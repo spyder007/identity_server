@@ -15,6 +15,8 @@ namespace one.Identity.Controllers.Admin.Client
         {
         }
 
+        #region BaseClientCollectionController Implementation
+
         protected override IEnumerable<ClientClaimViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
             return mainEntity.Claims.AsQueryable().ProjectTo<ClientClaimViewModel>();
@@ -25,20 +27,16 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.Claims);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
+        protected override ClientClaim FindItemInCollection(List<ClientClaim> collection, int id)
         {
-            var claimToDelete = mainEntity.Claims.FirstOrDefault(s => s.Id == id);
-            mainEntity.Claims.Remove(claimToDelete);
+            return collection.FirstOrDefault(c => c.Id == id);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientClaimViewModel newItem)
+        protected override List<ClientClaim> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            mainEntity.Claims.Add(new ClientClaim()
-            {
-                ClientId = parentId,
-                Type = newItem.Type,
-                Value = newItem.Value
-            });
+            return mainEntity.Claims;
         }
+
+        #endregion BaseClientCollectionController Implementation
     }
 }

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using one.Identity.Models.ClientViewModels;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace one.Identity.Controllers.Admin.Client
 {
@@ -16,6 +14,8 @@ namespace one.Identity.Controllers.Admin.Client
         public ClientIdpRestrictionsController(ConfigurationDbContext context) : base(context)
         {
         }
+
+        #region BaseClientCollectionController Implementation
 
         protected override IEnumerable<ClientIdpRestrictionViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
@@ -27,19 +27,16 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.IdentityProviderRestrictions);
         }
 
-        protected override void RemoveObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int id)
+        protected override ClientIdPRestriction FindItemInCollection(List<ClientIdPRestriction> collection, int id)
         {
-            var idpToRemove = mainEntity.IdentityProviderRestrictions.FirstOrDefault(idp => idp.Id == id);
-            mainEntity.IdentityProviderRestrictions.Remove(idpToRemove);
+            return collection.FirstOrDefault(idp => idp.Id == id);
         }
 
-        protected override void AddObject(IdentityServer4.EntityFramework.Entities.Client mainEntity, int parentId, ClientIdpRestrictionViewModel newItem)
+        protected override List<ClientIdPRestriction> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            mainEntity.IdentityProviderRestrictions.Add(new ClientIdPRestriction()
-            {
-                ClientId = parentId,
-                Provider = newItem.Provider
-            });
+            return mainEntity.IdentityProviderRestrictions;
         }
+
+        #endregion BaseClientCollectionController Implementation
     }
 }

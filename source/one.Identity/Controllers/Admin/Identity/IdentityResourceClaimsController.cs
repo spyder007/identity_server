@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +7,7 @@ using one.Identity.Models.IdentityResourceViewModels;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace one.Identity.Controllers.Admin.Identity.IdentityResourceViewModels
+namespace one.Identity.Controllers.Admin.Identity
 {
     public class IdentityResourceClaimsController : BaseIdentityResourceCollectionController<IdentityResourceClaimViewModel, IdentityResourceClaimsViewModel, IdentityClaim>
     {
@@ -28,17 +27,14 @@ namespace one.Identity.Controllers.Admin.Identity.IdentityResourceViewModels
             return query.Include(ir => ir.UserClaims);
         }
 
-        protected override void RemoveObject(IdentityResource mainEntity, int id)
+        protected override List<IdentityClaim> GetCollection(IdentityResource mainEntity)
         {
-            var claim = mainEntity.UserClaims.FirstOrDefault(uc => uc.Id == id);
-            mainEntity.UserClaims.Remove(claim);
+            return mainEntity.UserClaims;
         }
 
-        protected override void AddObject(IdentityResource mainEntity, int parentId, IdentityResourceClaimViewModel newItem)
+        protected override IdentityClaim FindItemInCollection(List<IdentityClaim> collection, int id)
         {
-            IdentityClaim ic = Mapper.Map<IdentityClaim>(newItem);
-            ic.IdentityResourceId = parentId;
-            mainEntity.UserClaims.Add(ic);
+            return collection.FirstOrDefault(ic => ic.Id == id);
         }
 
         #endregion BaseIdentityResourceCollectionController Implementation

@@ -1,6 +1,5 @@
 ﻿using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using one.Identity.Models.ClientViewModels;
@@ -28,19 +27,14 @@ namespace one.Identity.Controllers.Admin.Client
             return query.Include(c => c.RedirectUris);
         }
 
-        protected override void RemoveObject(IS4Entities.Client mainEntity, int id)
+        protected override IS4Entities.ClientRedirectUri FindItemInCollection(List<IS4Entities.ClientRedirectUri> collection, int id)
         {
-            var redirectToDelete = mainEntity.RedirectUris.FirstOrDefault(s => s.Id == id);
-            mainEntity.RedirectUris.Remove(redirectToDelete);
+            return collection.FirstOrDefault(r => r.Id == id);
         }
 
-        protected override void AddObject(IS4Entities.Client mainEntity, int parentId, ClientRedirectViewModel newItem)
+        protected override List<IS4Entities.ClientRedirectUri> GetCollection(IS4Entities.Client mainEntity)
         {
-            mainEntity.RedirectUris.Add(new IS4Entities.ClientRedirectUri()
-            {
-                ClientId = parentId,
-                RedirectUri = newItem.RedirectUri
-            });
+            return mainEntity.RedirectUris;
         }
 
         #endregion BaseClientCollectinoController Implementation
