@@ -1,8 +1,8 @@
 ﻿using IdentityServer4.Services;
 using Microsoft.AspNetCore.Mvc;
-using one.Identity.Quickstart;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
+using one.Identity.Models;
 
 namespace one.Identity.Controllers
 {

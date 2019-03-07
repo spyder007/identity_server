@@ -3,7 +3,7 @@
 
 using one.Identity.Models;
 
-namespace one.Identity.Quickstart
+namespace one.Identity.Models.Consent
 {
     public class ProcessConsentResult
     {

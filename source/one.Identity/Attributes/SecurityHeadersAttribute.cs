@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace one.Identity.Quickstart
+namespace one.Identity.Attributes
 {
     public class SecurityHeadersAttribute : ActionFilterAttribute
     {

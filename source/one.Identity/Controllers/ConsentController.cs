@@ -6,8 +6,11 @@ using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using one.Identity.Attributes;
+using one.Identity.Services;
+using one.Identity.Models.Consent;
 
-namespace one.Identity.Quickstart
+namespace one.Identity.Controllers
 {
     /// <summary>
     /// This controller processes the consent UI

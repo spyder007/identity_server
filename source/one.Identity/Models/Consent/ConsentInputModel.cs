@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace one.Identity.Quickstart
+namespace one.Identity.Models.Consent
 {
     public class ConsentInputModel
     {

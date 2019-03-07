@@ -3,7 +3,7 @@
 
 using IdentityServer4.Models;
 
-namespace one.Identity.Quickstart
+namespace one.Identity.Models
 {
     public class ErrorViewModel
     {

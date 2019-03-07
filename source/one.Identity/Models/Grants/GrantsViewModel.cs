@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace one.Identity.Quickstart
+namespace one.Identity.Models.Grants
 {
     public class GrantsViewModel
     {

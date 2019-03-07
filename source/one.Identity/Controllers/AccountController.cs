@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using one.Identity.Models;
 using one.Identity.Models.AccountViewModels;
-using one.Identity.Quickstart;
 using one.Identity.Services;
 using System;
 using System.Security.Claims;

@@ -2,7 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Collections.Generic;
-using one.Identity.Quickstart;
+using one.Identity.Models.Consent;
 
 namespace one.Identity.Models
 {

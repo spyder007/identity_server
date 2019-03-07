@@ -8,8 +8,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using one.Identity.Attributes;
+using one.Identity.Models.Grants;
 
-namespace one.Identity.Quickstart
+namespace one.Identity.Controllers
 {
     /// <summary>
     /// This sample controller allows a user to revoke grants given to clients
