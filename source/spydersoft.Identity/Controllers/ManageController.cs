@@ -462,6 +462,12 @@ namespace spydersoft.Identity.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public IActionResult UserClaimsInfo()
+        {
+            return View();
+        }
+
         #region Helpers
 
         private void AddErrors(IdentityResult result)

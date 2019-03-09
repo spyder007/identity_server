@@ -1,8 +1,6 @@
 ﻿<nav class="sidebar-nav">
     <ul class="nav">
         <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a></li>
-        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="About"><i class="fa fa-info-circle"></i> About</a></li>
-        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact"><i class="fa fa-address-card"></i> Contact</a></li>
         @if (User.IsInRole("admin"))
         {
             <li class="nav-title">IS4 Admin</li>
@@ -10,6 +8,9 @@
             <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="IdentityResources" asp-action="Index"><i class="fa fa-stream"></i> Resources</a></li>
             <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Apis" asp-action="Index"><i class="fa fa-server"></i> APIs</a></li>
         }
+        <li class="nav-title">Spydersoft</li>
+        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact"><i class="fa fa-address-card"></i> Contact</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="About"><i class="fa fa-info-circle"></i> About</a></li>
     </ul>
     
 
