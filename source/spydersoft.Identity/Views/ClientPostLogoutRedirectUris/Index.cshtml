@@ -1,8 +1,6 @@
 ﻿@using spydersoft.Identity.Models.Admin.ClientViewModels
-@model spydersoft.Identity.Models.Admin.ClientViewModels.ClientPostLogoutRedirectUrisViewModel
-@{
-    ViewData["Title"] = "Edit Client";
-}
+@model ClientPostLogoutRedirectUrisViewModel
+
 
 <h2>@ViewData["Title"]</h2>
 
@@ -15,7 +13,7 @@
             <thead>
             <tr>
                 <th>@Html.LabelFor(model => model.NewItem.PostLogoutRedirectUri)</th>
-                <th>Delete</th>
+                <th>Actions</th>
             </tr>
             </thead>
 

@@ -3,13 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace spydersoft.Identity.Models.Admin.ApiViewModels
 {
-    public class ApiViewModel
-    {
+    public class ApiViewModel : BaseAdminViewModel
+    { 
 
         public ApiViewModel()
         {
-            NavBar = new ApiNavBarViewModel();
-            NavBar.SetActive(this);
+            NavBar = new ApiNavBarViewModel(this);
         }
 
         public ApiViewModel(int id) : this()
@@ -19,8 +18,6 @@ namespace spydersoft.Identity.Models.Admin.ApiViewModels
         }
 
         public ApiNavBarViewModel NavBar { get; set; }
-
-        public int Id { get; set; }
 
         [Required]
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",

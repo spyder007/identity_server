@@ -3,12 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace spydersoft.Identity.Models.Admin.IdentityResourceViewModels
 {
-    public class IdentityResourceViewModel
+    public class IdentityResourceViewModel : BaseAdminViewModel
     {
         public IdentityResourceViewModel()
         {
-            NavBar = new IdentityResourceNavBarViewModel();
-            NavBar.SetActive(this);
+            NavBar = new IdentityResourceNavBarViewModel(this);
         }
 
         public IdentityResourceViewModel(int id) : this()
@@ -18,8 +17,6 @@ namespace spydersoft.Identity.Models.Admin.IdentityResourceViewModels
         }
 
         public IdentityResourceNavBarViewModel NavBar { get; set; }
-
-        public int Id { get; set; }
 
         [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 2)]

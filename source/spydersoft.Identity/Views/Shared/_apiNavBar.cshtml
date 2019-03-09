@@ -1,13 +1,15 @@
 ﻿@using spydersoft.Identity.Models.Admin.ApiViewModels
-@model spydersoft.Identity.Models.Admin.ApiViewModels.ApiNavBarViewModel
+@model ApiNavBarViewModel
 
-<nav class="nav nav-pills">
-    <a class="nav-link @Model.MainActive" asp-area="" asp-controller="Apis" asp-action="Edit" asp-route-id="@Model.Id">Main</a>
-    @if (Model.Id > 0)
-    {
-        <a class="nav-link @Model.ScopesActive" asp-area="" asp-controller="ApiScopes" asp-action="Index" asp-route-id="@Model.Id">Scopes</a>
-        <a class="nav-link @Model.ClaimsActive" asp-area="" asp-controller="ApiClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a>
-        <a class="nav-link @Model.PropertiesActive" asp-area="" asp-controller="ApiProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a>
-        <a class="nav-link @Model.SecretsActive" asp-area="" asp-controller="ApiSecrets" asp-action="Index" asp-route-id="@Model.Id">Secrets</a>
-    }
-</nav>
+    <nav>
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Apis" asp-action="Edit" asp-route-id="@Model.Id">Main</a></li>
+            @if (Model.Id > 0)
+            {
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiScopes" asp-action="Index" asp-route-id="@Model.Id">Scopes</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiSecrets" asp-action="Index" asp-route-id="@Model.Id">Secrets</a></li>
+            }
+        </ul>
+    </nav>

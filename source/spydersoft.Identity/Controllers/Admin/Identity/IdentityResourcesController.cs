@@ -19,6 +19,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 
         public IActionResult Index()
         {
+            ViewData["Title"] = "Registered Identity Resources";
             var identityResourcesViewModel = new IdentityResourcesViewModel
             {
                 IdentityResources = ConfigDbContext.IdentityResources.ProjectTo<IdentityResourceViewModel>()
@@ -34,6 +35,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             if (!id.HasValue)
             {
                 identityResourceViewModel = new IdentityResourceViewModel();
+                ViewData["Title"] = "New Identity Resource";
             }
             else
             {
@@ -46,6 +48,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
                 identityResourceViewModel = new IdentityResourceViewModel(id.Value);
                 Mapper.Map(identityResource, identityResourceViewModel);
                 identityResourceViewModel.Id = id.Value;
+                ViewData["Title"] = $"Edit {identityResourceViewModel.NavBar.Name}";
             }
 
             return View(identityResourceViewModel);

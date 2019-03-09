@@ -10,9 +10,10 @@ using spydersoft.Identity.Models.Admin;
 
 namespace spydersoft.Identity.Controllers.Admin
 {
-    public abstract class BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, TEntity, TChildEntity> : BaseAdminController
-           where TSingleViewModel : BaseAdminChildItemViewModel, new()
-           where TCollectionViewModel : BaseAdminChildCollectionViewModel<TSingleViewModel>, new()
+    public abstract class BaseAdminCollectionController<TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity> : BaseAdminController
+           where TChildViewModel : BaseAdminChildItemViewModel, new()
+           where TChildCollectionViewModel : BaseAdminChildCollectionViewModel<TChildViewModel, TMainEntityViewModel>, new()
+           where TMainEntityViewModel : BaseAdminViewModel, new()
            where TEntity : class
     {
         #region Constructor
@@ -25,7 +26,7 @@ namespace spydersoft.Identity.Controllers.Admin
 
         #region BaseClientCollectionController Interface
 
-        protected abstract IEnumerable<TSingleViewModel> PopulateItemList(TEntity mainEntity);
+        protected abstract IEnumerable<TChildViewModel> PopulateItemList(TEntity mainEntity);
 
         protected abstract IQueryable<TEntity> AddIncludes(DbSet<TEntity> query);
 
@@ -33,7 +34,7 @@ namespace spydersoft.Identity.Controllers.Admin
 
         protected abstract TChildEntity FindItemInCollection(List<TChildEntity> collection, int id);
 
-        protected virtual IActionResult GetView(TCollectionViewModel model)
+        protected virtual IActionResult GetView(TChildCollectionViewModel model)
         {
             return View(nameof(Index), model);
         }
@@ -56,11 +57,9 @@ namespace spydersoft.Identity.Controllers.Admin
         [HttpGet]
         public IActionResult Index(int? id)
         {
-            var collectionViewModel = new TCollectionViewModel();
+            var collectionViewModel = new TChildCollectionViewModel();
             if (id.HasValue)
             {
-                collectionViewModel.SetId(id.Value);
-
                 TEntity entity = GetMainEntity(id.Value);
 
                 if (entity == null)
@@ -68,14 +67,16 @@ namespace spydersoft.Identity.Controllers.Admin
                     return GetErrorAction("Could not load mainEntity");
                 }
 
+                collectionViewModel.SetMainViewModel(Mapper.Map<TMainEntityViewModel>(entity));
                 collectionViewModel.ItemsList.AddRange(PopulateItemList(entity));
+                ViewData["Title"] = $"Edit {collectionViewModel.NavBar.Name}";
             }
 
             return View(collectionViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Save(int? id, TCollectionViewModel collectionViewModel)
+        public async Task<IActionResult> Save(int? id, TChildCollectionViewModel collectionViewModel)
         {
             if (!id.HasValue)
             {
@@ -96,7 +97,7 @@ namespace spydersoft.Identity.Controllers.Admin
                 return GetIndexRedirect(new { id = id.Value });
             }
 
-            collectionViewModel.SetId(id.Value);
+            collectionViewModel.SetMainViewModel(Mapper.Map<TMainEntityViewModel>(entity));
             collectionViewModel.ItemsList.AddRange(PopulateItemList(entity));
 
             return GetView(collectionViewModel);
@@ -143,7 +144,7 @@ namespace spydersoft.Identity.Controllers.Admin
             }
         }
 
-        private void AddObject(TEntity mainEntity, TSingleViewModel newItem)
+        private void AddObject(TEntity mainEntity, TChildViewModel newItem)
         {
             var newEntity = Mapper.Map<TChildEntity>(newItem);
             SetAdditionalProperties(newEntity);

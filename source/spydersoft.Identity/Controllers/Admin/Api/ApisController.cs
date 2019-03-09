@@ -24,6 +24,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
                 Apis = ConfigDbContext.ApiResources.ProjectTo<ApiViewModel>()
             };
 
+            ViewData["Title"] = "Register APIs";
             return View(apisViewModel);
         }
 
@@ -34,6 +35,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
             if (!id.HasValue)
             {
                 apiModel = new ApiViewModel();
+                ViewData["Title"] = "New API";
             }
             else
             {
@@ -45,8 +47,9 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
                 apiModel = new ApiViewModel(client.Id);
                 Mapper.Map(client, apiModel);
+                ViewData["Title"] = $"Edit {apiModel.NavBar.Name}";
             }
-
+            
             return View(apiModel);
         }
 

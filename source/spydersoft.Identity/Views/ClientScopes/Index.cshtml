@@ -1,8 +1,5 @@
 ﻿@using spydersoft.Identity.Models.Admin.ClientViewModels
-@model spydersoft.Identity.Models.Admin.ClientViewModels.ClientScopesViewModel
-@{
-    ViewData["Title"] = "Edit Client";
-}
+@model ClientScopesViewModel
 
 <h2>@ViewData["Title"]</h2>
 
@@ -15,7 +12,7 @@
             <thead>
                 <tr>
                     <th>@Html.LabelFor(model => model.NewItem.Scope)</th>
-                    <th>Delete</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 

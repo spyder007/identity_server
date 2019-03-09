@@ -1,9 +1,5 @@
 ﻿@using spydersoft.Identity.Models.Admin.ApiViewModels
-@model spydersoft.Identity.Models.Admin.ApiViewModels.ApiScopesViewModel
-@{
-    ViewData["Title"] = "Edit API";
-}
-
+@model ApiScopesViewModel
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Save" asp-route-id="@Model.Id">
@@ -20,7 +16,7 @@
                     <th>@Html.LabelFor(model => model.NewItem.Emphasize)</th>
                     <th>@Html.LabelFor(model => model.NewItem.Required)</th>
                     <th>@Html.LabelFor(model => model.NewItem.ShowInDiscoveryDocument)</th>
-                    <th>Delete</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 

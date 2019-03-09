@@ -49,6 +49,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
             if (!id.HasValue)
             {
                 model = new ApiScopeViewModel();
+                ViewData["Title"] = "New API Scope";
             }
             else
             {
@@ -61,6 +62,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
                 model = new ApiScopeViewModel { Id = id.Value, ParentId = parentid.Value };
 
                 Mapper.Map(apiScope, model);
+                ViewData["Title"] = $"Edit API Scope {model.Name}";
             }
 
             return View(nameof(Edit), model);

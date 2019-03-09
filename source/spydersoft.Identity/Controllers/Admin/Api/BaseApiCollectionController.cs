@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using spydersoft.Identity.Models;
+using spydersoft.Identity.Models.Admin;
 using spydersoft.Identity.Models.Admin.ApiViewModels;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {
     public abstract class BaseApiCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity>
-        : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, IS4Entities.ApiResource, TChildEntity>
+        : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, ApiViewModel, IS4Entities.ApiResource, TChildEntity>
         where TSingleViewModel : BaseAdminChildItemViewModel, new()
         where TCollectionViewModel : BaseApiCollectionViewModel<TSingleViewModel>, new()
     {

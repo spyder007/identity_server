@@ -1,8 +1,5 @@
 ﻿@using spydersoft.Identity.Models.Admin.ClientViewModels
-@model spydersoft.Identity.Models.Admin.ClientViewModels.ClientRedirectsViewModel
-@{
-    ViewData["Title"] = "Edit Client";
-}
+@model ClientRedirectsViewModel
 
 <h2>@ViewData["Title"]</h2>
 
@@ -15,7 +12,7 @@
             <thead>
             <tr>
                 <th>@Html.LabelFor(model => model.NewItem.RedirectUri)</th>
-                <th>Delete</th>
+                <th>Actions</th>
             </tr>
             </thead>
 

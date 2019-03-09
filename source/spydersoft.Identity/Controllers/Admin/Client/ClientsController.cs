@@ -18,6 +18,8 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         public IActionResult Index()
         {
+            ViewData["Title"] = "Registered Clients";
+
             var clientsModel = new ClientsViewModel
             {
                 Clients = ConfigDbContext.Clients.ProjectTo<ClientViewModel>()
@@ -33,6 +35,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
             if (!id.HasValue)
             {
                 clientModel = new ClientViewModel();
+                ViewData["Title"] = "New Client";
             }
             else
             {
@@ -44,6 +47,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
                 clientModel = new ClientViewModel(client.Id);
                 Mapper.Map(client, clientModel);
+                ViewData["Title"] = $"Edit {clientModel.NavBar.Name}";
             }
 
             return View(clientModel);

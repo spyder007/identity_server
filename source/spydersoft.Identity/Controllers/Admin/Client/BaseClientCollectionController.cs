@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using spydersoft.Identity.Models;
 using System.Collections.Generic;
 using System.Linq;
+using spydersoft.Identity.Models.Admin;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public abstract class BaseClientCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity>
-        : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, IS4Entities.Client, TChildEntity>
+        : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, ClientViewModel, IS4Entities.Client, TChildEntity>
         where TSingleViewModel : BaseAdminChildItemViewModel, new()
         where TCollectionViewModel : BaseClientCollectionViewModel<TSingleViewModel>, new()
     {

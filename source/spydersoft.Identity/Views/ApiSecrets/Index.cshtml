@@ -1,9 +1,5 @@
 ﻿@using spydersoft.Identity.Models.Admin.ApiViewModels
-@model spydersoft.Identity.Models.Admin.ApiViewModels.ApiSecretsViewModel
-@{
-    ViewData["Title"] = "Edit API";
-}
-
+@model ApiSecretsViewModel
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Save" asp-route-id="@Model.Id">

@@ -1,15 +1,16 @@
 ﻿@using spydersoft.Identity.Models.Admin.ApiViewModels
-@model spydersoft.Identity.Models.Admin.ApiViewModels.ApiScopeViewModel
-@{
-    ViewData["Title"] = "Edit API Scope";
-}
+@model ApiScopeViewModel
 
 <h2>@ViewData["Title"]</h2>
 
+
 <form asp-action="Edit" asp-route-id="@Model.Id" asp-route-parentid="@Model.ParentId">
+
+    <a asp-action="Index" asp-route-id="@Model.ParentId" title="Back"><span class="fa fa-arrow-alt-circle-left"></span></a>
     @Html.HiddenFor(m => m.ParentId)
     @Html.HiddenFor(m => m.Id)
     @Html.HiddenFor(m => m.NewClaim.Type, new { value = "t"})
+
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         @Html.LabelFor(model => model.Name)

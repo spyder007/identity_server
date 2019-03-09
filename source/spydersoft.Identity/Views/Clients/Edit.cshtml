@@ -1,18 +1,7 @@
 ﻿@using spydersoft.Identity.Models.Admin.ClientViewModels
-@model spydersoft.Identity.Models.Admin.ClientViewModels.ClientViewModel
-@{
-    if (Model.Id > 0)
-    {
-        ViewData["Title"] = "Edit Client";
-    }
-    else
-    {
-        ViewData["Title"] = "New Client";
-    }
-}
+@model ClientViewModel
 
 <h2>@ViewData["Title"]</h2>
-
 
 @await Html.PartialAsync("_clientNavBar", Model.NavBar)
 

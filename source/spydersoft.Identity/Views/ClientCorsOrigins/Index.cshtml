@@ -1,9 +1,5 @@
 ﻿@using spydersoft.Identity.Models.Admin.ClientViewModels
-@model spydersoft.Identity.Models.Admin.ClientViewModels.ClientCorsOriginsViewModel
-@{
-    ViewData["Title"] = "Edit Client";
-}
-
+@model ClientCorsOriginsViewModel
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Save" asp-route-id="@Model.Id">

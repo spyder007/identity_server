@@ -1,15 +1,5 @@
 ﻿@using spydersoft.Identity.Models.Admin.IdentityResourceViewModels
-@model spydersoft.Identity.Models.Admin.IdentityResourceViewModels.IdentityResourceViewModel
-@{
-    if (Model.Id > 0)
-    {
-        ViewData["Title"] = "Edit Identity Resource";
-    }
-    else
-    {
-        ViewData["Title"] = "New Identity Resource";
-    }
-}
+@model IdentityResourceViewModel
 
 <h2>@ViewData["Title"]</h2>
 

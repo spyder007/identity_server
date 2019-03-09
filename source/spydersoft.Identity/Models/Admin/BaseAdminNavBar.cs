@@ -1,9 +1,15 @@
 ﻿namespace spydersoft.Identity.Models.Admin
 {
-    public abstract class BaseAdminNavBar
+    public abstract class BaseAdminNavBar<TMainViewModel> where TMainViewModel : BaseAdminViewModel
     {
-        public int Id { get; set; }
+        protected BaseAdminNavBar(TMainViewModel parent)
+        {
+            Parent = parent;
+        }
 
-        public abstract void SetActive(object model);
+        public int Id { get; set; }
+        protected TMainViewModel Parent { get; }
+
+        public abstract string Name { get; }
     }
 }

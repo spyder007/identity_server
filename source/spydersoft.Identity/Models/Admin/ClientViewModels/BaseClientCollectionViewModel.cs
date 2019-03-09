@@ -1,10 +1,11 @@
 ﻿namespace spydersoft.Identity.Models.Admin.ClientViewModels
 {
-    public class BaseClientCollectionViewModel<T> : BaseAdminChildCollectionViewModel<T> where T : BaseAdminChildItemViewModel, new()
+    public class BaseClientCollectionViewModel<TChildViewModel> : BaseAdminChildCollectionViewModel<TChildViewModel, ClientViewModel> 
+        where TChildViewModel : BaseAdminChildItemViewModel, new()
     {
-        public override BaseAdminNavBar GetNavBar()
+        public override BaseAdminNavBar<ClientViewModel> GetNavBar(ClientViewModel parent)
         {
-            return new NavBarViewModel();
+            return new NavBarViewModel(parent);
         }
     }
 }

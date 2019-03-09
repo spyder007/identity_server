@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace spydersoft.Identity.Models
+﻿namespace spydersoft.Identity.Models.Admin
 {
-    public class BaseAdminChildItemViewModel : BaseViewModel
+    public class BaseAdminChildItemViewModel : BaseAdminViewModel
     {
-        public int Id { get; set; }
         public int ParentId { get; set; }
     }
 }
