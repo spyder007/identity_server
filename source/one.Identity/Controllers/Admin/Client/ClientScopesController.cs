@@ -25,7 +25,8 @@ namespace one.Identity.Controllers.Admin.Client
             return mainEntity.AllowedScopes.AsQueryable().ProjectTo<ClientScopeViewModel>();
         }
 
-        protected override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientScope>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
+        protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(
+            DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
         {
             return query.Include(c => c.AllowedScopes);
         }

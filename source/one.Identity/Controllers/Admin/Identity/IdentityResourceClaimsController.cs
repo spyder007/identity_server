@@ -22,7 +22,7 @@ namespace one.Identity.Controllers.Admin.Identity
             return mainEntity.UserClaims.AsQueryable().ProjectTo<IdentityResourceClaimViewModel>();
         }
 
-        protected override IIncludableQueryable<IdentityResource, List<IdentityClaim>> AddIncludes(DbSet<IdentityResource> query)
+        protected override IQueryable<IdentityResource> AddIncludes(DbSet<IdentityResource> query)
         {
             return query.Include(ir => ir.UserClaims);
         }

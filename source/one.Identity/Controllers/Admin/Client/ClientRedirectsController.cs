@@ -22,7 +22,7 @@ namespace one.Identity.Controllers.Admin.Client
             return mainEntity.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>();
         }
 
-        protected override IIncludableQueryable<IS4Entities.Client, List<IS4Entities.ClientRedirectUri>> AddIncludes(DbSet<IS4Entities.Client> query)
+        protected override IQueryable<IS4Entities.Client> AddIncludes(DbSet<IS4Entities.Client> query)
         {
             return query.Include(c => c.RedirectUris);
         }

@@ -91,9 +91,13 @@ namespace one.Identity.Data
                 .ForMember(d => d.Id, opt => opt.Ignore());
 
             cfg.CreateMap<ApiScopeViewModel, ApiScope>()
-                .ForMember(d => d.UserClaims, opt => opt.Ignore())
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
+                .ReverseMap();
+
+            cfg.CreateMap<ApiScopeClaimViewModel, ApiScopeClaim>()
+                .ForMember(d => d.ApiScope, opt => opt.Ignore())
+                .ForMember(d => d.ApiScopeId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
             cfg.CreateMap<ApiPropertyViewModel, ApiResourceProperty>()

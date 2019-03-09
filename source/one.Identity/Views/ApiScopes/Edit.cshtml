@@ -1,79 +1,85 @@
 ﻿@using one.Identity.Models.Admin.ApiViewModels
-@model one.Identity.Models.Admin.ApiViewModels.ApiScopesViewModel
+@model one.Identity.Models.Admin.ApiViewModels.ApiScopeViewModel
 @{
-    ViewData["Title"] = "Edit API";
+    ViewData["Title"] = "Edit API Scope";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Save" asp-route-id="@Model.Id">
+<form asp-action="Edit" asp-route-id="@Model.Id" asp-route-parentid="@Model.ParentId">
+    @Html.HiddenFor(m => m.ParentId)
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.NewClaim.Type, new { value = "t"})
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name)
+        <input type="text" class="form-control" id="txtName" asp-for="Name" pf-validation-for="Name" pf-validationerror-class="is-invalid" />
+        <span asp-validation-for="Name" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.DisplayName)
+        <input type="text" class="form-control" id="txtDisplayName" asp-for="DisplayName" pf-validation-for="DisplayName" pf-validationerror-class="is-invalid" />
+        <span asp-validation-for="DisplayName" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description)
+        <input type="text" class="form-control" id="txtDescription" asp-for="Description" pf-validation-for="Description" pf-validationerror-class="is-invalid" />
+        <span asp-validation-for="Description" class="invalid-feedback"></span>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="Required" id="chkRequired" />
+            <label class="form-check-label" asp-for="Required"></label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="Emphasize" id="chkEmphasize" />
+            <label class="form-check-label" asp-for="Emphasize"></label>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" asp-for="ShowInDiscoveryDocument" id="chkShowInDiscoveryDocument" />
+            <label class="form-check-label" asp-for="ShowInDiscoveryDocument"></label>
+        </div>
+    </div>
 
-    @await Html.PartialAsync("_apiNavBar", Model.NavBar)
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" formaction="Edit" />
+    </div>
+</form>
 
+<form asp-action="AddClaim" asp-route-scopeid="@Model.Id" asp-route-apiid="@Model.ParentId">
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.ParentId)
+    @Html.HiddenFor(m => m.Name)
+    @Html.HiddenFor(m => m.DisplayName)
+    @Html.HiddenFor(m => m.Description)
+    @Html.HiddenFor(m => m.Emphasize)
+    @Html.HiddenFor(m => m.Required)
+    @Html.HiddenFor(m => m.ShowInDiscoveryDocument)
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>@Html.LabelFor(model => model.NewItem.Name)</th>
-                    <th>@Html.LabelFor(model => model.NewItem.DisplayName)</th>
-                    <th>@Html.LabelFor(model => model.NewItem.Description)</th>
-                    <th>@Html.LabelFor(model => model.NewItem.Emphasize)</th>
-                    <th>@Html.LabelFor(model => model.NewItem.Required)</th>
-                    <th>@Html.LabelFor(model => model.NewItem.ShowInDiscoveryDocument)</th>
-                    <th>Delete</th>
+                    <th>@Html.LabelFor(model => model.NewClaim.Type)</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
-            @foreach (var scope in Model.ItemsList)
+            @foreach (var apiClaim in Model.UserClaims)
             {
             <tr>
-                <td>@scope.Name</td>
-                <td>@scope.DisplayName</td>
-                <td>@scope.Description</td>
-                <td>@scope.Emphasize</td>
-                <td>@scope.Required</td>
-                <td>@scope.ShowInDiscoveryDocument</td>
-                <td><a asp-action="Delete" asp-route-id="@scope.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                <td>@apiClaim.Type</td>
+                <td><a asp-action="DeleteClaim" asp-route-id="@apiClaim.Id" asp-route-scopeid="@Model.Id" asp-route-apiid="@Model.ParentId" title="Delete"><span class="fa fa-trash"></span></a></td>
             </tr>
             }
             <tr>
                 <td>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Name" pf-validation-for="NewItem.Name" pf-validationerror-class="is-invalid" />
-                        <span asp-validation-for="NewItem.Name" class="invalid-feedback"></span>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.DisplayName" pf-validation-for="NewItem.DisplayName" pf-validationerror-class="is-invalid" />
-                        <span asp-validation-for="NewItem.DisplayName" class="invalid-feedback"></span>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Description" pf-validation-for="NewItem.Description" pf-validationerror-class="is-invalid" />
-                        <span asp-validation-for="NewItem.Description" class="invalid-feedback"></span>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" asp-for="NewItem.Emphasize" id="chkEmphasize"/>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" asp-for="NewItem.Required" id="chkRequired"/>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" asp-for="NewItem.ShowInDiscoveryDocument" id="chkShowInDiscoveryDocument"/>
-                        </div>
+                        <input type="text" class="form-control" id="txtClientId" asp-for="NewClaim.Type" pf-validation-for="NewClaim.Type" pf-validationerror-class="is-invalid" />
+                        <span asp-validation-for="NewClaim.Type" class="invalid-feedback"></span>
                     </div>
                 </td>
                 <td>

@@ -24,7 +24,8 @@ namespace one.Identity.Controllers.Admin.Client
             return mainEntity.ClientSecrets.AsQueryable().ProjectTo<ClientSecretViewModel>();
         }
 
-        protected override IIncludableQueryable<IdentityServer4.EntityFramework.Entities.Client, List<ClientSecret>> AddIncludes(DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
+        protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(
+            DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
         {
             return query.Include(c => c.ClientSecrets);
         }

@@ -1,0 +1,16 @@
+﻿<nav class="sidebar-nav">
+    <ul class="nav">
+        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+        @if (User.IsInRole("admin"))
+        {
+            <li class="nav-title">IS4 Admin</li>
+            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Clients" asp-action="Index">Clients</a></li>
+            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="IdentityResources" asp-action="Index">Resources</a></li>
+            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Apis" asp-action="Index">APIs</a></li>
+        }
+    </ul>
+    
+
+</nav>

@@ -23,7 +23,7 @@ namespace one.Identity.Controllers.Admin.Identity
             return mainEntity.Properties.AsQueryable().ProjectTo<IdentityResourcePropertyViewModel>();
         }
 
-        protected override IIncludableQueryable<IdentityResource, List<IdentityResourceProperty>> AddIncludes(DbSet<IdentityResource> query)
+        protected override IQueryable<IdentityResource> AddIncludes(DbSet<IdentityResource> query)
         {
             return query.Include(ir => ir.Properties);
         }

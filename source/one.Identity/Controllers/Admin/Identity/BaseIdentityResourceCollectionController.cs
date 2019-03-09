@@ -25,7 +25,8 @@ namespace one.Identity.Controllers.Admin.Identity
 
         protected abstract override IEnumerable<TSingleViewModel> PopulateItemList(IS4Entities.IdentityResource mainEntity);
 
-        protected abstract override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IS4Entities.IdentityResource, List<TChildEntity>> AddIncludes(DbSet<IS4Entities.IdentityResource> query);
+        protected abstract override IQueryable<IS4Entities.IdentityResource> AddIncludes(
+            DbSet<IS4Entities.IdentityResource> query);
 
         #endregion BaseIdentityResourceCollectionController Interface
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using one.Identity.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using one.Identity.Models.Admin;
 
@@ -26,7 +27,7 @@ namespace one.Identity.Controllers.Admin
 
         protected abstract IEnumerable<TSingleViewModel> PopulateItemList(TEntity mainEntity);
 
-        protected abstract Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<TEntity, List<TChildEntity>> AddIncludes(DbSet<TEntity> query);
+        protected abstract IQueryable<TEntity> AddIncludes(DbSet<TEntity> query);
 
         protected abstract List<TChildEntity> GetCollection(TEntity mainEntity);
 
@@ -34,12 +35,12 @@ namespace one.Identity.Controllers.Admin
 
         protected virtual IActionResult GetView(TCollectionViewModel model)
         {
-            return View(nameof(Edit), model);
+            return View(nameof(Index), model);
         }
 
-        protected virtual IActionResult GetEditRedirect(object routeValues)
+        protected virtual IActionResult GetIndexRedirect(object routeValues)
         {
-            return RedirectToAction(nameof(Edit), routeValues);
+            return RedirectToAction(nameof(Index), routeValues);
         }
 
         protected abstract TEntity GetMainEntity(int id);
@@ -53,7 +54,7 @@ namespace one.Identity.Controllers.Admin
         #region Controller Actions
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public IActionResult Index(int? id)
         {
             var collectionViewModel = new TCollectionViewModel();
             if (id.HasValue)
@@ -92,7 +93,7 @@ namespace one.Identity.Controllers.Admin
                 AddObject(entity, collectionViewModel.NewItem);
                 ConfigDbContext.Update(entity);
                 await ConfigDbContext.SaveChangesAsync();
-                return GetEditRedirect(new { id = id.Value });
+                return GetIndexRedirect(new { id = id.Value });
             }
 
             collectionViewModel.SetId(id.Value);
@@ -125,7 +126,7 @@ namespace one.Identity.Controllers.Admin
             ConfigDbContext.Update(entity);
             await ConfigDbContext.SaveChangesAsync();
 
-            return GetEditRedirect(new { id = parentId.Value });
+            return GetIndexRedirect(new { id = parentId.Value });
         }
 
         #endregion Controller Actions

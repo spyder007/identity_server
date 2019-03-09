@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace one.Identity.Models.Admin.ApiViewModels
 {
@@ -8,6 +9,12 @@ namespace one.Identity.Models.Admin.ApiViewModels
 
     public class ApiScopeViewModel : BaseAdminChildItemViewModel
     {
+        public ApiScopeViewModel()
+        {
+            NewClaim = new ApiScopeClaimViewModel();
+            UserClaims = new List<ApiScopeClaimViewModel>();
+        }
+
         [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 2)]
         [Display(Name = "Description")]
@@ -32,6 +39,19 @@ namespace one.Identity.Models.Admin.ApiViewModels
 
         [Display(Name = "Show in Discovery Document")]
         public bool ShowInDiscoveryDocument { get; set; }
+
+        public List<ApiScopeClaimViewModel> UserClaims { get; set; }
+
+        public ApiScopeClaimViewModel NewClaim { get; set; }
+    }
+
+    public class ApiScopeClaimViewModel : BaseAdminChildItemViewModel
+    {
+        [Required]
+        [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
+            MinimumLength = 2)]
+        [Display(Name = "Type")]
+        public string Type { get; set; }
     }
 }
 

@@ -22,7 +22,7 @@ namespace one.Identity.Controllers.Admin.Api
             return mainEntity.UserClaims.AsQueryable().ProjectTo<ApiClaimViewModel>();
         }
 
-        protected override IIncludableQueryable<ApiResource, List<ApiResourceClaim>> AddIncludes(DbSet<ApiResource> query)
+        protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)
         {
             return query.Include(c => c.UserClaims);
         }

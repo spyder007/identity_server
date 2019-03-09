@@ -25,7 +25,7 @@ namespace one.Identity.Controllers.Admin.Api
             return mainEntity.Secrets.AsQueryable().ProjectTo<ApiSecretViewModel>();
         }
 
-        protected override IIncludableQueryable<ApiResource, List<ApiSecret>> AddIncludes(DbSet<ApiResource> query)
+        protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)
         {
             return query.Include(api => api.Secrets);
         }

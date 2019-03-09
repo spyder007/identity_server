@@ -1,48 +1,147 @@
-﻿//gulpfile.js
+﻿/// <binding AfterBuild='build:dist' />
+'use strict';
 
 var gulp = require('gulp');
 var sass = require('gulp-sass');
-var runSequence = require('run-sequence');
+var autoprefixer = require('gulp-autoprefixer');
+var cssmin = require('gulp-cssmin');
+var rename = require('gulp-rename');
 
-//style paths
-var stylePath = "Styles/";
-var destination = "wwwroot";
+gulp.paths = {
+    dist: 'wwwroot/',
+    src: './',
+    styles: 'Styles/',
+    scripts: 'Scripts/',
+    node_modules: "node_modules/",
+    libDest: 'lib/',
+    assets: 'Assets/'
+};
 
-var sassFiles = 'Styles/**/*.scss',
-    cssDest = 'wwwroot/css/';
+gulp.libsToCopy = [
+    {
+        lib: "bootstrap",
+        jobs: [
+            {
+                src: "/dist/**/*",
+                dest: "{libDest}{libName}"
+            }
+        ]
+    },
+    {
+        lib: "popper.js",
+        jobs: [
+            {
+                src: "/dist/**/*",
+                dest: "{libDest}{libName}"
+            }
+        ]
+    },
+    {
+        lib: "jQuery",
+        jobs: [
+            {
+                src: "/dist/**/*",
+                dest: "{libDest}{libName}"
+            }
+        ]
+    },
+    {
+        lib: "jquery-validation-unobtrusive",
+        jobs: [
+            {
+                src: "/dist/**/*",
+                dest: "{libDest}{libName}"
+            }
+        ]
+    },
+    {
+        lib: "jquery-validation",
+        jobs: [
+            {
+                src: "/dist/**/*",
+                dest: "{libDest}{libName}"
+            }
+        ]
+    },
+    {
+        lib: "font-awesome",
+        jobs: [
+            {
+                src: "/css/**/*",
+                dest: "{libDest}{libName}/css"
+            },
+            {
+                src: "/fonts/**/*",
+                dest: "{libDest}{libName}/fonts"
+            }
+        ]
+    },
+    {
+        lib: "simple-line-icons",
+        jobs: [
+            {
+                src: "/css/**/*",
+                dest: "{libDest}{libName}/css"
+            },
+            {
+                src: "/fonts/**/*",
+                dest: "{libDest}{libName}/fonts"
+            }
+        ]
+    }
+];
 
-gulp.task('sass', function (done) {
-    gulp.src(stylePath + 'scss/style.scss', {base: 'Styles/scss'})
-        .pipe(sass().on('error', sass.logError))
-        .pipe(gulp.dest(cssDest));
-    done();
+
+var paths = gulp.paths;
+
+gulp.pkg = require('./package.json');
+var pkg = gulp.pkg;
+
+gulp.task('sass', function () {
+    return gulp.src(paths.styles + '/scss/style.scss')
+        .pipe(sass())
+        .pipe(autoprefixer())
+        .pipe(gulp.dest(paths.dist + 'css'))
+        .pipe(cssmin())
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(gulp.dest(paths.dist + 'css'));
 });
 
-gulp.task('copy:css', function (done) {
-    gulp.src(stylePath + 'css/**/*')
-        .pipe(gulp.dest(destination + '/css'));
-    done();
+gulp.task('sass:watch', function () {
+    gulp.watch(paths.styles + 'scss/**/*.scss', ['sass']);
 });
 
-gulp.task('copy:img', function () {
-    return gulp.src(stylePath + 'img/**/*')
-        .pipe(gulp.dest(destination + '/img'));
-});
-
-gulp.task('copy:fonts', function () {
-    return gulp.src(stylePath + 'fonts/**/*')
-        .pipe(gulp.dest(destination + '/fonts'));
-});
-
-gulp.task('copy:style-js', function () {
-    return gulp.src(stylePath + 'js/**/*')
-        .pipe(gulp.dest(destination + '/js'));
-});
-
-gulp.task('copy:js', function () {
-    return gulp.src('Scripts/**/*.js')
-        .pipe(gulp.dest(destination + '/js'));
+gulp.task('copy:assets', function () {
+    return gulp.src(paths.assets + '**/*')
+        .pipe(gulp.dest(paths.dist));
 });
 
 
-gulp.task('build:dist', gulp.series('sass', 'copy:css', 'copy:img', 'copy:fonts', 'copy:js', 'copy:style-js'));
+gulp.task('copy:libraries',
+    function (cb) {
+        gulp.libsToCopy.forEach(function(lib) {
+            console.log("Copying " + lib.lib);
+
+            lib.jobs.forEach(function(job) {
+                copyLibrary(lib.lib, job.src, job.dest);
+            });
+        });
+        cb();
+    });
+
+function copyLibrary(libName, src, dest) {
+
+    var fullSource = paths.node_modules + libName + src;
+
+    var fullDest = dest.replace("{libDest}", paths.libDest).replace("{libName}", libName);
+    fullDest = paths.dist + fullDest;
+
+    console.log("Copying " + fullSource + " to " + fullDest);
+    gulp.src(fullSource)
+        .pipe(gulp.dest(fullDest));
+}
+
+
+
+gulp.task('build:dist', gulp.series('sass', 'copy:assets', "copy:libraries"));
+

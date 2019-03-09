@@ -25,7 +25,7 @@ namespace one.Identity.Controllers.Admin.Client
 
         protected abstract override IEnumerable<TSingleViewModel> PopulateItemList(IS4Entities.Client mainEntity);
 
-        protected abstract override Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<IS4Entities.Client, List<TChildEntity>> AddIncludes(DbSet<IS4Entities.Client> query);
+        protected abstract override IQueryable<IS4Entities.Client> AddIncludes(DbSet<IS4Entities.Client> query);
 
         #endregion BaseClientCollectionController Interface
 

@@ -22,7 +22,7 @@ namespace one.Identity.Controllers.Admin.Api
             return mainEntity.Properties.AsQueryable().ProjectTo<ApiPropertyViewModel>();
         }
 
-        protected override IIncludableQueryable<ApiResource, List<ApiResourceProperty>> AddIncludes(DbSet<ApiResource> query)
+        protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)
         {
             return query.Include(api => api.Properties);
         }
