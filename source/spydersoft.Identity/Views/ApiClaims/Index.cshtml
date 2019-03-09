@@ -1,0 +1,44 @@
+﻿@using spydersoft.Identity.Models.Admin.ApiViewModels
+@model spydersoft.Identity.Models.Admin.ApiViewModels.ApiClaimsViewModel
+@{
+    ViewData["Title"] = "Edit API";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Save" asp-route-id="@Model.Id">
+
+    @await Html.PartialAsync("_apiNavBar", Model.NavBar)
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(model => model.NewItem.Type)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            @foreach (var apiClaim in Model.ItemsList)
+            {
+                <tr>
+                    <td>@apiClaim.Type</td>
+                    <td><a asp-action="Delete" asp-route-id="@apiClaim.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                </tr>
+            }
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Type" pf-validation-for="NewItem.Type" pf-validationerror-class="is-invalid" />
+                        <span asp-validation-for="NewItem.Type" class="invalid-feedback"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="submit" value="Add" class="btn btn-primary" />
+                    </div>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+</form>

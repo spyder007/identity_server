@@ -1,0 +1,13 @@
+﻿@using spydersoft.Identity.Models.Admin.ApiViewModels
+@model spydersoft.Identity.Models.Admin.ApiViewModels.ApiNavBarViewModel
+
+<nav class="nav nav-pills">
+    <a class="nav-link @Model.MainActive" asp-area="" asp-controller="Apis" asp-action="Edit" asp-route-id="@Model.Id">Main</a>
+    @if (Model.Id > 0)
+    {
+        <a class="nav-link @Model.ScopesActive" asp-area="" asp-controller="ApiScopes" asp-action="Index" asp-route-id="@Model.Id">Scopes</a>
+        <a class="nav-link @Model.ClaimsActive" asp-area="" asp-controller="ApiClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a>
+        <a class="nav-link @Model.PropertiesActive" asp-area="" asp-controller="ApiProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a>
+        <a class="nav-link @Model.SecretsActive" asp-area="" asp-controller="ApiSecrets" asp-action="Index" asp-route-id="@Model.Id">Secrets</a>
+    }
+</nav>

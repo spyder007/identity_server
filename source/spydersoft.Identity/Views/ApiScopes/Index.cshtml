@@ -1,0 +1,91 @@
+﻿@using spydersoft.Identity.Models.Admin.ApiViewModels
+@model spydersoft.Identity.Models.Admin.ApiViewModels.ApiScopesViewModel
+@{
+    ViewData["Title"] = "Edit API";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Save" asp-route-id="@Model.Id">
+
+    @await Html.PartialAsync("_apiNavBar", Model.NavBar)
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.LabelFor(model => model.NewItem.Name)</th>
+                    <th>@Html.LabelFor(model => model.NewItem.DisplayName)</th>
+                    <th>@Html.LabelFor(model => model.NewItem.Description)</th>
+                    <th>@Html.LabelFor(model => model.NewItem.Emphasize)</th>
+                    <th>@Html.LabelFor(model => model.NewItem.Required)</th>
+                    <th>@Html.LabelFor(model => model.NewItem.ShowInDiscoveryDocument)</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+
+            @foreach (var scope in Model.ItemsList)
+            {
+            <tr>
+                <td>@scope.Name</td>
+                <td>@scope.DisplayName</td>
+                <td>@scope.Description</td>
+                <td>@scope.Emphasize</td>
+                <td>@scope.Required</td>
+                <td>@scope.ShowInDiscoveryDocument</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@scope.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-edit"></span></a>
+                    <a asp-action="Delete" asp-route-id="@scope.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a>
+                </td>
+            </tr>
+            }
+            <tr>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Name" pf-validation-for="NewItem.Name" pf-validationerror-class="is-invalid" />
+                        <span asp-validation-for="NewItem.Name" class="invalid-feedback"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.DisplayName" pf-validation-for="NewItem.DisplayName" pf-validationerror-class="is-invalid" />
+                        <span asp-validation-for="NewItem.DisplayName" class="invalid-feedback"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Description" pf-validation-for="NewItem.Description" pf-validationerror-class="is-invalid" />
+                        <span asp-validation-for="NewItem.Description" class="invalid-feedback"></span>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" asp-for="NewItem.Emphasize" id="chkEmphasize"/>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" asp-for="NewItem.Required" id="chkRequired"/>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" asp-for="NewItem.ShowInDiscoveryDocument" id="chkShowInDiscoveryDocument"/>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="form-group">
+                        <input type="submit" value="Add" class="btn btn-primary" />
+                    </div>
+                </td>
+
+            </tr>
+        </table>
+    </div>
+</form>

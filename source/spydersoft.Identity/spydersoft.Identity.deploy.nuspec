@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>spydersoft.Identity.deploy</id>
+    <version>$version$</version>
+    <title>Identity Server Deployment</title>
+    <authors>spydersoft</authors>
+    <owners>spydersoft</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Identity Server Deployment Package</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>deploy</tags>
+  </metadata>
+  <files>
+	  <file src="PublishOutput\**\*.*" target="\" />
+  </files>
+</package>

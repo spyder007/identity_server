@@ -7,16 +7,16 @@ EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0-nanoserver-sac2016 AS build
 WORKDIR /src
-COPY ["one.Identity/one.Identity.csproj", "one.Identity/"]
-RUN dotnet restore "one.Identity/one.Identity.csproj"
+COPY ["spydersoft.Identity/spydersoft.Identity.csproj", "spydersoft.Identity/"]
+RUN dotnet restore "spydersoft.Identity/spydersoft.Identity.csproj"
 COPY . .
-WORKDIR "/src/one.Identity"
-RUN dotnet build "one.Identity.csproj" -c Release -o /app
+WORKDIR "/src/spydersoft.Identity"
+RUN dotnet build "spydersoft.Identity.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "one.Identity.csproj" -c Release -o /app
+RUN dotnet publish "spydersoft.Identity.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "one.Identity.dll"]
+ENTRYPOINT ["dotnet", "spydersoft.Identity.dll"]

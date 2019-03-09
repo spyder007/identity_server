@@ -1,0 +1,11 @@
+﻿@using spydersoft.Identity.Models.Admin.IdentityResourceViewModels
+@model spydersoft.Identity.Models.Admin.IdentityResourceViewModels.IdentityResourceNavBarViewModel
+
+<nav class="nav nav-pills">
+    <a class="nav-link @Model.MainActive" asp-area="" asp-controller="IdentityResources" asp-action="Edit" asp-route-id="@Model.Id">Main</a>
+    @if (Model.Id > 0)
+    {
+        <a class="nav-link @Model.ClaimsActive" asp-area="" asp-controller="IdentityResourceClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a>
+        <a class="nav-link @Model.PropertiesActive" asp-area="" asp-controller="IdentityResourceProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a>
+    }
+</nav>
