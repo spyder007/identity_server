@@ -10,8 +10,8 @@ using spydersoft.Identity.Data;
 namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190304211350_Test")]
-    partial class Test
+    [Migration("20190304211350_aspnetcore20_update")]
+    partial class aspnetcore20_update
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

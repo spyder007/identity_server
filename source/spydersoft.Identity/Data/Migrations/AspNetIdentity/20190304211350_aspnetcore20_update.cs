@@ -2,7 +2,7 @@
 
 namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 {
-    public partial class Test : Migration
+    public partial class aspnetcore20_update : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
