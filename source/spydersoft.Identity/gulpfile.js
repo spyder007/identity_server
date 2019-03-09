@@ -64,15 +64,23 @@ gulp.libsToCopy = [
         ]
     },
     {
-        lib: "font-awesome",
+        lib: "@fortawesome/fontawesome-free",
         jobs: [
             {
                 src: "/css/**/*",
-                dest: "{libDest}{libName}/css"
+                dest: "{libDest}/font-awesome/css"
             },
             {
-                src: "/fonts/**/*",
-                dest: "{libDest}{libName}/fonts"
+                src: "/webfonts/**/*",
+                dest: "{libDest}/font-awesome/webfonts"
+            },
+            {
+                src: "/svgs/**/*",
+                dest: "{libDest}/font-awesome/svgs"
+            },
+            {
+                src: "/sprites/**/*",
+                dest: "{libDest}/font-awesome/sprites"
             }
         ]
     },
@@ -119,10 +127,10 @@ gulp.task('copy:assets', function () {
 
 gulp.task('copy:libraries',
     function (cb) {
-        gulp.libsToCopy.forEach(function(lib) {
+        gulp.libsToCopy.forEach(function (lib) {
             console.log("Copying " + lib.lib);
 
-            lib.jobs.forEach(function(job) {
+            lib.jobs.forEach(function (job) {
                 copyLibrary(lib.lib, job.src, job.dest);
             });
         });

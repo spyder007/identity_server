@@ -6,15 +6,16 @@
     <title>@ViewData["Title"] - Spydersoft</title>
     <link rel="shortcut icon" href="img/favicon.png">
 
-    <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    
     <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
-
     <!-- Main styles for this application -->
     <environment include="Development">
         <link rel="stylesheet" href="~/css/style.css">
+        <link href="~/lib/font-awesome/css/all.css" rel="stylesheet">
     </environment>
 
     <environment exclude="Development">
+        <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="~/css/style.min.css" asp-append-version="true" />
     </environment>
 </head>
@@ -24,6 +25,8 @@
     <div class="app-body">
         <div class="sidebar">
             @await Html.PartialAsync("_SidebarNav")
+
+            <button class="sidebar-minimizer brand-minimizer" type="button"></button>
         </div>
 
         <!-- Main content -->
