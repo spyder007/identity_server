@@ -1,0 +1,63 @@
+{
+  "uilibraries": [
+    {
+      "name": "Bootstrap",
+      "url": "https://getbootstrap.com"
+    },
+    {
+      "name": "FontAwesome",
+      "url": "https://fontawesome.com"
+    },
+    {
+      "name": "chart.js",
+      "url": "https://www.chartjs.org"
+    },
+    {
+      "name": "flag-icon-css",
+      "url": "https://github.com/lipis/flag-icon-css"
+    },
+    {
+      "name": "jQuery",
+      "url": "https://jquery.com"
+    },
+    {
+      "name": "jQuery Validation",
+      "url": "https://jqueryvalidation.org/"
+    },
+    {
+      "name": "jQuery Validation Unobtrusive",
+      "url": "https://github.com/aspnet/jquery-validation-unobtrusive"
+    },
+    {
+      "name": "pace-progress",
+      "url": "https://github.hubspot.com/pace/"
+    },
+    {
+      "name": "popper.js",
+      "url": "https://popper.js.org/"
+    },
+    {
+      "name": "Simple Line Icons",
+      "url": "https://github.com/thesabbir/simple-line-icons"
+    }
+  ],
+  "netlibraries": [
+    {
+      "name": "AutoMapper",
+      "url": "http://automapper.org"
+    },
+    {
+      "name": "Gravatar Helper",
+      "url": "https://github.com/jkommer/GravatarHelper"
+    },
+    {
+      "name": "Identity Server 4",
+      "url": "https://identityserver.io"
+    },
+    {
+      "name": "Serilog",
+      "url": "http://serilog.net"
+    }
+
+  ]
+}

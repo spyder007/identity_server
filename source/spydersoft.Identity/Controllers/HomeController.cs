@@ -1,18 +1,23 @@
-﻿using IdentityServer4.Services;
+﻿using System.IO;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using IdentityServer4.Models;
+using Microsoft.AspNetCore.Hosting;
 using spydersoft.Identity.Models;
+using spydersoft.Identity.Models.Home;
 
 namespace spydersoft.Identity.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IIdentityServerInteractionService _interaction;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
-        public HomeController(IIdentityServerInteractionService interaction)
+        public HomeController(IIdentityServerInteractionService interaction, IHostingEnvironment hostingEnvironment)
         {
             _interaction = interaction;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public IActionResult Index()
@@ -22,9 +27,10 @@ namespace spydersoft.Identity.Controllers
 
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
+            var aboutDataFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "about_data.json");
+            AboutDataViewModel model = AboutDataViewModel.LoadFromFile(aboutDataFilePath);
 
-            return View();
+            return View(model);
         }
 
         public IActionResult Contact()
