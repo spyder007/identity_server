@@ -2,7 +2,7 @@
 @model ApiNavBarViewModel
 
     <nav>
-        <ul class="nav nav-pills">
+        <ul class="nav nav-tabs">
             <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Apis" asp-action="Edit" asp-route-id="@Model.Id">Main</a></li>
             @if (Model.Id > 0)
             {

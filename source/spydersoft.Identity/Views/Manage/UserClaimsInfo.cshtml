@@ -5,21 +5,28 @@
     ViewData.AddActivePage(ManageNavPages.UserClaimsInfo);
 }
 
-<h4>@ViewData["Title"]</h4>
+<table class="table table-striped table-sm">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in User.Claims)
+        {
+            <tr>
+                <td>@claim.Type</td>
+                <td>@claim.Value</td>
+            </tr>
 
-<h3>User Claims Info</h3>
-<dl>
-    @foreach (var claim in User.Claims)
-    {
-    <dt>@claim.Type</dt>
-    <dd>@claim.Value</dd>
-
-    }
-    <dt>id token</dt>
-    <dd>@await ViewContext.HttpContext.GetTokenAsync("id_token")</dd>
-</dl>
-
-
+        }
+        <tr>
+            <td>id token</td>
+            <td>@await ViewContext.HttpContext.GetTokenAsync("id_token")</td>
+        </tr>
+    <tbody>
+</table>
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

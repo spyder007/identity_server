@@ -3,7 +3,7 @@
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
 
-<ul class="nav nav-pills flex-column">
+<ul class="nav nav-tabs">
     <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" asp-action="Index">Profile</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" asp-action="ChangePassword">Password</a></li>
     @if (hasExternalLogins)
