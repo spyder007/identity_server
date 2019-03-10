@@ -1,35 +1,41 @@
 ﻿@using spydersoft.Identity.Models.Consent
 @model ScopeViewModel
 
-<li class="list-group-item">
-    <label>
-        <input class="consent-scopecheck"
-               type="checkbox"
-               name="ScopesConsented"
-               id="scopes_@Model.Name"
-               value="@Model.Name"
-               checked="@Model.Checked"
-               disabled="@Model.Required" />
-        @if (Model.Required)
-        {
-            <input type="hidden"
+<div class="list-group-item list-group-item-action flex-column align-items-start" disabled="@Model.Required">
+    <div class="d-flex w-100 justify-content-between">
+        <h5>                @Model.DisplayName
+
+            @if (Model.Emphasize)
+            {
+                <span class="fa fa-exclamation-triangle text-danger"></span>
+            }
+            @if (Model.Required)
+            {
+                <span><em>(required)</em></span>
+            }</h5>
+        <div class="form-check">
+            <input class="form-check-input"
+                   type="checkbox"
                    name="ScopesConsented"
-                   value="@Model.Name" />
-        }
-        <strong>@Model.DisplayName</strong>
-        @if (Model.Emphasize)
-        {
-            <span class="glyphicon glyphicon-exclamation-sign"></span>
-        }
-    </label>
-    @if (Model.Required)
-    {
-        <span><em>(required)</em></span>
-    }
+                   id="scopes_@Model.Name"
+                   value="@Model.Name"
+                   checked="@Model.Checked"
+                   disabled="@Model.Required"/>
+        </div>
+    </div>
     @if (Model.Description != null)
     {
-        <div class="consent-description">
+        <p class="mb-1">
             <label for="scopes_@Model.Name">@Model.Description</label>
-        </div>
+        </p>
     }
-</li>
+    @if (Model.Required)
+    {
+        <input type="hidden"
+               name="ScopesConsented"
+               value="@Model.Name" />
+    }
+
+
+
+</div>

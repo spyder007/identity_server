@@ -5,8 +5,8 @@ namespace spydersoft.Identity.Models.AccountViewModels
     public class LoginViewModel
     {
         [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        [StringLength(256, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
