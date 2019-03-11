@@ -5,28 +5,30 @@
     ViewData.AddActivePage(ManageNavPages.UserClaimsInfo);
 }
 
-<table class="table table-striped table-sm">
-    <thead>
-        <tr>
-            <th>Type</th>
-            <th>Value</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var claim in User.Claims)
-        {
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
             <tr>
-                <td>@claim.Type</td>
-                <td>@claim.Value</td>
+                <th>Type</th>
+                <th>Value</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var claim in User.Claims)
+            {
+                <tr>
+                    <td>@claim.Type</td>
+                    <td>@claim.Value</td>
+                </tr>
 
-        }
-        <tr>
-            <td>id token</td>
-            <td>@await ViewContext.HttpContext.GetTokenAsync("id_token")</td>
-        </tr>
-    <tbody>
-</table>
+            }
+            <tr>
+                <td>id token</td>
+                <td>@await ViewContext.HttpContext.GetTokenAsync("id_token")</td>
+            </tr>
+        <tbody>
+    </table>
+</div>
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 }

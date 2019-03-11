@@ -39,6 +39,10 @@
     {
       "name": "Simple Line Icons",
       "url": "https://github.com/thesabbir/simple-line-icons"
+    },
+    {
+      "name": "Core UI Bootstrap Theme",
+      "url": "http://coreui.io"
     }
   ],
   "netlibraries": [

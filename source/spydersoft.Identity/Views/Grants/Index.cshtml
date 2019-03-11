@@ -16,73 +16,75 @@
         }
         else
         {
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Client</th>
-                        <th>Created</th>
-                        <th>Expiration</th>
-                        <th>Identity Grants</th>
-                        <th>API Grants</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var grant in Model.Grants)
-                    {
+            <div class="table-responsive">
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Client</th>
+                            <th>Created</th>
+                            <th>Expiration</th>
+                            <th>Identity Grants</th>
+                            <th>API Grants</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var grant in Model.Grants)
+                        {
 
-                    <tr>
-                        <td>
-                            @if (grant.ClientLogoUrl != null)
-                            {
-                                <img src="@grant.ClientLogoUrl">
-                            }
-                            @grant.ClientName
-                        </td>
-                        <td>@grant.Created.ToString("yyyy-MM-dd")</td>
-                        <td>
-                            @if (grant.Expires.HasValue)
-                            {
-                                @grant.Expires.Value.ToString("yyyy-MM-dd")
-                            }
-                        </td>
-                        <td>
-                            @if (grant.IdentityGrantNames.Any())
-                            {
-
-                                <ul>
-                                    @foreach (var name in grant.IdentityGrantNames)
+                            <tr>
+                                <td>
+                                    @if (grant.ClientLogoUrl != null)
                                     {
-                                        <li>@name</li>
+                                        <img src="@grant.ClientLogoUrl">
                                     }
-                                </ul>
-                            }
-                        </td>
-
-                        <td>
-                            @if (grant.ApiGrantNames.Any())
-                            {
-                                <ul>
-                                    @foreach (var name in grant.ApiGrantNames)
+                                    @grant.ClientName
+                                </td>
+                                <td>@grant.Created.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @if (grant.Expires.HasValue)
                                     {
-                                        <li>@name</li>
+                                        @grant.Expires.Value.ToString("yyyy-MM-dd")
                                     }
-                                </ul>
+                                </td>
+                                <td>
+                                    @if (grant.IdentityGrantNames.Any())
+                                    {
 
-                            }
-                        </td>
-                        <td>
-                            <form asp-action="Revoke">
-                                <input type="hidden" name="clientId" value="@grant.ClientId">
-                                <button class="btn btn-danger">Revoke Access</button>
-                            </form>
-                        </td>
-                    </tr>
+                                        <ul>
+                                            @foreach (var name in grant.IdentityGrantNames)
+                                            {
+                                                <li>@name</li>
+                                            }
+                                        </ul>
+                                    }
+                                </td>
 
-                    }
-                </tbody>
+                                <td>
+                                    @if (grant.ApiGrantNames.Any())
+                                    {
+                                        <ul>
+                                            @foreach (var name in grant.ApiGrantNames)
+                                            {
+                                                <li>@name</li>
+                                            }
+                                        </ul>
 
-            </table>
+                                    }
+                                </td>
+                                <td>
+                                    <form asp-action="Revoke">
+                                        <input type="hidden" name="clientId" value="@grant.ClientId">
+                                        <button class="btn btn-danger">Revoke Access</button>
+                                    </form>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+
+                </table>
+            </div>
         }
 
     </div>
