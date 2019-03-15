@@ -78,9 +78,10 @@ namespace spydersoft.Identity
         {
             // this will do the initial DB population, but we only need to do it once
             // this is just in here as a easy, yet hacky, way to get our DB created/populated
-            InitializeDatabase(app);
-            Data.AutoMapper.Initialize();
-
+            var dbInitialize = new DatabaseInitializer(app);
+            dbInitialize.InitializeDatabase();
+            dbInitialize.InitializeAutomapper();
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -114,52 +115,6 @@ namespace spydersoft.Identity
             });
         }
 
-        private void InitializeDatabase(IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                PerformDatabaseMigrations(serviceScope);
-                SeedDatabase(serviceScope);
-            }
-        }
 
-        private void SeedDatabase(IServiceScope serviceScope)
-        {
-            ConfigurationDbContext context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-
-            if (!context.Clients.Any())
-            {
-                foreach (var client in Config.GetClients())
-                {
-                    context.Clients.Add(client.ToEntity());
-                }
-                context.SaveChanges();
-            }
-
-            if (!context.IdentityResources.Any())
-            {
-                foreach (var resource in Config.GetIdentityResources())
-                {
-                    context.IdentityResources.Add(resource.ToEntity());
-                }
-                context.SaveChanges();
-            }
-
-            if (!context.ApiResources.Any())
-            {
-                foreach (var resource in Config.GetApiResources())
-                {
-                    context.ApiResources.Add(resource.ToEntity());
-                }
-                context.SaveChanges();
-            }
-        }
-
-        private void PerformDatabaseMigrations(IServiceScope serviceScope)
-        {
-            serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>().Database.Migrate();
-            serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();
-            serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>().Database.Migrate();
-        }
     }
 }

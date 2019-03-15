@@ -3,8 +3,11 @@ using AutoMapper.QueryableExtensions;
 using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityServer4.EntityFramework.Mappers;
+using IdentityServer4.Models;
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Identity
@@ -22,10 +25,35 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             ViewData["Title"] = "Registered Identity Resources";
             var identityResourcesViewModel = new IdentityResourcesViewModel
             {
-                IdentityResources = ConfigDbContext.IdentityResources.ProjectTo<IdentityResourceViewModel>()
+                IdentityResources = ConfigDbContext.IdentityResources.ProjectTo<IdentityResourceViewModel>(),
             };
 
+            List<IdentityResourceViewModel> availableStandards = GetAllStandardsAsViewModels(identityResourcesViewModel.IdentityResources);
+
+            identityResourcesViewModel.AvailableStandardResources = availableStandards
+                .Where(s => !identityResourcesViewModel.IdentityResources.Any(ir => ir.Name == s.Name)).AsQueryable();
+
             return View(identityResourcesViewModel);
+        }
+
+        private List<IdentityResourceViewModel> GetAllStandardsAsViewModels(IQueryable<IdentityResourceViewModel> currentList)
+        {
+            var list = new List<IdentityResourceViewModel>();
+
+            List<IdentityResource> standardTypes = GetStandardTypes();
+            foreach (IdentityResource standardType in standardTypes)
+            {
+                if (!currentList.Any(irvm => irvm.Name == standardType.Name))
+                {
+                    var idViewModel = new IdentityResourceViewModel();
+                    Mapper.Map(standardType, idViewModel);
+
+                    //list.Add(Mapper.Map<IdentityResourceViewModel>(standardType));
+                    list.Add(idViewModel);
+                }
+            }
+
+            return list;
         }
 
         [HttpGet]
@@ -73,6 +101,24 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
         }
 
         [HttpPost]
+        public async Task<IActionResult> AddStandard(IdentityResourcesViewModel model)
+        {
+            if (!string.IsNullOrWhiteSpace(model.SelectedAvailableResource))
+            {
+                IdentityServer4.EntityFramework.Entities.IdentityResource resource = GetStandardProfile(model.SelectedAvailableResource);
+                if (resource != null)
+                {
+                    ConfigDbContext.IdentityResources.Add(resource);
+                    await ConfigDbContext.SaveChangesAsync();
+                }
+            }
+
+
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> Edit(int? id, IdentityResourceViewModel identityResource)
         {
             if (ModelState.IsValid)
@@ -116,8 +162,32 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             }
 
             return View(identityResource);
+        }
+        #endregion Controller Actions
 
-            #endregion Controller Actions
+        private IdentityServer4.EntityFramework.Entities.IdentityResource GetStandardProfile(string modelSelectedAvailableResource)
+        {
+            if (string.IsNullOrWhiteSpace(modelSelectedAvailableResource))
+            {
+                return null;
+            }
+
+            List<IdentityResource> standardTypes = GetStandardTypes();
+            var typeToAdd = standardTypes.FirstOrDefault(t => t.Name == modelSelectedAvailableResource);
+
+            return typeToAdd?.ToEntity();
+        }
+
+        private List<IdentityResource> GetStandardTypes()
+        {
+            return new List<IdentityResource>()
+            {
+                new IdentityResources.Profile(),
+                new IdentityResources.Address(),
+                new IdentityResources.Email(),
+                new IdentityResources.OpenId(),
+                new IdentityResources.Phone()
+            };
         }
     }
 }

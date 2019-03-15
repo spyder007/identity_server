@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
+using IdentityServer4.Models;
 using spydersoft.Identity.Models.Admin.ApiViewModels;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
+using ApiResource = IdentityServer4.EntityFramework.Entities.ApiResource;
+using Client = IdentityServer4.EntityFramework.Entities.Client;
+using IdentityResource = IdentityServer4.EntityFramework.Entities.IdentityResource;
 
 namespace spydersoft.Identity.Data
 {
@@ -121,6 +125,23 @@ namespace spydersoft.Identity.Data
             cfg.CreateMap<IdentityResourceViewModel, IdentityResource>()
                 .ForMember(d => d.Properties, opt => opt.Ignore())
                 .ForMember(d => d.UserClaims, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(d => d.NavBar, opt => opt.Ignore());
+
+            cfg.CreateMap<IdentityResources.Address, IdentityResourceViewModel>()
+                .ForMember(d => d.NavBar, opt => opt.Ignore())
+                .ReverseMap();
+            cfg.CreateMap<IdentityResources.Email, IdentityResourceViewModel>()
+                .ForMember(d => d.NavBar, opt => opt.Ignore())
+                .ReverseMap();
+            cfg.CreateMap<IdentityResources.Profile, IdentityResourceViewModel>()
+                .ForMember(d => d.NavBar, opt => opt.Ignore())
+                .ReverseMap();
+            cfg.CreateMap<IdentityResources.Phone, IdentityResourceViewModel>()
+                .ForMember(d => d.NavBar, opt => opt.Ignore())
+                .ReverseMap();
+            cfg.CreateMap<IdentityResources.OpenId, IdentityResourceViewModel>()
+                .ForMember(d => d.NavBar, opt => opt.Ignore())
                 .ReverseMap();
 
             cfg.CreateMap<IdentityResourceClaimViewModel, IdentityClaim>()
