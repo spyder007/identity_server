@@ -8,6 +8,10 @@ EXPOSE 80
 FROM microsoft/aspnetcore-build:2.0-nanoserver-sac2016 AS build
 WORKDIR /src
 COPY ["spydersoft.Identity/spydersoft.Identity.csproj", "spydersoft.Identity/"]
+RUN npm install
+RUN npm install gulp
+RUN gulp build:dist
+
 RUN dotnet restore "spydersoft.Identity/spydersoft.Identity.csproj"
 COPY . .
 WORKDIR "/src/spydersoft.Identity"
