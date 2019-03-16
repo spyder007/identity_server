@@ -29,6 +29,12 @@ namespace spydersoft.Identity.Data
             cfg.CreateMap<ApplicationRole, ApplicationRole>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.ConcurrencyStamp, opt => opt.Ignore());
+
+            cfg.CreateMap<ApplicationUser, ApplicationUser>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.ConcurrencyStamp, opt => opt.Ignore())
+                .ForMember(d => d.SecurityStamp, opt => opt.Ignore())
+                .ForMember(d => d.PasswordHash, opt => opt.Ignore());
         }
 
         private static void PopulateClientMappings(IMapperConfigurationExpression cfg)

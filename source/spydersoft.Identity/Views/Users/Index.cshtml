@@ -1,5 +1,5 @@
 ﻿@using spydersoft.Identity.Models.Identity
-@model ApplicationRolesViewModel
+@model UsersViewModel
 <div class="card">
     <div class="card-header">
         <h3>@ViewData["Title"]</h3>
@@ -8,20 +8,20 @@
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
             <tr>
-                <th>Name</th>
-                <th>Normalized Name</th>
+                <th>User Name</th>
+                <th>Email</th>
                 <th>Actions&nbsp;<a asp-action="Edit"><span class="fa fa-plus"></span></a></th>
             </tr>
             </thead>
 
-            @foreach (var role in Model.Roles)
+            @foreach (var user in Model.Users)
             {
                 <tr>
-                    <td>@role.Name</td>
-                    <td>@role.NormalizedName</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@role.Id"><span class="fa fa-edit"></span></a>
-                        <a asp-action="Delete" asp-route-id="@role.Id" title="Delete"><span class="fa fa-trash"></span></a>
+                        <a asp-action="Edit" asp-route-id="@user.Id"><span class="fa fa-edit"></span></a>
+                        <a asp-action="Delete" asp-route-id="@user.Id" title="Delete"><span class="fa fa-trash"></span></a>
                     </td>
                 </tr>
             }

@@ -1,0 +1,91 @@
+﻿@using spydersoft.Identity.Models.Identity
+@model UserViewModel
+
+<form asp-action="Edit">
+    <div class="card">
+        <div class="card-header">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body">
+            <div class="border px-2 py-1">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @Html.HiddenFor(model => model.User.Id)
+                @Html.HiddenFor(model => model.User.ConcurrencyStamp)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.User.UserName)
+                    <input type="text" class="form-control" id="txtName" asp-for="User.UserName" pf-validation-for="User.UserName" pf-validationerror-class="is-invalid" />
+                    <span asp-validation-for="User.UserName" class="invalid-feedback"></span>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.User.Email)
+                    <input type="text" class="form-control" id="txtDisplayName" asp-for="User.Email" pf-validation-for="User.Email" pf-validationerror-class="is-invalid" />
+                    <span asp-validation-for="User.Email" class="invalid-feedback"></span>
+                </div>
+                @if (Model.IsNewUser)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Password)
+                        <input type="text" class="form-control" id="txtPassword" asp-for="Password" pf-validation-for="Password" pf-validationerror-class="is-invalid" />
+                        <span asp-validation-for="Password" class="invalid-feedback"></span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+@if (!Model.IsNewUser)
+{
+    <form asp-action="AddRole" asp-route-userid="@Model.User.Id">
+        <div class="card">
+            <div class="card-header">
+                <h3>Roles</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Role</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    @foreach (var role in Model.Roles)
+                    {
+                        <tr>
+                            <td>@role</td>
+                            <td><a asp-action="DeleteRole" asp-route-role="@role" asp-route-userid="@Model.User.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label asp-for="SelectedAvailableRole" class="col-sm-4 col-form-label"></label>
+                                <div class="col-sm-6">
+                                    <select asp-for="SelectedAvailableRole" class="form-control">
+                                        @foreach (var availableRole in Model.AvailableRoles)
+                                        {
+                                            <option value="@availableRole">@availableRole</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="submit" value="Add" class="btn btn-primary" />
+                            </div>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </form>
+}
+
+
