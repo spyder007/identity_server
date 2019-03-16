@@ -4,6 +4,7 @@ using IdentityServer4.Models;
 using spydersoft.Identity.Models.Admin.ApiViewModels;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
+using spydersoft.Identity.Models.Identity;
 using ApiResource = IdentityServer4.EntityFramework.Entities.ApiResource;
 using Client = IdentityServer4.EntityFramework.Entities.Client;
 using IdentityResource = IdentityServer4.EntityFramework.Entities.IdentityResource;
@@ -19,8 +20,15 @@ namespace spydersoft.Identity.Data
                 PopulateClientMappings(cfg);
                 PopulateIdentityResourceMappings(cfg);
                 PopulateApiResourceMappings(cfg);
-               
+                PopulateIdentityMappings(cfg);
             });
+        }
+
+        private static void PopulateIdentityMappings(IMapperConfigurationExpression cfg)
+        {
+            cfg.CreateMap<ApplicationRole, ApplicationRole>()
+                .ForMember(d => d.Id, opt => opt.Ignore())
+                .ForMember(d => d.ConcurrencyStamp, opt => opt.Ignore());
         }
 
         private static void PopulateClientMappings(IMapperConfigurationExpression cfg)

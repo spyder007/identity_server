@@ -1,5 +1,5 @@
 ﻿@using spydersoft.Identity.Models.Identity
-@model ApplicationRole
+@model ApplicationRoleViewModel
 
 <form asp-action="Edit">
     <div class="card">
@@ -9,17 +9,17 @@
         <div class="card-body">
             <div class="border px-2 py-1">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                @Html.HiddenFor(model => model.Id)
-                @Html.HiddenFor(model => model.ConcurrencyStamp)
+                @Html.HiddenFor(model => model.Role.Id)
+                @Html.HiddenFor(model => model.Role.ConcurrencyStamp)
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Name)
-                    <input type="text" class="form-control" id="txtName" asp-for="Name" pf-validation-for="Name" pf-validationerror-class="is-invalid" />
-                    <span asp-validation-for="Name" class="invalid-feedback"></span>
+                    @Html.LabelFor(model => model.Role.Name)
+                    <input type="text" class="form-control" id="txtName" asp-for="Role.Name" pf-validation-for="Role.Name" pf-validationerror-class="is-invalid" />
+                    <span asp-validation-for="Role.Name" class="invalid-feedback"></span>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(model => model.NormalizedName)
-                    <input type="text" class="form-control" id="txtDisplayName" asp-for="NormalizedName" pf-validation-for="NormalizedName" pf-validationerror-class="is-invalid" />
-                    <span asp-validation-for="NormalizedName" class="invalid-feedback"></span>
+                    @Html.LabelFor(model => model.Role.NormalizedName)
+                    <input type="text" class="form-control" id="txtDisplayName" asp-for="Role.NormalizedName" pf-validation-for="Role.NormalizedName" pf-validationerror-class="is-invalid" />
+                    <span asp-validation-for="Role.NormalizedName" class="invalid-feedback"></span>
                 </div>
             </div>
         </div>
@@ -29,4 +29,54 @@
         </div>
     </div>
 </form>
+@if (Model.Claims != null)
+{
+    <form asp-action="AddClaim" asp-route-roleid="@Model.Role.Id">
+        <div class="card">
+            <div class="card-header">
+                <h3>Role Claims</h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>@Html.LabelFor(model => model.NewClaim.Type)</th>
+                        <th>@Html.LabelFor(model => model.NewClaim.Value)</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+
+                    @foreach (var apiClaim in Model.Claims)
+                    {
+                        <tr>
+                            <td>@apiClaim.Type</td>
+                            <td>@apiClaim.Value</td>
+                            <td><a asp-action="DeleteClaim" asp-route-claimtype="@apiClaim.Type" asp-route-roleid="@Model.Role.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                        </tr>
+                    }
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="txtClientId" asp-for="NewClaim.Type" pf-validation-for="NewClaim.Type" pf-validationerror-class="is-invalid"/>
+                                <span asp-validation-for="NewClaim.Type" class="invalid-feedback"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="txtNewClaim.Value" asp-for="NewClaim.Value" pf-validation-for="NewClaim.Value" pf-validationerror-class="is-invalid"/>
+                                <span asp-validation-for="NewClaim.Value" class="invalid-feedback"></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <input type="submit" value="Add" class="btn btn-primary"/>
+                            </div>
+                        </td>
+
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </form>
+}
 
