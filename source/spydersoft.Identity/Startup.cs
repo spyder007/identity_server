@@ -12,6 +12,7 @@ using spydersoft.Identity.Services;
 using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.HttpOverrides;
+using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity
 {
@@ -33,7 +34,7 @@ namespace spydersoft.Identity
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 

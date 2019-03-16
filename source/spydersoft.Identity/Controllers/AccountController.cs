@@ -12,6 +12,7 @@ using spydersoft.Identity.Services;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity.Controllers
 {
