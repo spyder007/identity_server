@@ -14,5 +14,9 @@ namespace spydersoft.Identity.Models.Identity
         public IQueryable<string> Roles { get; set; }
         public IQueryable<string> AvailableRoles { get; set; }
         public string SelectedAvailableRole { get; set; }
+
+        public IQueryable<ClaimModel> Claims { get; set; }
+        public ClaimModel NewClaim { get; set; }
+
     }
 }

@@ -9,7 +9,6 @@
             <thead class="thead-dark">
             <tr>
                 <th>Name</th>
-                <th>Normalized Name</th>
                 <th>Actions&nbsp;<a asp-action="Edit"><span class="fa fa-plus"></span></a></th>
             </tr>
             </thead>
@@ -18,7 +17,6 @@
             {
                 <tr>
                     <td>@role.Name</td>
-                    <td>@role.NormalizedName</td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@role.Id"><span class="fa fa-edit"></span></a>
                         <a asp-action="Delete" asp-route-id="@role.Id" title="Delete"><span class="fa fa-trash"></span></a>

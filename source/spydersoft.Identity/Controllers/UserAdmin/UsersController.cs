@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using spydersoft.Identity.Models.Identity;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper.QueryableExtensions;
 
 namespace spydersoft.Identity.Controllers.UserAdmin
 {
@@ -46,9 +48,13 @@ namespace spydersoft.Identity.Controllers.UserAdmin
                 var allRoles = RoleManager.Roles.Select(r => r.Name);
                 viewModel.Roles = roles.AsQueryable();
                 viewModel.AvailableRoles = allRoles.Where(r => !viewModel.Roles.Any(ur => ur == r));
+
+                var userClaims = await UserManager.GetClaimsAsync(viewModel.User);
+                viewModel.Claims = userClaims.AsQueryable().ProjectTo<ClaimModel>();
+
                 ViewData["Title"] = $"Edit {viewModel.User.UserName}";
             }
-
+            
             return View(viewModel);
         }
 
@@ -134,6 +140,49 @@ namespace spydersoft.Identity.Controllers.UserAdmin
             }
 
             IdentityResult result = await UserManager.RemoveFromRoleAsync(current, role);
+            if (!result.Succeeded)
+            {
+                return GetErrorAction(result.ToString());
+            }
+
+            return RedirectToAction(nameof(Edit), new { id = userid });
+        }
+
+        #endregion Add / Delete Roles
+
+        #region Add / Delete Claims
+
+        [HttpPost]
+        public async Task<IActionResult> AddClaim(string userid, UserViewModel model)
+        {
+            var current = await UserManager.FindByIdAsync(userid);
+            if (current == null)
+            {
+                return GetErrorAction("Invalid user");
+            }
+
+            IdentityResult result = await UserManager.AddClaimAsync(current, Mapper.Map<Claim>(model.NewClaim));
+            if (!result.Succeeded)
+            {
+                return GetErrorAction(result.ToString());
+            }
+
+            return RedirectToAction(nameof(Edit), new { id = userid });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteClaim(string userid, string claimtype)
+        {
+            var current = await UserManager.FindByIdAsync(userid);
+            if (current == null)
+            {
+                return GetErrorAction("Invalid role");
+            }
+
+            var claims = await UserManager.GetClaimsAsync(current);
+            var claim = claims.FirstOrDefault(c => c.Type == claimtype);
+
+            IdentityResult result = await UserManager.RemoveClaimAsync(current, claim);
             if (!result.Succeeded)
             {
                 return GetErrorAction(result.ToString());

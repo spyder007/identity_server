@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.Models;
 using spydersoft.Identity.Models.Admin.ApiViewModels;
@@ -35,6 +36,14 @@ namespace spydersoft.Identity.Data
                 .ForMember(d => d.ConcurrencyStamp, opt => opt.Ignore())
                 .ForMember(d => d.SecurityStamp, opt => opt.Ignore())
                 .ForMember(d => d.PasswordHash, opt => opt.Ignore());
+
+            cfg.CreateMap<ClaimModel, Claim>()
+                .ForMember(d => d.Issuer, opt => opt.Ignore())
+                .ForMember(d => d.OriginalIssuer, opt => opt.Ignore())
+                .ForMember(d => d.Properties, opt => opt.Ignore())
+                .ForMember(d => d.Subject, opt => opt.Ignore())
+                .ForMember(d => d.ValueType, opt => opt.Ignore())
+                .ReverseMap();
         }
 
         private static void PopulateClientMappings(IMapperConfigurationExpression cfg)
