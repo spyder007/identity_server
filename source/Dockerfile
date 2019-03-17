@@ -32,5 +32,5 @@ RUN dotnet publish "spydersoft.Identity.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-COPY --from=node-builder /src/spydersoft.Identity/wwwroot .
+COPY --from=node-builder /src/spydersoft.Identity/wwwroot ./wwwroot
 ENTRYPOINT ["dotnet", "spydersoft.Identity.dll"]
