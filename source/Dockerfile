@@ -18,9 +18,10 @@ FROM stefanscherer/node-windows:10.15.3-nanoserver-1809 AS node-builder
 WORKDIR /src
 COPY . .
 
+WORKDIR /src/spydersoft.Identity
 RUN npm install
 RUN npm install gulp-cli -g
-RUN npm install gulp
+#RUN npm install gulp
 RUN gulp build:dist
 
 RUN dotnet build "spydersoft.Identity.csproj" -c Release -o /app
