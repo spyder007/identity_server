@@ -20,6 +20,7 @@ COPY . .
 
 RUN npm install
 RUN npm install gulp-cli -g
+RUN npm install gulp
 RUN gulp build:dist
 
 RUN dotnet build "spydersoft.Identity.csproj" -c Release -o /app
