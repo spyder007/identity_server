@@ -14,7 +14,7 @@ COPY . .
 WORKDIR "/src/spydersoft.Identity"
 
 ## Could try a multi-arch build here too:  https://github.com/aspnet/aspnet-docker/tree/master/2.1
-FROM node-windows:10.15.3-nanoserver-1809 AS node-builder
+FROM stefanscherer/node-windows:10.15.3-nanoserver-1809 AS node-builder
 WORKDIR /src
 COPY . .
 
