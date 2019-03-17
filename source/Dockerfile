@@ -14,13 +14,9 @@ COPY . .
 WORKDIR "/src/spydersoft.Identity"
 
 ## Could try a multi-arch build here too:  https://github.com/aspnet/aspnet-docker/tree/master/2.1
-ENV NODE_VERSION 8.9.4
-ENV NODE_DOWNLOAD_SHA 21fb4690e349f82d708ae766def01d7fec1b085ce1f5ab30d9bda8ee126ca8fc
-RUN powershell -Command \
-    wget -Uri https://nodejs.org/dist/v%NODE_VERSION%/node-v%NODE_VERSION%-x64.msi -OutFile node.msi -UseBasicParsing ; \
-    if ((Get-FileHash node.msi -Algorithm sha256).Hash -ne $env:NODE_DOWNLOAD_SHA) {exit 1} ; \
-    Start-Process -FilePath msiexec -ArgumentList /q, /i, node.msi -Wait ; \
-    Remove-Item -Path node.msi
+FROM node-windows:10.15.3-nanoserver-1809 AS node-builder
+WORKDIR /src
+COPY . .
 
 RUN npm install
 RUN npm install gulp
@@ -34,4 +30,5 @@ RUN dotnet publish "spydersoft.Identity.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+COPY --from=node-builder /src/spydersoft.Identity/wwwroot .
 ENTRYPOINT ["dotnet", "spydersoft.Identity.dll"]
