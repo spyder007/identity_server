@@ -139,22 +139,22 @@ namespace spydersoft.Identity.Data
 
 
             var userMgr = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var alice = userMgr.FindByNameAsync("admin").Result;
-            if (alice == null)
+            var adminUser = userMgr.FindByNameAsync("admin").Result;
+            if (adminUser == null)
             {
-                alice = new ApplicationUser
+                adminUser = new ApplicationUser
                 {
                     UserName = "admin"
                 };
-                var result = userMgr.CreateAsync(alice, "Ch@ng3m3").Result;
+                var result = userMgr.CreateAsync(adminUser, "Ch@ng3m3").Result;
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                alice = userMgr.FindByNameAsync("admin").Result;
+                adminUser = userMgr.FindByNameAsync("admin").Result;
 
-                result = userMgr.AddClaimsAsync(alice, new Claim[]{
+                result = userMgr.AddClaimsAsync(adminUser, new Claim[]{
                                 new Claim(JwtClaimTypes.Name, "System Administrator"),
                                 new Claim(JwtClaimTypes.GivenName, "System"),
                                 new Claim(JwtClaimTypes.FamilyName, "administrator"),
@@ -168,7 +168,7 @@ namespace spydersoft.Identity.Data
                     throw new Exception(result.Errors.First().Description);
                 }
 
-                result = userMgr.AddToRoleAsync(alice, "admin").Result;
+                result = userMgr.AddToRoleAsync(adminUser, "admin").Result;
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
