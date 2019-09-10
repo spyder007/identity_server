@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientPropertiesController : BaseClientCollectionController<ClientPropertyViewModel, ClientPropertiesViewModel, ClientProperty>
     {
-        public ClientPropertiesController(ConfigurationDbContext context) : base(context)
+        public ClientPropertiesController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
         {
         }
 
@@ -19,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientPropertyViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return mainEntity.Properties.AsQueryable().ProjectTo<ClientPropertyViewModel>();
+            return mainEntity.Properties.AsQueryable().ProjectTo<ClientPropertyViewModel>(AutoMapperConfiguration);
         }
 
         protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(

@@ -11,6 +11,7 @@ using spydersoft.Identity.Models;
 using spydersoft.Identity.Services;
 using System.Linq;
 using System.Reflection;
+using AutoMapper;
 using Microsoft.AspNetCore.HttpOverrides;
 using spydersoft.Identity.Models.Identity;
 
@@ -33,7 +34,7 @@ namespace spydersoft.Identity
 
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
-
+            services.AddSingleton(Data.AutoMapper.GetMapperConfiguration());
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -81,7 +82,6 @@ namespace spydersoft.Identity
             // this is just in here as a easy, yet hacky, way to get our DB created/populated
             var dbInitialize = new DatabaseInitializer(app);
             dbInitialize.InitializeDatabase();
-            dbInitialize.InitializeAutomapper();
             
             if (env.IsDevelopment())
             {

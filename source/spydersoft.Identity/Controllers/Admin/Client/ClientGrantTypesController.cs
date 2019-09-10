@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientGrantTypesController : BaseClientCollectionController<ClientGrantTypeViewModel, ClientGrantTypesViewModel, ClientGrantType>
     {
-        public ClientGrantTypesController(ConfigurationDbContext context) : base(context)
+        public ClientGrantTypesController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
         {
         }
 
@@ -19,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientGrantTypeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return mainEntity.AllowedGrantTypes.AsQueryable().ProjectTo<ClientGrantTypeViewModel>();
+            return mainEntity.AllowedGrantTypes.AsQueryable().ProjectTo<ClientGrantTypeViewModel>(AutoMapperConfiguration);
         }
 
         protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(

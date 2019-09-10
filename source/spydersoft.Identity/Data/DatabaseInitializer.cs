@@ -38,12 +38,6 @@ namespace spydersoft.Identity.Data
             }
         }
 
-        public void InitializeAutomapper()
-        {
-            _log.LogDebug("Initializing Automapper");
-            AutoMapper.Initialize();
-        }
-
         #region Database Migration Methods
 
         private void PerformDatabaseMigrations(IServiceScope serviceScope)
@@ -265,7 +259,7 @@ namespace spydersoft.Identity.Data
                 }
             };
         }
-
         #endregion Identity Server Configuration Object Creators
+
     }
 }

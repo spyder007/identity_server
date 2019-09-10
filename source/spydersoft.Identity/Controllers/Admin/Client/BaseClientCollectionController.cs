@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using spydersoft.Identity.Models;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using spydersoft.Identity.Models.Admin;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
@@ -16,7 +17,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
     {
         #region Constructor
 
-        protected BaseClientCollectionController(ConfigurationDbContext context) : base(context)
+        protected BaseClientCollectionController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
         {
         }
 

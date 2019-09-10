@@ -14,9 +14,9 @@ namespace spydersoft.Identity.Data
 {
     public class AutoMapper : Profile
     {
-        public static void Initialize()
+        public static MapperConfiguration GetMapperConfiguration()
         {
-            Mapper.Initialize(cfg =>
+            return new MapperConfiguration(cfg =>
             {
                 PopulateClientMappings(cfg);
                 PopulateIdentityResourceMappings(cfg);

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
@@ -11,7 +12,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientRedirectsController : BaseClientCollectionController<ClientRedirectViewModel, ClientRedirectsViewModel, IS4Entities.ClientRedirectUri>
     {
-        public ClientRedirectsController(ConfigurationDbContext context) : base(context)
+        public ClientRedirectsController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
         {
         }
 
@@ -19,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientRedirectViewModel> PopulateItemList(IS4Entities.Client mainEntity)
         {
-            return mainEntity.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>();
+            return mainEntity.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>(AutoMapperConfiguration);
         }
 
         protected override IQueryable<IS4Entities.Client> AddIncludes(DbSet<IS4Entities.Client> query)

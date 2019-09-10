@@ -5,13 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Identity
 {
     public class IdentityResourceClaimsController : BaseIdentityResourceCollectionController<IdentityResourceClaimViewModel, IdentityResourceClaimsViewModel, IdentityClaim>
     {
-        public IdentityResourceClaimsController(ConfigurationDbContext context) : base(context)
+        public IdentityResourceClaimsController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
         {
         }
 
@@ -19,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 
         protected override IEnumerable<IdentityResourceClaimViewModel> PopulateItemList(IdentityResource mainEntity)
         {
-            return mainEntity.UserClaims.AsQueryable().ProjectTo<IdentityResourceClaimViewModel>();
+            return mainEntity.UserClaims.AsQueryable().ProjectTo<IdentityResourceClaimViewModel>(AutoMapperConfiguration);
         }
 
         protected override IQueryable<IdentityResource> AddIncludes(DbSet<IdentityResource> query)

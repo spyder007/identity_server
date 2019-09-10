@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using IdentityServer4.Models;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 
@@ -13,7 +14,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientSecretsController : BaseClientCollectionController<ClientSecretViewModel, ClientSecretsViewModel, ClientSecret>
     {
-        public ClientSecretsController(ConfigurationDbContext context) : base(context)
+        public ClientSecretsController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
         {
         }
 
@@ -21,7 +22,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientSecretViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return mainEntity.ClientSecrets.AsQueryable().ProjectTo<ClientSecretViewModel>();
+            return mainEntity.ClientSecrets.AsQueryable().ProjectTo<ClientSecretViewModel>(AutoMapperConfiguration);
         }
 
         protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(

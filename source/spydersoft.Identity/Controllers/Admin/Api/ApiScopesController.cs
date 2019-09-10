@@ -15,7 +15,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 {
     public class ApiScopesController : BaseApiCollectionController<ApiScopeViewModel, ApiScopesViewModel, ApiScope>
     {
-        public ApiScopesController(ConfigurationDbContext context) : base(context)
+        public ApiScopesController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
         {
         }
 
@@ -23,7 +23,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         protected override IEnumerable<ApiScopeViewModel> PopulateItemList(ApiResource mainEntity)
         {
-            return mainEntity.Scopes.AsQueryable().ProjectTo<ApiScopeViewModel>();
+            return mainEntity.Scopes.AsQueryable().ProjectTo<ApiScopeViewModel>(AutoMapperConfiguration);
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)
@@ -108,7 +108,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
             }
             else
             {
-                scopeModel.UserClaims.AddRange(apiScope.UserClaims.AsQueryable().ProjectTo<ApiScopeClaimViewModel>());
+                scopeModel.UserClaims.AddRange(apiScope.UserClaims.AsQueryable().ProjectTo<ApiScopeClaimViewModel>(AutoMapperConfiguration));
             }
 
             return RedirectToAction(nameof(Edit), new { id = scopeId.Value, parentid = apiId.Value });
@@ -153,7 +153,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
             {
                 scopeModel.Id = id.Value;
                 ApiScope scope = GetScope(parentid, id);
-                scopeModel.UserClaims.AddRange(scope.UserClaims.AsQueryable().ProjectTo<ApiScopeClaimViewModel>());
+                scopeModel.UserClaims.AddRange(scope.UserClaims.AsQueryable().ProjectTo<ApiScopeClaimViewModel>(AutoMapperConfiguration));
             }
 
             return View(nameof(Edit), scopeModel);
