@@ -1,11 +1,11 @@
 #Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
 #For more information, please see https://aka.ms/containercompat
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-nanoserver-1809 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-nanoserver-1909 AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM stefanscherer/node-windows:10.15.3-nanoserver-1809 AS node-builder
+FROM stefanscherer/node-windows:10.16.3-nanoserver-1809 AS node-builder
 WORKDIR /src
 COPY . .
 
@@ -14,7 +14,7 @@ RUN npm install
 RUN npm install gulp-cli -g
 RUN gulp build:dist
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2-nanoserver-1809 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1.100-nanoserver-1903 AS build
 WORKDIR /src
 COPY ["spydersoft.Identity/spydersoft.Identity.csproj", "spydersoft.Identity/"]
 
