@@ -12,9 +12,9 @@ namespace spydersoft.Identity.Controllers
     public class HomeController : Controller
     {
         private readonly IIdentityServerInteractionService _interaction;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
-        public HomeController(IIdentityServerInteractionService interaction, IHostingEnvironment hostingEnvironment)
+        public HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment hostingEnvironment)
         {
             _interaction = interaction;
             _hostingEnvironment = hostingEnvironment;

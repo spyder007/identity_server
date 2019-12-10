@@ -13,6 +13,7 @@ using System.Linq;
 using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Hosting;
 using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity
@@ -42,7 +43,7 @@ namespace spydersoft.Identity
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddMvc();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
@@ -76,7 +77,7 @@ namespace spydersoft.Identity
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // this will do the initial DB population, but we only need to do it once
             // this is just in here as a easy, yet hacky, way to get our DB created/populated
