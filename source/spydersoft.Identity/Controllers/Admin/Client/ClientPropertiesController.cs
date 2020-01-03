@@ -12,7 +12,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientPropertiesController : BaseClientCollectionController<ClientPropertyViewModel, ClientPropertiesViewModel, ClientProperty>
     {
-        public ClientPropertiesController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public ClientPropertiesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -20,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientPropertyViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return mainEntity.Properties.AsQueryable().ProjectTo<ClientPropertyViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<ClientPropertyViewModel>(mainEntity.Properties.ToList().AsQueryable());
         }
 
         protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(

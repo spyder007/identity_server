@@ -35,7 +35,8 @@ namespace spydersoft.Identity
 
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
-            services.AddSingleton(Data.AutoMapper.GetMapperConfiguration());
+            services.AddAutoMapper(typeof(Startup));
+            //services.AddSingleton(Data.AutoMapper.GetMapperConfiguration());
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

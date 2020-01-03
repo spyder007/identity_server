@@ -15,7 +15,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 {
     public class ApiSecretsController : BaseApiCollectionController<ApiSecretViewModel, ApiSecretsViewModel, ApiSecret>
     {
-        public ApiSecretsController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public ApiSecretsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -23,7 +23,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         protected override IEnumerable<ApiSecretViewModel> PopulateItemList(ApiResource mainEntity)
         {
-            return mainEntity.Secrets.AsQueryable().ProjectTo<ApiSecretViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<ApiSecretViewModel>(mainEntity.Secrets.ToList().AsQueryable());
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)

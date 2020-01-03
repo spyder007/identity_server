@@ -13,7 +13,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
     {
         #region Constructor
 
-        public ClientScopesController(ConfigurationDbContext dbContext, MapperConfiguration mapperConfig) : base(dbContext, mapperConfig)
+        public ClientScopesController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 
@@ -23,7 +23,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientScopeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return mainEntity.AllowedScopes.AsQueryable().ProjectTo<ClientScopeViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<ClientScopeViewModel>(mainEntity.AllowedScopes.ToList().AsQueryable());
         }
 
         protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(

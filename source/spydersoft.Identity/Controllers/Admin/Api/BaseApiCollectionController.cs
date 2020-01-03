@@ -17,7 +17,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
     {
         #region Constructor
 
-        protected BaseApiCollectionController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        protected BaseApiCollectionController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 

@@ -10,7 +10,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientsController : BaseAdminController
     {
-        public ClientsController(ConfigurationDbContext dbContext, MapperConfiguration mapperConfig) : base(dbContext, mapperConfig)
+        public ClientsController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 
@@ -22,7 +22,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
             var clientsModel = new ClientsViewModel
             {
-                Clients = ConfigDbContext.Clients.ProjectTo<ClientViewModel>(AutoMapperConfiguration)
+                Clients = Mapper.ProjectTo<ClientViewModel>(ConfigDbContext.Clients.ToList().AsQueryable())
             };
 
             return View(clientsModel);

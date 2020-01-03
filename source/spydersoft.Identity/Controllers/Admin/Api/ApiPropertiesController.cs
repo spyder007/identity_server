@@ -12,15 +12,15 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 {
     public class ApiPropertiesController : BaseApiCollectionController<ApiPropertyViewModel, ApiPropertiesViewModel, ApiResourceProperty>
     {
-        public ApiPropertiesController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public ApiPropertiesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
         #region BaseApiCollectionController Implementation
 
         protected override IEnumerable<ApiPropertyViewModel> PopulateItemList(ApiResource mainEntity)
-        {
-            return mainEntity.Properties.AsQueryable().ProjectTo<ApiPropertyViewModel>(AutoMapperConfiguration);
+        { 
+            return Mapper.ProjectTo<ApiPropertyViewModel>(mainEntity.Properties.ToList().AsQueryable());
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)

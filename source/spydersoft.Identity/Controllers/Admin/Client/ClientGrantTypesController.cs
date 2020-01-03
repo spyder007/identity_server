@@ -12,7 +12,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientGrantTypesController : BaseClientCollectionController<ClientGrantTypeViewModel, ClientGrantTypesViewModel, ClientGrantType>
     {
-        public ClientGrantTypesController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public ClientGrantTypesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -20,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientGrantTypeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return mainEntity.AllowedGrantTypes.AsQueryable().ProjectTo<ClientGrantTypeViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<ClientGrantTypeViewModel>(mainEntity.AllowedGrantTypes.ToList().AsQueryable());
         }
 
         protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(

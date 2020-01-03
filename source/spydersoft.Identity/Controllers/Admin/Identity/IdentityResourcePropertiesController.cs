@@ -12,7 +12,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 {
     public class IdentityResourcePropertiesController : BaseIdentityResourceCollectionController<IdentityResourcePropertyViewModel, IdentityResourcePropertiesViewModel, IdentityResourceProperty>
     {
-        public IdentityResourcePropertiesController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public IdentityResourcePropertiesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -20,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 
         protected override IEnumerable<IdentityResourcePropertyViewModel> PopulateItemList(IdentityResource mainEntity)
         {
-            return mainEntity.Properties.AsQueryable().ProjectTo<IdentityResourcePropertyViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<IdentityResourcePropertyViewModel>(mainEntity.Properties.ToList().AsQueryable());
         }
 
         protected override IQueryable<IdentityResource> AddIncludes(DbSet<IdentityResource> query)

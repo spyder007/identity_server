@@ -11,7 +11,7 @@ namespace spydersoft.Identity.Controllers.Admin
     [Authorize(Roles = "admin")]
     public class BaseAdminController : BaseController
     {
-        public BaseAdminController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(mapperConfig)
+        public BaseAdminController(ConfigurationDbContext context, IMapper mapper) : base(mapper)
         {
             ConfigDbContext = context;
         }

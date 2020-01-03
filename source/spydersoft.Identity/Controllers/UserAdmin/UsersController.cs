@@ -11,8 +11,8 @@ namespace spydersoft.Identity.Controllers.UserAdmin
 {
     public class UsersController : BaseUserAdminController
     {
-        public UsersController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, MapperConfiguration mapperConfig) 
-            : base(userManager, roleManager, mapperConfig)
+        public UsersController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) 
+            : base(userManager, roleManager, mapper)
         {
         }
 
@@ -51,7 +51,7 @@ namespace spydersoft.Identity.Controllers.UserAdmin
                 viewModel.AvailableRoles = allRoles.Where(r => !viewModel.Roles.Any(ur => ur == r));
 
                 var userClaims = await UserManager.GetClaimsAsync(viewModel.User);
-                viewModel.Claims = userClaims.AsQueryable().ProjectTo<ClaimModel>(AutoMapperConfiguration);
+                viewModel.Claims = Mapper.ProjectTo<ClaimModel>(userClaims.ToList().AsQueryable());
 
                 ViewData["Title"] = $"Edit {viewModel.User.UserName}";
             }

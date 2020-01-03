@@ -14,7 +14,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientSecretsController : BaseClientCollectionController<ClientSecretViewModel, ClientSecretsViewModel, ClientSecret>
     {
-        public ClientSecretsController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public ClientSecretsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -22,7 +22,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientSecretViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return mainEntity.ClientSecrets.AsQueryable().ProjectTo<ClientSecretViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<ClientSecretViewModel>(mainEntity.ClientSecrets.ToList().AsQueryable());
         }
 
         protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(

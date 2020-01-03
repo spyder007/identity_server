@@ -11,7 +11,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 {
     public class ApisController : BaseAdminController
     {
-        public ApisController(ConfigurationDbContext dbContext, MapperConfiguration mapperConfig) : base(dbContext, mapperConfig)
+        public ApisController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 
@@ -21,7 +21,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
         {
             var apisViewModel = new ApisViewModel
             {
-                Apis = ConfigDbContext.ApiResources.ProjectTo<ApiViewModel>(AutoMapperConfiguration)
+                Apis = Mapper.ProjectTo<ApiViewModel>(ConfigDbContext.ApiResources.ToList().AsQueryable())
             };
 
             ViewData["Title"] = "Register APIs";

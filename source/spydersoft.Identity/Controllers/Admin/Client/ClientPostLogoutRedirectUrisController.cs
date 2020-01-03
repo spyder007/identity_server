@@ -12,7 +12,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientPostLogoutRedirectUrisController : BaseClientCollectionController<ClientPostLogoutRedirectUriViewModel, ClientPostLogoutRedirectUrisViewModel, ClientPostLogoutRedirectUri>
     {
-        public ClientPostLogoutRedirectUrisController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public ClientPostLogoutRedirectUrisController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -20,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientPostLogoutRedirectUriViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return mainEntity.PostLogoutRedirectUris.AsQueryable().ProjectTo<ClientPostLogoutRedirectUriViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<ClientPostLogoutRedirectUriViewModel>(mainEntity.PostLogoutRedirectUris.ToList().AsQueryable());
         }
 
         protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(

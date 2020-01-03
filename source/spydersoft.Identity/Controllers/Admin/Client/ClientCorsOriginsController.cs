@@ -12,7 +12,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientCorsOriginsController : BaseClientCollectionController<ClientCorsOriginViewModel, ClientCorsOriginsViewModel, ClientCorsOrigin>
     {
-        public ClientCorsOriginsController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public ClientCorsOriginsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -20,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientCorsOriginViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
         {
-            return mainEntity.AllowedCorsOrigins.AsQueryable().ProjectTo<ClientCorsOriginViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<ClientCorsOriginViewModel>(mainEntity.AllowedCorsOrigins.ToList().AsQueryable());
         }
 
         protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(

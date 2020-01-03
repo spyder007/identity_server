@@ -12,7 +12,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 {
     public class ApiClaimsController : BaseApiCollectionController<ApiClaimViewModel, ApiClaimsViewModel, ApiResourceClaim>
     {
-        public ApiClaimsController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public ApiClaimsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -20,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         protected override IEnumerable<ApiClaimViewModel> PopulateItemList(ApiResource mainEntity)
         {
-            return mainEntity.UserClaims.AsQueryable().ProjectTo<ApiClaimViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<ApiClaimViewModel>(mainEntity.UserClaims.ToList().AsQueryable());
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)

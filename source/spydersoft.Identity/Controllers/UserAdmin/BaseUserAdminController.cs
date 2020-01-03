@@ -12,7 +12,7 @@ namespace spydersoft.Identity.Controllers.UserAdmin
 {
     public class BaseUserAdminController : BaseController
     {
-        public BaseUserAdminController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, MapperConfiguration mapperConfig) : base(mapperConfig)
+        public BaseUserAdminController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) : base(mapper)
         {
             UserManager = userManager;
             RoleManager = roleManager;

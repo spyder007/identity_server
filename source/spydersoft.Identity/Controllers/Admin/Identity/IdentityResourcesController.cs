@@ -14,7 +14,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 {
     public class IdentityResourcesController : BaseAdminController
     {
-        public IdentityResourcesController(ConfigurationDbContext dbContext, MapperConfiguration mapperConfig) : base(dbContext, mapperConfig)
+        public IdentityResourcesController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 
@@ -25,7 +25,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             ViewData["Title"] = "Registered Identity Resources";
             var identityResourcesViewModel = new IdentityResourcesViewModel
             {
-                IdentityResources = ConfigDbContext.IdentityResources.ProjectTo<IdentityResourceViewModel>(AutoMapperConfiguration),
+                IdentityResources = Mapper.ProjectTo<IdentityResourceViewModel>(ConfigDbContext.IdentityResources.ToList().AsQueryable())
             };
 
             List<IdentityResourceViewModel> availableStandards = GetAllStandardsAsViewModels(identityResourcesViewModel.IdentityResources);

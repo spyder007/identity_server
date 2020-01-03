@@ -10,13 +10,12 @@ namespace spydersoft.Identity.Controllers
 {
     public class BaseController : Controller
     {
-        public MapperConfiguration AutoMapperConfiguration { get; }
 
-        public IMapper Mapper => AutoMapperConfiguration.CreateMapper();
+        public IMapper Mapper { get; }
 
-        public BaseController(MapperConfiguration mapperConfig)
+        public BaseController(IMapper mapper)
         {
-            AutoMapperConfiguration = mapperConfig;
+            Mapper = mapper;
         }
 
         public IActionResult GetErrorAction(string errorMessage)

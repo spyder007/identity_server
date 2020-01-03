@@ -12,7 +12,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 {
     public class IdentityResourceClaimsController : BaseIdentityResourceCollectionController<IdentityResourceClaimViewModel, IdentityResourceClaimsViewModel, IdentityClaim>
     {
-        public IdentityResourceClaimsController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public IdentityResourceClaimsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -20,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 
         protected override IEnumerable<IdentityResourceClaimViewModel> PopulateItemList(IdentityResource mainEntity)
         {
-            return mainEntity.UserClaims.AsQueryable().ProjectTo<IdentityResourceClaimViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<IdentityResourceClaimViewModel>(mainEntity.UserClaims.ToList().AsQueryable());
         }
 
         protected override IQueryable<IdentityResource> AddIncludes(DbSet<IdentityResource> query)

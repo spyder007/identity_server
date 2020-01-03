@@ -17,7 +17,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
     {
         #region Constructor
 
-        protected BaseIdentityResourceCollectionController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        protected BaseIdentityResourceCollectionController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 

@@ -12,7 +12,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientRedirectsController : BaseClientCollectionController<ClientRedirectViewModel, ClientRedirectsViewModel, IS4Entities.ClientRedirectUri>
     {
-        public ClientRedirectsController(ConfigurationDbContext context, MapperConfiguration mapperConfig) : base(context, mapperConfig)
+        public ClientRedirectsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
@@ -20,7 +20,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientRedirectViewModel> PopulateItemList(IS4Entities.Client mainEntity)
         {
-            return mainEntity.RedirectUris.AsQueryable().ProjectTo<ClientRedirectViewModel>(AutoMapperConfiguration);
+            return Mapper.ProjectTo<ClientRedirectViewModel>(mainEntity.RedirectUris.ToList().AsQueryable());
         }
 
         protected override IQueryable<IS4Entities.Client> AddIncludes(DbSet<IS4Entities.Client> query)
