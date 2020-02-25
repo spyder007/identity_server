@@ -14,6 +14,7 @@ using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Hosting;
+using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity
@@ -33,6 +34,7 @@ namespace spydersoft.Identity
             var connString = Configuration.GetConnectionString("IdentityConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
+            services.ConfigureNonBreakingSameSiteCookies();
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
             services.AddAutoMapper(typeof(Startup));
@@ -96,6 +98,7 @@ namespace spydersoft.Identity
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseCookiePolicy();
             app.UseStaticFiles();
             var fordwardedHeaderOptions = new ForwardedHeadersOptions
             {
@@ -108,7 +111,7 @@ namespace spydersoft.Identity
 
             // app.UseIdentity(); // not needed, since UseIdentityServer adds the authentication middleware
             app.UseIdentityServer();
-
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
