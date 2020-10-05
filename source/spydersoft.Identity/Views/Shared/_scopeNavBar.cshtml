@@ -1,0 +1,13 @@
+﻿@using spydersoft.Identity.Models.Admin.ScopeViewModels
+@model ScopeNavBarViewModel
+
+    <nav>
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Scopes" asp-action="Edit" asp-route-id="@Model.Id">Main</a></li>
+            @if (Model.Id > 0)
+            {
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ScopeClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a></li>
+                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ScopeProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a></li>
+            }
+        </ul>
+    </nav>

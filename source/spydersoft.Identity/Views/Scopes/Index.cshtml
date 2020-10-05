@@ -1,0 +1,30 @@
+﻿@using spydersoft.Identity.Models.Admin.ScopeViewModels;
+@model ScopesViewModel
+<div class="card">
+    <div class="card-header">
+        <h3>@ViewData["Title"]</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Display Name</th>
+                    <th>Actions&nbsp;<a asp-controller="Scopes" asp-action="Edit"><span class="fa fa-plus"></span></a></th>
+                </tr>
+            </thead>
+
+            @foreach (var api in Model.Scopes)
+            {
+                <tr>
+                    <td>@api.Name</td>
+                    <td>@api.DisplayName</td>
+                    <td>
+                        <a asp-controller="Scopes" asp-action="Edit" asp-route-id="@api.Id"><span class="fa fa-edit"></span></a>
+                        <a asp-controller="Scopes" asp-action="Delete" asp-route-id="@api.Id" title="Delete"><span class="fa fa-trash"></span></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

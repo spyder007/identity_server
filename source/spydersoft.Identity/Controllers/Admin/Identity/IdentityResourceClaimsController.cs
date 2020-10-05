@@ -10,7 +10,7 @@ using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Identity
 {
-    public class IdentityResourceClaimsController : BaseIdentityResourceCollectionController<IdentityResourceClaimViewModel, IdentityResourceClaimsViewModel, IdentityClaim>
+    public class IdentityResourceClaimsController : BaseIdentityResourceCollectionController<IdentityResourceClaimViewModel, IdentityResourceClaimsViewModel, IdentityResourceClaim>
     {
         public IdentityResourceClaimsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
@@ -28,12 +28,12 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             return query.Include(ir => ir.UserClaims);
         }
 
-        protected override List<IdentityClaim> GetCollection(IdentityResource mainEntity)
+        protected override List<IdentityResourceClaim> GetCollection(IdentityResource mainEntity)
         {
             return mainEntity.UserClaims;
         }
 
-        protected override IdentityClaim FindItemInCollection(List<IdentityClaim> collection, int id)
+        protected override IdentityResourceClaim FindItemInCollection(List<IdentityResourceClaim> collection, int id)
         {
             return collection.FirstOrDefault(ic => ic.Id == id);
         }

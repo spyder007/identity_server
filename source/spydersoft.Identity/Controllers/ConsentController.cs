@@ -26,9 +26,10 @@ namespace spydersoft.Identity.Controllers
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IResourceStore resourceStore,
+            IEventService events,
             ILogger<ConsentController> logger)
         {
-            _consent = new ConsentService(interaction, clientStore, resourceStore, logger);
+            _consent = new ConsentService(interaction, clientStore, resourceStore, events, logger, User);
         }
 
         /// <summary>

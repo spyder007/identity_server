@@ -13,7 +13,7 @@ using ApiResource = IdentityServer4.EntityFramework.Entities.ApiResource;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiSecretsController : BaseApiCollectionController<ApiSecretViewModel, ApiSecretsViewModel, ApiSecret>
+    public class ApiSecretsController : BaseApiCollectionController<ApiSecretViewModel, ApiSecretsViewModel, ApiResourceSecret>
     {
         public ApiSecretsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
@@ -31,19 +31,19 @@ namespace spydersoft.Identity.Controllers.Admin.Api
             return query.Include(api => api.Secrets);
         }
 
-        protected override void SetAdditionalProperties(ApiSecret newItem)
+        protected override void SetAdditionalProperties(ApiResourceSecret newItem)
         {
             base.SetAdditionalProperties(newItem);
             newItem.Created = DateTime.UtcNow;
             newItem.Value = newItem.Value.Sha256();
         }
 
-        protected override ApiSecret FindItemInCollection(List<ApiSecret> collection, int id)
+        protected override ApiResourceSecret FindItemInCollection(List<ApiResourceSecret> collection, int id)
         {
             return collection.FirstOrDefault(s => s.Id == id);
         }
 
-        protected override List<ApiSecret> GetCollection(ApiResource mainEntity)
+        protected override List<ApiResourceSecret> GetCollection(ApiResource mainEntity)
         {
             return mainEntity.Secrets;
         }

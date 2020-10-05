@@ -11,7 +11,6 @@
             
             @Html.HiddenFor(m => m.ParentId)
             @Html.HiddenFor(m => m.Id)
-            @Html.HiddenFor(m => m.NewClaim.Type, new { value = "tt"})
 
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -56,51 +55,3 @@
     </form>
 </div>
 
-
-<form asp-action="AddClaim" asp-route-scopeid="@Model.Id" asp-route-apiid="@Model.ParentId">
-    @Html.HiddenFor(m => m.Id)
-    @Html.HiddenFor(m => m.ParentId)
-    @Html.HiddenFor(m => m.Name)
-    @Html.HiddenFor(m => m.DisplayName)
-    @Html.HiddenFor(m => m.Description)
-    @Html.HiddenFor(m => m.Emphasize)
-    @Html.HiddenFor(m => m.Required)
-    @Html.HiddenFor(m => m.ShowInDiscoveryDocument)
-    <div class="card">
-        <div class="card-header">
-            <h3>API Scope Claims</h3>
-        </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                <tr>
-                    <th>@Html.LabelFor(model => model.NewClaim.Type)</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-
-                @foreach (var apiClaim in Model.UserClaims)
-                {
-                    <tr>
-                        <td>@apiClaim.Type</td>
-                        <td><a asp-action="DeleteClaim" asp-route-id="@apiClaim.Id" asp-route-scopeid="@Model.Id" asp-route-apiid="@Model.ParentId" title="Delete"><span class="fa fa-trash"></span></a></td>
-                    </tr>
-                }
-                <tr>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="txtClientId" asp-for="NewClaim.Type" pf-validation-for="NewClaim.Type" pf-validationerror-class="is-invalid"/>
-                            <span asp-validation-for="NewClaim.Type" class="invalid-feedback"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="submit" value="Add" class="btn btn-sm btn-primary"/>
-                        </div>
-                    </td>
-
-                </tr>
-            </table>
-        </div>
-    </div>
-</form>

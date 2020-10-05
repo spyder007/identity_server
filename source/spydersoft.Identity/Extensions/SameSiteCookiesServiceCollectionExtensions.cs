@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -130,7 +131,27 @@ namespace spydersoft.Identity.Extensions
                 return true;
             }
 
+            var chromeVersion = GetChromeVersion(userAgent);
+
+            if (chromeVersion >= 80)
+            {
+                return true;
+            }
+
             return false;
+        }
+
+        private static int GetChromeVersion(string userAgent)
+        {
+            try
+            {
+                var subStr = Convert.ToInt32(userAgent.Split("Chrome/")[1].Split('.')[0]);
+                return subStr;
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
         }
     }
 }

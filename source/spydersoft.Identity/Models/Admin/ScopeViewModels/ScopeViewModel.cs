@@ -1,17 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace spydersoft.Identity.Models.Admin.ApiViewModels
+namespace spydersoft.Identity.Models.Admin.ScopeViewModels
 {
-    public class ApiScopesViewModel : BaseApiCollectionViewModel<ApiScopeViewModel>
+    public class ScopeViewModel : BaseAdminViewModel
     {
-    }
-
-    public class ApiScopeViewModel : BaseAdminChildItemViewModel
-    {
-        public ApiScopeViewModel()
+        public ScopeViewModel()
         {
+            NavBar = new ScopeNavBarViewModel(this);
         }
+
+        public ScopeViewModel(int id) : this()
+        {
+            Id = id;
+            NavBar.Id = id;
+        }
+
+        public ScopeNavBarViewModel NavBar { get; set; }
+
 
         [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 2)]
@@ -37,9 +46,6 @@ namespace spydersoft.Identity.Models.Admin.ApiViewModels
 
         [Display(Name = "Show in Discovery Document")]
         public bool ShowInDiscoveryDocument { get; set; }
-
     }
 
-
 }
-

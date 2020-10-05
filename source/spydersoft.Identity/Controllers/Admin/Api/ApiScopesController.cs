@@ -13,7 +13,7 @@ using spydersoft.Identity.Models.Admin.ApiViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiScopesController : BaseApiCollectionController<ApiScopeViewModel, ApiScopesViewModel, ApiScope>
+    public class ApiScopesController : BaseApiCollectionController<ApiScopeViewModel, ApiScopesViewModel, ApiResourceScope>
     {
         public ApiScopesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
@@ -28,15 +28,15 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)
         {
-            return query.Include(c => c.Scopes).ThenInclude(s => s.UserClaims);
+            return query.Include(c => c.Scopes).ThenInclude(s => s.ApiResource);
         }
 
-        protected override ApiScope FindItemInCollection(List<ApiScope> collection, int id)
+        protected override ApiResourceScope FindItemInCollection(List<ApiResourceScope> collection, int id)
         {
             return collection.Find(s => s.Id == id);
         }
 
-        protected override List<ApiScope> GetCollection(ApiResource mainEntity)
+        protected override List<ApiResourceScope> GetCollection(ApiResource mainEntity)
         {
             return mainEntity.Scopes;
         }
@@ -53,7 +53,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
             }
             else
             {
-                ApiScope apiScope = GetScope(parentid, id);
+                ApiResourceScope apiScope = GetScope(parentid, id);
                 if (apiScope == null)
                 {
                     return GetErrorAction("Could not load api scope");
@@ -76,40 +76,16 @@ namespace spydersoft.Identity.Controllers.Admin.Api
                 return GetErrorAction("No ID provided");
             }
 
-            ApiScope apiScope = GetScope(apiId, scopeId);
+            ApiResourceScope apiScope = GetScope(apiId, scopeId);
             if (apiScope == null)
             {
                 return GetErrorAction("Could not load api scope");
             }
-
-            var claim = apiScope.UserClaims.FirstOrDefault(uc => uc.Id == id.Value);
-            apiScope.UserClaims.Remove(claim);
+            
+            var claim = apiScope.ApiResource.UserClaims.FirstOrDefault(uc => uc.Id == id.Value);
+            apiScope.ApiResource.UserClaims.Remove(claim);
             ConfigDbContext.Update(apiScope);
             await ConfigDbContext.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Edit), new { id = scopeId.Value, parentid = apiId.Value });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddClaim(int? scopeId, int? apiId, ApiScopeViewModel scopeModel)
-        {
-            ApiScope apiScope = GetScope(apiId, scopeId);
-            if (apiScope == null)
-            {
-                return GetErrorAction("Could not load api scope");
-            }
-
-            if (ModelState.IsValid)
-            {
-                scopeModel.NewClaim.ParentId = scopeId.Value;
-                apiScope.UserClaims.Add(Mapper.Map<ApiScopeClaim>(scopeModel.NewClaim));
-                ConfigDbContext.Update(apiScope);
-                await ConfigDbContext.SaveChangesAsync();
-            }
-            else
-            {
-                scopeModel.UserClaims.AddRange(Mapper.ProjectTo<ApiScopeClaimViewModel>(apiScope.UserClaims.ToList().AsQueryable()));
-            }
 
             return RedirectToAction(nameof(Edit), new { id = scopeId.Value, parentid = apiId.Value });
         }
@@ -119,12 +95,12 @@ namespace spydersoft.Identity.Controllers.Admin.Api
         {
             if (ModelState.IsValid)
             {
-                ApiScope dbEntity;
+                ApiResourceScope dbEntity;
                 var isNew = false;
 
                 if (!id.HasValue || id.Value == 0)
                 {
-                    dbEntity = new ApiScope();
+                    dbEntity = new ApiResourceScope();
                     ConfigDbContext.Add(dbEntity);
                     isNew = true;
                 }
@@ -152,19 +128,18 @@ namespace spydersoft.Identity.Controllers.Admin.Api
             if (id.HasValue)
             {
                 scopeModel.Id = id.Value;
-                ApiScope scope = GetScope(parentid, id);
-                scopeModel.UserClaims.AddRange(Mapper.ProjectTo<ApiScopeClaimViewModel>(scope.UserClaims.ToList().AsQueryable()));
+                ApiResourceScope scope = GetScope(parentid, id);
             }
 
             return View(nameof(Edit), scopeModel);
         }
 
-        private ApiScope GetScope(int? apiId, int? id)
+        private ApiResourceScope GetScope(int? apiId, int? id)
         {
-            var apiResource = ConfigDbContext.ApiResources.Include(a => a.Scopes).ThenInclude(s => s.UserClaims).FirstOrDefault(c => c.Id == apiId.Value);
+            var apiResource = ConfigDbContext.ApiResources.Include(a => a.Scopes).ThenInclude(s => s.ApiResource).FirstOrDefault(c => c.Id == apiId.Value);
 
             var apiScope = apiResource?.Scopes.FirstOrDefault(s => s.Id == id.Value);
-
+            
             return apiScope;
         }
     }

@@ -5,6 +5,7 @@ namespace spydersoft.Identity.Models.Consent
 {
     public class ScopeViewModel
     {
+        public string Value { get; set; }
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public string Description { get; set; }
