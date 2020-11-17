@@ -5,19 +5,19 @@ using System.Linq;
 using AutoMapper;
 using spydersoft.Identity.Models;
 using spydersoft.Identity.Models.Admin;
-using spydersoft.Identity.Models.Admin.ApiViewModels;
+using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 using IS4Entities = IdentityServer4.EntityFramework.Entities;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {
-    public abstract class BaseApiCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity>
-        : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, ApiViewModel, IS4Entities.ApiResource, TChildEntity>
+    public abstract class BaseApiResourceCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity>
+        : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, ApiResourceViewModel, IS4Entities.ApiResource, TChildEntity>
         where TSingleViewModel : BaseAdminChildItemViewModel, new()
-        where TCollectionViewModel : BaseApiCollectionViewModel<TSingleViewModel>, new()
+        where TCollectionViewModel : BaseApiResourceCollectionViewModel<TSingleViewModel>, new()
     {
         #region Constructor
 
-        protected BaseApiCollectionController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
+        protected BaseApiResourceCollectionController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 

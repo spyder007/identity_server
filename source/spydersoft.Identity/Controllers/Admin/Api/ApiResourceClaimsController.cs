@@ -6,21 +6,21 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using spydersoft.Identity.Models.Admin.ApiViewModels;
+using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiClaimsController : BaseApiCollectionController<ApiClaimViewModel, ApiClaimsViewModel, ApiResourceClaim>
+    public class ApiResourceClaimsController : BaseApiResourceCollectionController<ApiResourceClaimViewModel, ApiResourceClaimsViewModel, ApiResourceClaim>
     {
-        public ApiClaimsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
+        public ApiResourceClaimsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
         #region BaseApiCollectionController Implementation
 
-        protected override IEnumerable<ApiClaimViewModel> PopulateItemList(ApiResource mainEntity)
+        protected override IEnumerable<ApiResourceClaimViewModel> PopulateItemList(ApiResource mainEntity)
         {
-            return Mapper.ProjectTo<ApiClaimViewModel>(mainEntity.UserClaims.ToList().AsQueryable());
+            return Mapper.ProjectTo<ApiResourceClaimViewModel>(mainEntity.UserClaims.ToList().AsQueryable());
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)

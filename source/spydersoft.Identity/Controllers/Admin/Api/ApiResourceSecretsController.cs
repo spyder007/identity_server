@@ -8,22 +8,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using spydersoft.Identity.Models.Admin.ApiViewModels;
+using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 using ApiResource = IdentityServer4.EntityFramework.Entities.ApiResource;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiSecretsController : BaseApiCollectionController<ApiSecretViewModel, ApiSecretsViewModel, ApiResourceSecret>
+    public class ApiResourceSecretsController : BaseApiResourceCollectionController<ApiResourceSecretViewModel, ApiResourceSecretsViewModel, ApiResourceSecret>
     {
-        public ApiSecretsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
+        public ApiResourceSecretsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
         #region BaseApiCollectionController Implementation
 
-        protected override IEnumerable<ApiSecretViewModel> PopulateItemList(ApiResource mainEntity)
+        protected override IEnumerable<ApiResourceSecretViewModel> PopulateItemList(ApiResource mainEntity)
         {
-            return Mapper.ProjectTo<ApiSecretViewModel>(mainEntity.Secrets.ToList().AsQueryable());
+            return Mapper.ProjectTo<ApiResourceSecretViewModel>(mainEntity.Secrets.ToList().AsQueryable());
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)

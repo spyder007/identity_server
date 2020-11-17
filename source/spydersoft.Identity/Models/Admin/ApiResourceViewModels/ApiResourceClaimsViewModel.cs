@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace spydersoft.Identity.Models.Admin.ApiViewModels
+namespace spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
-    public class ApiClaimsViewModel : BaseApiCollectionViewModel<ApiClaimViewModel>
+    public class ApiResourceClaimsViewModel : BaseApiResourceCollectionViewModel<ApiResourceClaimViewModel>
     {
     }
 
-    public class ApiClaimViewModel : BaseAdminChildItemViewModel
+    public class ApiResourceClaimViewModel : BaseAdminChildItemViewModel
     {
         [Required]
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",

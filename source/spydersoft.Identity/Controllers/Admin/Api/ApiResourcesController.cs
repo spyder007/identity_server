@@ -5,13 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using spydersoft.Identity.Models.Admin.ApiViewModels;
+using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApisController : BaseAdminController
+    public class ApiResourcesController : BaseAdminController
     {
-        public ApisController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
+        public ApiResourcesController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
         {
         }
 
@@ -19,22 +19,22 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         public IActionResult Index()
         {
-            var apisViewModel = new ApisViewModel
+            var apisViewModel = new ApiResourcesViewModel
             {
-                Apis = Mapper.ProjectTo<ApiViewModel>(ConfigDbContext.ApiResources.ToList().AsQueryable())
+                Apis = Mapper.ProjectTo<ApiResourceViewModel>(ConfigDbContext.ApiResources.ToList().AsQueryable())
             };
 
-            ViewData["Title"] = "Register APIs";
+            ViewData["Title"] = "Register API Resources";
             return View(apisViewModel);
         }
 
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            ApiViewModel apiModel;
+            ApiResourceViewModel apiModel;
             if (!id.HasValue)
             {
-                apiModel = new ApiViewModel();
+                apiModel = new ApiResourceViewModel();
                 ViewData["Title"] = "New API";
             }
             else
@@ -45,7 +45,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
                     return GetErrorAction("Could not load api");
                 }
 
-                apiModel = new ApiViewModel(client.Id);
+                apiModel = new ApiResourceViewModel(client.Id);
                 Mapper.Map(client, apiModel);
                 ViewData["Title"] = $"Edit {apiModel.NavBar.Name}";
             }
@@ -76,7 +76,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
         #region Main Tab
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int? id, ApiViewModel apiViewModel)
+        public async Task<IActionResult> Edit(int? id, ApiResourceViewModel apiViewModel)
         {
             if (ModelState.IsValid)
             {

@@ -6,21 +6,21 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using spydersoft.Identity.Models.Admin.ApiViewModels;
+using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiPropertiesController : BaseApiCollectionController<ApiPropertyViewModel, ApiPropertiesViewModel, ApiResourceProperty>
+    public class ApiResourcePropertiesController : BaseApiResourceCollectionController<ApiResourcePropertyViewModel, ApiResourcePropertiesViewModel, ApiResourceProperty>
     {
-        public ApiPropertiesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
+        public ApiResourcePropertiesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
         #region BaseApiCollectionController Implementation
 
-        protected override IEnumerable<ApiPropertyViewModel> PopulateItemList(ApiResource mainEntity)
+        protected override IEnumerable<ApiResourcePropertyViewModel> PopulateItemList(ApiResource mainEntity)
         { 
-            return Mapper.ProjectTo<ApiPropertyViewModel>(mainEntity.Properties.ToList().AsQueryable());
+            return Mapper.ProjectTo<ApiResourcePropertyViewModel>(mainEntity.Properties.ToList().AsQueryable());
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)

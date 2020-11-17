@@ -3,7 +3,7 @@ using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
 //using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.Models;
-using spydersoft.Identity.Models.Admin.ApiViewModels;
+using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 using spydersoft.Identity.Models.Admin.ScopeViewModels;
@@ -110,7 +110,7 @@ namespace spydersoft.Identity.Data
 
         private void PopulateApiResourceMappings()
         {
-            CreateMap<ApiViewModel, ApiResource>()
+            CreateMap<ApiResourceViewModel, ApiResource>()
                 .ForMember(d => d.UserClaims, opt => opt.Ignore())
                 .ForMember(d => d.Properties, opt => opt.Ignore())
                 .ForMember(d => d.Scopes, opt => opt.Ignore())
@@ -118,27 +118,27 @@ namespace spydersoft.Identity.Data
                 .ReverseMap()
                 .ForMember(d => d.Id, opt => opt.Ignore());
 
-            CreateMap<ApiScopeViewModel, ApiResourceScope>()
+            CreateMap<ApiResourceScopeViewModel, ApiResourceScope>()
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ApiPropertyViewModel, ApiResourceProperty>()
+            CreateMap<ApiResourcePropertyViewModel, ApiResourceProperty>()
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ApiClaimViewModel, ApiResourceClaim>()
+            CreateMap<ApiResourceClaimViewModel, ApiResourceClaim>()
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ApiSecretViewModel, ApiResourceSecret>()
+            CreateMap<ApiResourceSecretViewModel, ApiResourceSecret>()
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-  }
+        }
 
         private void PopulateScopeResourceMappings()
         {

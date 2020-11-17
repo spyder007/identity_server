@@ -46,6 +46,8 @@ namespace spydersoft.Identity.Models.Admin.ScopeViewModels
 
         [Display(Name = "Show in Discovery Document")]
         public bool ShowInDiscoveryDocument { get; set; }
+
+        public bool Enabled { get; set; }
     }
 
 }

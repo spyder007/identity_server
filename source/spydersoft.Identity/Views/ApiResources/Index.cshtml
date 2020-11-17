@@ -1,5 +1,5 @@
-﻿@using spydersoft.Identity.Models.Admin.ApiViewModels
-@model ApisViewModel
+﻿@using spydersoft.Identity.Models.Admin.ApiResourceViewModels
+@model ApiResourcesViewModel
 <div class="card">
     <div class="card-header">
         <h3>@ViewData["Title"]</h3>
@@ -10,7 +10,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Display Name</th>
-                    <th>Actions&nbsp;<a asp-controller="Apis" asp-action="Edit"><span class="fa fa-plus"></span></a></th>
+                    <th>Actions&nbsp;<a asp-controller="ApiResources" asp-action="Edit"><span class="fa fa-plus"></span></a></th>
                 </tr>
             </thead>
 
@@ -20,8 +20,8 @@
                     <td>@api.Name</td>
                     <td>@api.DisplayName</td>
                     <td>
-                        <a asp-controller="Apis" asp-action="Edit" asp-route-id="@api.Id"><span class="fa fa-edit"></span></a>
-                        <a asp-controller="Apis" asp-action="Delete" asp-route-id="@api.Id" title="Delete"><span class="fa fa-trash"></span></a>
+                        <a asp-controller="ApiResources" asp-action="Edit" asp-route-id="@api.Id"><span class="fa fa-edit"></span></a>
+                        <a asp-controller="ApiResources" asp-action="Delete" asp-route-id="@api.Id" title="Delete"><span class="fa fa-trash"></span></a>
                     </td>
                 </tr>
             }

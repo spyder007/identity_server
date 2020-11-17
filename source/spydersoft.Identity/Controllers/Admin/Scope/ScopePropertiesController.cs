@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using spydersoft.Identity.Models.Admin.ApiViewModels;
+using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 using spydersoft.Identity.Models.Admin.ScopeViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Scope

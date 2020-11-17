@@ -9,21 +9,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using spydersoft.Identity.Models.Admin.ApiViewModels;
+using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiScopesController : BaseApiCollectionController<ApiScopeViewModel, ApiScopesViewModel, ApiResourceScope>
+    public class ApiResourceScopesController : BaseApiResourceCollectionController<ApiResourceScopeViewModel, ApiResourceScopesViewModel, ApiResourceScope>
     {
-        public ApiScopesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
+        public ApiResourceScopesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
 
         #region BaseApiCollectionController Implementation
 
-        protected override IEnumerable<ApiScopeViewModel> PopulateItemList(ApiResource mainEntity)
+        protected override IEnumerable<ApiResourceScopeViewModel> PopulateItemList(ApiResource mainEntity)
         {
-            return Mapper.ProjectTo<ApiScopeViewModel>(mainEntity.Scopes.ToList().AsQueryable());
+            return Mapper.ProjectTo<ApiResourceScopeViewModel>(mainEntity.Scopes.ToList().AsQueryable());
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)
@@ -45,10 +45,10 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         public IActionResult Edit(int? id, int? parentid)
         {
-            ApiScopeViewModel model;
+            ApiResourceScopeViewModel model;
             if (!id.HasValue)
             {
-                model = new ApiScopeViewModel();
+                model = new ApiResourceScopeViewModel();
                 ViewData["Title"] = "New API Scope";
             }
             else
@@ -59,10 +59,10 @@ namespace spydersoft.Identity.Controllers.Admin.Api
                     return GetErrorAction("Could not load api scope");
                 }
 
-                model = new ApiScopeViewModel { Id = id.Value, ParentId = parentid.Value };
+                model = new ApiResourceScopeViewModel { Id = id.Value, ParentId = parentid.Value };
 
                 Mapper.Map(apiScope, model);
-                ViewData["Title"] = $"Edit API Scope {model.Name}";
+                ViewData["Title"] = $"Edit API Scope {model.Scope}";
             }
 
             return View(nameof(Edit), model);
@@ -91,7 +91,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int? id, int? parentid, ApiScopeViewModel scopeModel)
+        public async Task<IActionResult> Edit(int? id, int? parentid, ApiResourceScopeViewModel scopeModel)
         {
             if (ModelState.IsValid)
             {

@@ -1,0 +1,29 @@
+﻿@using spydersoft.Identity.Models.Admin.ApiResourceViewModels
+@model ApiResourceScopeViewModel
+
+<div class="card">
+    <form asp-action="Edit" asp-route-id="@Model.Id" asp-route-parentid="@Model.ParentId">
+
+        <div class="card-header">
+            <h3><a asp-action="Index" asp-route-id="@Model.ParentId" title="Back"><span class="fa fa-arrow-alt-circle-left"></span></a> @ViewData["Title"]</h3> 
+        </div>
+        <div class="card-body">
+            
+            @Html.HiddenFor(m => m.ParentId)
+            @Html.HiddenFor(m => m.Id)
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Scope)
+                <input type="text" class="form-control" id="txtName" asp-for="Scope" pf-validation-for="Scope" pf-validationerror-class="is-invalid" />
+                <span asp-validation-for="Scope" class="invalid-feedback"></span>
+            </div>
+
+        </div>
+
+        <div class="card-footer">
+            <input type="submit" value="Save" class="btn btn-sm btn-primary" formaction="Edit" />
+        </div>
+    </form>
+</div>
+
