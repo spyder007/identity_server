@@ -5,19 +5,14 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal AS base
 WORKDIR /app
 EXPOSE 80
 
-# Setup NodeJs
-
-RUN apt-get update
-RUN apt-get install curl gnupg -yq
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
-RUN apt-get install nodejs -yq
-
-# End setup
+FROM stefanscherer/node-windows:12.19-slim AS node-builder
+WORKDIR /src
+COPY . .
 
 WORKDIR /src/spydersoft.Identity
 RUN npm install
-RUN npm install gulp
-RUN npx gulp build:dist
+RUN npm install gulp-cli -g
+RUN gulp build:dist
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /src
