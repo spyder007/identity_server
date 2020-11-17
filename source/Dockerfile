@@ -16,7 +16,7 @@ RUN apt-get install nodejs -yq
 
 WORKDIR /src/spydersoft.Identity
 RUN npm install
-RUN npm install gulp -g
+RUN npm install gulp
 RUN npx gulp build:dist
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
