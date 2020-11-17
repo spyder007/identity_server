@@ -37,7 +37,7 @@ gulp.libsToCopy = [
         ]
     },
     {
-        lib: "jQuery",
+        lib: "jquery",
         jobs: [
             {
                 src: "/dist/**/*",
