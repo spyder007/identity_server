@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM stefanscherer/node-windows:12.19-slim AS node-builder
+FROM node:12.19-slim AS node-builder
 WORKDIR /src
 COPY . .
 
