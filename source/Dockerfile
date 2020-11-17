@@ -7,6 +7,7 @@ EXPOSE 80
 
 # Setup NodeJs
 
+RUN apt-get update
 RUN apt-get install curl gnupg -yq
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash
 RUN apt-get install nodejs -yq
