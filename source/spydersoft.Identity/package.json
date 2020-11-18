@@ -1,6 +1,7 @@
 {
   "name": "@spydersoft/identity",
   "version": "1.0.10",
+  "private": true,
   "description": "Identity Server 4 Implementation",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.12.0",

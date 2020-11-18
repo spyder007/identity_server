@@ -32,7 +32,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
-                        .HasName("RoleNameIndex");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -163,11 +163,11 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
+                        .HasDatabaseName("EmailIndex");
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });

@@ -91,7 +91,6 @@ namespace spydersoft.Identity
             {
                 app.UseDeveloperExceptionPage();
                 //app.UseBrowserLink();
-                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -100,14 +99,14 @@ namespace spydersoft.Identity
 
             app.UseCookiePolicy();
             app.UseStaticFiles();
-            var fordwardedHeaderOptions = new ForwardedHeadersOptions
+            var forwardedHeadersOptions = new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             };
-            fordwardedHeaderOptions.KnownNetworks.Clear();
-            fordwardedHeaderOptions.KnownProxies.Clear();
+            forwardedHeadersOptions.KnownNetworks.Clear();
+            forwardedHeadersOptions.KnownProxies.Clear();
 
-            app.UseForwardedHeaders(fordwardedHeaderOptions);
+            app.UseForwardedHeaders(forwardedHeadersOptions);
 
             // app.UseIdentity(); // not needed, since UseIdentityServer adds the authentication middleware
             app.UseIdentityServer();
