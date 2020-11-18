@@ -4,7 +4,7 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
-var cssmin = require('gulp-cssmin');
+var cleanCSS = require('gulp-clean-css');
 var rename = require('gulp-rename');
 
 gulp.paths = {
@@ -110,7 +110,7 @@ gulp.task('sass', function () {
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(gulp.dest(paths.dist + 'css'))
-        .pipe(cssmin())
+        .pipe(cleanCSS({ compatibility: 'ie8' }).minify)
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest(paths.dist + 'css'));
 });
