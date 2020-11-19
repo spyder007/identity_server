@@ -110,7 +110,7 @@ gulp.task('sass', function () {
         .pipe(sass())
         .pipe(autoprefixer())
         .pipe(gulp.dest(paths.dist + 'css'))
-        .pipe(cleanCSS({ compatibility: 'ie8' }).minify)
+        .pipe(cleanCSS({ compatibility: 'ie8' }))
         .pipe(rename({ suffix: '.min' }))
         .pipe(gulp.dest(paths.dist + 'css'));
 });
