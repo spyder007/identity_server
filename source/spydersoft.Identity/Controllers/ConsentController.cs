@@ -4,9 +4,11 @@
 using System.Collections.Generic;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using spydersoft.Identity.Attributes;
 using spydersoft.Identity.Models;
 using spydersoft.Identity.Services;
@@ -18,6 +20,7 @@ namespace spydersoft.Identity.Controllers
     /// This controller processes the consent UI
     /// </summary>
     [SecurityHeaders]
+    [Authorize]
     public class ConsentController : Controller
     {
         private readonly ConsentService _consent;
@@ -27,9 +30,10 @@ namespace spydersoft.Identity.Controllers
             IClientStore clientStore,
             IResourceStore resourceStore,
             IEventService events,
-            ILogger<ConsentController> logger)
+            ILogger<ConsentController> logger,
+            IHttpContextAccessor httpContextAccessor)
         {
-            _consent = new ConsentService(interaction, clientStore, resourceStore, events, logger, User);
+            _consent = new ConsentService(interaction, clientStore, resourceStore, events, logger, httpContextAccessor);
         }
 
         /// <summary>

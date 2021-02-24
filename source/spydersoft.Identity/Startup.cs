@@ -35,6 +35,7 @@ namespace spydersoft.Identity
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.ConfigureNonBreakingSameSiteCookies();
+            services.AddHttpContextAccessor();
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
             services.AddAutoMapper(typeof(Startup));

@@ -13,6 +13,7 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using spydersoft.Identity.Models;
 using spydersoft.Identity.Models.Consent;
@@ -26,7 +27,7 @@ namespace spydersoft.Identity.Services
         private readonly IIdentityServerInteractionService _interaction;
         private readonly ILogger _logger;
         private readonly IEventService _events;
-        private readonly ClaimsPrincipal _user;
+        private readonly IHttpContextAccessor _contextAccessor;
 
         public ConsentService(
             IIdentityServerInteractionService interaction,
@@ -34,14 +35,14 @@ namespace spydersoft.Identity.Services
             IResourceStore resourceStore,
             IEventService events,
             ILogger logger,
-            ClaimsPrincipal user)
+            IHttpContextAccessor contextAccessor)
         {
             _interaction = interaction;
             _clientStore = clientStore;
             _resourceStore = resourceStore;
             _events = events;
             _logger = logger;
-            _user = user;
+            _contextAccessor = contextAccessor;
         }
 
         public async Task<ProcessConsentResult> ProcessConsent(ConsentInputModel model)
@@ -52,6 +53,12 @@ namespace spydersoft.Identity.Services
             var request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
             if (request == null) return result;
 
+            var user = _contextAccessor.HttpContext?.User;
+            if (user == null)
+            {
+                return new ProcessConsentResult();
+            }
+
             ConsentResponse grantedConsent = null;
 
             // user clicked 'no' - send back the standard 'access_denied' response
@@ -60,7 +67,7 @@ namespace spydersoft.Identity.Services
                 grantedConsent = new ConsentResponse { Error = AuthorizationError.AccessDenied };
 
                 // emit event
-                await _events.RaiseAsync(new ConsentDeniedEvent(_user.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues));
+                await _events.RaiseAsync(new ConsentDeniedEvent(user.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues));
             }
             // user clicked 'yes' - validate the data
             else if (model?.Button == "yes")
@@ -82,7 +89,7 @@ namespace spydersoft.Identity.Services
                     };
 
                     // emit event
-                    await _events.RaiseAsync(new ConsentGrantedEvent(_user.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues, grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent));
+                    await _events.RaiseAsync(new ConsentGrantedEvent(user.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues, grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent));
                 }
                 else
                 {
