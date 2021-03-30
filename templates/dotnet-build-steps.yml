@@ -43,5 +43,5 @@ steps:
     inputs:
       command: publish
       projects: 'source/spydersoft.Identity/spydersoft.Identity.csproj'
-      arguments: '--no-restore --runtime linux-x64 --configuration ${{ parameters.BUILD_CONFIGURATION }} --output $(Build.ArtifactStagingDirectory)'
+      arguments: '--no-restore --configuration ${{ parameters.BUILD_CONFIGURATION }} --output $(Build.ArtifactStagingDirectory)'
       zipAfterPublish: True
