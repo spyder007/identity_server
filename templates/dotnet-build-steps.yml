@@ -1,0 +1,28 @@
+parameters:
+- name: BUILD_CONFIGURATION
+  default: 'Release'
+  type: string
+
+steps:
+  - task: Npm@1
+    displayName: NPM Install
+    inputs:
+      workingDir: $(Build.SourcesDirectory)/source/spydersoft.identity
+      command: install
+
+  - task: DotNetCoreCLI@2
+    displayName: 'DotNet restore packages (dotnet restore)'
+    inputs:
+      command: 'restore'
+      feedsToUse: config
+      nugetConfigPath: "$(Build.SourcesDirectory)/nuget.config"
+      projects: "**/*.csproj"
+      externalFeedCredentials: 'SpydersoftDevelop'
+
+  - task: DotNetCoreCLI@2
+    displayName: Publish (dotnet publish)
+    inputs:
+      command: publish
+      projects: 'source/spydersoft.Identity/spydersoft.Identity.csproj'
+      arguments: '--no-restore --runtime linux-x64 --configuration ${{ parameters.BUILD_CONFIGURATION }} --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: True

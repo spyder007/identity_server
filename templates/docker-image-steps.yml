@@ -1,0 +1,70 @@
+parameters:
+- name: dockerImageName
+  type: string
+- name: containerRegistryName
+  type: string
+- name: containerRegistryUrl
+  type: string
+- name: artifactName
+  type: string
+- name: dockerImageFileName
+  type: string
+
+steps:
+  - download: current
+    artifact: ${{ parameters.artifactName }}
+  - task: ExtractFiles@1
+    displayName: Extract Build Files
+    inputs:
+      archiveFilePatterns: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/spydersoft.Identity.zip' 
+      destinationFolder: $(Pipeline.Workspace)/publishFiles
+      cleanDestinationFolder: true   
+  - task: Bash@3
+    displayName: Copy Docker file to build folder
+    inputs:
+      targetType: 'inline'
+      script: |
+        cp $(Build.SourcesDirectory)/Dockerfile.simple $(Pipeline.Workspace)/publishFiles/Dockerfile
+
+  - task: Bash@3
+    name: setContainerTag
+    displayName: Set branch tag
+    inputs:
+      targetType: 'inline'
+      script: |
+          echo 'Source Branch Name $(build.SourceBranch)'
+          if [ '$(build.SourceBranch)' == 'refs/heads/master' ]
+          then
+              echo 'Setting branchTag to rc'
+              echo '##vso[task.setvariable variable=containerTag;isOutput=true]rc-$(build.buildnumber)'
+              echo '##vso[task.setvariable variable=containerTag]rc-$(build.buildnumber)'
+          else
+              echo 'Setting branchTag to feature'
+              echo '##vso[task.setvariable variable=containerTag;isOutput=true]feature-$(build.buildnumber)'
+              echo '##vso[task.setvariable variable=containerTag]feature-$(build.buildnumber)'
+          fi
+
+  - task: Docker@2
+    displayName: Build Image
+    inputs:
+      command: 'build'
+      containerRegistry: ${{ parameters.containerRegistryName }}
+      repository: ${{ parameters.dockerImageName }}
+      Dockerfile: '$(Pipeline.Workspace)/publishFiles/Dockerfile'
+      buildContext: '$(Pipeline.Workspace)/publishFiles'
+      # always add the regression-test tag here so that the docker compose can find this image for testing
+      tags: |
+        $(containerTag) 
+
+  - task: Docker@2
+    displayName: 'Save image to TAR'
+    inputs:
+      repository: '${{ parameters.dockerImageName }}'
+      command: save
+      arguments: '--output $(build.artifactstagingdirectory)/${{ parameters.dockerImageFileName }}.image.tar ${{ parameters.containerRegistryUrl }}/${{ parameters.dockerImageName }}:$(containerTag)'
+      addPipelineData: false
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publishing Image as Pipeline Artifact'
+    inputs:
+      path: $(build.artifactstagingdirectory)
+      artifact: 'ContainerImage'
