@@ -2,8 +2,17 @@ parameters:
 - name: BUILD_CONFIGURATION
   default: 'Release'
   type: string
+- name: netCoreVersion
+  type: string
+  default: '5.0.x'
 
 steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core sdk'
+    inputs:
+      packageType: sdk
+      version: ${{ parameters.netCoreVersion }}
+
   - task: Npm@1
     displayName: NPM Install
     inputs:
