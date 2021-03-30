@@ -9,6 +9,10 @@ steps:
     inputs:
       workingDir: $(Build.SourcesDirectory)/source/spydersoft.Identity
       command: install
+  
+  - task: CmdLine@2
+    inputs:
+        script: 'npm install gulp' 
 
   - task: CmdLine@2
     inputs:
