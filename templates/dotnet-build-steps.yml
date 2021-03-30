@@ -10,6 +10,10 @@ steps:
       workingDir: $(Build.SourcesDirectory)/source/spydersoft.Identity
       command: install
 
+  - task: CmdLine@2
+    inputs:
+        script: 'gulp build:dist' 
+
   - task: DotNetCoreCLI@2
     displayName: 'DotNet restore packages (dotnet restore)'
     inputs:
@@ -17,7 +21,7 @@ steps:
       feedsToUse: config
       nugetConfigPath: "$(Build.SourcesDirectory)/nuget.config"
       projects: "**/*.csproj"
-      externalFeedCredentials: 'SpydersoftDevelop'
+      #externalFeedCredentials: 'SpydersoftDevelop'
 
   - task: DotNetCoreCLI@2
     displayName: Publish (dotnet publish)
