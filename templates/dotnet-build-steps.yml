@@ -12,11 +12,13 @@ steps:
   
   - task: CmdLine@2
     inputs:
-        script: 'npm install gulp' 
+      script: 'npm install gulp' 
+      workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
 
   - task: CmdLine@2
     inputs:
-        script: 'gulp build:dist' 
+      script: 'gulp build:dist'
+      workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
 
   - task: DotNetCoreCLI@2
     displayName: 'DotNet restore packages (dotnet restore)'
