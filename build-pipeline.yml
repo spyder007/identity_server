@@ -1,12 +1,18 @@
 variables:
-  DOCKER_BUILDKIT: 1
-  BUILD_CONFIGURATION: "Release"
-
-  dockerImageName: spydersoft/identity/identity_server
-  containerRegistryName: proget_docker
-  containerRegistryUrl: proget.mattgerega.com
-  dockerImageFileName: identity_server
-
+  - group: helm-repository
+  - name: DOCKER_BUILDKIT
+    value: 1
+  - name: BUILD_CONFIGURATION
+    value: "Release"
+  - name: dockerImageName
+    value: spydersoft/identity/identity_server
+  - name: containerRegistryName
+    value: proget_docker
+  - name: containerRegistryUrl
+    value: proget.mattgerega.com
+  - name: dockerImageFileName
+    value: identity_server 
+  
 trigger:
   branches:
     include:
@@ -15,8 +21,6 @@ trigger:
   paths:
     exclude:
       - README.md
-
-
 
 stages:
 - stage: Build
@@ -47,3 +51,20 @@ stages:
         containerRegistryUrl: $(containerRegistryUrl)
         artifactName: 'identityServer'
         dockerImageFileName: $(dockerImageFileName)
+
+- stage: helm_publish
+  jobs:
+  - job: create_helm_chart_and_publish
+    pool:
+      name: Default
+      demands: agent.os -equals Linux
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+         helm package . --app-version $(FullSemVer) --version $(FullSemVer)
+         curl $(helm_repository_url) --user $(helm_username):$(helm_password) --upload-file identity-server-$(FullSemVer).tgz
+        workingDirectory: $(Build.SourcesDirectory)/charts/identity-server
+
+
+## TODO: If "master" create release in octopus
