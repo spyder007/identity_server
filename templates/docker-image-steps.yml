@@ -9,6 +9,8 @@ parameters:
   type: string
 - name: dockerImageFileName
   type: string
+- name: artifactZipName
+  type: string
 
 steps:
   - download: current
@@ -16,7 +18,7 @@ steps:
   - task: ExtractFiles@1
     displayName: Extract Build Files
     inputs:
-      archiveFilePatterns: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/spydersoft.Identity.zip' 
+      archiveFilePatterns: '$(Pipeline.Workspace)/${{ parameters.artifactName }}/${{ parameters.artifactZipName }}.zip' 
       destinationFolder: $(Pipeline.Workspace)/publishFiles
       cleanDestinationFolder: true   
   - task: Bash@3

@@ -1,3 +1,8 @@
+## Basic Build Pipeline
+## Feature builds only do the build and UT portion 
+## Builds from master will create container images and helm charts and create an octopus release
+## based on that build
+
 variables:
   - group: helm-repository
   - name: DOCKER_BUILDKIT
@@ -11,8 +16,22 @@ variables:
   - name: containerRegistryUrl
     value: proget.mattgerega.com
   - name: dockerImageFileName
-    value: identity_server 
-  
+    value: identity_server
+  - name: helmChartName
+    value: identity-server
+  - name: helmChartPath
+    value: $(Build.SourcesDirectory)/charts/identity-server
+  - name: artifactName
+    value: identityServer
+  - name: artifactZipName
+    value: spydersoft.Identity
+  - name: npmInstallFolder
+    value: $(Build.SourcesDirectory)/source/spydersoft.Identity
+  - name: gulpFolder
+    value: $(Build.SourcesDirectory)/source/spydersoft.Identity
+  - name: publishProject
+    value: source/spydersoft.Identity/spydersoft.Identity.csproj
+
 trigger:
   branches:
     include:
@@ -22,6 +41,8 @@ trigger:
     exclude:
       - README.md
 
+# TODO - Add test steps (even though there may only be one test)
+##  Feature builds ONLY run unit tests
 stages:
 - stage: Build
   jobs:
@@ -31,12 +52,22 @@ stages:
       demands: agent.os -equals Linux
     steps:
     - template: templates/dotnet-build-steps.yml
+      parameters:
+        npmInstallFolder: $(npmInstallFolder)
+        gulpFolder: $(gulpFolder)
+        publishProject: $(publishProject)
+
     # this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your pipeline.
     - publish: '$(Build.ArtifactStagingDirectory)' 
-      artifact: 'identityServer'
+      artifact: '$(artifactName)'
 
+## If "master" 
+##  Create and push docker container
+##  Create and push helm chart
+##  Create octopus release
         
 - stage: docker_and_test
+  condition: and(succeeded(), eq('$(build.SourceBranch)', 'refs/heads/master'))
   jobs:
   - job: create_docker_image_and_test
     timeoutInMinutes: 90
@@ -49,10 +80,13 @@ stages:
         dockerImageName: $(dockerImageName)
         containerRegistryName: $(containerRegistryName)
         containerRegistryUrl: $(containerRegistryUrl)
-        artifactName: 'identityServer'
+        artifactName: '$(artifactName)'
+        artifactZipName: $(artifactZipName)
         dockerImageFileName: $(dockerImageFileName)
+        
 
 - stage: helm_publish
+  condition: and(succeeded(), eq('$(build.SourceBranch)', 'refs/heads/master'))
   jobs:
   - job: create_helm_chart_and_publish
     pool:
@@ -63,8 +97,7 @@ stages:
       inputs:
         script: |
          helm package . --app-version $(build.buildnumber) --version $(build.buildnumber)
-         curl $(helm_repository_url) --user $(helm_username):$(helm_password) --upload-file identity-server-$(build.buildnumber).tgz
-        workingDirectory: $(Build.SourcesDirectory)/charts/identity-server
+         curl $(helm_repository_url) --user $(helm_username):$(helm_password) --upload-file $(helmChartName)-$(build.buildnumber).tgz
+        workingDirectory: $(helmChartPath)
 
 
-## TODO: If "master" create release in octopus

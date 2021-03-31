@@ -5,6 +5,12 @@ parameters:
 - name: netCoreVersion
   type: string
   default: '5.0.x'
+- name: npmInstallFolder
+  type: string
+- name: gulpFolder
+  type: string
+- name: publishProject
+  type: string
 
 steps:
   - task: gitversion/setup@0
@@ -23,18 +29,18 @@ steps:
   - task: Npm@1
     displayName: NPM Install
     inputs:
-      workingDir: $(Build.SourcesDirectory)/source/spydersoft.Identity
+      workingDir: ${{ parameters.npmInstallFolder }}
       command: install
   
   - task: CmdLine@2
     inputs:
       script: 'npm install gulp' 
-      workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
+      workingDirectory: ${{ parameters.gulpFolder }}
 
   - task: CmdLine@2
     inputs:
       script: 'gulp build:dist'
-      workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
+      workingDirectory: ${{ parameters.gulpFolder }}
 
   - task: DotNetCoreCLI@2
     displayName: 'DotNet restore packages (dotnet restore)'
@@ -49,6 +55,6 @@ steps:
     displayName: Publish (dotnet publish)
     inputs:
       command: publish
-      projects: 'source/spydersoft.Identity/spydersoft.Identity.csproj'
+      projects: ${{ parameters.publishProject }}
       arguments: '--no-restore --configuration ${{ parameters.BUILD_CONFIGURATION }} --output $(Build.ArtifactStagingDirectory) /p:InformationalVersion=$(fullSemVer)'
       zipAfterPublish: True
