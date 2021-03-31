@@ -62,8 +62,8 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
-         helm package . --app-version $(fullSemVer) --version $(fullSemVer)
-         curl $(helm_repository_url) --user $(helm_username):$(helm_password) --upload-file identity-server-$(fullSemVer).tgz
+         helm package . --app-version $(build.buildnumber) --version $(build.buildnumber)
+         curl $(helm_repository_url) --user $(helm_username):$(helm_password) --upload-file identity-server-$(build.buildnumber).tgz
         workingDirectory: $(Build.SourcesDirectory)/charts/identity-server
 
 
