@@ -36,8 +36,8 @@ steps:
           if [ '$(build.SourceBranch)' == 'refs/heads/master' ]
           then
               echo 'Setting branchTag to rc'
-              echo '##vso[task.setvariable variable=containerTag;isOutput=true]rc-$(build.buildnumber)'
-              echo '##vso[task.setvariable variable=containerTag]rc-$(build.buildnumber)'
+              echo '##vso[task.setvariable variable=containerTag;isOutput=true]$(build.buildnumber)'
+              echo '##vso[task.setvariable variable=containerTag]$(build.buildnumber)'
           else
               echo 'Setting branchTag to feature'
               echo '##vso[task.setvariable variable=containerTag;isOutput=true]feature-$(build.buildnumber)'
@@ -57,14 +57,10 @@ steps:
         $(containerTag) 
 
   - task: Docker@2
-    displayName: 'Save image to TAR'
+    displayName: Push to Container Registry
     inputs:
-      repository: '${{ parameters.dockerImageName }}'
-      command: save
-      arguments: '--output $(build.artifactstagingdirectory)/${{ parameters.dockerImageFileName }}.image.tar ${{ parameters.containerRegistryUrl }}/${{ parameters.dockerImageName }}:$(containerTag)'
-      addPipelineData: false
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publishing Image as Pipeline Artifact'
-    inputs:
-      path: $(build.artifactstagingdirectory)
-      artifact: 'ContainerImage'
+      containerRegistry: ${{ parameters.containerRegistryName}}
+      repository: '${{ parameters.dockerImageName}}'
+      command: 'push'
+      tags: | 
+        $(containerTag)
