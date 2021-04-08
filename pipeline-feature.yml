@@ -45,7 +45,7 @@ trigger:
 
 pr: none
 
-# TODO - Add test steps (even though there may only be one test)
+
 stages:
 - stage: Build
   jobs:
@@ -64,23 +64,17 @@ stages:
     - publish: '$(Build.ArtifactStagingDirectory)' 
       artifact: '$(artifactName)'
 
-- stage: docker_and_test
+- stage: docker_publish
   displayName: Create Docker Image
   jobs:
-  - job: create_docker_image_and_test
-    timeoutInMinutes: 90
-    pool:
-      name: Default
-      demands: agent.os -equals Linux
-    steps:
-    - template: step_collections/docker-image-steps.yml@templates
-      parameters:
-        dockerImageName: $(dockerImageName)
-        containerRegistryName: $(containerRegistryName)
-        containerRegistryUrl: $(containerRegistryUrl)
-        artifactName: '$(artifactName)'
-        artifactZipName: $(artifactZipName)
-        dockerImageFileName: $(dockerImageFileName)
+  - template: jobs/docker-image-job.yml@templates
+    parameters:
+      dockerImageName: $(dockerImageName)
+      containerRegistryName: $(containerRegistryName)
+      containerRegistryUrl: $(containerRegistryUrl)
+      artifactName: '$(artifactName)'
+      artifactZipName: $(artifactZipName)
+      dockerImageFileName: $(dockerImageFileName)
         
 
 - stage: helm_publish
