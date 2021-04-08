@@ -117,4 +117,4 @@ stages:
               ReleaseNumber: '$(build.buildnumber)'
               Channel: 'development' #'Channels-281'
               DeployToEnvironment: 'mattgerega.net (Test)' #'Environments-1'
-              AdditionalArguments: '--packageversion %build.number%'
+              AdditionalArguments: '--packageversion $(build.buildnumber)'
