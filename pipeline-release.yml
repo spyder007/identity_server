@@ -37,6 +37,8 @@ trigger:
     exclude:
       - README.md
 
+pr: none
+
 # TODO - Add test steps (even though there may only be one test)
 stages:
 - stage: Build
