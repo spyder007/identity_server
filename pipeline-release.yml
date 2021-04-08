@@ -115,7 +115,7 @@ stages:
               ProjectName: 'identity.server.k8' #'Projects-241'
               ReleaseNumber: '$(build.buildnumber)'
               Channel: 'release-candidate' #'Channels-281'
-              DeployToEnvironment: 'mattgerega.org (Stage)' #'Environments-1'
+              DeployToEnvironment: 'mattgerega.org (Staging)' #'Environments-1'
               AdditionalArguments: '--packageversion %build.number%'
    
 - stage: production_release
