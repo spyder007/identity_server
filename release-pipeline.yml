@@ -1,0 +1,145 @@
+## Basic Build Pipeline
+## Feature builds only do the build and UT portion 
+## Builds from master will create container images and helm charts and create an octopus release
+## based on that build
+
+variables:
+  - group: helm-repository
+  - name: DOCKER_BUILDKIT
+    value: 1
+  - name: BUILD_CONFIGURATION
+    value: "Release"
+  - name: dockerImageName
+    value: spydersoft/identity/identity_server
+  - name: containerRegistryName
+    value: proget_docker
+  - name: containerRegistryUrl
+    value: proget.mattgerega.com
+  - name: dockerImageFileName
+    value: identity_server
+  - name: helmChartName
+    value: identity-server
+  - name: helmChartPath
+    value: $(Build.SourcesDirectory)/charts/identity-server
+  - name: artifactName
+    value: identityServer
+  - name: artifactZipName
+    value: spydersoft.Identity
+  - name: npmInstallFolder
+    value: $(Build.SourcesDirectory)/source/spydersoft.Identity
+  - name: gulpFolder
+    value: $(Build.SourcesDirectory)/source/spydersoft.Identity
+  - name: publishProject
+    value: source/spydersoft.Identity/spydersoft.Identity.csproj
+
+trigger:
+  branches:
+    include:
+      - master
+  paths:
+    exclude:
+      - README.md
+
+# TODO - Add test steps (even though there may only be one test)
+stages:
+- stage: Build
+  jobs:
+  - job: BuildJob
+    pool:
+      name: Default
+      demands: agent.os -equals Linux
+    steps:
+    - template: templates/dotnet-build-steps.yml
+      parameters:
+        npmInstallFolder: $(npmInstallFolder)
+        gulpFolder: $(gulpFolder)
+        publishProject: $(publishProject)
+
+    # this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your pipeline.
+    - publish: '$(Build.ArtifactStagingDirectory)' 
+      artifact: '$(artifactName)'
+
+- stage: docker_and_test
+  display: Create Docker Image
+  jobs:
+  - job: create_docker_image_and_test
+    timeoutInMinutes: 90
+    pool:
+      name: Default
+      demands: agent.os -equals Linux
+    steps:
+    - template: templates/docker-image-steps.yml
+      parameters:
+        dockerImageName: $(dockerImageName)
+        containerRegistryName: $(containerRegistryName)
+        containerRegistryUrl: $(containerRegistryUrl)
+        artifactName: '$(artifactName)'
+        artifactZipName: $(artifactZipName)
+        dockerImageFileName: $(dockerImageFileName)
+        
+
+- stage: helm_publish
+  display: Publish Helm Chart
+  jobs:
+  - job: create_helm_chart_and_publish
+    pool:
+      name: Default
+      demands: agent.os -equals Linux
+    steps:
+    - task: CmdLine@2
+      inputs:
+        script: |
+         helm package . --app-version $(build.buildnumber) --version $(build.buildnumber)
+         curl $(helm_repository_url) --user $(helm_username):$(helm_password) --upload-file $(helmChartName)-$(build.buildnumber).tgz
+        workingDirectory: $(helmChartPath)
+
+- stage: stage_release
+  dependsOn:
+  - helm_publish
+  display: Create and Deploy Octopus Release to Release Candidate Channel
+  jobs:
+  - deployment: stage
+    displayName: 'Deploy to Stage'
+    environment: stage
+    pool:
+      name: Default
+      demands: agent.os -equals Linux
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: OctopusCreateRelease@4
+            inputs:
+              OctoConnectedServiceName: 'octopus-mattgerega-com'
+              Space: 'Gerega' #'Spaces-1'
+              ProjectGroup: 'Identity Server' #'ProjectGroups-41'
+              ProjectName: 'identity.server.k8' #'Projects-241'
+              ReleaseNumber: '$(build.buildnumber)'
+              Channel: 'release-candidate' #'Channels-281'
+              DeployToEnvironment: 'mattgerega.org (Stage)' #'Environments-1'
+              AdditionalArguments: '--packageversion %build.number%'
+   
+- stage: production_release
+  dependsOn:
+  - helm_publish
+  display: Promote to Production
+  jobs:
+  - deployment: production
+    displayName: 'Promote to Production'
+    environment: production
+    pool:
+      name: Default
+      demands: agent.os -equals Linux
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: OctopusPromote@4
+            inputs:
+              OctoConnectedServiceName: 'octopus-mattgerega-com'
+              Space: 'Gerega' #'Spaces-1'
+              ProjectGroup: 'Identity Server' #'ProjectGroups-41'
+              ProjectName: 'identity.server.k8' #'Projects-241'
+              From: 'mattgerega.org (Staging)' #'Environments-2'
+              To: mattgerega.com (Production)' #'Environments-3'
+
