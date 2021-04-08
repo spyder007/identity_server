@@ -1,7 +1,4 @@
-## Basic Build Pipeline
-## Feature builds only do the build and UT portion 
-## Builds from master will create container images and helm charts and create an octopus release
-## based on that build
+## Feature Build Pipeline - Build and publish to development channel
 
 variables:
   - group: helm-repository
@@ -35,7 +32,7 @@ variables:
 trigger:
   branches:
     include:
-      - master
+      - feature/*
   paths:
     exclude:
       - README.md
@@ -93,14 +90,14 @@ stages:
          curl $(helm_repository_url) --user $(helm_username):$(helm_password) --upload-file $(helmChartName)-$(build.buildnumber).tgz
         workingDirectory: $(helmChartPath)
 
-- stage: stage_release
+- stage: test_release
   dependsOn:
   - helm_publish
-  displayName: Create and Deploy Octopus Release to Release Candidate Channel
+  displayName: Create and Deploy Octopus Release to Test Channel
   jobs:
-  - deployment: stage
-    displayName: 'Deploy to Stage'
-    environment: stage
+  - deployment: test
+    displayName: 'Deploy to Test'
+    environment: test
     pool:
       name: Default
       demands: agent.os -equals Linux
@@ -115,31 +112,6 @@ stages:
               ProjectGroup: 'Identity Server' #'ProjectGroups-41'
               ProjectName: 'identity.server.k8' #'Projects-241'
               ReleaseNumber: '$(build.buildnumber)'
-              Channel: 'release-candidate' #'Channels-281'
-              DeployToEnvironment: 'mattgerega.org (Stage)' #'Environments-1'
-              AdditionalArguments: '--packageversion %build.number%'
-   
-- stage: production_release
-  dependsOn:
-  - helm_publish
-  displayName: Promote to Production
-  jobs:
-  - deployment: production
-    displayName: 'Promote to Production'
-    environment: production
-    pool:
-      name: Default
-      demands: agent.os -equals Linux
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: OctopusPromote@4
-            inputs:
-              OctoConnectedServiceName: 'octopus-mattgerega-com'
-              Space: 'Gerega' #'Spaces-1'
-              ProjectGroup: 'Identity Server' #'ProjectGroups-41'
-              ProjectName: 'identity.server.k8' #'Projects-241'
-              From: 'mattgerega.org (Staging)' #'Environments-2'
-              To: mattgerega.com (Production)' #'Environments-3'
-
+              Channel: 'development' #'Channels-281'
+              DeployToEnvironment: 'mattgerega.net (Test)' #'Environments-1'
+              AdditionalArguments: '--packageversion $(build.buildnumber)'
