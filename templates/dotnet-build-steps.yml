@@ -56,5 +56,5 @@ steps:
     inputs:
       command: publish
       projects: ${{ parameters.publishProject }}
-      arguments: '--no-restore --configuration ${{ parameters.BUILD_CONFIGURATION }} --output $(Build.ArtifactStagingDirectory) /p:InformationalVersion=$(fullSemVer)'
+      arguments: '--no-restore --configuration ${{ parameters.BUILD_CONFIGURATION }} --output $(Build.ArtifactStagingDirectory) /p:InformationalVersion=$(SemVer)'
       zipAfterPublish: True
