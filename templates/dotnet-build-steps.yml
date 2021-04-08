@@ -46,10 +46,10 @@ steps:
     displayName: 'DotNet restore packages (dotnet restore)'
     inputs:
       command: 'restore'
-      #feedsToUse: config
-      #nugetConfigPath: "$(Build.SourcesDirectory)/nuget.config"
+      feedsToUse: config
+      nugetConfigPath: "$(Build.SourcesDirectory)/nuget.config"
       projects: "**/*.csproj"
-      #externalFeedCredentials: 'SpydersoftDevelop'
+      externalFeedCredentials: 'SpydersoftDevelop'
 
   - task: DotNetCoreCLI@2
     displayName: Publish (dotnet publish)
