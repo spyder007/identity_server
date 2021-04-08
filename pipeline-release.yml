@@ -120,7 +120,7 @@ stages:
    
 - stage: production_release
   dependsOn:
-  - helm_publish
+  - stage_release
   displayName: Promote to Production
   jobs:
   - deployment: production
