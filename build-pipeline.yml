@@ -35,14 +35,12 @@ variables:
 trigger:
   branches:
     include:
-      - master
       - feature/*
   paths:
     exclude:
       - README.md
 
 # TODO - Add test steps (even though there may only be one test)
-##  Feature builds ONLY run unit tests
 stages:
 - stage: Build
   jobs:
@@ -61,13 +59,8 @@ stages:
     - publish: '$(Build.ArtifactStagingDirectory)' 
       artifact: '$(artifactName)'
 
-## If "master" 
-##  Create and push docker container
-##  Create and push helm chart
-##  Create octopus release
-        
 - stage: docker_and_test
-  condition: and(succeeded(), eq('$(build.SourceBranch)', 'refs/heads/master'))
+  display: Create Docker Image
   jobs:
   - job: create_docker_image_and_test
     timeoutInMinutes: 90
@@ -86,7 +79,7 @@ stages:
         
 
 - stage: helm_publish
-  condition: and(succeeded(), eq('$(build.SourceBranch)', 'refs/heads/master'))
+  display: Publish Helm Chart
   jobs:
   - job: create_helm_chart_and_publish
     pool:
@@ -100,4 +93,28 @@ stages:
          curl $(helm_repository_url) --user $(helm_username):$(helm_password) --upload-file $(helmChartName)-$(build.buildnumber).tgz
         workingDirectory: $(helmChartPath)
 
-
+- stage: test_release
+  dependsOn:
+  - helm_publish
+  display: Create and Deploy Octopus Release to Test Channel
+  jobs:
+  - deployment: test
+    displayName: 'Deploy to Test'
+    environment: test
+    pool:
+      name: Default
+      demands: agent.os -equals Linux
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: OctopusCreateRelease@4
+            inputs:
+              OctoConnectedServiceName: 'octopus-mattgerega-com'
+              Space: 'Gerega' #'Spaces-1'
+              ProjectGroup: 'Identity Server' #'ProjectGroups-41'
+              ProjectName: 'identity.server.k8' #'Projects-241'
+              ReleaseNumber: '$(build.buildnumber)'
+              Channel: 'development' #'Channels-281'
+              DeployToEnvironment: 'mattgerega.net (Test)' #'Environments-1'
+              AdditionalArguments: '--packageversion %build.number%'
