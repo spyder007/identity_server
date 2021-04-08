@@ -1,4 +1,10 @@
 ## Feature Build Pipeline - Build and publish to development channel
+resources:
+  repositories:
+    - repository: templates
+      type: BitBucket
+      endpoint: "Bitbucket - spydersoft"
+      name: spydersoftteam/azure-devops-templates
 
 variables:
   - group: helm-repository
@@ -48,7 +54,7 @@ stages:
       name: Default
       demands: agent.os -equals Linux
     steps:
-    - template: templates/dotnet-build-steps.yml
+    - template: step_collections/dotnet-web-gulp-build-steps.yml@templates
       parameters:
         npmInstallFolder: $(npmInstallFolder)
         gulpFolder: $(gulpFolder)
@@ -67,7 +73,7 @@ stages:
       name: Default
       demands: agent.os -equals Linux
     steps:
-    - template: templates/docker-image-steps.yml
+    - template: step_collections/docker-image-steps.yml@templates
       parameters:
         dockerImageName: $(dockerImageName)
         containerRegistryName: $(containerRegistryName)
