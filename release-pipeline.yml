@@ -60,7 +60,7 @@ stages:
       artifact: '$(artifactName)'
 
 - stage: docker_and_test
-  display: Create Docker Image
+  displayName: Create Docker Image
   jobs:
   - job: create_docker_image_and_test
     timeoutInMinutes: 90
@@ -79,7 +79,7 @@ stages:
         
 
 - stage: helm_publish
-  display: Publish Helm Chart
+  displayName: Publish Helm Chart
   jobs:
   - job: create_helm_chart_and_publish
     pool:
@@ -96,7 +96,7 @@ stages:
 - stage: stage_release
   dependsOn:
   - helm_publish
-  display: Create and Deploy Octopus Release to Release Candidate Channel
+  displayName: Create and Deploy Octopus Release to Release Candidate Channel
   jobs:
   - deployment: stage
     displayName: 'Deploy to Stage'
@@ -122,7 +122,7 @@ stages:
 - stage: production_release
   dependsOn:
   - helm_publish
-  display: Promote to Production
+  displayName: Promote to Production
   jobs:
   - deployment: production
     displayName: 'Promote to Production'
