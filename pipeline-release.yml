@@ -139,6 +139,7 @@ stages:
               Space: 'Gerega' #'Spaces-1'
               ProjectGroup: 'Identity Server' #'ProjectGroups-41'
               ProjectName: 'identity.server.k8' #'Projects-241'
+              Project: 'identity.server.k8'
               From: 'mattgerega.org (Staging)' #'Environments-2'
               To: mattgerega.com (Production)' #'Environments-3'
 
