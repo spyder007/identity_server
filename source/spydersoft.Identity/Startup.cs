@@ -14,6 +14,8 @@ using System.Reflection;
 using AutoMapper;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
 using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.Identity;
 
@@ -21,9 +23,22 @@ namespace spydersoft.Identity
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddUserSecrets<Startup>()
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+
+            // Configure logging as per app settings, but always configure a console logger
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Literate)
+                .CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
