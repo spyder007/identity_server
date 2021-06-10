@@ -1,8 +1,8 @@
 ﻿using System.IO;
-using IdentityServer4.Services;
+using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using IdentityServer4.Models;
+using Duende.IdentityServer.Models;
 using Microsoft.AspNetCore.Hosting;
 using spydersoft.Identity.Models;
 using spydersoft.Identity.Models.Home;

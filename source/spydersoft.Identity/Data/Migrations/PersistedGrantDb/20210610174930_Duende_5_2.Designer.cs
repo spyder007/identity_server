@@ -10,56 +10,56 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
-    [Migration("20201005143523_IdentityServer3to4")]
-    partial class IdentityServer3to4
+    [Migration("20210610174930_Duende_5_2")]
+    partial class Duende_5_2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.DeviceFlowCodes", b =>
                 {
                     b.Property<string>("UserCode")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Data")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasMaxLength(50000);
+                        .HasMaxLength(50000)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("DeviceCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime?>("Expiration")
                         .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SessionId")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SubjectId")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("UserCode");
 
@@ -71,16 +71,52 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
                     b.ToTable("DeviceCodes");
                 });
 
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.Key", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Algorithm")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("DataProtected")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsX509Certificate")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Use")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Use");
+
+                    b.ToTable("Keys");
+                });
+
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
                 {
                     b.Property<string>("Key")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime?>("ConsumedTime")
                         .HasColumnType("datetime2");
@@ -90,30 +126,32 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 
                     b.Property<string>("Data")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasMaxLength(50000);
+                        .HasMaxLength(50000)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime?>("Expiration")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SessionId")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SubjectId")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Key");
+
+                    b.HasIndex("ConsumedTime");
 
                     b.HasIndex("Expiration");
 

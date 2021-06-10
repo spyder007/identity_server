@@ -1,7 +1,7 @@
 ﻿using AutoMapper.QueryableExtensions;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Entities;
-using IdentityServer4.Models;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Entities;
+using Duende.IdentityServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
-using ApiResource = IdentityServer4.EntityFramework.Entities.ApiResource;
+using ApiResource = Duende.IdentityServer.EntityFramework.Entities.ApiResource;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
 {

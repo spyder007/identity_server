@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using IdentityServer4.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -80,13 +80,13 @@ namespace spydersoft.Identity.Controllers.Admin.Api
         {
             if (ModelState.IsValid)
             {
-                IdentityServer4.EntityFramework.Entities.ApiResource dbEntity;
+                Duende.IdentityServer.EntityFramework.Entities.ApiResource dbEntity;
                 var isNew = false;
 
                 if (!id.HasValue || id.Value == 0)
                 {
                     apiViewModel.Created = DateTime.UtcNow;
-                    dbEntity = new IdentityServer4.EntityFramework.Entities.ApiResource();
+                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.ApiResource();
                     ConfigDbContext.Add(dbEntity);
                     isNew = true;
                 }

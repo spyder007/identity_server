@@ -1,6 +1,6 @@
 ﻿using AutoMapper.QueryableExtensions;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Entities;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +21,13 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         #region BaseClientCollectionController Implementation
 
-        protected override IEnumerable<ClientScopeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
+        protected override IEnumerable<ClientScopeViewModel> PopulateItemList(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)
         {
             return Mapper.ProjectTo<ClientScopeViewModel>(mainEntity.AllowedScopes.ToList().AsQueryable());
         }
 
-        protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(
-            DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
+        protected override IQueryable<Duende.IdentityServer.EntityFramework.Entities.Client> AddIncludes(
+            DbSet<Duende.IdentityServer.EntityFramework.Entities.Client> query)
         {
             return query.Include(c => c.AllowedScopes);
         }
@@ -37,7 +37,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
             return collection.FirstOrDefault(s => s.Id == id);
         }
 
-        protected override List<ClientScope> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
+        protected override List<ClientScope> GetCollection(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)
         {
             return mainEntity.AllowedScopes;
         }

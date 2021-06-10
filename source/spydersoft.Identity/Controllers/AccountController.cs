@@ -1,5 +1,5 @@
-﻿using IdentityServer4.Services;
-using IdentityServer4.Stores;
+﻿using Duende.IdentityServer.Services;
+using Duende.IdentityServer.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

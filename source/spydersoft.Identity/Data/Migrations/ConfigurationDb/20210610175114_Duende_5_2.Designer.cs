@@ -10,15 +10,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
     [DbContext(typeof(ConfigurationDbContext))]
-    [Migration("20191211025439_aspnetcore_31_update")]
-    partial class aspnetcore_31_update
+    [Migration("20210610175114_Duende_5_2")]
+    partial class Duende_5_2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResource", b =>
@@ -28,16 +28,20 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("AllowedAccessTokenSigningAlgorithms")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("Enabled")
                         .HasColumnType("bit");
@@ -47,10 +51,16 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("NonEditable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequireResourceIndicator")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ShowInDiscoveryDocument")
                         .HasColumnType("bit");
 
                     b.Property<DateTime?>("Updated")
@@ -76,14 +86,14 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApiResourceId");
 
-                    b.ToTable("ApiClaims");
+                    b.ToTable("ApiResourceClaims");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceProperty", b =>
@@ -98,22 +108,22 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApiResourceId");
 
-                    b.ToTable("ApiProperties");
+                    b.ToTable("ApiResourceProperties");
                 });
 
-            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScope", b =>
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceScope", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -123,21 +133,80 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                     b.Property<int>("ApiResourceId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Scope")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApiResourceId");
+
+                    b.ToTable("ApiResourceScopes");
+                });
+
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceSecret", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ApiResourceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("Expiration")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApiResourceId");
+
+                    b.ToTable("ApiResourceSecrets");
+                });
+
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScope", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("Emphasize")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("Required")
                         .HasColumnType("bit");
@@ -146,8 +215,6 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApiResourceId");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -162,56 +229,46 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ApiScopeId")
+                    b.Property<int>("ScopeId")
                         .HasColumnType("int");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApiScopeId");
+                    b.HasIndex("ScopeId");
 
                     b.ToTable("ApiScopeClaims");
                 });
 
-            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiSecret", b =>
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScopeProperty", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ApiResourceId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
-
-                    b.Property<DateTime?>("Expiration")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Type")
+                    b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<int>("ScopeId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(4000)")
-                        .HasMaxLength(4000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApiResourceId");
+                    b.HasIndex("ScopeId");
 
-                    b.ToTable("ApiSecrets");
+                    b.ToTable("ApiScopeProperties");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.Client", b =>
@@ -242,6 +299,10 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                     b.Property<bool>("AllowRememberConsent")
                         .HasColumnType("bit");
 
+                    b.Property<string>("AllowedIdentityTokenSigningAlgorithms")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<bool>("AlwaysIncludeUserClaimsInIdToken")
                         .HasColumnType("bit");
 
@@ -255,25 +316,25 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("bit");
 
                     b.Property<string>("BackChannelLogoutUri")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("ClientClaimsPrefix")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ClientId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ClientName")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ClientUri")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<int?>("ConsentLifetime")
                         .HasColumnType("int");
@@ -282,8 +343,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int>("DeviceCodeLifetime")
                         .HasColumnType("int");
@@ -298,8 +359,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("bit");
 
                     b.Property<string>("FrontChannelLogoutUri")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<int>("IdentityTokenLifetime")
                         .HasColumnType("int");
@@ -311,20 +372,20 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LogoUri")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<bool>("NonEditable")
                         .HasColumnType("bit");
 
                     b.Property<string>("PairWiseSubjectSalt")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ProtocolType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("RefreshTokenExpiration")
                         .HasColumnType("int");
@@ -341,6 +402,9 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                     b.Property<bool>("RequirePkce")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("RequireRequestObject")
+                        .HasColumnType("bit");
+
                     b.Property<int>("SlidingRefreshTokenLifetime")
                         .HasColumnType("int");
 
@@ -351,8 +415,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserCodeType")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("UserSsoLifetime")
                         .HasColumnType("int");
@@ -377,13 +441,13 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -404,8 +468,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Origin")
                         .IsRequired()
-                        .HasColumnType("nvarchar(150)")
-                        .HasMaxLength(150);
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
@@ -426,8 +490,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("GrantType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.HasKey("Id");
 
@@ -448,8 +512,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Provider")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -470,8 +534,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("PostLogoutRedirectUri")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("Id");
 
@@ -492,13 +556,13 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("Id");
 
@@ -519,8 +583,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("RedirectUri")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("Id");
 
@@ -541,8 +605,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Scope")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -565,21 +629,21 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<DateTime?>("Expiration")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(4000)")
-                        .HasMaxLength(4000);
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
 
                     b.HasKey("Id");
 
@@ -588,26 +652,36 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                     b.ToTable("ClientSecrets");
                 });
 
-            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityClaim", b =>
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityProvider", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("IdentityResourceId")
-                        .HasColumnType("int");
+                    b.Property<string>("DisplayName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("Enabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Properties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Scheme")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdentityResourceId");
-
-                    b.ToTable("IdentityClaims");
+                    b.ToTable("IdentityProviders");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityResource", b =>
@@ -621,12 +695,12 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("DisplayName")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("Emphasize")
                         .HasColumnType("bit");
@@ -636,8 +710,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("NonEditable")
                         .HasColumnType("bit");
@@ -659,6 +733,28 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                     b.ToTable("IdentityResources");
                 });
 
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityResourceClaim", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("IdentityResourceId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdentityResourceId");
+
+                    b.ToTable("IdentityResourceClaims");
+                });
+
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityResourceProperty", b =>
                 {
                     b.Property<int>("Id")
@@ -671,19 +767,19 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
                     b.Property<string>("Key")
                         .IsRequired()
-                        .HasColumnType("nvarchar(250)")
-                        .HasMaxLength(250);
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IdentityResourceId");
 
-                    b.ToTable("IdentityProperties");
+                    b.ToTable("IdentityResourceProperties");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceClaim", b =>
@@ -693,6 +789,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApiResource");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceProperty", b =>
@@ -702,33 +800,52 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApiResource");
                 });
 
-            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScope", b =>
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceScope", b =>
                 {
                     b.HasOne("Duende.IdentityServer.EntityFramework.Entities.ApiResource", "ApiResource")
                         .WithMany("Scopes")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApiResource");
                 });
 
-            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScopeClaim", b =>
-                {
-                    b.HasOne("Duende.IdentityServer.EntityFramework.Entities.ApiScope", "ApiScope")
-                        .WithMany("UserClaims")
-                        .HasForeignKey("ApiScopeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiSecret", b =>
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResourceSecret", b =>
                 {
                     b.HasOne("Duende.IdentityServer.EntityFramework.Entities.ApiResource", "ApiResource")
                         .WithMany("Secrets")
                         .HasForeignKey("ApiResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApiResource");
+                });
+
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScopeClaim", b =>
+                {
+                    b.HasOne("Duende.IdentityServer.EntityFramework.Entities.ApiScope", "Scope")
+                        .WithMany("UserClaims")
+                        .HasForeignKey("ScopeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Scope");
+                });
+
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScopeProperty", b =>
+                {
+                    b.HasOne("Duende.IdentityServer.EntityFramework.Entities.ApiScope", "Scope")
+                        .WithMany("Properties")
+                        .HasForeignKey("ScopeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Scope");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientClaim", b =>
@@ -738,6 +855,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientCorsOrigin", b =>
@@ -747,6 +866,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientGrantType", b =>
@@ -756,6 +877,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientIdPRestriction", b =>
@@ -765,6 +888,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientPostLogoutRedirectUri", b =>
@@ -774,6 +899,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientProperty", b =>
@@ -783,6 +910,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientRedirectUri", b =>
@@ -792,6 +921,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientScope", b =>
@@ -801,6 +932,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ClientSecret", b =>
@@ -810,15 +943,19 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Client");
                 });
 
-            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityClaim", b =>
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityResourceClaim", b =>
                 {
                     b.HasOne("Duende.IdentityServer.EntityFramework.Entities.IdentityResource", "IdentityResource")
                         .WithMany("UserClaims")
                         .HasForeignKey("IdentityResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("IdentityResource");
                 });
 
             modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityResourceProperty", b =>
@@ -828,6 +965,54 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         .HasForeignKey("IdentityResourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("IdentityResource");
+                });
+
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiResource", b =>
+                {
+                    b.Navigation("Properties");
+
+                    b.Navigation("Scopes");
+
+                    b.Navigation("Secrets");
+
+                    b.Navigation("UserClaims");
+                });
+
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.ApiScope", b =>
+                {
+                    b.Navigation("Properties");
+
+                    b.Navigation("UserClaims");
+                });
+
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.Client", b =>
+                {
+                    b.Navigation("AllowedCorsOrigins");
+
+                    b.Navigation("AllowedGrantTypes");
+
+                    b.Navigation("AllowedScopes");
+
+                    b.Navigation("Claims");
+
+                    b.Navigation("ClientSecrets");
+
+                    b.Navigation("IdentityProviderRestrictions");
+
+                    b.Navigation("PostLogoutRedirectUris");
+
+                    b.Navigation("Properties");
+
+                    b.Navigation("RedirectUris");
+                });
+
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.IdentityResource", b =>
+                {
+                    b.Navigation("Properties");
+
+                    b.Navigation("UserClaims");
                 });
 #pragma warning restore 612, 618
         }

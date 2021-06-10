@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using IdentityServer4.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace spydersoft.Identity.Controllers

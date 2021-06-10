@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using IdentityServer4.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using spydersoft.Identity.Models;

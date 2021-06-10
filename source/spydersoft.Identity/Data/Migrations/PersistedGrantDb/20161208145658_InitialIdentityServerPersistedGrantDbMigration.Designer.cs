@@ -1,5 +1,5 @@
 ﻿using System;
-using IdentityServer4.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -17,7 +17,7 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
                 .HasAnnotation("ProductVersion", "1.1.0-rtm-22752")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("IdentityServer4.EntityFramework.Entities.PersistedGrant", b =>
+            modelBuilder.Entity("Duende.IdentityServer.EntityFramework.Entities.PersistedGrant", b =>
                 {
                     b.Property<string>("Key")
                         .HasAnnotation("MaxLength", 200);

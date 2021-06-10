@@ -1,7 +1,7 @@
 ﻿using System;
 using AutoMapper.QueryableExtensions;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Entities;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;

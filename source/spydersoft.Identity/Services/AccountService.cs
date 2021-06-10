@@ -3,9 +3,9 @@
 
 using System.Threading.Tasks;
 using IdentityModel;
-using IdentityServer4.Extensions;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
+using Duende.IdentityServer.Extensions;
+using Duende.IdentityServer.Services;
+using Duende.IdentityServer.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using spydersoft.Identity.Models.AccountViewModels;
@@ -132,7 +132,7 @@ namespace spydersoft.Identity.Services
             if (user?.Identity.IsAuthenticated == true)
             {
                 var idp = user.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-                if (idp != null && idp != IdentityServer4.IdentityServerConstants.LocalIdentityProvider)
+                if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
                 {
                     var providerSupportsSignout = await _httpContextAccessor.HttpContext.GetSchemeSupportsSignOutAsync(idp);
                     if (providerSupportsSignout)

@@ -30,8 +30,9 @@
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="GravatarHelper.AspNetCore" Version="1.1.0" />
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
-    <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
+    <PackageReference Include="Duende.IdentityServer" Version="5.2.0" />
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.0" />
+    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.17.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="5.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="5.0.5" />

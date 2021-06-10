@@ -1,5 +1,5 @@
-﻿using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Mappers;
+﻿using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -65,7 +65,6 @@ namespace spydersoft.Identity
             services.AddMvc(options => options.EnableEndpointRouting = false);
 
             services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
                 .AddAspNetIdentity<ApplicationUser>()
                 // this adds the config data from DB (clients, resources)
                 .AddConfigurationStore(options =>

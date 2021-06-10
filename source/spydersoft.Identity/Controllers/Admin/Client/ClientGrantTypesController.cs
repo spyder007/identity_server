@@ -1,6 +1,6 @@
 ﻿using AutoMapper.QueryableExtensions;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Entities;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System.Collections.Generic;
@@ -18,13 +18,13 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         #region BaseClientCollectionController Implementation
 
-        protected override IEnumerable<ClientGrantTypeViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
+        protected override IEnumerable<ClientGrantTypeViewModel> PopulateItemList(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)
         {
             return Mapper.ProjectTo<ClientGrantTypeViewModel>(mainEntity.AllowedGrantTypes.ToList().AsQueryable());
         }
 
-        protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(
-            DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
+        protected override IQueryable<Duende.IdentityServer.EntityFramework.Entities.Client> AddIncludes(
+            DbSet<Duende.IdentityServer.EntityFramework.Entities.Client> query)
         {
             return query.Include(c => c.AllowedGrantTypes);
         }
@@ -34,7 +34,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
             return collection.FirstOrDefault(g => g.Id == id);
         }
 
-        protected override List<ClientGrantType> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
+        protected override List<ClientGrantType> GetCollection(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)
         {
             return mainEntity.AllowedGrantTypes;
         }

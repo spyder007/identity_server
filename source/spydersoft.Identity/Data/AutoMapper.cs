@@ -1,18 +1,18 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
-using IdentityServer4.EntityFramework.Entities;
-//using IdentityServer4.EntityFramework.Entities;
-using IdentityServer4.Models;
+using Duende.IdentityServer.EntityFramework.Entities;
+//using Duende.IdentityServer.EntityFramework.Entities;
+using Duende.IdentityServer.Models;
 using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 using spydersoft.Identity.Models.Admin.ScopeViewModels;
 using spydersoft.Identity.Models.Identity;
-using ApiResource = IdentityServer4.EntityFramework.Entities.ApiResource;
-using ApiScope = IdentityServer4.EntityFramework.Entities.ApiScope;
-using Client = IdentityServer4.EntityFramework.Entities.Client;
-using ClientClaim = IdentityServer4.EntityFramework.Entities.ClientClaim;
-using IdentityResource = IdentityServer4.EntityFramework.Entities.IdentityResource;
+using ApiResource = Duende.IdentityServer.EntityFramework.Entities.ApiResource;
+using ApiScope = Duende.IdentityServer.EntityFramework.Entities.ApiScope;
+using Client = Duende.IdentityServer.EntityFramework.Entities.Client;
+using ClientClaim = Duende.IdentityServer.EntityFramework.Entities.ClientClaim;
+using IdentityResource = Duende.IdentityServer.EntityFramework.Entities.IdentityResource;
 
 namespace spydersoft.Identity.Data
 {

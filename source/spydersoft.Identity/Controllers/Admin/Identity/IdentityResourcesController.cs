@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using IdentityServer4.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityServer4.EntityFramework.Mappers;
-using IdentityServer4.Models;
+using Duende.IdentityServer.EntityFramework.Mappers;
+using Duende.IdentityServer.Models;
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Identity
@@ -105,7 +105,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
         {
             if (!string.IsNullOrWhiteSpace(model.SelectedAvailableResource))
             {
-                IdentityServer4.EntityFramework.Entities.IdentityResource resource = GetStandardProfile(model.SelectedAvailableResource);
+                Duende.IdentityServer.EntityFramework.Entities.IdentityResource resource = GetStandardProfile(model.SelectedAvailableResource);
                 if (resource != null)
                 {
                     ConfigDbContext.IdentityResources.Add(resource);
@@ -123,12 +123,12 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
         {
             if (ModelState.IsValid)
             {
-                IdentityServer4.EntityFramework.Entities.IdentityResource dbEntity;
+                Duende.IdentityServer.EntityFramework.Entities.IdentityResource dbEntity;
                 var isNew = false;
 
                 if (!id.HasValue || id.Value == 0)
                 {
-                    dbEntity = new IdentityServer4.EntityFramework.Entities.IdentityResource();
+                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.IdentityResource();
                     ConfigDbContext.Add(dbEntity);
                     identityResource.Created = DateTime.UtcNow;
                     isNew = true;
@@ -165,7 +165,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
         }
         #endregion Controller Actions
 
-        private IdentityServer4.EntityFramework.Entities.IdentityResource GetStandardProfile(string modelSelectedAvailableResource)
+        private Duende.IdentityServer.EntityFramework.Entities.IdentityResource GetStandardProfile(string modelSelectedAvailableResource)
         {
             if (string.IsNullOrWhiteSpace(modelSelectedAvailableResource))
             {

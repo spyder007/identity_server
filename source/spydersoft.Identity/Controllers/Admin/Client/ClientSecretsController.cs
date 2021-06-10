@@ -1,13 +1,13 @@
 ﻿using AutoMapper.QueryableExtensions;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Entities;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using IdentityServer4.Models;
+using Duende.IdentityServer.Models;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Client
@@ -20,13 +20,13 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         #region BaseClientCollectionController Implementation
 
-        protected override IEnumerable<ClientSecretViewModel> PopulateItemList(IdentityServer4.EntityFramework.Entities.Client mainEntity)
+        protected override IEnumerable<ClientSecretViewModel> PopulateItemList(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)
         {
             return Mapper.ProjectTo<ClientSecretViewModel>(mainEntity.ClientSecrets.ToList().AsQueryable());
         }
 
-        protected override IQueryable<IdentityServer4.EntityFramework.Entities.Client> AddIncludes(
-            DbSet<IdentityServer4.EntityFramework.Entities.Client> query)
+        protected override IQueryable<Duende.IdentityServer.EntityFramework.Entities.Client> AddIncludes(
+            DbSet<Duende.IdentityServer.EntityFramework.Entities.Client> query)
         {
             return query.Include(c => c.ClientSecrets);
         }
@@ -36,7 +36,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
             return collection.FirstOrDefault(s => s.Id == id);
         }
 
-        protected override List<ClientSecret> GetCollection(IdentityServer4.EntityFramework.Entities.Client mainEntity)
+        protected override List<ClientSecret> GetCollection(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)
         {
             return mainEntity.ClientSecrets;
         }

@@ -1,8 +1,8 @@
 ﻿using System;
-using IdentityServer4;
-using IdentityServer4.EntityFramework.DbContexts;
-using IdentityServer4.EntityFramework.Mappers;
-using IdentityServer4.Models;
+using Duende.IdentityServer;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Mappers;
+using Duende.IdentityServer.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -155,7 +155,7 @@ namespace spydersoft.Identity.Data
                                 new Claim(JwtClaimTypes.Email, "admin@localhost.net"),
                                 new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
                                 new Claim(JwtClaimTypes.WebSite, "123 NoWhere"),
-                                new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json)
+                                new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", Duende.IdentityServer.IdentityServerConstants.ClaimValueTypes.Json)
                             }).Result;
                 if (!result.Succeeded)
                 {

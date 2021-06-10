@@ -101,7 +101,7 @@ namespace spydersoft.Identity.Models.Admin.ClientViewModels
         [Required]
         [Range(0, int.MaxValue, ErrorMessage = "Please enter a valid integer")]
         [Display(Name = "Refresh Token Usage")]
-        // TODO: Should be 1 or 0, based on IdentityServer4.Models.TokenUsage.. figure out how to handle enums
+        // TODO: Should be 1 or 0, based on Duende.IdentityServer.Models.TokenUsage.. figure out how to handle enums
         public int RefreshTokenUsage { get; set; }
 
         [Display(Name = "Require client secret")]

@@ -1,4 +1,4 @@
-﻿using IdentityServer4.EntityFramework.DbContexts;
+﻿using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using spydersoft.Identity.Models;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using AutoMapper;
 using spydersoft.Identity.Models.Admin;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
-using IS4Entities = IdentityServer4.EntityFramework.Entities;
+using IS4Entities = Duende.IdentityServer.EntityFramework.Entities;
 
 namespace spydersoft.Identity.Controllers.Admin.Client
 {
