@@ -2,8 +2,8 @@ assembly-versioning-scheme: MajorMinorPatchTag
 continuous-delivery-fallback-tag: ''
 mode: Mainline
 branches:
-  master:
-    regex: master
+  main:
+    regex: main
     tag: ''
     increment: Patch
     prevent-increment-of-merged-branch-version: true
