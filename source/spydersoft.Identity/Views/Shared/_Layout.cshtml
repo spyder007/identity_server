@@ -4,14 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Spydersoft</title>
-    <link rel="shortcut icon" href="images/favicon.png">
+    <link rel="shortcut icon" href="images/favicon.svg">
 
 
     <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
     <!-- Main styles for this application -->
     <environment include="Development">
         <link rel="stylesheet" href="~/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/LineIcons.css" />
+        <link rel="stylesheet" href="~/css/lineicons.css" />
         <link rel="stylesheet" href="~/css/materialdesignicons.min.css" />
         <link rel="stylesheet" href="~/css/fullcalendar.css" />
         <link rel="stylesheet" href="~/css/main.css" />
@@ -21,7 +21,7 @@
 
     <environment exclude="Development">
         <link rel="stylesheet" href="~/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/LineIcons.css" />
+        <link rel="stylesheet" href="~/css/lineicons.css" />
         <link rel="stylesheet" href="~/css/materialdesignicons.min.css" />
         <link rel="stylesheet" href="~/css/fullcalendar.css" />
         <link rel="stylesheet" href="~/css/main.css" />
@@ -44,9 +44,9 @@
     <!-- Main content -->
     <main class="main-wrapper">
         @await Html.PartialAsync("_AppHeader")
-        <section class="section">
-            @RenderBody()
-        </section>
+
+        @RenderBody()
+
         <!-- /.conainer-fluid -->
         @await Html.PartialAsync("_Footer")
     </main>

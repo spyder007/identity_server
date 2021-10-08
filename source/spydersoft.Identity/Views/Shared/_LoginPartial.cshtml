@@ -41,7 +41,7 @@
                     <a asp-area="" asp-controller="Grants" asp-action="Index"> <i class="lni lni-inbox"></i> My Apps </a>
                 </li>
                 <li>
-                    <button type="submit" class="dropdown-item"><i class="fa fa-lock"></i> Logout</button>
+                    <a asp-controller="Account" asp-action="Logout"><i class="lni lni-exit"></i> Logout</a>
                 </li>
             </ul>
         </div>
@@ -78,9 +78,6 @@ else
             </li>
             <li>
                 <a asp-area="" asp-controller="Account" asp-action="Login"> <i class="lni lni-inbox"></i> Login </a>
-            </li>
-            <li>
-                <button type="submit" class="dropdown-item"><i class="fa fa-lock"></i> Logout</button>
             </li>
         </ul>
     </div>
