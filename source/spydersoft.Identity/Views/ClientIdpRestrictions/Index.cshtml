@@ -1,43 +1,54 @@
 ﻿@using spydersoft.Identity.Models.Admin.ClientViewModels
 @model ClientIdpRestrictionsViewModel
-
-<form asp-action="Save" asp-route-id="@Model.Id">
-    <div class="card">
-        <div class="card-header">
-            <h3>@ViewData["Title"]</h3>
+<section>
+    <div class="container-fluid">
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                        <h2>@ViewData["Title"]</h2>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
         </div>
-        <div class="card-body">
-            @await Html.PartialAsync("_clientNavBar", Model.NavBar)
-            <table class="table table-striped">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>@Html.LabelFor(model => model.NewItem.Provider)</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
+        <div class="row">
+            <div class="card-style mb-30">
+                <form asp-action="Save" asp-route-id="@Model.Id">
+                    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>@Html.LabelFor(model => model.NewItem.Provider)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
 
-                @foreach (var idpRestriction in Model.ItemsList)
-                {
-                    <tr>
-                        <td>@idpRestriction.Provider</td>
-                        <td><a asp-action="Delete" asp-route-id="@idpRestriction.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                    </tr>
-                }
-                <tr>
-                    <td>
-                        <div class="form-group">
-                            <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Provider" pf-validation-for="NewItem.Provider" pf-validationerror-class="is-invalid" />
-                            <span asp-validation-for="NewItem.Provider" class="invalid-feedback"></span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                        </div>
-                    </td>
+                        @foreach (var idpRestriction in Model.ItemsList)
+                        {
+                            <tr>
+                                <td>@idpRestriction.Provider</td>
+                                <td><a asp-action="Delete" asp-route-id="@idpRestriction.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Provider" pf-validation-for="NewItem.Provider" pf-validationerror-class="is-invalid" />
+                                    <span asp-validation-for="NewItem.Provider" class="invalid-feedback"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group">
+                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
+                                </div>
+                            </td>
 
-                </tr>
-            </table>
+                        </tr>
+                    </table>
+                </form>
+            </div>
         </div>
     </div>
-</form>
+</section>
