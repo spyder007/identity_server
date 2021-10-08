@@ -2,45 +2,57 @@
 @using spydersoft.Identity.Models.Home;
 @model AboutDataViewModel;
 
-<h2>@ViewData["Title"]</h2>
 
-<div class="row">
-    <div class="col-sm-6 col-md-6">
-        <div class="card card-accent-info">
-            <div class="card-header">
-                <strong>
-                    <i class="icon-envelope"></i> NPM Libraries
-                </strong>
+<section>
+    <div class="container-fluid">
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                        <h2>About</h2>
+                    </div>
+                </div>
+                <!-- end col -->
             </div>
-            <div class="card-body">
-                <div class="list-group">
-                    @foreach (var library in Model.UiLibraries)
-                    {
-                        <a href="@library.Url" target="_blank" class="list-group-item list-group-item-action">@library.Name</a>
-                    }
+            <!-- end row -->
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-6">
+                <div class="card-style">
+                    <div class="card-meta">
+                        <strong>
+                            <i class="icon-envelope"></i> NPM Libraries
+                        </strong>
+                    </div>
+                    <div class="card-content">
+                        <div class="list-group">
+                            @foreach (var library in Model.UiLibraries)
+                            {
+                                <a href="@library.Url" target="_blank" class="list-group-item list-group-item-action">@library.Name</a>
+                            }
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6">
+                <div class="card-style">
+                    <div class="card-meta">
+                        <strong>
+                            <i class="icon-envelope"></i> Net Core Libraries
+                        </strong>
+                    </div>
+                    <div class="card-content">
+                        <div class="list-group">
+                            @foreach (var library in Model.NetLibraries)
+                            {
+                                <a href="@library.Url" target="_blank" class="list-group-item list-group-item-action">@library.Name</a>
+                            }
+
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-sm-6 col-md-6">
-        <div class="card card-accent-info">
-            <div class="card-header">
-                <strong>
-                    <i class="icon-envelope"></i> Net Core Libraries
-                </strong>
-            </div>
-            <div class="card-body">
-                <div class="list-group">
-                    @foreach (var library in Model.NetLibraries)
-                    {
-                        <a href="@library.Url" target="_blank" class="list-group-item list-group-item-action">@library.Name</a>
-                    }
 
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
+</section>

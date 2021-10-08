@@ -1,145 +1,160 @@
 ﻿@using spydersoft.Identity.Models.Identity
 @model UserViewModel
 
-<form asp-action="Edit">
-    <div class="card">
-        <div class="card-header">
-            <h3>@ViewData["Title"]</h3>
-        </div>
-        <div class="card-body">
-            <div class="border px-2 py-1">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                @Html.HiddenFor(model => model.User.Id)
-                @Html.HiddenFor(model => model.User.ConcurrencyStamp)
-                <div class="form-group">
-                    @Html.LabelFor(model => model.User.UserName)
-                    <input type="text" class="form-control" id="txtName" asp-for="User.UserName" pf-validation-for="User.UserName" pf-validationerror-class="is-invalid" />
-                    <span asp-validation-for="User.UserName" class="invalid-feedback"></span>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(model => model.User.Email)
-                    <input type="text" class="form-control" id="txtDisplayName" asp-for="User.Email" pf-validation-for="User.Email" pf-validationerror-class="is-invalid" />
-                    <span asp-validation-for="User.Email" class="invalid-feedback"></span>
-                </div>
-                @if (Model.IsNewUser)
-                {
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Password)
-                        <input type="text" class="form-control" id="txtPassword" asp-for="Password" pf-validation-for="Password" pf-validationerror-class="is-invalid" />
-                        <span asp-validation-for="Password" class="invalid-feedback"></span>
+<section>
+    <div class="container-fluid">
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                        <h2>@ViewData["Title"]</h2>
                     </div>
-                }
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <div class="row">
+            <div class="card-style mb-30">
+                <form asp-action="Edit">
+                    <div class="card-meta">
+                        <h3>User Details</h3>
+                    </div>
+                    <div class="card-content">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        @Html.HiddenFor(model => model.User.Id)
+                        @Html.HiddenFor(model => model.User.ConcurrencyStamp)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.User.UserName)
+                            <input type="text" class="form-control" id="txtName" asp-for="User.UserName" pf-validation-for="User.UserName" pf-validationerror-class="is-invalid" />
+                            <span asp-validation-for="User.UserName" class="invalid-feedback"></span>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.User.Email)
+                            <input type="text" class="form-control" id="txtDisplayName" asp-for="User.Email" pf-validation-for="User.Email" pf-validationerror-class="is-invalid" />
+                            <span asp-validation-for="User.Email" class="invalid-feedback"></span>
+                        </div>
+                        @if (Model.IsNewUser)
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Password)
+                                <input type="text" class="form-control" id="txtPassword" asp-for="Password" pf-validation-for="Password" pf-validationerror-class="is-invalid" />
+                                <span asp-validation-for="Password" class="invalid-feedback"></span>
+                            </div>
+                        }
+                    </div>
+
+                    <div>
+                        <input type="submit" value="Save" class="btn btn-sm btn-primary" />
+                    </div>
+                </form>
             </div>
         </div>
+        <div class="row">
+            @if (!Model.IsNewUser)
+            {
+                <div class="col-sm-6 col-md-6">
+                    <div class="card-style">
+                        <form asp-action="AddRole" asp-route-userid="@Model.User.Id">
 
-        <div class="card-footer">
-            <input type="submit" value="Save" class="btn btn-sm btn-primary" />
+                            <div class="card-meta">
+                                <h3>Roles</h3>
+                            </div>
+                            <div class="card-content">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Role</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                    @foreach (var role in Model.Roles)
+                                    {
+                                        <tr>
+                                            <td>@role</td>
+                                            <td><a asp-action="DeleteRole" asp-route-role="@role" asp-route-userid="@Model.User.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <select asp-for="SelectedAvailableRole" class="form-control">
+                                                    @foreach (var availableRole in Model.AvailableRoles)
+                                                    {
+                                                        <option value="@availableRole">@availableRole</option>
+                                                    }
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="submit" value="Add" class="btn btn-sm btn-primary" />
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+
+            @if (!Model.IsNewUser)
+            {
+                <div class="col-sm-6 col-md-6">
+                    <div class="card-style">
+                        <form asp-action="AddClaim" asp-route-userid="@Model.User.Id">
+
+                            <div class="card-meta">
+                                <h3>Claims</h3>
+                            </div>
+                            <div class="card-content">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Value</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                    @foreach (var claim in Model.Claims)
+                                    {
+                                        <tr>
+                                            <td>@claim.Type</td>
+                                            <td>@claim.Value</td>
+                                            <td><a asp-action="DeleteClaim" asp-route-claimtype="@claim.Type" asp-route-userid="@Model.User.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="txtNewClaim.Type" asp-for="NewClaim.Type" pf-validation-for="NewClaim.Type" pf-validationerror-class="is-invalid" />
+                                                <span asp-validation-for="NewClaim.Type" class="invalid-feedback"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" id="txtNewClaim.Value" asp-for="NewClaim.Value" pf-validation-for="NewClaim.Value" pf-validationerror-class="is-invalid" />
+                                                <span asp-validation-for="NewClaim.Value" class="invalid-feedback"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <input type="submit" value="Add" class="btn btn-sm btn-primary" />
+                                            </div>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
-</form>
-
-<div class="row">
-    @if (!Model.IsNewUser)
-    {
-        <div class="col-sm-6 col-md-6">
-            <form asp-action="AddRole" asp-route-userid="@Model.User.Id">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Roles</h3>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Role</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-
-                            @foreach (var role in Model.Roles)
-                            {
-                                <tr>
-                                    <td>@role</td>
-                                    <td><a asp-action="DeleteRole" asp-route-role="@role" asp-route-userid="@Model.User.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                                </tr>
-                            }
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <select asp-for="SelectedAvailableRole" class="form-control">
-                                            @foreach (var availableRole in Model.AvailableRoles)
-                                            {
-                                                <option value="@availableRole">@availableRole</option>
-                                            }
-                                        </select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                    </div>
-                                </td>
-
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </form>
-        </div>
-    }
-
-    @if (!Model.IsNewUser)
-    {
-        <div class="col-sm-6 col-md-6">
-            <form asp-action="AddClaim" asp-route-userid="@Model.User.Id">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Claims</h3>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-striped">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Value</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-
-                            @foreach (var claim in Model.Claims)
-                            {
-                            <tr>
-                                <td>@claim.Type</td>
-                                <td>@claim.Value</td>
-                                <td><a asp-action="DeleteClaim" asp-route-claimtype="@claim.Type" asp-route-userid="@Model.User.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                            </tr>
-                            }
-                            <tr>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="txtNewClaim.Type" asp-for="NewClaim.Type" pf-validation-for="NewClaim.Type" pf-validationerror-class="is-invalid"/>
-                                        <span asp-validation-for="NewClaim.Type" class="invalid-feedback"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="txtNewClaim.Value" asp-for="NewClaim.Value" pf-validation-for="NewClaim.Value" pf-validationerror-class="is-invalid"/>
-                                        <span asp-validation-for="NewClaim.Value" class="invalid-feedback"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="form-group">
-                                        <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                    </div>
-                                </td>
-
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </form>
-        </div>
-    }
-
-</div>
-
+</section>

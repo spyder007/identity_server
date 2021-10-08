@@ -19,9 +19,9 @@
             >
                 <div class="profile-info">
                     <div class="info">
-                        <h6>John Doe</h6>
+                        <h6>@UserManager.GetUserName(User)</h6>
                         <div class="image">
-                            <img gravatar-email="@UserManager.GetUserName(User)" gravatar-size="80" alt="My Gravatar" class="img-avatar" />
+                            <img gravatar-email="@UserManager.GetEmailAsync(UserManager.GetUserAsync(User).Result).Result" gravatar-size="80" alt="My Gravatar" class="img-avatar" />
                             <span class="status"></span>
                         </div>
                     </div>

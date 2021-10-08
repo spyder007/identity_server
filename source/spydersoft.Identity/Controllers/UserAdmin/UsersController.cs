@@ -20,6 +20,7 @@ namespace spydersoft.Identity.Controllers.UserAdmin
         public IActionResult Index()
         {
             var model = new UsersViewModel { Users = UserManager.Users };
+            ViewData["Title"] = "Registered Users";
             return View(model);
         }
 

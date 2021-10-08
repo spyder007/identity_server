@@ -1,7 +1,7 @@
 {
   "uilibraries": [
     {
-      "name": "Bootstrap",
+      "name": "Bootstrap 5",
       "url": "https://getbootstrap.com"
     },
     {
@@ -41,8 +41,12 @@
       "url": "https://github.com/thesabbir/simple-line-icons"
     },
     {
-      "name": "Core UI Bootstrap Theme",
-      "url": "http://coreui.io"
+      "name": "simplebar",
+      "url": "https://grsmto.github.io/simplebar/"
+    },
+    {
+      "name": "PlainAdmin UI Theme",
+      "url": "https://plainadmin.com/"
     }
   ],
   "netlibraries": [
@@ -55,8 +59,8 @@
       "url": "https://github.com/jkommer/GravatarHelper"
     },
     {
-      "name": "Identity Server 4",
-      "url": "https://identityserver.io"
+      "name": "Duende.IdentityServer",
+      "url": "https://duendesoftware.com/"
     },
     {
       "name": "Serilog",
