@@ -10,13 +10,8 @@
 @import "bootstrap-variables";
 
 // Import Bootstrap source files
-@import "node_modules/bootstrap/scss/bootstrap";
-
-// Override core variables
-@import "core-variables";
-
-// Import core styles
-@import "core/core";
+//@import "node_modules/bootstrap/scss/bootstrap";
+@import "Assets/scss/main.scss";
 
 // Custom styles
 @import "custom";

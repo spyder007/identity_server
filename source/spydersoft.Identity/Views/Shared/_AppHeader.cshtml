@@ -1,12 +1,24 @@
-﻿<header class="app-header navbar">
-    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none mr-auto" type="button">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <a class="navbar-brand" href="#"></a>
-    <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+﻿<header class="header navbar">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-5 col-md-5 col-6">
+                <div class="header-left d-flex align-items-center">
+                    <div class="menu-toggle-btn mr-20">
+                        <button id="menu-toggle"
+                                class="main-btn primary-btn btn-hover">
+                            <i class="lni lni-chevron-left me-2"></i> Menu
+                        </button>
+                    </div>
+                </div>
 
-    @await Html.PartialAsync("_LoginPartial")
 
+            </div>
+        </div>
+
+        <div class="col-lg-7 col-md-7 col-6">
+            <div class="header-right">
+                @await Html.PartialAsync("_LoginPartial")
+            </div>
+        </div>
+    </div>
 </header>

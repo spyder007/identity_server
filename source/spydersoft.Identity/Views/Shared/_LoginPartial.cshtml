@@ -2,41 +2,86 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+
+
+
+
 @if (User.Identity.IsAuthenticated)
 {
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="nav navbar-nav ml-auto">
-        <ul class="nav">
-
-            <li class="nav-item dropdown">
-                <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                    <img gravatar-email="@UserManager.GetUserName(User)" gravatar-size="80" alt="My Gravatar" class="img-avatar" />
-                </a>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <div class="dropdown-header text-center">
-                        <strong>Account</strong>
+        <div class="profile-box ml-15">
+            <button
+                class="dropdown-toggle bg-transparent border-0"
+                type="button"
+                id="profile"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >
+                <div class="profile-info">
+                    <div class="info">
+                        <h6>John Doe</h6>
+                        <div class="image">
+                            <img gravatar-email="@UserManager.GetUserName(User)" gravatar-size="80" alt="My Gravatar" class="img-avatar" />
+                            <span class="status"></span>
+                        </div>
                     </div>
-                    <a class="dropdown-item" asp-area="" asp-controller="Manage" asp-action="Index"><i class="fa fa-user"></i> Profile</a>
-                    <a class="dropdown-item" asp-area="" asp-controller="Grants" asp-action="Index"><i class="fa fa-tablet"></i> My Apps</a>
-                    <button type="submit" class="dropdown-item"><i class="fa fa-lock"></i> Logout</button>
                 </div>
-            </li>
-        </ul>
+                <i class="lni lni-chevron-down"></i>
+            </button>
+            <ul
+                class="dropdown-menu dropdown-menu-end"
+                aria-labelledby="profile"
+            >
+                <li>
+                    <a asp-area="" asp-controller="Manage" asp-action="Index">
+                        <i class="lni lni-user"></i> View Profile
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-controller="Grants" asp-action="Index"> <i class="lni lni-inbox"></i> My Apps </a>
+                </li>
+                <li>
+                    <button type="submit" class="dropdown-item"><i class="fa fa-lock"></i> Logout</button>
+                </li>
+            </ul>
+        </div>
     </form>
 }
 else
 {
-    <ul class="nav navbar-nav ml-auto">
-        <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-                <img gravatar-email="@UserManager.GetUserName(User)" gravatar-size="80" alt="My Gravatar" class="img-avatar" />
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-header text-center">
-                    <strong>Account</strong>
+    <div class="profile-box ml-15">
+        <button
+            class="dropdown-toggle bg-transparent border-0"
+            type="button"
+            id="profile"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+        >
+            <div class="profile-info">
+                <div class="info">
+                    <div class="image">
+                        <img gravatar-email="@UserManager.GetUserName(User)" gravatar-size="50" alt="My Gravatar" class="img-avatar" />
+                        <span class="status"></span>
+                    </div>
                 </div>
-                <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Register"><i class="fa fa-user-plus"></i>Register</a>
-                <a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Login"><i class="fa fa-sign-in-alt"></i>Login</a>
             </div>
-        </li>
-    </ul>
+            <i class="lni lni-chevron-down"></i>
+        </button>
+        <ul
+            class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="profile"
+        >
+            <li>
+                <a asp-area="" asp-controller="Account" asp-action="Register">
+                    <i class="lni lni-user"></i> Register
+                </a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Account" asp-action="Login"> <i class="lni lni-inbox"></i> Login </a>
+            </li>
+            <li>
+                <button type="submit" class="dropdown-item"><i class="fa fa-lock"></i> Logout</button>
+            </li>
+        </ul>
+    </div>
 }
