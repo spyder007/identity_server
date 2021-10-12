@@ -5,7 +5,7 @@
         {
             <li class="nav-item nav-item-has-children">
                 <a href="#0"
-                   data-bs-toggle="collapse"
+                   data-bs-toggle="collapsed"
                    data-bs-target="#dd_clients"
                    aria-controls="dd_clients"
                    aria-expanded="false"
@@ -19,10 +19,10 @@
                 </a>
 
                 <ul id="dd_clients" class="collapse show dropdown-nav">
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa fa-mobile"></i> Clients</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="IdentityResources" asp-action="Index"><i class="fa fa-stream"></i> Resources</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiResources" asp-action="Index"><i class="fa fa-server"></i> APIs</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Scopes" asp-action="Index"><i class="fa fa-server"></i> Scopes</a></li>
+                    <li><a asp-area="" asp-controller="Clients" asp-action="Index"><i class="fa fa-mobile"></i> Clients</a></li>
+                    <li><a asp-area="" asp-controller="IdentityResources" asp-action="Index"><i class="fa fa-stream"></i> Resources</a></li>
+                    <li><a asp-area="" asp-controller="ApiResources" asp-action="Index"><i class="fa fa-server"></i> APIs</a></li>
+                    <li><a asp-area="" asp-controller="Scopes" asp-action="Index"><i class="fa fa-server"></i> Scopes</a></li>
                 </ul>
             </li>
             <li class="nav-item nav-item-has-children">
@@ -45,8 +45,8 @@
                     <span class="text">User Admin</span>
                 </a>
                 <ul id="ddmenu_2" class="collapse dropdown-nav">
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index"><i class="fa fa-users"></i> Users</a></li>
-                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="UserRoles" asp-action="Index"><i class="fa fa-user-tag"></i> Roles</a></li>
+                    <li><a asp-area="" asp-controller="Users" asp-action="Index"><i class="fa fa-users"></i> Users</a></li>
+                    <li><a asp-area="" asp-controller="UserRoles" asp-action="Index"><i class="fa fa-user-tag"></i> Roles</a></li>
                 </ul>
             </li>
         }
@@ -70,8 +70,8 @@
                 <span class="text">Spydersoft</span>
             </a>
             <ul id="ddmenu_3" class="collapse dropdown-nav">
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Contact"><i class="fa fa-address-card"></i> Contact</a></li>
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="About"><i class="fa fa-info-circle"></i> About</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Contact"><i class="fa fa-address-card"></i> Contact</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="About"><i class="fa fa-info-circle"></i> About</a></li>
             </ul>
         </li>
     </ul>
