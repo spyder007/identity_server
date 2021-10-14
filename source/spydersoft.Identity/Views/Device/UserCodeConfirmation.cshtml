@@ -1,4 +1,4 @@
-@model DeviceAuthorizationViewModel
+@model spydersoft.Identity.Models.Device.DeviceAuthorizationViewModel
 
 <div class="page-device-confirmation">
     <div class="lead">
@@ -38,7 +38,7 @@
                             <ul class="list-group list-group-flush">
                                 @foreach (var scope in Model.IdentityScopes)
                                 {
-                                    <partial name="_ScopeListItem" model="@scope" />
+                                    @await Html.PartialAsync("_ScopeListItem", scope)
                                 }
                             </ul>
                         </div>
@@ -56,7 +56,7 @@
                             <ul class="list-group list-group-flush">
                                 @foreach (var scope in Model.ApiScopes)
                                 {
-                                    <partial name="_ScopeListItem" model="scope" />
+                                    @await Html.PartialAsync("_ScopeListItem", scope)
                                 }
                             </ul>
                         </div>
