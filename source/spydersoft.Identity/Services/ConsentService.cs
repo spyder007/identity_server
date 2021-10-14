@@ -209,7 +209,6 @@ namespace spydersoft.Identity.Services
         {
             return new ScopeViewModel
             {
-                Name = Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess,
                 DisplayName = ConsentOptions.OfflineAccessDisplayName,
                 Description = ConsentOptions.OfflineAccessDescription,
                 Emphasize = true,

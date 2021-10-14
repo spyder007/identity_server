@@ -12,6 +12,7 @@ using spydersoft.Identity.Services;
 using System.Linq;
 using System.Reflection;
 using AutoMapper;
+using Duende.IdentityServer;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -48,14 +49,18 @@ namespace spydersoft.Identity
         {
             var connString = Configuration.GetConnectionString("IdentityConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-
+            
+            
             services.ConfigureNonBreakingSameSiteCookies();
             services.AddHttpContextAccessor();
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
             services.AddAutoMapper(typeof(Startup));
             //services.AddSingleton(Data.AutoMapper.GetMapperConfiguration());
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+                {
+                    options.User.RequireUniqueEmail = true;
+                })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -88,8 +93,9 @@ namespace spydersoft.Identity
             services.AddAuthentication()
                 .AddGoogle(option =>
                 {
-                    option.ClientId = "GoogleClientId";
-                    option.ClientSecret = "GoogleClientSecret";
+                    option.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    option.ClientId = Configuration.GetValue<string>("ProviderSettings:GoogleClientId");
+                    option.ClientSecret = Configuration.GetValue<string>("ProviderSettings:GoogleClientSecret");
                 });
 
         }

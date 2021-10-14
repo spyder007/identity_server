@@ -5,6 +5,6 @@ namespace spydersoft.Identity.Models.AccountViewModels
 {
     public class LogoutViewModel : LogoutInputModel
     {
-        public bool ShowLogoutPrompt { get; set; }
+        public bool ShowLogoutPrompt { get; set; } = true;
     }
 }

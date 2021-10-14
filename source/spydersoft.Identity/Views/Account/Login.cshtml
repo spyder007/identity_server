@@ -47,8 +47,8 @@
                                 <div class="col-12">
                                     <div class="input-style-1">
                                         <label>Email</label>
-                                        <input asp-for="UserName" class="form-control" placeholder="User Name" />
-                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                        <input asp-for="Username" class="form-control" placeholder="User Name" />
+                                        <span asp-validation-for="Username" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <!-- end col -->
@@ -62,9 +62,9 @@
                                 <!-- end col -->
                                 <div class="col-xxl-6 col-lg-12 col-md-6">
                                     <div class="form-check checkbox-style mb-30">
-                                        <label asp-for="RememberMe">
-                                            <input asp-for="RememberMe" class="form-check-input" />
-                                            @Html.DisplayNameFor(m => m.RememberMe)
+                                        <label asp-for="RememberLogin">
+                                            <input asp-for="RememberLogin" class="form-check-input" />
+                                            @Html.DisplayNameFor(m => m.RememberLogin)
                                         </label>
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                 <!-- end col -->
                                 <div class="col-12">
                                     <div class="button-group d-flex justify-content-center flex-wrap">
-                                        <button type="submit" class="main-btn primary-btn btn-hover w-100 text-center">
+                                        <button type="submit" class="main-btn primary-btn btn-hover w-100 text-center" name="button" value="login">
                                             Sign In
                                         </button>
                                     </div>
@@ -92,35 +92,26 @@
                                 Easy Sign In With
                             </p>
                             <div class="button-group pt-40 pb-40 d-flex justify-content-center flex-wrap">
-                                @{
-                                    var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-                                    if (loginProviders.Count == 0)
+                                @if (Model.VisibleExternalProviders.Any())
+                                {
+                                    @foreach (var provider in Model.VisibleExternalProviders)
                                     {
-                                        <div>
-                                            <p>
-                                                There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                                                for details on setting up this ASP.NET application to support logging in via external services.
-                                            </p>
+                                        <div class="p-1">
+                                            <a class="d-inline-block main-btn @provider.ButtonCssClass"
+                                               asp-controller="External"
+                                               asp-action="Challenge"
+                                               asp-route-scheme="@provider.AuthenticationScheme"
+                                               asp-route-returnUrl="@Model.ReturnUrl">
+                                                <i class="@provider.LniCssClass mr-10 align-middle"></i>
+                                                <span>@provider.DisplayName</span>
+                                            </a>
                                         </div>
-                                    }
-                                    else
-                                    {
-                                        <form asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                                            <div>
-                                                <p>
-                                                    @foreach (var provider in loginProviders)
-                                                    {
-                                                        <button type="submit" class="main-btn primary-btn-outline m-2" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.Name</button>
-                                                    }
-                                                </p>
-                                            </div>
-                                        </form>
                                     }
                                 }
                             </div>
                             <p class="text-sm text-medium text-dark text-center">
                                 Don’t have any account yet?
-                                <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Create an account</a>
+                                <a asp-controller="Register" asp-action="Index" asp-route-returnurl="@ViewData["ReturnUrl"]">Create an account</a>
                             </p>
                         </div>
                     </div>

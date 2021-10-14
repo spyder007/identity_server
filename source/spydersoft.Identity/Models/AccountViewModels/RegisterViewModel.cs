@@ -6,8 +6,8 @@ namespace spydersoft.Identity.Models.AccountViewModels
     {
         [Required]
         [StringLength(256, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-        [Display(Name = "User Name")]
-        public string UserName { get; set; }
+        [Display(Name = "Name")]
+        public string Name { get; set; }
 
 
         [Required]

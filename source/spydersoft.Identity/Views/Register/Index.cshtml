@@ -44,17 +44,14 @@
                 <div class="signup-wrapper">
                     <div class="form-wrapper">
                         <h6 class="mb-15">Sign Up Form</h6>
-                        <p class="text-sm mb-25">
-                            Start creating the best possible user experience for you
-                            customers.
-                        </p>
-                        <form action="#">
+                        <form method="post">
+                            <div asp-validation-summary="All" class="text-danger"></div>
                             <div class="row">
                                 <div class="col-12">
                                     <div class="input-style-1">
                                         <label>Name</label>
-                                        <input asp-for="UserName" class="form-control" placeholder="User Name" />
-                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                        <input asp-for="Name" class="form-control" placeholder="Name" />
+                                        <span asp-validation-for="Name" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <!-- end col -->
@@ -83,7 +80,7 @@
                                 <!-- end col -->
                                 <div class="col-12">
                                     <div class="button-group d-flex justify-content-center flex-wrap">
-                                        <button class="main-btn primary-btn btn-hover w-100 text-center">
+                                        <button class="main-btn primary-btn btn-hover w-100 text-center" type="submit">
                                             Create Account
                                         </button>
                                     </div>
@@ -91,20 +88,6 @@
                             </div>
                             <!-- end row -->
                         </form>
-                        <div class="singup-option pt-40">
-                            <p class="text-sm text-medium text-center text-gray">
-                                Easy Sign Up With
-                            </p>
-                            <div class="button-group pt-40 pb-40 d-flex justify-content-center flex-wrap">
-                                <button class="main-btn danger-btn-outline m-2">
-                                    <i class="lni lni-google mr-10"></i>
-                                    Google
-                                </button>
-                            </div>
-                            <p class="text-sm text-medium text-dark text-center">
-                                Already have an account? <a asp-area="" asp-controller="Account" asp-action="Login">Sign In</a>
-                            </p>
-                        </div>
                     </div>
                 </div>
             </div>

@@ -22,5 +22,16 @@ namespace spydersoft.Identity.Controllers
         {
             return RedirectToAction(nameof(HomeController.Error), "Home", new { errorId = errorMessage });
         }
+        protected IActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+        }
     }
 }
