@@ -13,9 +13,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using spydersoft.Identity.Attributes;
+using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.AccountViewModels;
 using spydersoft.Identity.Models.Identity;
 
+/// <summary>
+/// The Controllers namespace.
+/// </summary>
 namespace spydersoft.Identity.Controllers
 {
     [SecurityHeaders]
@@ -92,20 +96,12 @@ namespace spydersoft.Identity.Controllers
                         await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Name, model.Name));
                         return RedirectToLocal(returnUrl);
                     }
-                    AddErrors(result);
+                    ModelState.AddErrors(result);
                 }
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
-        }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
         }
     }
 }

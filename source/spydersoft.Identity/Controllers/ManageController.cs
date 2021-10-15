@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity.Controllers
@@ -165,7 +166,7 @@ namespace spydersoft.Identity.Controllers
             var changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (!changePasswordResult.Succeeded)
             {
-                AddErrors(changePasswordResult);
+                ModelState.AddErrors(changePasswordResult);
                 return View(model);
             }
 
@@ -214,7 +215,7 @@ namespace spydersoft.Identity.Controllers
             var addPasswordResult = await _userManager.AddPasswordAsync(user, model.NewPassword);
             if (!addPasswordResult.Succeeded)
             {
-                AddErrors(addPasswordResult);
+                ModelState.AddErrors(addPasswordResult);
                 return View(model);
             }
 
@@ -471,13 +472,7 @@ namespace spydersoft.Identity.Controllers
 
         #region Helpers
 
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
+
 
         private string FormatKey(string unformattedKey)
         {
