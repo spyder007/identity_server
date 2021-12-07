@@ -18,19 +18,22 @@ envFrom:
       name: standard-net-environment
 
 service:
-  port:
-    port: 80
-    targetPort: 8080
+  main:
+    ports:
+      http:
+        port: 80
+        targetPort: 8080
 
 ingress:
-  enabled: true
-  annotations: 
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /
-  labels: 
-    ingressClassName: "nginx"
-  hosts:
-    - host: auth.mattgerega.net
-      paths:
-        - path: /
-          pathType: Prefix
+  main:
+    enabled: true
+    annotations: 
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/rewrite-target: /
+    labels: 
+      ingressClassName: "nginx"
+    hosts:
+      - host: auth.mattgerega.net
+        paths:
+          - path: /
+            pathType: Prefix
