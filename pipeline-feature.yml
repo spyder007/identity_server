@@ -88,6 +88,7 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
+         helm dependency update
          helm package . --app-version $(build.buildnumber) --version $(build.buildnumber)
          curl $(helm_repository_url) --user $(helm_username):$(helm_password) --upload-file $(helmChartName)-$(build.buildnumber).tgz
         workingDirectory: $(helmChartPath)
