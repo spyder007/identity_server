@@ -41,7 +41,7 @@
             <div class="col-lg-6">
                 <div class="signin-wrapper">
                     <div class="form-wrapper">
-                        <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                        <form asp-route-returnurl="@Model.ReturnUrl" method="post">
                             <div asp-validation-summary="All" class="text-danger"></div>
                             <div class="row">
                                 <div class="col-12">
@@ -111,7 +111,7 @@
                             </div>
                             <p class="text-sm text-medium text-dark text-center">
                                 Don’t have any account yet?
-                                <a asp-controller="Register" asp-action="Index" asp-route-returnurl="@ViewData["ReturnUrl"]">Create an account</a>
+                                <a asp-controller="Register" asp-action="Index" asp-route-returnurl="@Model.ReturnUrl">Create an account</a>
                             </p>
                         </div>
                     </div>
