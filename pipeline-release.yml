@@ -59,6 +59,7 @@ stages:
         npmInstallFolder: $(npmInstallFolder)
         gulpFolder: $(gulpFolder)
         publishProject: $(publishProject)
+        netCoreVersion: '6.0.x'
     # this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your pipeline.
     - publish: '$(Build.ArtifactStagingDirectory)' 
       artifact: '$(artifactName)'
