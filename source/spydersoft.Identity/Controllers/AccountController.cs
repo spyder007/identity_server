@@ -34,6 +34,7 @@ namespace spydersoft.Identity.Controllers
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
+        private readonly IAuthenticationHandlerProvider _authenticationHandler;
         private readonly IEventService _events;
         private readonly ILogger<AccountController> _logger;
         private readonly IEmailSender _emailSender;
@@ -44,6 +45,7 @@ namespace spydersoft.Identity.Controllers
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
+            IAuthenticationHandlerProvider authenticationHandler,
             IEventService events,
             ILogger<AccountController> logger,
             IEmailSender emailSender)
@@ -56,6 +58,7 @@ namespace spydersoft.Identity.Controllers
             _events = events;
             _logger = logger;
             _emailSender = emailSender;
+            _authenticationHandler = authenticationHandler;
         }
 
         /// <summary>
@@ -423,8 +426,8 @@ namespace spydersoft.Identity.Controllers
                 var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
                 if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
                 {
-                    var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
-                    if (providerSupportsSignout)
+                    var handler = await _authenticationHandler.GetHandlerAsync(HttpContext, idp);
+                    if (handler is IAuthenticationSignOutHandler)
                     {
                         if (vm.LogoutId == null)
                         {

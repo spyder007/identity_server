@@ -18,17 +18,20 @@ namespace spydersoft.Identity.Services
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
+        private readonly IAuthenticationHandlerProvider _authenticationHandler;
 
         public AccountService(
             IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContextAccessor,
             IAuthenticationSchemeProvider schemeProvider,
-            IClientStore clientStore)
+            IClientStore clientStore,
+            IAuthenticationHandlerProvider authenticationHandler)
         {
             _interaction = interaction;
             _httpContextAccessor = httpContextAccessor;
             _schemeProvider = schemeProvider;
             _clientStore = clientStore;
+            _authenticationHandler = authenticationHandler;
         }
 
         //public async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
@@ -134,8 +137,8 @@ namespace spydersoft.Identity.Services
                 var idp = user.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
                 if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
                 {
-                    var providerSupportsSignout = await _httpContextAccessor.HttpContext.GetSchemeSupportsSignOutAsync(idp);
-                    if (providerSupportsSignout)
+                    var handler = await _authenticationHandler.GetHandlerAsync(_httpContextAccessor.HttpContext, idp);
+                    if (handler is IAuthenticationSignOutHandler)
                     {
                         if (vm.LogoutId == null)
                         {
