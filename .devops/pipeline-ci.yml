@@ -1,0 +1,47 @@
+## Build Pipeline - Build, publish container image, and update helmfile config
+resources:
+  repositories:
+    - repository: templates
+      type: BitBucket
+      endpoint: "Bitbucket - spydersoft"
+      name: spydersoftteam/azure-devops-templates
+    - repository: helmfileconfig
+      type: BitBucket
+      endpoint: Bitbucket - spydersoft
+      name: spydersoftteam/id-helm-config-repo
+
+trigger:
+  branches:
+    include:
+      - main
+      - feature/*
+  paths:
+    exclude:
+      - README.md
+
+pr: none
+
+extends:
+  template: stages/stages-build-docker-update-helm/v1.yml@templates
+  parameters:
+    publishProject: source/spydersoft.Identity/spydersoft.Identity.csproj
+    artifactName: identityServer
+    artifactZipName: spydersoft.Identity
+    dockerImageFileName: identity_server
+    dockerImageName: spydersoft/identity/identity_server
+    imageTagVariableName: identity_server
+    helmfileRepoName: helmfileconfig
+    prebuildSteps:
+      - task: Npm@1
+        displayName: NPM Install
+        inputs:
+          workingDir: $(Build.SourcesDirectory)/source/spydersoft.Identity
+          command: install
+      - task: CmdLine@2
+        inputs:
+          script: 'npm install gulp' 
+          workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
+      - task: CmdLine@2
+        inputs:
+          script: 'gulp build:dist'
+          workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
