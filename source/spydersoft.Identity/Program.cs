@@ -1,25 +1,42 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Serilog;
-using Serilog.Events;
-using Serilog.Sinks.SystemConsole.Themes;
 using System;
+using spydersoft.Identity;
 
-namespace spydersoft.Identity
+var baseConfig = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(baseConfig)
+    .CreateBootstrapLogger();
+
+try
 {
-    public class Program
+    Log.Information("identityServer starting.");
+    var builder = WebApplication.CreateBuilder(args);
+    var config = builder.Configuration;
+
+    builder.Host.UseSerilog((context, services, configuration) =>
     {
-        public static void Main(string[] args)
-        {
-            Console.Title = "spydersoft.Identity";
+        configuration.ReadFrom.Configuration(context.Configuration);
+    });
 
-            CreateWebHostBuilder(args).Build().Run();
-        }
+    var startup = new Startup(builder.Configuration);
+    startup.ConfigureServices(builder.Services);
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .UseStartup<Startup>();
-    }
+    var app = builder.Build();
+    startup.Configure(app, app.Environment);
+
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "identityServer failed to start.");
+}
+finally
+{
+    Log.Information("identityServer shut down complete");
+    Log.CloseAndFlush();
 }

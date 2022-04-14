@@ -1,6 +1,7 @@
 ﻿using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,22 +25,9 @@ namespace spydersoft.Identity
 {
     public class Startup
     {
-        public Startup(IWebHostEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddUserSecrets<Startup>(true)
-                .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
-
-            // Configure logging as per app settings, but always configure a console logger
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Literate)
-                .CreateLogger();
+            Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -49,7 +37,6 @@ namespace spydersoft.Identity
         {
             var connString = Configuration.GetConnectionString("IdentityConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-            
             
             services.ConfigureNonBreakingSameSiteCookies();
             services.AddHttpContextAccessor();
@@ -97,7 +84,7 @@ namespace spydersoft.Identity
                     option.ClientId = Configuration.GetValue<string>("ProviderSettings:GoogleClientId");
                     option.ClientSecret = Configuration.GetValue<string>("ProviderSettings:GoogleClientSecret");
                 });
-
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,7 +104,7 @@ namespace spydersoft.Identity
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            app.UseHealthChecks("/healthz", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
             app.UseCookiePolicy();
             app.UseStaticFiles();
             var forwardedHeadersOptions = new ForwardedHeadersOptions
