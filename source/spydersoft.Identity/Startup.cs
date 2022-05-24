@@ -84,7 +84,8 @@ namespace spydersoft.Identity
                     option.ClientId = Configuration.GetValue<string>("ProviderSettings:GoogleClientId");
                     option.ClientSecret = Configuration.GetValue<string>("ProviderSettings:GoogleClientSecret");
                 });
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddSqlServer(connString, null, "sqlserver",null, new []{ "ready" }, null, null);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,6 +106,8 @@ namespace spydersoft.Identity
                 app.UseExceptionHandler("/Home/Error");
             }
             app.UseHealthChecks("/healthz", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
+            app.UseHealthChecks("/readyz", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
+            app.UseHealthChecks("/livez", new HealthCheckOptions { Predicate = _ => false });
             app.UseCookiePolicy();
             app.UseStaticFiles();
             var forwardedHeadersOptions = new ForwardedHeadersOptions
