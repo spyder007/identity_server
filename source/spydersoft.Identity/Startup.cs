@@ -23,6 +23,7 @@ using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.Identity;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace spydersoft.Identity
 {
@@ -72,6 +73,18 @@ namespace spydersoft.Identity
             services.AddHttpContextAccessor();
             // Add framework services.
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
+            
+            services.AddDbContext<DataProtectionDbContext>(options => options.UseSqlServer(connString));
+            services.AddDataProtection()
+                .SetApplicationName("identity-server")
+                .PersistKeysToDbContext<DataProtectionDbContext>();
+
+            var cacheConnection = Configuration.GetConnectionString("RedisCache");
+            if (!string.IsNullOrEmpty(cacheConnection))
+            {
+                services.AddStackExchangeRedisCache(options => { options.Configuration = cacheConnection; });
+            }
+
             services.AddAutoMapper(typeof(Startup));
             //services.AddSingleton(Data.AutoMapper.GetMapperConfiguration());
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>

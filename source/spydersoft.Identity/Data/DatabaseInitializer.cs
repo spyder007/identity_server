@@ -56,6 +56,12 @@ namespace spydersoft.Identity.Data
                 DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>(), "Identity Server 4 Configuration Database");
 
             Task.WaitAll(configTask);
+
+            Task dataProtectTask =
+                DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<DataProtectionDbContext>(),
+                    "Data Protection Database");
+            
+            Task.WaitAll(dataProtectTask);
         }
 
         private async Task DoMigrationIfNeeded(DbContext context, string databaseName)
