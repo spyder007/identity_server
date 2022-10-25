@@ -67,7 +67,7 @@ namespace spydersoft.Identity.Controllers.Admin
                     return GetErrorAction("Could not load mainEntity");
                 }
 
-                collectionViewModel.SetMainViewModel(Mapper.Map<TMainEntityViewModel>(entity));
+                collectionViewModel.SetMainViewModel(Mapper.Map<TMainEntityViewModel>(entity), ConfigDbContext);
                 collectionViewModel.ItemsList.AddRange(PopulateItemList(entity));
                 ViewData["Title"] = $"Edit {collectionViewModel.NavBar.Name}";
             }
@@ -97,7 +97,7 @@ namespace spydersoft.Identity.Controllers.Admin
                 return GetIndexRedirect(new { id = id.Value });
             }
 
-            collectionViewModel.SetMainViewModel(Mapper.Map<TMainEntityViewModel>(entity));
+            collectionViewModel.SetMainViewModel(Mapper.Map<TMainEntityViewModel>(entity), ConfigDbContext);
             collectionViewModel.ItemsList.AddRange(PopulateItemList(entity));
 
             return GetView(collectionViewModel);

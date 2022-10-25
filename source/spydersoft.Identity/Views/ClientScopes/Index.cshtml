@@ -37,7 +37,12 @@
                         <tr>
                             <td>
                                 <div class="form-group">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Scope" pf-validation-for="NewItem.Scope" pf-validationerror-class="is-invalid" />
+                                    <select asp-for="NewItem.Scope" id="selScope" pf-validation-for="NewItem.Scope" pf-validationerror-class="is-invalid" class="form-control">
+                                        @foreach (var scope in Model.NewItem.Scopes)
+                                        {
+                                            <option value="@scope">@scope</option>
+                                        }
+                                    </select>
                                     <span asp-validation-for="NewItem.Scope" class="invalid-feedback"></span>
                                 </div>
                             </td>

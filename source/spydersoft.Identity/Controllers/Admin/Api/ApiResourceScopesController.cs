@@ -28,7 +28,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)
         {
-            return query.Include(c => c.Scopes).ThenInclude(s => s.ApiResource);
+            return query.Include(c => c.Scopes);
         }
 
         protected override ApiResourceScope FindItemInCollection(List<ApiResourceScope> collection, int id)
@@ -43,103 +43,13 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         #endregion BaseApiCollectionController Implementation
 
-        public IActionResult Edit(int? id, int? parentid)
-        {
-            ApiResourceScopeViewModel model;
-            if (!id.HasValue)
-            {
-                model = new ApiResourceScopeViewModel();
-                ViewData["Title"] = "New API Scope";
-            }
-            else
-            {
-                ApiResourceScope apiScope = GetScope(parentid, id);
-                if (apiScope == null)
-                {
-                    return GetErrorAction("Could not load api scope");
-                }
-
-                model = new ApiResourceScopeViewModel { Id = id.Value, ParentId = parentid.Value };
-
-                Mapper.Map(apiScope, model);
-                ViewData["Title"] = $"Edit API Scope {model.Scope}";
-            }
-
-            return View(nameof(Edit), model);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> DeleteClaim(int? id, int? scopeId, int? apiId)
-        {
-            if (!id.HasValue)
-            {
-                return GetErrorAction("No ID provided");
-            }
-
-            ApiResourceScope apiScope = GetScope(apiId, scopeId);
-            if (apiScope == null)
-            {
-                return GetErrorAction("Could not load api scope");
-            }
-            
-            var claim = apiScope.ApiResource.UserClaims.FirstOrDefault(uc => uc.Id == id.Value);
-            apiScope.ApiResource.UserClaims.Remove(claim);
-            ConfigDbContext.Update(apiScope);
-            await ConfigDbContext.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Edit), new { id = scopeId.Value, parentid = apiId.Value });
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(int? id, int? parentid, ApiResourceScopeViewModel scopeModel)
-        {
-            if (ModelState.IsValid)
-            {
-                ApiResourceScope dbEntity;
-                var isNew = false;
-
-                if (!id.HasValue || id.Value == 0)
-                {
-                    dbEntity = new ApiResourceScope();
-                    ConfigDbContext.Add(dbEntity);
-                    isNew = true;
-                }
-                else
-                {
-                    scopeModel.Id = id.Value;
-                    dbEntity = GetScope(parentid, id);
-                }
-
-                if (dbEntity != null)
-                {
-                    Mapper.Map(scopeModel, dbEntity);
-                }
-
-                if (!isNew)
-                {
-                    ConfigDbContext.Update(dbEntity);
-                }
-
-                await ConfigDbContext.SaveChangesAsync();
-
-                return (isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id, parentid = parentid.Value }) : RedirectToAction(nameof(Index), new { id = parentid.Value }));
-            }
-
-            if (id.HasValue)
-            {
-                scopeModel.Id = id.Value;
-                ApiResourceScope scope = GetScope(parentid, id);
-            }
-
-            return View(nameof(Edit), scopeModel);
-        }
 
         private ApiResourceScope GetScope(int? apiId, int? id)
         {
-            var apiResource = ConfigDbContext.ApiResources.Include(a => a.Scopes).ThenInclude(s => s.ApiResource).FirstOrDefault(c => c.Id == apiId.Value);
+            var apiResource = ConfigDbContext.ApiResources.Include(a => a.Scopes).FirstOrDefault(c => c.Id == apiId.Value);
 
             var apiScope = apiResource?.Scopes.FirstOrDefault(s => s.Id == id.Value);
-            
+
             return apiScope;
         }
     }
