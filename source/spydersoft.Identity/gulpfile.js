@@ -96,6 +96,15 @@ gulp.libsToCopy = [
                 dest: "{libDest}{libName}/fonts"
             }
         ]
+    },
+    {
+        lib: "davidshimjs-qrcodejs",
+        jobs: [
+            {
+                src: "/*",
+                dest: "{libDest}{libName}"
+            }
+        ]
     }
 ];
 

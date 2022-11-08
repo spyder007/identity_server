@@ -42,36 +42,36 @@
                         }
                         <tr>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Description" pf-validation-for="NewItem.Description" pf-validationerror-class="is-invalid" />
                                     <span asp-validation-for="NewItem.Description" class="invalid-feedback"></span>
                                 </div>
                             </td>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <input type="text" class="form-control" id="txtValue" asp-for="NewItem.Type" readonly />
                                     @Html.HiddenFor(model => model.NewItem.Type)
                                 </div>
                             </td>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <input type="text" class="form-control" id="txtValue" asp-for="NewItem.Value" pf-validation-for="NewItem.Value" pf-validationerror-class="is-invalid" />
                                     <span asp-validation-for="NewItem.Value" class="invalid-feedback"></span>
                                 </div>
                             </td>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <input type="datetime" class="form-control" id="txtCreated" asp-for="NewItem.Created" readonly />
                                 </div>
                             </td>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <input type="datetime" class="form-control" id="txtExpiration" asp-for="NewItem.Expiration" pf-validation-for="NewItem.Expiration" pf-validationerror-class="is-invalid" />
                                     <span asp-validation-for="NewItem.Expiration" class="invalid-feedback"></span>
                                 </div>
                             </td>
                             <td>
-                                <div class="form-group">
+                                <div class="mb-3">
                                     <input type="submit" value="Add" class="btn btn-sm btn-primary" />
                                 </div>
                             </td>

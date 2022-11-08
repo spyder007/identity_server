@@ -24,7 +24,7 @@
                         @Html.HiddenFor(model => model.Role.Id)
                         @Html.HiddenFor(model => model.Role.ConcurrencyStamp)
                         @Html.HiddenFor(model => model.Role.NormalizedName)
-                        <div class="form-group">
+                        <div class="mb-3">
                             @Html.LabelFor(model => model.Role.Name)
                             <input type="text" class="form-control" id="txtName" asp-for="Role.Name" pf-validation-for="Role.Name" pf-validationerror-class="is-invalid" />
                             <span asp-validation-for="Role.Name" class="invalid-feedback"></span>
@@ -65,19 +65,19 @@
                                 }
                                 <tr>
                                     <td>
-                                        <div class="form-group">
+                                        <div class="mb-3">
                                             <input type="text" class="form-control" id="txtClientId" asp-for="NewClaim.Type" pf-validation-for="NewClaim.Type" pf-validationerror-class="is-invalid" />
                                             <span asp-validation-for="NewClaim.Type" class="invalid-feedback"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="form-group">
+                                        <div class="mb-3">
                                             <input type="text" class="form-control" id="txtNewClaim.Value" asp-for="NewClaim.Value" pf-validation-for="NewClaim.Value" pf-validationerror-class="is-invalid" />
                                             <span asp-validation-for="NewClaim.Value" class="invalid-feedback"></span>
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="form-group">
+                                        <div class="mb-3">
                                             <input type="submit" value="Add" class="btn btn-sm btn-primary" />
                                         </div>
                                     </td>

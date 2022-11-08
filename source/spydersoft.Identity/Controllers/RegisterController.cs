@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Duende.IdentityServer.Services;
@@ -11,11 +12,13 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using spydersoft.Identity.Attributes;
 using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.AccountViewModels;
 using spydersoft.Identity.Models.Identity;
+using spydersoft.Identity.Services;
 
 /// <summary>
 /// The Controllers namespace.
@@ -28,10 +31,10 @@ namespace spydersoft.Identity.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
+        private readonly IEmailSender _emailSender;
         private readonly ILogger<RegisterController> _logger;
 
         [TempData]
@@ -40,20 +43,20 @@ namespace spydersoft.Identity.Controllers
         public RegisterController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events,
             ILogger<RegisterController> logger,
-            IMapper mapper) : base(mapper)
+            IMapper mapper,
+            IEmailSender emailSender) : base(mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _interaction = interaction;
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
             _logger = logger;
+            _emailSender = emailSender;
         }
         [HttpGet]
         public IActionResult Index(string returnUrl = null)
@@ -86,10 +89,12 @@ namespace spydersoft.Identity.Controllers
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User created a new account with password.");
-
+                        var userId = await _userManager.GetUserIdAsync(user);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-                        //await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
+                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                        var callbackUrl = Url.Action(nameof(AccountController.ConfirmEmail), "Account",
+                            new { userId = userId, code = code }, Request.Scheme);
+                        await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created a new account with password.");

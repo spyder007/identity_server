@@ -24,6 +24,7 @@ using spydersoft.Identity.Models.Identity;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Microsoft.AspNetCore.DataProtection;
+using spydersoft.Identity.Options;
 
 namespace spydersoft.Identity
 {
@@ -41,6 +42,9 @@ namespace spydersoft.Identity
         {
             var connString = Configuration.GetConnectionString("IdentityConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+
+            services.Configure<SendgridOptions>(Configuration.GetSection(SendgridOptions.Name));
+
             services.AddOpenTelemetryTracing(builder =>
             {
                 builder
@@ -97,7 +101,11 @@ namespace spydersoft.Identity
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddMvc(options =>
+            {
+                options.SuppressAsyncSuffixInActionNames = false;
+                options.EnableEndpointRouting = false;
+            });
 
             services.AddIdentityServer()
                 .AddAspNetIdentity<ApplicationUser>()
@@ -127,6 +135,7 @@ namespace spydersoft.Identity
                     option.ClientId = Configuration.GetValue<string>("ProviderSettings:GoogleClientId");
                     option.ClientSecret = Configuration.GetValue<string>("ProviderSettings:GoogleClientSecret");
                 });
+            services.AddAuthorization();
             services.AddHealthChecks()
                 .AddSqlServer(connString, null, "sqlserver", null, new[] { "ready" }, null, null);
         }
@@ -160,17 +169,18 @@ namespace spydersoft.Identity
             };
             forwardedHeadersOptions.KnownNetworks.Clear();
             forwardedHeadersOptions.KnownProxies.Clear();
-
+            
             app.UseForwardedHeaders(forwardedHeadersOptions);
             app.UseOpenTelemetryPrometheusScrapingEndpoint();
+            app.UseAuthentication();
             app.UseRouting();
+            app.UseIdentityServer();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-            // app.UseIdentity(); // not needed, since UseIdentityServer adds the authentication middleware
-            app.UseIdentityServer();
-            app.UseAuthentication();
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

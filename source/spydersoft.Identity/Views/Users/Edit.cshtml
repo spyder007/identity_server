@@ -24,19 +24,19 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         @Html.HiddenFor(model => model.User.Id)
                         @Html.HiddenFor(model => model.User.ConcurrencyStamp)
-                        <div class="form-group">
+                        <div class="mb-3">
                             @Html.LabelFor(model => model.User.UserName)
                             <input type="text" class="form-control" id="txtName" asp-for="User.UserName" pf-validation-for="User.UserName" pf-validationerror-class="is-invalid" />
                             <span asp-validation-for="User.UserName" class="invalid-feedback"></span>
                         </div>
-                        <div class="form-group">
+                        <div class="mb-3">
                             @Html.LabelFor(model => model.User.Email)
                             <input type="text" class="form-control" id="txtDisplayName" asp-for="User.Email" pf-validation-for="User.Email" pf-validationerror-class="is-invalid" />
                             <span asp-validation-for="User.Email" class="invalid-feedback"></span>
                         </div>
                         @if (Model.IsNewUser)
                         {
-                            <div class="form-group">
+                            <div class="mb-3">
                                 @Html.LabelFor(model => model.Password)
                                 <input type="text" class="form-control" id="txtPassword" asp-for="Password" pf-validation-for="Password" pf-validationerror-class="is-invalid" />
                                 <span asp-validation-for="Password" class="invalid-feedback"></span>
@@ -78,7 +78,7 @@
                                     }
                                     <tr>
                                         <td>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <select asp-for="SelectedAvailableRole" class="form-control">
                                                     @foreach (var availableRole in Model.AvailableRoles)
                                                     {
@@ -88,7 +88,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <input type="submit" value="Add" class="btn btn-sm btn-primary" />
                                             </div>
                                         </td>
@@ -130,19 +130,19 @@
                                     }
                                     <tr>
                                         <td>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <input type="text" class="form-control" id="txtNewClaim.Type" asp-for="NewClaim.Type" pf-validation-for="NewClaim.Type" pf-validationerror-class="is-invalid" />
                                                 <span asp-validation-for="NewClaim.Type" class="invalid-feedback"></span>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <input type="text" class="form-control" id="txtNewClaim.Value" asp-for="NewClaim.Value" pf-validation-for="NewClaim.Value" pf-validationerror-class="is-invalid" />
                                                 <span asp-validation-for="NewClaim.Value" class="invalid-feedback"></span>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="form-group">
+                                            <div class="mb-3">
                                                 <input type="submit" value="Add" class="btn btn-sm btn-primary" />
                                             </div>
                                         </td>

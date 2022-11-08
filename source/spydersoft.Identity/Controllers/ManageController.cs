@@ -13,11 +13,11 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.Identity;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace spydersoft.Identity.Controllers
 {
     [Authorize]
-    [Route("[controller]/[action]")]
     public class ManageController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -60,6 +60,7 @@ namespace spydersoft.Identity.Controllers
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
+                IsPhoneConfirmed = user.PhoneNumberConfirmed,
                 StatusMessage = StatusMessage
             };
 
@@ -120,10 +121,13 @@ namespace spydersoft.Identity.Controllers
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            //var callbackUrl = Url.EmailConfirmationLink(user.Id, code, Request.Scheme);
-            //var email = user.Email;
-            //await _emailSender.SendEmailConfirmationAsync(email, callbackUrl);
+            var userId = await _userManager.GetUserIdAsync(user);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+            var callbackUrl = Url.Action(nameof(AccountController.ConfirmEmail), "Account",
+                values: new { userId, code }, Request.Scheme);
+            await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
             StatusMessage = "Verification email sent. Please check your email.";
             return RedirectToAction(nameof(Index));

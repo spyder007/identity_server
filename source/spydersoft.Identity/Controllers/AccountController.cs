@@ -22,6 +22,8 @@ using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.AccountViewModels;
 using spydersoft.Identity.Models.Identity;
 using spydersoft.Identity.Services;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace spydersoft.Identity.Controllers
 {
@@ -153,6 +155,11 @@ namespace spydersoft.Identity.Controllers
                     }
                 }
 
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToAction(nameof(LoginWith2fa), new { rememberMe = model.RememberLogin, returnUrl = model.ReturnUrl });
+                }
+
                 await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
@@ -271,6 +278,68 @@ namespace spydersoft.Identity.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> LoginWith2fa(bool rememberMe, string returnUrl = null)
+        {
+            // Ensure the user has gone through the username & password screen first
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+
+            if (user == null)
+            {
+                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+            }
+
+            var model = new LoginWith2faViewModel()
+            {
+                RememberMe = rememberMe,
+                ReturnUrl = returnUrl
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var returnUrl = model.ReturnUrl ?? Url.Content("~/");
+
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
+            }
+
+            var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
+
+            var result =
+                await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, model.RememberMe,
+                    model.RememberMachine);
+
+            var userId = await _userManager.GetUserIdAsync(user);
+
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
+                return LocalRedirect(returnUrl);
+            }
+            else if (result.IsLockedOut)
+            {
+                _logger.LogWarning("User with ID '{UserId}' account locked out.", user.Id);
+                return RedirectToPage("./Lockout");
+            }
+            else
+            {
+                _logger.LogWarning("Invalid authenticator code entered for user with ID '{UserId}'.", user.Id);
+                ModelState.AddModelError(string.Empty, "Invalid authenticator code.");
+                return View();
+            }
+        }
+
+        [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
         {
@@ -313,6 +382,27 @@ namespace spydersoft.Identity.Controllers
             return View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return RedirectToPage("/Index");
+            }
+
+            var user = _userManager.FindByIdAsync(userId).Result;
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{userId}'.");
+            }
+
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            var result = _userManager.ConfirmEmailAsync(user, code).Result;
+            var model = new BaseModel();
+            model.Message = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            return View(model);
+        }
 
         /*****************************************/
         /* helper APIs for the AccountController */
