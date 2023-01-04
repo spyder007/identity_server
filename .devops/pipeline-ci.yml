@@ -32,7 +32,7 @@ extends:
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
     sonar_endpoint_name: sonarqube
-    sonar_project_key: identity_identity_AYVkGidskcw9VpefVwd1
+    sonar_project_key: identity_identity_AYV-QkChmblgg6j_jAeV
     execute_sonar: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
     execute_tests: true
     prebuildSteps:
