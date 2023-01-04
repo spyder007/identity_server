@@ -33,6 +33,7 @@ extends:
     helmfileRepoName: helmfileconfig
     sonar_endpoint_name: sonarqube
     sonar_project_key: identity_identity_AYVkGidskcw9VpefVwd1
+    execute_sonar: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
     execute_tests: true
     prebuildSteps:
       - task: Npm@1
