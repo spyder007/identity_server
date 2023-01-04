@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+
 using Serilog;
-using System;
+
 using spydersoft.Identity;
 
-var baseConfig = new ConfigurationBuilder()
+IConfigurationRoot baseConfig = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
 
@@ -15,18 +18,14 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     Log.Information("identityServer starting.");
-    var builder = WebApplication.CreateBuilder(args);
-    var config = builder.Configuration;
+    WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-    builder.Host.UseSerilog((context, services, configuration) =>
-    {
-        configuration.ReadFrom.Configuration(context.Configuration);
-    });
+    _ = builder.Host.UseSerilog((context, services, configuration) => _ = configuration.ReadFrom.Configuration(context.Configuration));
 
     var startup = new Startup(builder.Configuration);
     startup.ConfigureServices(builder.Services);
 
-    var app = builder.Build();
+    WebApplication app = builder.Build();
     startup.Configure(app, app.Environment);
 
     app.Run();

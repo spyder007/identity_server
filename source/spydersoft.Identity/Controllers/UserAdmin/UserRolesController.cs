@@ -1,10 +1,13 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using spydersoft.Identity.Models.Identity;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
+using AutoMapper;
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+
+using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity.Controllers.UserAdmin
 {
@@ -48,7 +51,7 @@ namespace spydersoft.Identity.Controllers.UserAdmin
                     return GetErrorAction("Could not load role");
                 }
 
-                var claims = await RoleManager.GetClaimsAsync(viewModel.Role);
+                System.Collections.Generic.IList<Claim> claims = await RoleManager.GetClaimsAsync(viewModel.Role);
                 viewModel.Claims = claims.AsQueryable();
                 viewModel.NewClaim = new ClaimModel();
                 ViewData["Title"] = $"Edit {viewModel.Role.Name}";
@@ -62,7 +65,7 @@ namespace spydersoft.Identity.Controllers.UserAdmin
         {
             if (ModelState.IsValid)
             {
-                var current = await RoleManager.FindByIdAsync(id);
+                ApplicationRole current = await RoleManager.FindByIdAsync(id);
                 IdentityResult result;
                 if (current == null)
                 {
@@ -70,16 +73,11 @@ namespace spydersoft.Identity.Controllers.UserAdmin
                 }
                 else
                 {
-                    Mapper.Map(roleModel.Role, current);
+                    _ = Mapper.Map(roleModel.Role, current);
                     result = await RoleManager.UpdateAsync(current);
                 }
 
-                if (!result.Succeeded)
-                {
-                    return GetErrorAction(result.ToString());
-                }
-
-                return RedirectToAction(nameof(Index));
+                return !result.Succeeded ? GetErrorAction(result.ToString()) : RedirectToAction(nameof(Index));
             }
 
             return View(roleModel);
@@ -92,19 +90,14 @@ namespace spydersoft.Identity.Controllers.UserAdmin
             {
                 return GetErrorAction("Invalid ID provided");
             }
-            var role = await RoleManager.FindByIdAsync(id);
+            ApplicationRole role = await RoleManager.FindByIdAsync(id);
             if (role == null)
             {
                 return GetErrorAction("Could ID provided");
             }
 
             IdentityResult result = await RoleManager.DeleteAsync(role);
-            if (!result.Succeeded)
-            {
-                return GetErrorAction(result.ToString());
-            }
-
-            return RedirectToAction(nameof(Index));
+            return !result.Succeeded ? GetErrorAction(result.ToString()) : RedirectToAction(nameof(Index));
         }
 
         #endregion Role Editing and Deletion
@@ -114,41 +107,31 @@ namespace spydersoft.Identity.Controllers.UserAdmin
         [HttpPost]
         public async Task<IActionResult> AddClaim(string roleid, ApplicationRoleViewModel viewModel)
         {
-            var current = await RoleManager.FindByIdAsync(roleid);
+            ApplicationRole current = await RoleManager.FindByIdAsync(roleid);
             if (current == null)
             {
                 return GetErrorAction("Invalid role");
             }
 
             IdentityResult result = await RoleManager.AddClaimAsync(current, new Claim(viewModel.NewClaim.Type, viewModel.NewClaim.Value));
-            if (!result.Succeeded)
-            {
-                return GetErrorAction(result.ToString());
-            }
-
-            return RedirectToAction(nameof(Edit), new { id = roleid });
+            return !result.Succeeded ? GetErrorAction(result.ToString()) : RedirectToAction(nameof(Edit), new { id = roleid });
         }
 
         [HttpGet]
         public async Task<IActionResult> DeleteClaim(string roleid, string claimtype)
         {
-            var current = await RoleManager.FindByIdAsync(roleid);
+            ApplicationRole current = await RoleManager.FindByIdAsync(roleid);
             if (current == null)
             {
                 return GetErrorAction("Invalid role");
             }
 
-            var claims = await RoleManager.GetClaimsAsync(current);
+            System.Collections.Generic.IList<Claim> claims = await RoleManager.GetClaimsAsync(current);
 
-            var claim = claims.FirstOrDefault(c => c.Type == claimtype);
+            Claim claim = claims.FirstOrDefault(c => c.Type == claimtype);
 
             IdentityResult result = await RoleManager.RemoveClaimAsync(current, claim);
-            if (!result.Succeeded)
-            {
-                return GetErrorAction(result.ToString());
-            }
-
-            return RedirectToAction(nameof(Edit), new { id = roleid });
+            return !result.Succeeded ? GetErrorAction(result.ToString()) : RedirectToAction(nameof(Edit), new { id = roleid });
         }
 
         #endregion Role Claim Add / Deletion

@@ -3,20 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
+
 using IdentityModel;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
 using spydersoft.Identity.Attributes;
-using spydersoft.Identity.Models.Identity;
 using spydersoft.Identity.Extensions;
+using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity.Controllers
 {
@@ -53,10 +57,13 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public IActionResult Challenge(string scheme, string returnUrl)
         {
-            if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";
+            if (string.IsNullOrEmpty(returnUrl))
+            {
+                returnUrl = "~/";
+            }
 
             // validate returnUrl - either it is a valid OIDC URL or back to a local page
-            if (Url.IsLocalUrl(returnUrl) == false && _interaction.IsValidReturnUrl(returnUrl) == false)
+            if (!Url.IsLocalUrl(returnUrl) && !_interaction.IsValidReturnUrl(returnUrl))
             {
                 // user might have clicked on a malicious link - should be logged
                 throw new Exception("invalid return URL");
@@ -84,7 +91,7 @@ namespace spydersoft.Identity.Controllers
         public async Task<IActionResult> Callback()
         {
             // read external identity from the temporary cookie
-            var result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+            AuthenticateResult result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
             if (result?.Succeeded != true)
             {
                 throw new Exception("External authentication error");
@@ -92,19 +99,13 @@ namespace spydersoft.Identity.Controllers
 
             if (_logger.IsEnabled(LogLevel.Debug))
             {
-                var externalClaims = result.Principal.Claims.Select(c => $"{c.Type}: {c.Value}");
+                IEnumerable<string> externalClaims = result.Principal.Claims.Select(c => $"{c.Type}: {c.Value}");
                 _logger.LogDebug("External claims: {@claims}", externalClaims);
             }
 
             // lookup our user and external provider info
-            var (user, provider, providerUserId, claims) = await FindUserFromExternalProviderAsync(result);
-            if (user == null)
-            {
-                // this might be where you might initiate a custom workflow for user registration
-                // in this sample we don't show how that would be done, as our sample implementation
-                // simply auto-provisions new external user
-                user = await AutoProvisionUserAsync(provider, providerUserId, claims);
-            }
+            (ApplicationUser user, var provider, var providerUserId, IEnumerable<Claim> claims) = await FindUserFromExternalProviderAsync(result);
+            user ??= await AutoProvisionUserAsync(provider, providerUserId, claims);
 
             // this allows us to collect any additional claims or properties
             // for the specific protocols used and store them in the local auth cookie.
@@ -116,7 +117,7 @@ namespace spydersoft.Identity.Controllers
             // issue authentication cookie for user
             // we must issue the cookie maually, and can't use the SignInManager because
             // it doesn't expose an API to issue additional claims from the login workflow
-            var principal = await _signInManager.CreateUserPrincipalAsync(user);
+            ClaimsPrincipal principal = await _signInManager.CreateUserPrincipalAsync(user);
             additionalLocalClaims.AddRange(principal.Claims);
             var name = principal.FindFirst(JwtClaimTypes.Name)?.Value ?? user.Id;
 
@@ -136,17 +137,14 @@ namespace spydersoft.Identity.Controllers
             var returnUrl = result.Properties.Items["returnUrl"] ?? "~/";
 
             // check if external login is in the context of an OIDC request
-            var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
+            Duende.IdentityServer.Models.AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(returnUrl);
             await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.Id, name, true, context?.Client.ClientId));
 
-            if (context != null)
+            if (context != null && context.IsNativeClient())
             {
-                if (context.IsNativeClient())
-                {
-                    // The client is native, so this change in how to
-                    // return the response is for better UX for the end user.
-                    return this.LoadingPage("Redirect", returnUrl);
-                }
+                // The client is native, so this change in how to
+                // return the response is for better UX for the end user.
+                return this.LoadingPage("Redirect", returnUrl);
             }
 
             return Redirect(returnUrl);
@@ -155,24 +153,24 @@ namespace spydersoft.Identity.Controllers
         private async Task<(ApplicationUser user, string provider, string providerUserId, IEnumerable<Claim> claims)>
             FindUserFromExternalProviderAsync(AuthenticateResult result)
         {
-            var externalUser = result.Principal;
+            ClaimsPrincipal externalUser = result.Principal;
 
             // try to determine the unique id of the external user (issued by the provider)
             // the most common claim type for that are the sub claim and the NameIdentifier
             // depending on the external provider, some other claim type might be used
-            var userIdClaim = externalUser.FindFirst(JwtClaimTypes.Subject) ??
+            Claim userIdClaim = externalUser.FindFirst(JwtClaimTypes.Subject) ??
                               externalUser.FindFirst(ClaimTypes.NameIdentifier) ??
                               throw new Exception("Unknown userid");
 
             // remove the user id claim so we don't include it as an extra claim if/when we provision the user
             var claims = externalUser.Claims.ToList();
-            claims.Remove(userIdClaim);
+            _ = claims.Remove(userIdClaim);
 
             var provider = result.Properties.Items["scheme"];
             var providerUserId = userIdClaim.Value;
 
             // find external user
-            var user = await _userManager.FindByLoginAsync(provider, providerUserId);
+            ApplicationUser user = await _userManager.FindByLoginAsync(provider, providerUserId);
 
             return (user, provider, providerUserId, claims);
         }
@@ -195,12 +193,12 @@ namespace spydersoft.Identity.Controllers
                     claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value;
                 var last = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.FamilyName)?.Value ??
                     claims.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value;
-                
-                
+
+
                 if (first != null && last != null)
                 {
                     name = first + " " + last;
-                    
+
                 }
                 else if (first != null)
                 {
@@ -222,7 +220,7 @@ namespace spydersoft.Identity.Controllers
             }
 
             // If this email already exists in the system, we will link the claims and login to the external provider
-            var user = await _userManager.FindByEmailAsync(email);
+            ApplicationUser user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 user = new ApplicationUser
@@ -231,22 +229,25 @@ namespace spydersoft.Identity.Controllers
                     Email = email,
                     Name = name ?? "Unknown User"
                 };
-                var createResult = await _userManager.CreateAsync(user);
-                if (!createResult.Succeeded) throw new Exception(createResult.Errors.First().Description);
-
+                IdentityResult createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded)
+                {
+                    throw new Exception(createResult.Errors.First().Description);
+                }
             }
 
             IdentityResult identityResult;
             if (filtered.Any())
             {
                 identityResult = await _userManager.AddClaimsAsync(user, filtered);
-                if (!identityResult.Succeeded) throw new Exception(identityResult.Errors.First().Description);
+                if (!identityResult.Succeeded)
+                {
+                    throw new Exception(identityResult.Errors.First().Description);
+                }
             }
 
             identityResult = await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, providerUserId, provider));
-            if (!identityResult.Succeeded) throw new Exception(identityResult.Errors.First().Description);
-
-            return user;
+            return !identityResult.Succeeded ? throw new Exception(identityResult.Errors.First().Description) : user;
         }
 
         // if the external login is OIDC-based, there are certain things we need to preserve to make logout work
@@ -255,7 +256,7 @@ namespace spydersoft.Identity.Controllers
         {
             // if the external system sent a session id claim, copy it over
             // so we can use it for single sign-out
-            var sid = externalResult.Principal.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.SessionId);
+            Claim sid = externalResult.Principal.Claims.FirstOrDefault(x => x.Type == JwtClaimTypes.SessionId);
             if (sid != null)
             {
                 localClaims.Add(new Claim(JwtClaimTypes.SessionId, sid.Value));

@@ -1,11 +1,15 @@
-﻿using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using AutoMapper;
-using spydersoft.Identity.Models;
+
+using Duende.IdentityServer.EntityFramework.DbContexts;
+
+using Microsoft.EntityFrameworkCore;
+
 using spydersoft.Identity.Models.Admin;
 using spydersoft.Identity.Models.Admin.ScopeViewModels;
+
 using IS4Entities = Duende.IdentityServer.EntityFramework.Entities;
 
 namespace spydersoft.Identity.Controllers.Admin.Scope
@@ -33,11 +37,11 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
         #endregion BaseClientCollectionController Interface
 
         #region BaseAdminCollectionController Implementation
-        
+
         protected override IS4Entities.ApiScope GetMainEntity(int id)
         {
-            var query = ConfigDbContext.ApiScopes;
-            var includeQuery = AddIncludes(query);
+            DbSet<IS4Entities.ApiScope> query = ConfigDbContext.ApiScopes;
+            IQueryable<IS4Entities.ApiScope> includeQuery = AddIncludes(query);
 
             return includeQuery.FirstOrDefault(c => c.Id == id);
         }

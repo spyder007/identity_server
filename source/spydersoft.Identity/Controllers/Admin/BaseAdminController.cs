@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+
 using Duende.IdentityServer.EntityFramework.DbContexts;
+
 using Microsoft.AspNetCore.Authorization;
 
 namespace spydersoft.Identity.Controllers.Admin

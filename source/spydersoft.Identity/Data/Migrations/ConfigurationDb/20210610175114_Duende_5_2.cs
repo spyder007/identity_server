@@ -6,14 +6,14 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
+            _ = migrationBuilder.AddColumn<bool>(
                 name: "RequireResourceIndicator",
                 table: "ApiResources",
                 type: "bit",
                 nullable: false,
                 defaultValue: false);
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "IdentityProviders",
                 columns: table => new
                 {
@@ -25,18 +25,15 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                     Type = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Properties = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityProviders", x => x.Id);
-                });
+                constraints: table => _ = table.PrimaryKey("PK_IdentityProviders", x => x.Id));
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "IdentityProviders");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "RequireResourceIndicator",
                 table: "ApiResources");
         }

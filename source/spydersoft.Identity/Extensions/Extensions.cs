@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Duende.IdentityServer.Models;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 using spydersoft.Identity.Models.AccountViewModels;
 
 namespace spydersoft.Identity.Extensions
@@ -32,7 +32,7 @@ namespace spydersoft.Identity.Extensions
 
         public static void AddErrors(this ModelStateDictionary modelState, IdentityResult result)
         {
-            foreach (var error in result.Errors)
+            foreach (IdentityError error in result.Errors)
             {
                 modelState.AddModelError(string.Empty, error.Description);
             }

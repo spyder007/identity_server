@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -8,24 +9,24 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "Created",
                 table: "IdentityResources",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
-            migrationBuilder.AddColumn<bool>(
+            _ = migrationBuilder.AddColumn<bool>(
                 name: "NonEditable",
                 table: "IdentityResources",
                 nullable: false,
                 defaultValue: false);
 
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "Updated",
                 table: "IdentityResources",
                 nullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Value",
                 table: "ClientSecrets",
                 maxLength: 4000,
@@ -33,7 +34,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 oldClrType: typeof(string),
                 oldMaxLength: 2000);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Type",
                 table: "ClientSecrets",
                 maxLength: 250,
@@ -42,52 +43,52 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 oldMaxLength: 250,
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "Created",
                 table: "ClientSecrets",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "Created",
                 table: "Clients",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
-            migrationBuilder.AddColumn<int>(
+            _ = migrationBuilder.AddColumn<int>(
                 name: "DeviceCodeLifetime",
                 table: "Clients",
                 nullable: false,
                 defaultValue: 0);
 
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "LastAccessed",
                 table: "Clients",
                 nullable: true);
 
-            migrationBuilder.AddColumn<bool>(
+            _ = migrationBuilder.AddColumn<bool>(
                 name: "NonEditable",
                 table: "Clients",
                 nullable: false,
                 defaultValue: false);
 
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "Updated",
                 table: "Clients",
                 nullable: true);
 
-            migrationBuilder.AddColumn<string>(
+            _ = migrationBuilder.AddColumn<string>(
                 name: "UserCodeType",
                 table: "Clients",
                 maxLength: 100,
                 nullable: true);
 
-            migrationBuilder.AddColumn<int>(
+            _ = migrationBuilder.AddColumn<int>(
                 name: "UserSsoLifetime",
                 table: "Clients",
                 nullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Value",
                 table: "ApiSecrets",
                 maxLength: 4000,
@@ -96,7 +97,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 oldMaxLength: 2000,
                 oldNullable: true);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Type",
                 table: "ApiSecrets",
                 maxLength: 250,
@@ -105,35 +106,35 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 oldMaxLength: 250,
                 oldNullable: true);
 
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "Created",
                 table: "ApiSecrets",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "Created",
                 table: "ApiResources",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "LastAccessed",
                 table: "ApiResources",
                 nullable: true);
 
-            migrationBuilder.AddColumn<bool>(
+            _ = migrationBuilder.AddColumn<bool>(
                 name: "NonEditable",
                 table: "ApiResources",
                 nullable: false,
                 defaultValue: false);
 
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "Updated",
                 table: "ApiResources",
                 nullable: true);
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ApiProperties",
                 columns: table => new
                 {
@@ -145,8 +146,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApiProperties", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ApiProperties", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ApiProperties_ApiResources_ApiResourceId",
                         column: x => x.ApiResourceId,
                         principalTable: "ApiResources",
@@ -154,7 +155,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "IdentityProperties",
                 columns: table => new
                 {
@@ -166,8 +167,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IdentityProperties", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_IdentityProperties", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_IdentityProperties_IdentityResources_IdentityResourceId",
                         column: x => x.IdentityResourceId,
                         principalTable: "IdentityResources",
@@ -175,12 +176,12 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiProperties_ApiResourceId",
                 table: "ApiProperties",
                 column: "ApiResourceId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_IdentityProperties_IdentityResourceId",
                 table: "IdentityProperties",
                 column: "IdentityResourceId");
@@ -188,77 +189,77 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ApiProperties");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "IdentityProperties");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Created",
                 table: "IdentityResources");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "NonEditable",
                 table: "IdentityResources");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Updated",
                 table: "IdentityResources");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Created",
                 table: "ClientSecrets");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Created",
                 table: "Clients");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "DeviceCodeLifetime",
                 table: "Clients");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "LastAccessed",
                 table: "Clients");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "NonEditable",
                 table: "Clients");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Updated",
                 table: "Clients");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "UserCodeType",
                 table: "Clients");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "UserSsoLifetime",
                 table: "Clients");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Created",
                 table: "ApiSecrets");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Created",
                 table: "ApiResources");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "LastAccessed",
                 table: "ApiResources");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "NonEditable",
                 table: "ApiResources");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Updated",
                 table: "ApiResources");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Value",
                 table: "ClientSecrets",
                 maxLength: 2000,
@@ -266,7 +267,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 oldClrType: typeof(string),
                 oldMaxLength: 4000);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Type",
                 table: "ClientSecrets",
                 maxLength: 250,
@@ -274,7 +275,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 oldClrType: typeof(string),
                 oldMaxLength: 250);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Value",
                 table: "ApiSecrets",
                 maxLength: 2000,
@@ -282,7 +283,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 oldClrType: typeof(string),
                 oldMaxLength: 4000);
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Type",
                 table: "ApiSecrets",
                 maxLength: 250,

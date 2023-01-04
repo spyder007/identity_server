@@ -1,11 +1,13 @@
-﻿using AutoMapper.QueryableExtensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using AutoMapper;
+
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Entities;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Identity
@@ -20,7 +22,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 
         protected override IEnumerable<IdentityResourceClaimViewModel> PopulateItemList(IdentityResource mainEntity)
         {
-            return Mapper.ProjectTo<IdentityResourceClaimViewModel>(mainEntity.UserClaims.ToList().AsQueryable());
+            return Mapper.ProjectTo<IdentityResourceClaimViewModel>(mainEntity.UserClaims.AsQueryable());
         }
 
         protected override IQueryable<IdentityResource> AddIncludes(DbSet<IdentityResource> query)

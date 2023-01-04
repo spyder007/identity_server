@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text.Encodings.Web;
+
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
@@ -26,13 +27,15 @@ namespace spydersoft.Identity.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            ModelStateEntry entry;
             if (For == null)
             {
                 return;
             }
-            ViewContext.ViewData.ModelState.TryGetValue(For.Name, out entry);
-            if (entry == null || !entry.Errors.Any()) return;
+
+            if (!ViewContext.ViewData.ModelState.TryGetValue(For.Name, out ModelStateEntry entry) || !entry.Errors.Any())
+            {
+                return;
+            }
 
             output.AddClass(ValidationErrorClass, HtmlEncoder.Default);
         }

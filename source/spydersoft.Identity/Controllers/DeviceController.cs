@@ -2,23 +2,24 @@
 // See LICENSE in the project root for license information.
 
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System;
+
 using Duende.IdentityServer.Configuration;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Validation;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
 using spydersoft.Identity.Attributes;
-using spydersoft.Identity.Extensions;
-using spydersoft.Identity.Models;
 using spydersoft.Identity.Models.Consent;
 using spydersoft.Identity.Models.Device;
 
@@ -48,12 +49,18 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            string userCodeParamName = _options.Value.UserInteraction.DeviceVerificationUserCodeParameter;
+            var userCodeParamName = _options.Value.UserInteraction.DeviceVerificationUserCodeParameter;
             string userCode = Request.Query[userCodeParamName];
-            if (string.IsNullOrWhiteSpace(userCode)) return View("UserCodeCapture");
+            if (string.IsNullOrWhiteSpace(userCode))
+            {
+                return View("UserCodeCapture");
+            }
 
-            var vm = await BuildViewModelAsync(userCode);
-            if (vm == null) return View("Error");
+            DeviceAuthorizationViewModel vm = await BuildViewModelAsync(userCode);
+            if (vm == null)
+            {
+                return View("Error");
+            }
 
             vm.ConfirmUserCode = true;
             return View("UserCodeConfirmation", vm);
@@ -63,30 +70,32 @@ namespace spydersoft.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserCodeCapture(string userCode)
         {
-            var vm = await BuildViewModelAsync(userCode);
-            if (vm == null) return View("Error");
-
-            return View("UserCodeConfirmation", vm);
+            DeviceAuthorizationViewModel vm = await BuildViewModelAsync(userCode);
+            return vm == null ? View("Error") : (IActionResult)View("UserCodeConfirmation", vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Callback(DeviceAuthorizationInputModel model)
         {
-            if (model == null) throw new ArgumentNullException(nameof(model));
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
 
-            var result = await ProcessConsent(model);
-            if (result.HasValidationError) return View("Error");
-
-            return View("Success");
+            ProcessConsentResult result = await ProcessConsent(model);
+            return result.HasValidationError ? View("Error") : (IActionResult)View("Success");
         }
 
         private async Task<ProcessConsentResult> ProcessConsent(DeviceAuthorizationInputModel model)
         {
             var result = new ProcessConsentResult();
 
-            var request = await _interaction.GetAuthorizationContextAsync(model.UserCode);
-            if (request == null) return result;
+            DeviceFlowAuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(model.UserCode);
+            if (request == null)
+            {
+                return result;
+            }
 
             ConsentResponse grantedConsent = null;
 
@@ -104,8 +113,8 @@ namespace spydersoft.Identity.Controllers
                 // if the user consented to some scope, build the response model
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())
                 {
-                    var scopes = model.ScopesConsented;
-                    if (ConsentOptions.EnableOfflineAccess == false)
+                    IEnumerable<string> scopes = model.ScopesConsented;
+                    if (!ConsentOptions.EnableOfflineAccess)
                     {
                         scopes = scopes.Where(x => x != Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess);
                     }
@@ -133,7 +142,7 @@ namespace spydersoft.Identity.Controllers
             if (grantedConsent != null)
             {
                 // communicate outcome of consent back to identityserver
-                await _interaction.HandleRequestAsync(model.UserCode, grantedConsent);
+                _ = await _interaction.HandleRequestAsync(model.UserCode, grantedConsent);
 
                 // indicate that's it ok to redirect back to authorization endpoint
                 result.RedirectUri = model.ReturnUrl;
@@ -150,13 +159,8 @@ namespace spydersoft.Identity.Controllers
 
         private async Task<DeviceAuthorizationViewModel> BuildViewModelAsync(string userCode, DeviceAuthorizationInputModel model = null)
         {
-            var request = await _interaction.GetAuthorizationContextAsync(userCode);
-            if (request != null)
-            {
-                return CreateConsentViewModel(userCode, model, request);
-            }
-
-            return null;
+            DeviceFlowAuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(userCode);
+            return request != null ? CreateConsentViewModel(userCode, model, request) : null;
         }
 
         private DeviceAuthorizationViewModel CreateConsentViewModel(string userCode, DeviceAuthorizationInputModel model, DeviceFlowAuthorizationRequest request)
@@ -178,12 +182,12 @@ namespace spydersoft.Identity.Controllers
             vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
 
             var apiScopes = new List<ScopeViewModel>();
-            foreach (var parsedScope in request.ValidatedResources.ParsedScopes)
+            foreach (ParsedScopeValue parsedScope in request.ValidatedResources.ParsedScopes)
             {
-                var apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
+                ApiScope apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
                 if (apiScope != null)
                 {
-                    var scopeVm = CreateScopeViewModel(parsedScope, apiScope, vm.ScopesConsented.Contains(parsedScope.RawValue) || model == null);
+                    ScopeViewModel scopeVm = CreateScopeViewModel(parsedScope, apiScope, vm.ScopesConsented.Contains(parsedScope.RawValue) || model == null);
                     apiScopes.Add(scopeVm);
                 }
             }
@@ -214,7 +218,6 @@ namespace spydersoft.Identity.Controllers
             return new ScopeViewModel
             {
                 Value = parsedScopeValue.RawValue,
-                // todo: use the parsed scope value in the display?
                 DisplayName = apiScope.DisplayName ?? apiScope.Name,
                 Description = apiScope.Description,
                 Emphasize = apiScope.Emphasize,

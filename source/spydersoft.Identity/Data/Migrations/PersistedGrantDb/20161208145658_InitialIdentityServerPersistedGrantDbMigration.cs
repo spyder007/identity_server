@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
@@ -7,7 +8,7 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "PersistedGrants",
                 columns: table => new
                 {
@@ -19,22 +20,19 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
                     Expiration = table.Column<DateTime>(nullable: false),
                     SubjectId = table.Column<string>(maxLength: 200, nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PersistedGrants", x => new { x.Key, x.Type });
-                });
+                constraints: table => _ = table.PrimaryKey("PK_PersistedGrants", x => new { x.Key, x.Type }));
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId",
                 table: "PersistedGrants",
                 column: "SubjectId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "ClientId" });
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "ClientId", "Type" });
@@ -42,7 +40,7 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "PersistedGrants");
         }
     }

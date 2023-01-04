@@ -1,9 +1,10 @@
-﻿using Duende.IdentityServer.EntityFramework.DbContexts;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+
+using Duende.IdentityServer.EntityFramework.DbContexts;
 
 namespace spydersoft.Identity.Models.Admin
 {
-    public abstract class BaseAdminChildCollectionViewModel<TChildItemViewModel, TParentItemViewModel> 
+    public abstract class BaseAdminChildCollectionViewModel<TChildItemViewModel, TParentItemViewModel>
         where TChildItemViewModel : BaseAdminChildItemViewModel, new()
         where TParentItemViewModel : BaseAdminViewModel, new()
     {

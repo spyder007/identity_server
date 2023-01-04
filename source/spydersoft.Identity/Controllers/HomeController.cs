@@ -1,9 +1,12 @@
 ﻿using System.IO;
-using Duende.IdentityServer.Services;
-using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
+
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+
 using spydersoft.Identity.Models;
 using spydersoft.Identity.Models.Home;
 
@@ -28,7 +31,7 @@ namespace spydersoft.Identity.Controllers
         public IActionResult About()
         {
             var aboutDataFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "about_data.json");
-            AboutDataViewModel model = AboutDataViewModel.LoadFromFile(aboutDataFilePath);
+            var model = AboutDataViewModel.LoadFromFile(aboutDataFilePath);
 
             return View(model);
         }
@@ -48,18 +51,11 @@ namespace spydersoft.Identity.Controllers
             var vm = new ErrorViewModel();
 
             // retrieve error details from identityserver
-            var message = await _interaction.GetErrorContextAsync(errorId);
-            if (message != null)
+            ErrorMessage message = await _interaction.GetErrorContextAsync(errorId);
+            vm.Error = message ?? new ErrorMessage()
             {
-                vm.Error = message;
-            }
-            else
-            {
-                vm.Error = new ErrorMessage()
-                {
-                    Error = errorId
-                };
-            }
+                Error = errorId
+            };
 
             return View("Error", vm);
         }

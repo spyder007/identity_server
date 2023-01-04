@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+
 using Newtonsoft.Json;
 
 namespace spydersoft.Identity.Models.Home
 {
     public class AboutDataViewModel
-    { 
+    {
         [JsonProperty("uilibraries")]
         public List<Library> UiLibraries { get; set; }
 
@@ -21,7 +19,7 @@ namespace spydersoft.Identity.Models.Home
         }
     }
 
-    
+
     public class Library
     {
         public string Name { get; set; }

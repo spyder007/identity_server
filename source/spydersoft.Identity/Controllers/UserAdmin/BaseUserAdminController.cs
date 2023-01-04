@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
+
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using spydersoft.Identity.Models;
+
 using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity.Controllers.UserAdmin

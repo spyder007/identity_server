@@ -1,12 +1,13 @@
-﻿using AutoMapper.QueryableExtensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using AutoMapper;
+
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Entities;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
-using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
+
 using spydersoft.Identity.Models.Admin.ScopeViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Scope
@@ -20,8 +21,8 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
         #region BaseApiCollectionController Implementation
 
         protected override IEnumerable<ScopePropertyViewModel> PopulateItemList(ApiScope mainEntity)
-        { 
-            return Mapper.ProjectTo<ScopePropertyViewModel>(mainEntity.Properties.ToList().AsQueryable());
+        {
+            return Mapper.ProjectTo<ScopePropertyViewModel>(mainEntity.Properties.AsQueryable());
         }
 
         protected override IQueryable<ApiScope> AddIncludes(DbSet<ApiScope> query)

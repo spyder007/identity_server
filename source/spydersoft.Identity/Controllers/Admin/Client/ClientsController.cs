@@ -1,9 +1,12 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+
+using AutoMapper;
+
+using Duende.IdentityServer.EntityFramework.DbContexts;
+
+using Microsoft.AspNetCore.Mvc;
+
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Client
@@ -22,7 +25,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
             var clientsModel = new ClientsViewModel
             {
-                Clients = Mapper.ProjectTo<ClientViewModel>(ConfigDbContext.Clients.ToList().AsQueryable())
+                Clients = Mapper.ProjectTo<ClientViewModel>(ConfigDbContext.Clients.AsQueryable())
             };
 
             return View(clientsModel);
@@ -39,14 +42,14 @@ namespace spydersoft.Identity.Controllers.Admin.Client
             }
             else
             {
-                var client = ConfigDbContext.Clients.FirstOrDefault(c => c.Id == id.Value);
+                Duende.IdentityServer.EntityFramework.Entities.Client client = ConfigDbContext.Clients.FirstOrDefault(c => c.Id == id.Value);
                 if (client == null)
                 {
                     return GetErrorAction("Could not load client");
                 }
 
                 clientModel = new ClientViewModel(client.Id);
-                Mapper.Map(client, clientModel);
+                _ = Mapper.Map(client, clientModel);
                 ViewData["Title"] = $"Edit {clientModel.NavBar.Name}";
             }
 
@@ -58,14 +61,14 @@ namespace spydersoft.Identity.Controllers.Admin.Client
         {
             if (id.HasValue)
             {
-                var client = ConfigDbContext.Clients.FirstOrDefault(c => c.Id == id.Value);
+                Duende.IdentityServer.EntityFramework.Entities.Client client = ConfigDbContext.Clients.FirstOrDefault(c => c.Id == id.Value);
                 if (client == null)
                 {
                     return GetErrorAction("Could not load client");
                 }
 
-                ConfigDbContext.Clients.Remove(client);
-                await ConfigDbContext.SaveChangesAsync();
+                _ = ConfigDbContext.Clients.Remove(client);
+                _ = await ConfigDbContext.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(Index));
@@ -86,7 +89,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
                 if (!id.HasValue || id.Value == 0)
                 {
                     dbEntity = new Duende.IdentityServer.EntityFramework.Entities.Client();
-                    ConfigDbContext.Add(dbEntity);
+                    _ = ConfigDbContext.Add(dbEntity);
                     isNew = true;
                 }
                 else
@@ -97,17 +100,17 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
                 if (dbEntity != null)
                 {
-                    Mapper.Map(client, dbEntity);
+                    _ = Mapper.Map(client, dbEntity);
                 }
 
                 if (!isNew)
                 {
-                    ConfigDbContext.Update(dbEntity);
+                    _ = ConfigDbContext.Update(dbEntity);
                 }
 
-                await ConfigDbContext.SaveChangesAsync();
+                _ = await ConfigDbContext.SaveChangesAsync();
 
-                return (isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index)));
+                return isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index));
             }
 
             if (id.HasValue)

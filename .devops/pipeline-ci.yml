@@ -31,6 +31,9 @@ extends:
     dockerImageName: spydersoft/identity/identity_server
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
+    sonar_endpoint_name: sonarqube
+    sonar_project_key: identity_identity_AYVkGidskcw9VpefVwd1
+    execute_tests: true
     prebuildSteps:
       - task: Npm@1
         displayName: NPM Install

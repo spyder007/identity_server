@@ -2,7 +2,9 @@
 
 namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
+#pragma warning disable IDE1006 // Naming Styles
     public partial class aspnetcore_31_update : Migration
+#pragma warning restore IDE1006 // Naming Styles
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +13,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            // Method intentionally left empty.
         }
     }
 }

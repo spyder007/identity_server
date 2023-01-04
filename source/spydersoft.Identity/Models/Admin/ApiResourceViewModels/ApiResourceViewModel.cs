@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
     public class ApiResourceViewModel : BaseAdminViewModel
-    { 
+    {
 
         public ApiResourceViewModel()
         {
@@ -35,10 +35,10 @@ namespace spydersoft.Identity.Models.Admin.ApiResourceViewModels
         [Display(Name = "Description")]
         public string Description { get; set; }
 
-        [Display(Name ="Enabled")]
+        [Display(Name = "Enabled")]
         public bool Enabled { get; set; }
 
-        [Display(Name="Non Editable")]
+        [Display(Name = "Non Editable")]
         public bool NonEditable { get; set; }
 
         public DateTime Created { get; set; }

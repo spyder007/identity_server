@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
 
 namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
@@ -13,7 +12,7 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            // Method intentionally left empty.
         }
     }
 }

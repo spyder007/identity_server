@@ -1,7 +1,9 @@
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace spydersoft.Identity.Services
+using spydersoft.Identity.Services;
+
+namespace spydersoft.Identity.Extensions
 {
     public static class EmailSenderExtensions
     {

@@ -4,18 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
+
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
 using Duende.IdentityServer.Validation;
-using Microsoft.ApplicationInsights;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using spydersoft.Identity.Models;
+
 using spydersoft.Identity.Models.Consent;
 
 namespace spydersoft.Identity.Services
@@ -50,10 +50,13 @@ namespace spydersoft.Identity.Services
             var result = new ProcessConsentResult();
 
             // validate return url is still valid
-            var request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
-            if (request == null) return result;
+            AuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+            if (request == null)
+            {
+                return result;
+            }
 
-            var user = _contextAccessor.HttpContext?.User;
+            System.Security.Claims.ClaimsPrincipal user = _contextAccessor.HttpContext?.User;
             if (user == null)
             {
                 return new ProcessConsentResult();
@@ -75,8 +78,8 @@ namespace spydersoft.Identity.Services
                 // if the user consented to some scope, build the response model
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())
                 {
-                    var scopes = model.ScopesConsented;
-                    if (ConsentOptions.EnableOfflineAccess == false)
+                    IEnumerable<string> scopes = model.ScopesConsented;
+                    if (!ConsentOptions.EnableOfflineAccess)
                     {
                         scopes = scopes.Where(x => x != Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess);
                     }
@@ -121,7 +124,7 @@ namespace spydersoft.Identity.Services
 
         public async Task<ConsentViewModel> BuildViewModelAsync(string returnUrl, ConsentInputModel model = null)
         {
-            var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
+            AuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (request != null)
             {
                 return CreateConsentViewModel(model, returnUrl, request);
@@ -155,12 +158,12 @@ namespace spydersoft.Identity.Services
             vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
 
             var apiScopes = new List<ScopeViewModel>();
-            foreach (var parsedScope in request.ValidatedResources.ParsedScopes)
+            foreach (ParsedScopeValue parsedScope in request.ValidatedResources.ParsedScopes)
             {
-                var apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
+                ApiScope apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
                 if (apiScope != null)
                 {
-                    var scopeVm = CreateScopeViewModel(parsedScope, apiScope, vm.ScopesConsented.Contains(parsedScope.RawValue) || model == null);
+                    ScopeViewModel scopeVm = CreateScopeViewModel(parsedScope, apiScope, vm.ScopesConsented.Contains(parsedScope.RawValue) || model == null);
                     apiScopes.Add(scopeVm);
                 }
             }
@@ -172,7 +175,7 @@ namespace spydersoft.Identity.Services
 
             return vm;
         }
-        
+
         private ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
         {
             return new ScopeViewModel
@@ -189,7 +192,7 @@ namespace spydersoft.Identity.Services
         public ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
         {
             var displayName = apiScope.DisplayName ?? apiScope.Name;
-            if (!String.IsNullOrWhiteSpace(parsedScopeValue.ParsedParameter))
+            if (!string.IsNullOrWhiteSpace(parsedScopeValue.ParsedParameter))
             {
                 displayName += ":" + parsedScopeValue.ParsedParameter;
             }

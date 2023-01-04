@@ -16,7 +16,7 @@ namespace spydersoft.Identity.Models.Admin.ClientViewModels
         public string Description { get; set; }
 
         [DataType(DataType.DateTime)]
-        [Display(Name="Expiration")]
+        [Display(Name = "Expiration")]
         public DateTime? Expiration { get; set; }
 
         [StringLength(250, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",

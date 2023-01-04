@@ -1,13 +1,16 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using AutoMapper;
+
+using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Duende.IdentityServer.Models;
+
+using Microsoft.AspNetCore.Mvc;
+
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Identity
@@ -25,7 +28,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             ViewData["Title"] = "Registered Identity Resources";
             var identityResourcesViewModel = new IdentityResourcesViewModel
             {
-                IdentityResources = Mapper.ProjectTo<IdentityResourceViewModel>(ConfigDbContext.IdentityResources.ToList().AsQueryable())
+                IdentityResources = Mapper.ProjectTo<IdentityResourceViewModel>(ConfigDbContext.IdentityResources.AsQueryable())
             };
 
             List<IdentityResourceViewModel> availableStandards = GetAllStandardsAsViewModels(identityResourcesViewModel.IdentityResources);
@@ -46,9 +49,8 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
                 if (!currentList.Any(irvm => irvm.Name == standardType.Name))
                 {
                     var idViewModel = new IdentityResourceViewModel();
-                    Mapper.Map(standardType, idViewModel);
+                    _ = Mapper.Map(standardType, idViewModel);
 
-                    //list.Add(Mapper.Map<IdentityResourceViewModel>(standardType));
                     list.Add(idViewModel);
                 }
             }
@@ -67,14 +69,14 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             }
             else
             {
-                var identityResource = ConfigDbContext.IdentityResources.FirstOrDefault(ir => ir.Id == id.Value);
+                Duende.IdentityServer.EntityFramework.Entities.IdentityResource identityResource = ConfigDbContext.IdentityResources.FirstOrDefault(ir => ir.Id == id.Value);
                 if (identityResource == null)
                 {
                     return GetErrorAction("Could not load identity resource");
                 }
 
                 identityResourceViewModel = new IdentityResourceViewModel(id.Value);
-                Mapper.Map(identityResource, identityResourceViewModel);
+                _ = Mapper.Map(identityResource, identityResourceViewModel);
                 identityResourceViewModel.Id = id.Value;
                 ViewData["Title"] = $"Edit {identityResourceViewModel.NavBar.Name}";
             }
@@ -87,14 +89,14 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
         {
             if (id.HasValue)
             {
-                var identityResource = ConfigDbContext.IdentityResources.FirstOrDefault(ir => ir.Id == id.Value);
+                Duende.IdentityServer.EntityFramework.Entities.IdentityResource identityResource = ConfigDbContext.IdentityResources.FirstOrDefault(ir => ir.Id == id.Value);
                 if (identityResource == null)
                 {
                     return GetErrorAction("Could not load resource");
                 }
 
-                ConfigDbContext.IdentityResources.Remove(identityResource);
-                await ConfigDbContext.SaveChangesAsync();
+                _ = ConfigDbContext.IdentityResources.Remove(identityResource);
+                _ = await ConfigDbContext.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(Index));
@@ -108,8 +110,8 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
                 Duende.IdentityServer.EntityFramework.Entities.IdentityResource resource = GetStandardProfile(model.SelectedAvailableResource);
                 if (resource != null)
                 {
-                    ConfigDbContext.IdentityResources.Add(resource);
-                    await ConfigDbContext.SaveChangesAsync();
+                    _ = ConfigDbContext.IdentityResources.Add(resource);
+                    _ = await ConfigDbContext.SaveChangesAsync();
                 }
             }
 
@@ -129,7 +131,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
                 if (!id.HasValue || id.Value == 0)
                 {
                     dbEntity = new Duende.IdentityServer.EntityFramework.Entities.IdentityResource();
-                    ConfigDbContext.Add(dbEntity);
+                    _ = ConfigDbContext.Add(dbEntity);
                     identityResource.Created = DateTime.UtcNow;
                     isNew = true;
                 }
@@ -143,17 +145,17 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 
                 if (dbEntity != null)
                 {
-                    Mapper.Map(identityResource, dbEntity);
+                    _ = Mapper.Map(identityResource, dbEntity);
                 }
 
                 if (!isNew)
                 {
-                    ConfigDbContext.Update(dbEntity);
+                    _ = ConfigDbContext.Update(dbEntity);
                 }
 
-                await ConfigDbContext.SaveChangesAsync();
+                _ = await ConfigDbContext.SaveChangesAsync();
 
-                return (isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index)));
+                return isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index));
             }
 
             if (id.HasValue)
@@ -173,7 +175,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             }
 
             List<IdentityResource> standardTypes = GetStandardTypes();
-            var typeToAdd = standardTypes.FirstOrDefault(t => t.Name == modelSelectedAvailableResource);
+            IdentityResource typeToAdd = standardTypes.FirstOrDefault(t => t.Name == modelSelectedAvailableResource);
 
             return typeToAdd?.ToEntity();
         }

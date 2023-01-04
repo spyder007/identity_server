@@ -1,19 +1,21 @@
 ﻿using System;
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
 
 namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
+#pragma warning disable IDE1006 // Naming Styles
     public partial class Duende_6_2_Upgrade : Migration
+#pragma warning restore IDE1006 // Naming Styles
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
+            _ = migrationBuilder.DropPrimaryKey(
                 name: "PK_PersistedGrants",
                 table: "PersistedGrants");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Key",
                 table: "PersistedGrants",
                 type: "nvarchar(200)",
@@ -23,7 +25,7 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
                 oldType: "nvarchar(200)",
                 oldMaxLength: 200);
 
-            migrationBuilder.AddColumn<long>(
+            _ = migrationBuilder.AddColumn<long>(
                 name: "Id",
                 table: "PersistedGrants",
                 type: "bigint",
@@ -31,12 +33,12 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
                 defaultValue: 0L)
                 .Annotation("SqlServer:Identity", "1, 1");
 
-            migrationBuilder.AddPrimaryKey(
+            _ = migrationBuilder.AddPrimaryKey(
                 name: "PK_PersistedGrants",
                 table: "PersistedGrants",
                 column: "Id");
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ServerSideSessions",
                 columns: table => new
                 {
@@ -52,40 +54,37 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
                     Expires = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServerSideSessions", x => x.Id);
-                });
+                constraints: table => _ = table.PrimaryKey("PK_ServerSideSessions", x => x.Id));
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_Key",
                 table: "PersistedGrants",
                 column: "Key",
                 unique: true,
                 filter: "[Key] IS NOT NULL");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ServerSideSessions_DisplayName",
                 table: "ServerSideSessions",
                 column: "DisplayName");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ServerSideSessions_Expires",
                 table: "ServerSideSessions",
                 column: "Expires");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ServerSideSessions_Key",
                 table: "ServerSideSessions",
                 column: "Key",
                 unique: true);
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ServerSideSessions_SessionId",
                 table: "ServerSideSessions",
                 column: "SessionId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ServerSideSessions_SubjectId",
                 table: "ServerSideSessions",
                 column: "SubjectId");
@@ -93,22 +92,22 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ServerSideSessions");
 
-            migrationBuilder.DropPrimaryKey(
+            _ = migrationBuilder.DropPrimaryKey(
                 name: "PK_PersistedGrants",
                 table: "PersistedGrants");
 
-            migrationBuilder.DropIndex(
+            _ = migrationBuilder.DropIndex(
                 name: "IX_PersistedGrants_Key",
                 table: "PersistedGrants");
 
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Id",
                 table: "PersistedGrants");
 
-            migrationBuilder.AlterColumn<string>(
+            _ = migrationBuilder.AlterColumn<string>(
                 name: "Key",
                 table: "PersistedGrants",
                 type: "nvarchar(200)",
@@ -120,7 +119,7 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
                 oldMaxLength: 200,
                 oldNullable: true);
 
-            migrationBuilder.AddPrimaryKey(
+            _ = migrationBuilder.AddPrimaryKey(
                 name: "PK_PersistedGrants",
                 table: "PersistedGrants",
                 column: "Key");

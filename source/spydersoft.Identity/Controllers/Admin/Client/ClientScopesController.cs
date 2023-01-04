@@ -1,10 +1,13 @@
-﻿using AutoMapper.QueryableExtensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using AutoMapper;
+
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Entities;
+
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Client
@@ -23,7 +26,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientScopeViewModel> PopulateItemList(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)
         {
-            return Mapper.ProjectTo<ClientScopeViewModel>(mainEntity.AllowedScopes.ToList().AsQueryable());
+            return Mapper.ProjectTo<ClientScopeViewModel>(mainEntity.AllowedScopes.AsQueryable());
         }
 
         protected override IQueryable<Duende.IdentityServer.EntityFramework.Entities.Client> AddIncludes(

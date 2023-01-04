@@ -6,7 +6,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+            _ = migrationBuilder.AddColumn<string>(
                 name: "Name",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
@@ -15,7 +15,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Name",
                 table: "AspNetUsers");
         }

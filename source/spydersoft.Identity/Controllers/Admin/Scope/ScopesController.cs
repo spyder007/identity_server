@@ -1,9 +1,12 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+
+using AutoMapper;
+
+using Duende.IdentityServer.EntityFramework.DbContexts;
+
+using Microsoft.AspNetCore.Mvc;
+
 using spydersoft.Identity.Models.Admin.ScopeViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Scope
@@ -22,7 +25,7 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
 
             var scopesModel = new ScopesViewModel()
             {
-               Scopes = Mapper.ProjectTo<ScopeViewModel>(ConfigDbContext.ApiScopes.ToList().AsQueryable())
+                Scopes = Mapper.ProjectTo<ScopeViewModel>(ConfigDbContext.ApiScopes.AsQueryable())
             };
 
             return View(scopesModel);
@@ -39,14 +42,14 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
             }
             else
             {
-                var apiScope = ConfigDbContext.ApiScopes.FirstOrDefault(c => c.Id == id.Value);
+                Duende.IdentityServer.EntityFramework.Entities.ApiScope apiScope = ConfigDbContext.ApiScopes.FirstOrDefault(c => c.Id == id.Value);
                 if (apiScope == null)
                 {
                     return GetErrorAction("Could not load client");
                 }
 
                 scopeViewModel = new ScopeViewModel(apiScope.Id);
-                Mapper.Map(apiScope, scopeViewModel);
+                _ = Mapper.Map(apiScope, scopeViewModel);
                 ViewData["Title"] = $"Edit {scopeViewModel.Name}";
             }
 
@@ -58,14 +61,14 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
         {
             if (id.HasValue)
             {
-                var apiScope = ConfigDbContext.ApiScopes.FirstOrDefault(c => c.Id == id.Value);
+                Duende.IdentityServer.EntityFramework.Entities.ApiScope apiScope = ConfigDbContext.ApiScopes.FirstOrDefault(c => c.Id == id.Value);
                 if (apiScope == null)
                 {
                     return GetErrorAction("Could not load scope");
                 }
 
-                ConfigDbContext.ApiScopes.Remove(apiScope);
-                await ConfigDbContext.SaveChangesAsync();
+                _ = ConfigDbContext.ApiScopes.Remove(apiScope);
+                _ = await ConfigDbContext.SaveChangesAsync();
             }
 
             return RedirectToAction(nameof(Index));
@@ -86,7 +89,7 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
                 if (!id.HasValue || id.Value == 0)
                 {
                     dbEntity = new Duende.IdentityServer.EntityFramework.Entities.ApiScope();
-                    ConfigDbContext.Add(dbEntity);
+                    _ = ConfigDbContext.Add(dbEntity);
                     isNew = true;
                 }
                 else
@@ -97,17 +100,17 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
 
                 if (dbEntity != null)
                 {
-                    Mapper.Map(client, dbEntity);
+                    _ = Mapper.Map(client, dbEntity);
                 }
 
                 if (!isNew)
                 {
-                    ConfigDbContext.Update(dbEntity);
+                    _ = ConfigDbContext.Update(dbEntity);
                 }
 
-                await ConfigDbContext.SaveChangesAsync();
+                _ = await ConfigDbContext.SaveChangesAsync();
 
-                return (isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index)));
+                return isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index));
             }
 
             if (id.HasValue)

@@ -1,32 +1,35 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
+#pragma warning disable IDE1006 // Naming Styles
     public partial class NetCore20_Support : Migration
+#pragma warning restore IDE1006 // Naming Styles
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
+            _ = migrationBuilder.DropPrimaryKey(
                 name: "PK_PersistedGrants",
                 table: "PersistedGrants");
 
-            migrationBuilder.DropIndex(
+            _ = migrationBuilder.DropIndex(
                 name: "IX_PersistedGrants_SubjectId",
                 table: "PersistedGrants");
 
-            migrationBuilder.DropIndex(
+            _ = migrationBuilder.DropIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId",
                 table: "PersistedGrants");
 
-            migrationBuilder.AlterColumn<DateTime>(
+            _ = migrationBuilder.AlterColumn<DateTime>(
                 name: "Expiration",
                 table: "PersistedGrants",
                 type: "datetime2",
                 nullable: true,
                 oldClrType: typeof(DateTime));
 
-            migrationBuilder.AddPrimaryKey(
+            _ = migrationBuilder.AddPrimaryKey(
                 name: "PK_PersistedGrants",
                 table: "PersistedGrants",
                 column: "Key");
@@ -34,11 +37,11 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
+            _ = migrationBuilder.DropPrimaryKey(
                 name: "PK_PersistedGrants",
                 table: "PersistedGrants");
 
-            migrationBuilder.AlterColumn<DateTime>(
+            _ = migrationBuilder.AlterColumn<DateTime>(
                 name: "Expiration",
                 table: "PersistedGrants",
                 nullable: false,
@@ -46,17 +49,17 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
                 oldType: "datetime2",
                 oldNullable: true);
 
-            migrationBuilder.AddPrimaryKey(
+            _ = migrationBuilder.AddPrimaryKey(
                 name: "PK_PersistedGrants",
                 table: "PersistedGrants",
                 columns: new[] { "Key", "Type" });
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId",
                 table: "PersistedGrants",
                 column: "SubjectId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId",
                 table: "PersistedGrants",
                 columns: new[] { "SubjectId", "ClientId" });

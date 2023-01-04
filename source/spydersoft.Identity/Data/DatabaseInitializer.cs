@@ -1,18 +1,22 @@
 ﻿using System;
-using Duende.IdentityServer;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Duende.IdentityServer.EntityFramework.Mappers;
-using Duende.IdentityServer.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+
+using Duende.IdentityServer;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Mappers;
+using Duende.IdentityServer.Models;
+
 using IdentityModel;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity.Data
@@ -29,13 +33,11 @@ namespace spydersoft.Identity.Data
 
         public void InitializeDatabase()
         {
-            using (var serviceScope = _app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
-            {
-                _log = serviceScope.ServiceProvider.GetRequiredService<ILogger<DatabaseInitializer>>();
+            using IServiceScope serviceScope = _app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            _log = serviceScope.ServiceProvider.GetRequiredService<ILogger<DatabaseInitializer>>();
 
-                PerformDatabaseMigrations(serviceScope);
-                SeedDatabase(serviceScope);
-            }
+            PerformDatabaseMigrations(serviceScope);
+            SeedDatabase(serviceScope);
         }
 
         #region Database Migration Methods
@@ -60,14 +62,14 @@ namespace spydersoft.Identity.Data
             Task dataProtectTask =
                 DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<DataProtectionDbContext>(),
                     "Data Protection Database");
-            
+
             Task.WaitAll(dataProtectTask);
         }
 
         private async Task DoMigrationIfNeeded(DbContext context, string databaseName)
         {
             _log.LogDebug("Checking {0} for pending migrations.", databaseName);
-            bool hasMigrations = (await context.Database.GetPendingMigrationsAsync()).Any();
+            var hasMigrations = (await context.Database.GetPendingMigrationsAsync()).Any();
             if (hasMigrations)
             {
                 _log.LogInformation("Migrating {0}.", databaseName);
@@ -91,39 +93,39 @@ namespace spydersoft.Identity.Data
 
             if (!context.Clients.Any())
             {
-                foreach (var client in GetClients())
+                foreach (Client client in GetClients())
                 {
-                    context.Clients.Add(client.ToEntity());
+                    _ = context.Clients.Add(client.ToEntity());
                 }
 
-                context.SaveChanges();
+                _ = context.SaveChanges();
             }
 
             if (!context.IdentityResources.Any())
             {
-                foreach (var resource in GetIdentityResources())
+                foreach (IdentityResource resource in GetIdentityResources())
                 {
-                    context.IdentityResources.Add(resource.ToEntity());
+                    _ = context.IdentityResources.Add(resource.ToEntity());
                 }
 
-                context.SaveChanges();
+                _ = context.SaveChanges();
             }
 
             if (!context.ApiResources.Any())
             {
-                foreach (var resource in GetApiResources())
+                foreach (ApiResource resource in GetApiResources())
                 {
-                    context.ApiResources.Add(resource.ToEntity());
+                    _ = context.ApiResources.Add(resource.ToEntity());
                 }
 
-                context.SaveChanges();
+                _ = context.SaveChanges();
             }
         }
 
         private void SeedAspNetIdentityDatabase(IServiceScope serviceScope)
         {
-            var roleMgr = serviceScope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-            var adminRole = roleMgr.FindByNameAsync("admin").Result;
+            RoleManager<ApplicationRole> roleMgr = serviceScope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
+            ApplicationRole adminRole = roleMgr.FindByNameAsync("admin").Result;
             if (adminRole == null)
             {
                 IdentityResult result = roleMgr.CreateAsync(new ApplicationRole()
@@ -138,15 +140,15 @@ namespace spydersoft.Identity.Data
             }
 
 
-            var userMgr = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var adminUser = userMgr.FindByNameAsync("admin").Result;
+            UserManager<ApplicationUser> userMgr = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            ApplicationUser adminUser = userMgr.FindByNameAsync("admin").Result;
             if (adminUser == null)
             {
                 adminUser = new ApplicationUser
                 {
                     UserName = "admin"
                 };
-                var result = userMgr.CreateAsync(adminUser, "Ch@ng3m3").Result;
+                IdentityResult result = userMgr.CreateAsync(adminUser, "Ch@ng3m3").Result;
                 if (!result.Succeeded)
                 {
                     throw new Exception(result.Errors.First().Description);
@@ -161,7 +163,7 @@ namespace spydersoft.Identity.Data
                                 new Claim(JwtClaimTypes.Email, "admin@localhost.net"),
                                 new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
                                 new Claim(JwtClaimTypes.WebSite, "123 NoWhere"),
-                                new Claim(JwtClaimTypes.Address, @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", Duende.IdentityServer.IdentityServerConstants.ClaimValueTypes.Json)
+                                new Claim(JwtClaimTypes.Address, /*lang=json*/ @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServerConstants.ClaimValueTypes.Json)
                             }).Result;
                 if (!result.Succeeded)
                 {
@@ -180,7 +182,7 @@ namespace spydersoft.Identity.Data
             {
                 _log.LogDebug("admin already exists");
             }
-      
+
         }
 
         #endregion Seeding Functions

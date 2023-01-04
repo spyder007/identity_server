@@ -1,13 +1,16 @@
 ﻿using System.Security.Claims;
+
 using AutoMapper;
+
 using Duende.IdentityServer.EntityFramework.Entities;
-//using Duende.IdentityServer.EntityFramework.Entities;
 using Duende.IdentityServer.Models;
+
 using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
 using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 using spydersoft.Identity.Models.Admin.ScopeViewModels;
 using spydersoft.Identity.Models.Identity;
+
 using ApiResource = Duende.IdentityServer.EntityFramework.Entities.ApiResource;
 using ApiScope = Duende.IdentityServer.EntityFramework.Entities.ApiScope;
 using Client = Duende.IdentityServer.EntityFramework.Entities.Client;
@@ -30,17 +33,17 @@ namespace spydersoft.Identity.Data
 
         private void PopulateIdentityMappings()
         {
-            CreateMap<ApplicationRole, ApplicationRole>()
+            _ = CreateMap<ApplicationRole, ApplicationRole>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.ConcurrencyStamp, opt => opt.Ignore());
 
-            CreateMap<ApplicationUser, ApplicationUser>()
+            _ = CreateMap<ApplicationUser, ApplicationUser>()
                 .ForMember(d => d.Id, opt => opt.Ignore())
                 .ForMember(d => d.ConcurrencyStamp, opt => opt.Ignore())
                 .ForMember(d => d.SecurityStamp, opt => opt.Ignore())
                 .ForMember(d => d.PasswordHash, opt => opt.Ignore());
 
-            CreateMap<ClaimModel, Claim>()
+            _ = CreateMap<ClaimModel, Claim>()
                 .ForMember(d => d.Issuer, opt => opt.Ignore())
                 .ForMember(d => d.OriginalIssuer, opt => opt.Ignore())
                 .ForMember(d => d.Properties, opt => opt.Ignore())
@@ -51,7 +54,7 @@ namespace spydersoft.Identity.Data
 
         private void PopulateClientMappings()
         {
-            CreateMap<ClientViewModel, Client>()
+            _ = CreateMap<ClientViewModel, Client>()
                 .ForMember(d => d.AllowedCorsOrigins, opt => opt.Ignore())
                 .ForMember(d => d.AllowedGrantTypes, opt => opt.Ignore())
                 .ForMember(d => d.AllowedScopes, opt => opt.Ignore())
@@ -64,45 +67,45 @@ namespace spydersoft.Identity.Data
                 .ReverseMap()
                 .ForMember(d => d.Id, opt => opt.Ignore());
 
-            CreateMap<ClientClaimViewModel, ClientClaim>()
+            _ = CreateMap<ClientClaimViewModel, ClientClaim>()
                 .ReverseMap();
 
-            CreateMap<ClientCorsOriginViewModel, ClientCorsOrigin>()
+            _ = CreateMap<ClientCorsOriginViewModel, ClientCorsOrigin>()
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ClientGrantTypeViewModel, ClientGrantType>()
+            _ = CreateMap<ClientGrantTypeViewModel, ClientGrantType>()
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ClientIdpRestrictionViewModel, ClientIdPRestriction>()
+            _ = CreateMap<ClientIdpRestrictionViewModel, ClientIdPRestriction>()
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ClientPostLogoutRedirectUriViewModel, ClientPostLogoutRedirectUri>()
+            _ = CreateMap<ClientPostLogoutRedirectUriViewModel, ClientPostLogoutRedirectUri>()
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ClientPropertyViewModel, ClientProperty>()
+            _ = CreateMap<ClientPropertyViewModel, ClientProperty>()
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ClientSecretViewModel, ClientSecret>()
+            _ = CreateMap<ClientSecretViewModel, ClientSecret>()
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ClientScopeViewModel, ClientScope>()
+            _ = CreateMap<ClientScopeViewModel, ClientScope>()
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ClientRedirectViewModel, ClientRedirectUri>()
+            _ = CreateMap<ClientRedirectViewModel, ClientRedirectUri>()
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
@@ -110,7 +113,7 @@ namespace spydersoft.Identity.Data
 
         private void PopulateApiResourceMappings()
         {
-            CreateMap<ApiResourceViewModel, ApiResource>()
+            _ = CreateMap<ApiResourceViewModel, ApiResource>()
                 .ForMember(d => d.UserClaims, opt => opt.Ignore())
                 .ForMember(d => d.Properties, opt => opt.Ignore())
                 .ForMember(d => d.Scopes, opt => opt.Ignore())
@@ -118,22 +121,22 @@ namespace spydersoft.Identity.Data
                 .ReverseMap()
                 .ForMember(d => d.Id, opt => opt.Ignore());
 
-            CreateMap<ApiResourceScopeViewModel, ApiResourceScope>()
+            _ = CreateMap<ApiResourceScopeViewModel, ApiResourceScope>()
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ApiResourcePropertyViewModel, ApiResourceProperty>()
+            _ = CreateMap<ApiResourcePropertyViewModel, ApiResourceProperty>()
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ApiResourceClaimViewModel, ApiResourceClaim>()
+            _ = CreateMap<ApiResourceClaimViewModel, ApiResourceClaim>()
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ApiResourceSecretViewModel, ApiResourceSecret>()
+            _ = CreateMap<ApiResourceSecretViewModel, ApiResourceSecret>()
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
@@ -142,18 +145,18 @@ namespace spydersoft.Identity.Data
 
         private void PopulateScopeResourceMappings()
         {
-            CreateMap<ScopeViewModel, ApiScope>()
+            _ = CreateMap<ScopeViewModel, ApiScope>()
                 .ForMember(d => d.UserClaims, opt => opt.Ignore())
                 .ForMember(d => d.Properties, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(d => d.Id, opt => opt.Ignore());
 
-            CreateMap<ScopeClaimViewModel, ApiScopeClaim>()
+            _ = CreateMap<ScopeClaimViewModel, ApiScopeClaim>()
                 .ForMember(d => d.Scope, opt => opt.Ignore())
                 .ForMember(d => d.ScopeId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<ScopePropertyViewModel, ApiScopeProperty>()
+            _ = CreateMap<ScopePropertyViewModel, ApiScopeProperty>()
                 .ForMember(d => d.Scope, opt => opt.Ignore())
                 .ForMember(d => d.ScopeId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
@@ -161,34 +164,34 @@ namespace spydersoft.Identity.Data
 
         private void PopulateIdentityResourceMappings()
         {
-            CreateMap<IdentityResourceViewModel, IdentityResource>()
+            _ = CreateMap<IdentityResourceViewModel, IdentityResource>()
                 .ForMember(d => d.Properties, opt => opt.Ignore())
                 .ForMember(d => d.UserClaims, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(d => d.NavBar, opt => opt.Ignore());
 
-            CreateMap<IdentityResources.Address, IdentityResourceViewModel>()
+            _ = CreateMap<IdentityResources.Address, IdentityResourceViewModel>()
                 .ForMember(d => d.NavBar, opt => opt.Ignore())
                 .ReverseMap();
-            CreateMap<IdentityResources.Email, IdentityResourceViewModel>()
+            _ = CreateMap<IdentityResources.Email, IdentityResourceViewModel>()
                 .ForMember(d => d.NavBar, opt => opt.Ignore())
                 .ReverseMap();
-            CreateMap<IdentityResources.Profile, IdentityResourceViewModel>()
+            _ = CreateMap<IdentityResources.Profile, IdentityResourceViewModel>()
                 .ForMember(d => d.NavBar, opt => opt.Ignore())
                 .ReverseMap();
-            CreateMap<IdentityResources.Phone, IdentityResourceViewModel>()
+            _ = CreateMap<IdentityResources.Phone, IdentityResourceViewModel>()
                 .ForMember(d => d.NavBar, opt => opt.Ignore())
                 .ReverseMap();
-            CreateMap<IdentityResources.OpenId, IdentityResourceViewModel>()
+            _ = CreateMap<IdentityResources.OpenId, IdentityResourceViewModel>()
                 .ForMember(d => d.NavBar, opt => opt.Ignore())
                 .ReverseMap();
 
-            CreateMap<IdentityResourceClaimViewModel, IdentityResourceClaim>()
+            _ = CreateMap<IdentityResourceClaimViewModel, IdentityResourceClaim>()
                 .ForMember(d => d.IdentityResource, opt => opt.Ignore())
                 .ForMember(d => d.IdentityResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();
 
-            CreateMap<IdentityResourcePropertyViewModel, IdentityResourceProperty>()
+            _ = CreateMap<IdentityResourcePropertyViewModel, IdentityResourceProperty>()
                 .ForMember(d => d.IdentityResource, opt => opt.Ignore())
                 .ForMember(d => d.IdentityResourceId, opt => opt.MapFrom(src => src.ParentId))
                 .ReverseMap();

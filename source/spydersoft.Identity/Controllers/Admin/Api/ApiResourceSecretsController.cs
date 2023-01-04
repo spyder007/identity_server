@@ -1,14 +1,17 @@
-﻿using AutoMapper.QueryableExtensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using AutoMapper;
+
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Entities;
 using Duende.IdentityServer.Models;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using AutoMapper;
+
 using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
+
 using ApiResource = Duende.IdentityServer.EntityFramework.Entities.ApiResource;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
@@ -23,7 +26,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         protected override IEnumerable<ApiResourceSecretViewModel> PopulateItemList(ApiResource mainEntity)
         {
-            return Mapper.ProjectTo<ApiResourceSecretViewModel>(mainEntity.Secrets.ToList().AsQueryable());
+            return Mapper.ProjectTo<ApiResourceSecretViewModel>(mainEntity.Secrets.AsQueryable());
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)

@@ -1,10 +1,13 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+
+using AutoMapper;
+
+using Duende.IdentityServer.EntityFramework.DbContexts;
+
+using Microsoft.AspNetCore.Mvc;
+
 using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
@@ -21,7 +24,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
         {
             var apisViewModel = new ApiResourcesViewModel
             {
-                Apis = Mapper.ProjectTo<ApiResourceViewModel>(ConfigDbContext.ApiResources.ToList().AsQueryable())
+                Apis = Mapper.ProjectTo<ApiResourceViewModel>(ConfigDbContext.ApiResources.AsQueryable())
             };
 
             ViewData["Title"] = "Register API Resources";
@@ -39,41 +42,19 @@ namespace spydersoft.Identity.Controllers.Admin.Api
             }
             else
             {
-                var client = ConfigDbContext.ApiResources.FirstOrDefault(c => c.Id == id.Value);
+                Duende.IdentityServer.EntityFramework.Entities.ApiResource client = ConfigDbContext.ApiResources.FirstOrDefault(c => c.Id == id.Value);
                 if (client == null)
                 {
                     return GetErrorAction("Could not load api");
                 }
 
                 apiModel = new ApiResourceViewModel(client.Id);
-                Mapper.Map(client, apiModel);
+                _ = Mapper.Map(client, apiModel);
                 ViewData["Title"] = $"Edit {apiModel.NavBar.Name}";
             }
-            
+
             return View(apiModel);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id.HasValue)
-            {
-                var api = ConfigDbContext.ApiResources.FirstOrDefault(c => c.Id == id.Value);
-                if (api == null)
-                {
-                    return GetErrorAction("Could not load api");
-                }
-
-                ConfigDbContext.ApiResources.Remove(api);
-                await ConfigDbContext.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        #endregion Client List Actions
-
-        #region Main Tab
 
         [HttpPost]
         public async Task<IActionResult> Edit(int? id, ApiResourceViewModel apiViewModel)
@@ -87,7 +68,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
                 {
                     apiViewModel.Created = DateTime.UtcNow;
                     dbEntity = new Duende.IdentityServer.EntityFramework.Entities.ApiResource();
-                    ConfigDbContext.Add(dbEntity);
+                    _ = ConfigDbContext.Add(dbEntity);
                     isNew = true;
                 }
                 else
@@ -100,17 +81,17 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
                 if (dbEntity != null)
                 {
-                    Mapper.Map(apiViewModel, dbEntity);
+                    _ = Mapper.Map(apiViewModel, dbEntity);
                 }
 
                 if (!isNew)
                 {
-                    ConfigDbContext.Update(dbEntity);
+                    _ = ConfigDbContext.Update(dbEntity);
                 }
 
-                await ConfigDbContext.SaveChangesAsync();
+                _ = await ConfigDbContext.SaveChangesAsync();
 
-                return (isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index)));
+                return isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index));
             }
 
             if (id.HasValue)
@@ -121,6 +102,24 @@ namespace spydersoft.Identity.Controllers.Admin.Api
             return View(apiViewModel);
         }
 
-        #endregion Main Tab
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id.HasValue)
+            {
+                Duende.IdentityServer.EntityFramework.Entities.ApiResource api = ConfigDbContext.ApiResources.FirstOrDefault(c => c.Id == id.Value);
+                if (api == null)
+                {
+                    return GetErrorAction("Could not load api");
+                }
+
+                _ = ConfigDbContext.ApiResources.Remove(api);
+                _ = await ConfigDbContext.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        #endregion Client List Actions
     }
 }

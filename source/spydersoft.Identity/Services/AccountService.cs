@@ -2,12 +2,15 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 using System.Threading.Tasks;
-using IdentityModel;
-using Duende.IdentityServer.Extensions;
+
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
+
+using IdentityModel;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+
 using spydersoft.Identity.Models.AccountViewModels;
 
 namespace spydersoft.Identity.Services
@@ -34,69 +37,11 @@ namespace spydersoft.Identity.Services
             _authenticationHandler = authenticationHandler;
         }
 
-        //public async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
-        //{
-        //    var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
-        //    if (context?.IdP != null)
-        //    {
-        //        // this is meant to short circuit the UI and only trigger the one external IdP
-        //        return new LoginViewModel
-        //        {
-        //            EnableLocalLogin = false,
-        //            ReturnUrl = returnUrl,
-        //            Username = context?.LoginHint,
-        //            ExternalProviders = new ExternalProvider[] {new ExternalProvider { AuthenticationScheme = context.IdP } }
-        //        };
-        //    }
-
-        //    var schemes = await _schemeProvider.GetAllSchemesAsync();
-
-        //    var providers = schemes
-        //        .Where(x => x.DisplayName != null)
-        //        .Select(x => new ExternalProvider
-        //        {
-        //            DisplayName = x.DisplayName,
-        //            AuthenticationScheme = x.Name
-        //        }).ToList();
-
-        //    var allowLocal = true;
-        //    if (context?.ClientId != null)
-        //    {
-        //        var client = await _clientStore.FindEnabledClientByIdAsync(context.ClientId);
-        //        if (client != null)
-        //        {
-        //            allowLocal = client.EnableLocalLogin;
-
-        //            if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Any())
-        //            {
-        //                providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
-        //            }
-        //        }
-        //    }
-
-        //    return new LoginViewModel
-        //    {
-        //        AllowRememberLogin = AccountOptions.AllowRememberLogin,
-        //        EnableLocalLogin = allowLocal && AccountOptions.AllowLocalLogin,
-        //        ReturnUrl = returnUrl,
-        //        Username = context?.LoginHint,
-        //        ExternalProviders = providers.ToArray()
-        //    };
-        //}
-
-        //public async Task<LoginViewModel> BuildLoginViewModelAsync(LoginInputModel model)
-        //{
-        //    var vm = await BuildLoginViewModelAsync(model.ReturnUrl);
-        //    vm.Username = model.Username;
-        //    vm.RememberLogin = model.RememberLogin;
-        //    return vm;
-        //}
-
         public async Task<LogoutViewModel> BuildLogoutViewModelAsync(string logoutId)
         {
             var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
 
-            var user = _httpContextAccessor.HttpContext.User;
+            System.Security.Claims.ClaimsPrincipal user = _httpContextAccessor.HttpContext.User;
             if (user?.Identity.IsAuthenticated != true)
             {
                 // if the user is not authenticated, then just show logged out page
@@ -104,7 +49,7 @@ namespace spydersoft.Identity.Services
                 return vm;
             }
 
-            var context = await _interaction.GetLogoutContextAsync(logoutId);
+            Duende.IdentityServer.Models.LogoutRequest context = await _interaction.GetLogoutContextAsync(logoutId);
             if (context?.ShowSignoutPrompt == false)
             {
                 // it's safe to automatically sign-out
@@ -120,7 +65,7 @@ namespace spydersoft.Identity.Services
         public async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
         {
             // get context information (client name, post logout redirect URI and iframe for federated signout)
-            var logout = await _interaction.GetLogoutContextAsync(logoutId);
+            Duende.IdentityServer.Models.LogoutRequest logout = await _interaction.GetLogoutContextAsync(logoutId);
 
             var vm = new LoggedOutViewModel
             {
@@ -131,22 +76,16 @@ namespace spydersoft.Identity.Services
                 LogoutId = logoutId
             };
 
-            var user = _httpContextAccessor.HttpContext.User;
+            System.Security.Claims.ClaimsPrincipal user = _httpContextAccessor.HttpContext.User;
             if (user?.Identity.IsAuthenticated == true)
             {
                 var idp = user.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-                if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
+                if (idp is not null and not Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
                 {
-                    var handler = await _authenticationHandler.GetHandlerAsync(_httpContextAccessor.HttpContext, idp);
+                    IAuthenticationHandler handler = await _authenticationHandler.GetHandlerAsync(_httpContextAccessor.HttpContext, idp);
                     if (handler is IAuthenticationSignOutHandler)
                     {
-                        if (vm.LogoutId == null)
-                        {
-                            // if there's no current logout context, we need to create one
-                            // this captures necessary info from the current logged in user
-                            // before we signout and redirect away to the external IdP for signout
-                            vm.LogoutId = await _interaction.CreateLogoutContextAsync();
-                        }
+                        vm.LogoutId ??= await _interaction.CreateLogoutContextAsync();
 
                         vm.ExternalAuthenticationScheme = idp;
                     }

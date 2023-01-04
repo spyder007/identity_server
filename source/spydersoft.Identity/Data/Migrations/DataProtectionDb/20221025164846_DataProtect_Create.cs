@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
 
 namespace spydersoft.Identity.Data.Migrations.DataProtectionDb
 {
@@ -8,7 +7,7 @@ namespace spydersoft.Identity.Data.Migrations.DataProtectionDb
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "DataProtectionKeys",
                 columns: table => new
                 {
@@ -17,15 +16,12 @@ namespace spydersoft.Identity.Data.Migrations.DataProtectionDb
                     FriendlyName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Xml = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DataProtectionKeys", x => x.Id);
-                });
+                constraints: table => _ = table.PrimaryKey("PK_DataProtectionKeys", x => x.Id));
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "DataProtectionKeys");
         }
     }

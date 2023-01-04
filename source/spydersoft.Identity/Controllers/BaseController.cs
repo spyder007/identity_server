@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Duende.IdentityServer.EntityFramework.DbContexts;
+﻿using AutoMapper;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace spydersoft.Identity.Controllers
@@ -24,14 +20,7 @@ namespace spydersoft.Identity.Controllers
         }
         protected IActionResult RedirectToLocal(string returnUrl)
         {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
+            return Url.IsLocalUrl(returnUrl) ? Redirect(returnUrl) : RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
 }

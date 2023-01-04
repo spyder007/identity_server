@@ -1,13 +1,16 @@
 ﻿using System;
+
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
+#pragma warning disable IDE1006 // Naming Styles
     public partial class Duende_5_2 : Migration
+#pragma warning restore IDE1006 // Naming Styles
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Keys",
                 columns: table => new
                 {
@@ -20,17 +23,14 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
                     DataProtected = table.Column<bool>(type: "bit", nullable: false),
                     Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Keys", x => x.Id);
-                });
+                constraints: table => _ = table.PrimaryKey("PK_Keys", x => x.Id));
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_ConsumedTime",
                 table: "PersistedGrants",
                 column: "ConsumedTime");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Keys_Use",
                 table: "Keys",
                 column: "Use");
@@ -38,10 +38,10 @@ namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Keys");
 
-            migrationBuilder.DropIndex(
+            _ = migrationBuilder.DropIndex(
                 name: "IX_PersistedGrants_ConsumedTime",
                 table: "PersistedGrants");
         }

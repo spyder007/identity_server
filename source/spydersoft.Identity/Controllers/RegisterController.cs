@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+
 using AutoMapper;
+
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
+
 using IdentityModel;
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+
 using spydersoft.Identity.Attributes;
 using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.AccountViewModels;
@@ -72,7 +74,7 @@ namespace spydersoft.Identity.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var existingUser = await _userManager.FindByEmailAsync(model.Email);
+                ApplicationUser existingUser = await _userManager.FindByEmailAsync(model.Email);
                 if (existingUser != null)
                 {
                     ModelState.AddModelError("", $"An account already exists for this email.");
@@ -81,11 +83,11 @@ namespace spydersoft.Identity.Controllers
                 {
                     var user = new ApplicationUser
                     {
-                        UserName = model.Email, 
-                        Email = model.Email, 
+                        UserName = model.Email,
+                        Email = model.Email,
                         Name = model.Name
                     };
-                    var result = await _userManager.CreateAsync(user, model.Password);
+                    IdentityResult result = await _userManager.CreateAsync(user, model.Password);
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User created a new account with password.");
@@ -93,12 +95,12 @@ namespace spydersoft.Identity.Controllers
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                         var callbackUrl = Url.Action(nameof(AccountController.ConfirmEmail), "Account",
-                            new { userId = userId, code = code }, Request.Scheme);
+                            new { userId, code }, Request.Scheme);
                         await _emailSender.SendEmailConfirmationAsync(model.Email, callbackUrl);
 
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation("User created a new account with password.");
-                        await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Name, model.Name));
+                        _ = await _userManager.AddClaimAsync(user, new Claim(JwtClaimTypes.Name, model.Name));
                         return RedirectToLocal(returnUrl);
                     }
                     ModelState.AddErrors(result);

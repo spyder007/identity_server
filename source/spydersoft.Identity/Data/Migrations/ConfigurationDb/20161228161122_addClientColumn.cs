@@ -2,11 +2,13 @@
 
 namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
+#pragma warning disable IDE1006 // Naming Styles
     public partial class addClientColumn : Migration
+#pragma warning restore IDE1006 // Naming Styles
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
+            _ = migrationBuilder.AddColumn<bool>(
                 name: "AlwaysIncludeUserClaimsInIdToken",
                 table: "Clients",
                 nullable: false,
@@ -15,7 +17,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "AlwaysIncludeUserClaimsInIdToken",
                 table: "Clients");
         }

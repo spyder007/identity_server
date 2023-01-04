@@ -2,15 +2,18 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
+
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 using spydersoft.Identity.Attributes;
 using spydersoft.Identity.Models.Grants;
 
@@ -63,15 +66,15 @@ namespace spydersoft.Identity.Controllers
 
         private async Task<GrantsViewModel> BuildViewModelAsync()
         {
-            var grants = await _interaction.GetAllUserGrantsAsync();
+            IEnumerable<Duende.IdentityServer.Models.Grant> grants = await _interaction.GetAllUserGrantsAsync();
 
             var list = new List<GrantViewModel>();
-            foreach(var grant in grants)
+            foreach (Duende.IdentityServer.Models.Grant grant in grants)
             {
-                var client = await _clients.FindClientByIdAsync(grant.ClientId);
+                Duende.IdentityServer.Models.Client client = await _clients.FindClientByIdAsync(grant.ClientId);
                 if (client != null)
                 {
-                    var resources = await _resources.FindResourcesByScopeAsync(grant.Scopes);
+                    Duende.IdentityServer.Models.Resources resources = await _resources.FindResourcesByScopeAsync(grant.Scopes);
 
                     var item = new GrantViewModel()
                     {

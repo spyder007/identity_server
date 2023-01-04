@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
 
 namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 {
@@ -13,7 +12,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-
+            // Method intentionally left empty.
         }
     }
 }

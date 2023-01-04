@@ -1,11 +1,14 @@
-﻿using AutoMapper.QueryableExtensions;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using AutoMapper;
+
+using Duende.IdentityServer.EntityFramework.DbContexts;
+
+using Microsoft.EntityFrameworkCore;
+
 using spydersoft.Identity.Models.Admin.ClientViewModels;
+
 using IS4Entities = Duende.IdentityServer.EntityFramework.Entities;
 
 namespace spydersoft.Identity.Controllers.Admin.Client
@@ -20,7 +23,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IEnumerable<ClientRedirectViewModel> PopulateItemList(IS4Entities.Client mainEntity)
         {
-            return Mapper.ProjectTo<ClientRedirectViewModel>(mainEntity.RedirectUris.ToList().AsQueryable());
+            return Mapper.ProjectTo<ClientRedirectViewModel>(mainEntity.RedirectUris.AsQueryable());
         }
 
         protected override IQueryable<IS4Entities.Client> AddIncludes(DbSet<IS4Entities.Client> query)

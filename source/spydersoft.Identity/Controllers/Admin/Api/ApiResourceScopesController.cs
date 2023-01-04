@@ -1,14 +1,13 @@
-﻿using System;
-using AutoMapper.QueryableExtensions;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using AutoMapper;
+
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Entities;
+
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+
 using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace spydersoft.Identity.Controllers.Admin.Api
@@ -23,7 +22,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         protected override IEnumerable<ApiResourceScopeViewModel> PopulateItemList(ApiResource mainEntity)
         {
-            return Mapper.ProjectTo<ApiResourceScopeViewModel>(mainEntity.Scopes.ToList().AsQueryable());
+            return Mapper.ProjectTo<ApiResourceScopeViewModel>(mainEntity.Scopes.AsQueryable());
         }
 
         protected override IQueryable<ApiResource> AddIncludes(DbSet<ApiResource> query)
@@ -46,9 +45,9 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         private ApiResourceScope GetScope(int? apiId, int? id)
         {
-            var apiResource = ConfigDbContext.ApiResources.Include(a => a.Scopes).FirstOrDefault(c => c.Id == apiId.Value);
+            ApiResource apiResource = ConfigDbContext.ApiResources.Include(a => a.Scopes).FirstOrDefault(c => c.Id == apiId.Value);
 
-            var apiScope = apiResource?.Scopes.FirstOrDefault(s => s.Id == id.Value);
+            ApiResourceScope apiScope = apiResource?.Scopes.FirstOrDefault(s => s.Id == id.Value);
 
             return apiScope;
         }

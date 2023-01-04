@@ -1,6 +1,4 @@
-﻿using System.Security.Policy;
-
-namespace spydersoft.Identity.Options
+﻿namespace spydersoft.Identity.Options
 {
     public class SendgridOptions
     {

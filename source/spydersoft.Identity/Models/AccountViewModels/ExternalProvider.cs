@@ -1,43 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace spydersoft.Identity.Models.AccountViewModels
+﻿namespace spydersoft.Identity.Models.AccountViewModels
 {
     public class ExternalProvider
     {
         public string DisplayName { get; set; }
         public string AuthenticationScheme { get; set; }
 
-        public string LniCssClass
+        public string LniCssClass => DisplayName switch
         {
-            get
-            {
-                switch (DisplayName)
-                {
-                    case "Google":
-                        return "fab fa-2x fa-google";
+            "Google" => "fab fa-2x fa-google",
+            _ => "fab fa-2x fa-openid",
+        };
 
-                    default:
-                        return "fab fa-2x fa-openid";
-                }
-            }
-        }
-
-        public string ButtonCssClass
+        public string ButtonCssClass => DisplayName switch
         {
-            get
-            {
-                switch (DisplayName)
-                {
-                    case "Google":
-                        return "danger-btn-outline";
-
-                    default:
-                        return "primary-btn-outline";
-                }
-            }
-        }
+            "Google" => "danger-btn-outline",
+            _ => "primary-btn-outline",
+        };
     }
 }

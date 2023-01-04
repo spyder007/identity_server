@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
 
 namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
@@ -8,7 +7,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
+            _ = migrationBuilder.AddColumn<bool>(
                 name: "CoordinateLifetimeWithUserSession",
                 table: "Clients",
                 type: "bit",
@@ -17,7 +16,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "CoordinateLifetimeWithUserSession",
                 table: "Clients");
         }

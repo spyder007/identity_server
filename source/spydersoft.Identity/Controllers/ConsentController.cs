@@ -2,21 +2,23 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-using System;
+
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Validation;
+
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
 using spydersoft.Identity.Attributes;
 using spydersoft.Identity.Extensions;
-using spydersoft.Identity.Models;
 using spydersoft.Identity.Models.Consent;
 
 namespace spydersoft.Identity.Controllers
@@ -50,13 +52,8 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string returnUrl)
         {
-            var vm = await BuildViewModelAsync(returnUrl);
-            if (vm != null)
-            {
-                return View("Index", vm);
-            }
-
-            return View("Error");
+            ConsentViewModel vm = await BuildViewModelAsync(returnUrl);
+            return vm != null ? View("Index", vm) : (IActionResult)View("Error");
         }
 
         /// <summary>
@@ -66,11 +63,11 @@ namespace spydersoft.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ConsentInputModel model)
         {
-            var result = await ProcessConsent(model);
+            ProcessConsentResult result = await ProcessConsent(model);
 
             if (result.IsRedirect)
             {
-                var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+                AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
                 if (context?.IsNativeClient() == true)
                 {
                     // The client is native, so this change in how to
@@ -86,12 +83,7 @@ namespace spydersoft.Identity.Controllers
                 ModelState.AddModelError(string.Empty, result.ValidationError);
             }
 
-            if (result.ShowView)
-            {
-                return View("Index", result.ViewModel);
-            }
-
-            return View("Error");
+            return result.ShowView ? View("Index", result.ViewModel) : (IActionResult)View("Error");
         }
 
         /*****************************************/
@@ -102,8 +94,11 @@ namespace spydersoft.Identity.Controllers
             var result = new ProcessConsentResult();
 
             // validate return url is still valid
-            var request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
-            if (request == null) return result;
+            AuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+            if (request == null)
+            {
+                return result;
+            }
 
             ConsentResponse grantedConsent = null;
 
@@ -121,8 +116,8 @@ namespace spydersoft.Identity.Controllers
                 // if the user consented to some scope, build the response model
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())
                 {
-                    var scopes = model.ScopesConsented;
-                    if (ConsentOptions.EnableOfflineAccess == false)
+                    IEnumerable<string> scopes = model.ScopesConsented;
+                    if (!ConsentOptions.EnableOfflineAccess)
                     {
                         scopes = scopes.Where(x => x != Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess);
                     }
@@ -167,7 +162,7 @@ namespace spydersoft.Identity.Controllers
 
         private async Task<ConsentViewModel> BuildViewModelAsync(string returnUrl, ConsentInputModel model = null)
         {
-            var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
+            AuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (request != null)
             {
                 return CreateConsentViewModel(model, returnUrl, request);
@@ -201,12 +196,12 @@ namespace spydersoft.Identity.Controllers
             vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
 
             var apiScopes = new List<ScopeViewModel>();
-            foreach(var parsedScope in request.ValidatedResources.ParsedScopes)
+            foreach (ParsedScopeValue parsedScope in request.ValidatedResources.ParsedScopes)
             {
-                var apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
+                ApiScope apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
                 if (apiScope != null)
                 {
-                    var scopeVm = CreateScopeViewModel(parsedScope, apiScope, vm.ScopesConsented.Contains(parsedScope.RawValue) || model == null);
+                    ScopeViewModel scopeVm = CreateScopeViewModel(parsedScope, apiScope, vm.ScopesConsented.Contains(parsedScope.RawValue) || model == null);
                     apiScopes.Add(scopeVm);
                 }
             }
@@ -235,7 +230,7 @@ namespace spydersoft.Identity.Controllers
         public ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
         {
             var displayName = apiScope.DisplayName ?? apiScope.Name;
-            if (!String.IsNullOrWhiteSpace(parsedScopeValue.ParsedParameter))
+            if (!string.IsNullOrWhiteSpace(parsedScopeValue.ParsedParameter))
             {
                 displayName += ":" + parsedScopeValue.ParsedParameter;
             }

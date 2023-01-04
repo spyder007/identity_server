@@ -1,11 +1,15 @@
-﻿using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using spydersoft.Identity.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using AutoMapper;
+
+using Duende.IdentityServer.EntityFramework.DbContexts;
+
+using Microsoft.EntityFrameworkCore;
+
 using spydersoft.Identity.Models.Admin;
 using spydersoft.Identity.Models.Admin.ClientViewModels;
+
 using IS4Entities = Duende.IdentityServer.EntityFramework.Entities;
 
 namespace spydersoft.Identity.Controllers.Admin.Client
@@ -35,8 +39,8 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IS4Entities.Client GetMainEntity(int id)
         {
-            var query = ConfigDbContext.Clients;
-            var includeQuery = AddIncludes(query);
+            DbSet<IS4Entities.Client> query = ConfigDbContext.Clients;
+            IQueryable<IS4Entities.Client> includeQuery = AddIncludes(query);
 
             return includeQuery.FirstOrDefault(c => c.Id == id);
         }

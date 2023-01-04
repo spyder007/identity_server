@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
@@ -8,7 +9,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ApiResources",
                 columns: table => new
                 {
@@ -19,12 +20,9 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                     Enabled = table.Column<bool>(nullable: false),
                     Name = table.Column<string>(maxLength: 200, nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApiResources", x => x.Id);
-                });
-            
-            migrationBuilder.CreateTable(
+                constraints: table => _ = table.PrimaryKey("PK_ApiResources", x => x.Id));
+
+            _ = migrationBuilder.CreateTable(
                 name: "Clients",
                 columns: table => new
                 {
@@ -59,12 +57,9 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                     SlidingRefreshTokenLifetime = table.Column<int>(nullable: false),
                     UpdateAccessTokenClaimsOnRefresh = table.Column<bool>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                });
+                constraints: table => _ = table.PrimaryKey("PK_Clients", x => x.Id));
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "IdentityResources",
                 columns: table => new
                 {
@@ -78,12 +73,9 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                     Required = table.Column<bool>(nullable: false),
                     ShowInDiscoveryDocument = table.Column<bool>(nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityResources", x => x.Id);
-                });
+                constraints: table => _ = table.PrimaryKey("PK_IdentityResources", x => x.Id));
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ApiClaims",
                 columns: table => new
                 {
@@ -94,8 +86,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApiClaims", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ApiClaims", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ApiClaims_ApiResources_ApiResourceId",
                         column: x => x.ApiResourceId,
                         principalTable: "ApiResources",
@@ -103,7 +95,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ApiScopes",
                 columns: table => new
                 {
@@ -119,8 +111,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApiScopes", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ApiScopes", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ApiScopes_ApiResources_ApiResourceId",
                         column: x => x.ApiResourceId,
                         principalTable: "ApiResources",
@@ -128,7 +120,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ApiSecrets",
                 columns: table => new
                 {
@@ -142,8 +134,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApiSecrets", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ApiSecrets", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ApiSecrets_ApiResources_ApiResourceId",
                         column: x => x.ApiResourceId,
                         principalTable: "ApiResources",
@@ -151,7 +143,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ClientClaims",
                 columns: table => new
                 {
@@ -163,8 +155,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientClaims", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ClientClaims", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ClientClaims_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
@@ -172,7 +164,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ClientCorsOrigins",
                 columns: table => new
                 {
@@ -183,8 +175,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientCorsOrigins", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ClientCorsOrigins", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ClientCorsOrigins_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
@@ -192,7 +184,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ClientGrantTypes",
                 columns: table => new
                 {
@@ -203,8 +195,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientGrantTypes", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ClientGrantTypes", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ClientGrantTypes_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
@@ -212,7 +204,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ClientIdPRestrictions",
                 columns: table => new
                 {
@@ -223,8 +215,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientIdPRestrictions", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ClientIdPRestrictions", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ClientIdPRestrictions_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
@@ -232,7 +224,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ClientPostLogoutRedirectUris",
                 columns: table => new
                 {
@@ -243,8 +235,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientPostLogoutRedirectUris", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ClientPostLogoutRedirectUris", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ClientPostLogoutRedirectUris_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
@@ -252,7 +244,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ClientRedirectUris",
                 columns: table => new
                 {
@@ -263,8 +255,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientRedirectUris", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ClientRedirectUris", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ClientRedirectUris_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
@@ -272,7 +264,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ClientScopes",
                 columns: table => new
                 {
@@ -283,8 +275,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientScopes", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ClientScopes", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ClientScopes_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
@@ -292,7 +284,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ClientSecrets",
                 columns: table => new
                 {
@@ -306,8 +298,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientSecrets", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ClientSecrets", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ClientSecrets_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
@@ -315,7 +307,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "IdentityClaims",
                 columns: table => new
                 {
@@ -326,8 +318,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IdentityClaims", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_IdentityClaims", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_IdentityClaims_IdentityResources_IdentityResourceId",
                         column: x => x.IdentityResourceId,
                         principalTable: "IdentityResources",
@@ -335,7 +327,7 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ApiScopeClaims",
                 columns: table => new
                 {
@@ -346,8 +338,8 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApiScopeClaims", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_ApiScopeClaims", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_ApiScopeClaims_ApiScopes_ApiScopeId",
                         column: x => x.ApiScopeId,
                         principalTable: "ApiScopes",
@@ -355,90 +347,90 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiResources_Name",
                 table: "ApiResources",
                 column: "Name",
                 unique: true);
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiClaims_ApiResourceId",
                 table: "ApiClaims",
                 column: "ApiResourceId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiScopes_ApiResourceId",
                 table: "ApiScopes",
                 column: "ApiResourceId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiScopes_Name",
                 table: "ApiScopes",
                 column: "Name",
                 unique: true);
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiScopeClaims_ApiScopeId",
                 table: "ApiScopeClaims",
                 column: "ApiScopeId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiSecrets_ApiResourceId",
                 table: "ApiSecrets",
                 column: "ApiResourceId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Clients_ClientId",
                 table: "Clients",
                 column: "ClientId",
                 unique: true);
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientClaims_ClientId",
                 table: "ClientClaims",
                 column: "ClientId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientCorsOrigins_ClientId",
                 table: "ClientCorsOrigins",
                 column: "ClientId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientGrantTypes_ClientId",
                 table: "ClientGrantTypes",
                 column: "ClientId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientIdPRestrictions_ClientId",
                 table: "ClientIdPRestrictions",
                 column: "ClientId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientPostLogoutRedirectUris_ClientId",
                 table: "ClientPostLogoutRedirectUris",
                 column: "ClientId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientRedirectUris_ClientId",
                 table: "ClientRedirectUris",
                 column: "ClientId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientScopes_ClientId",
                 table: "ClientScopes",
                 column: "ClientId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientSecrets_ClientId",
                 table: "ClientSecrets",
                 column: "ClientId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_IdentityClaims_IdentityResourceId",
                 table: "IdentityClaims",
                 column: "IdentityResourceId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_IdentityResources_Name",
                 table: "IdentityResources",
                 column: "Name",
@@ -447,52 +439,52 @@ namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ApiClaims");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ApiScopeClaims");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ApiSecrets");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ClientClaims");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ClientCorsOrigins");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ClientGrantTypes");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ClientIdPRestrictions");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ClientPostLogoutRedirectUris");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ClientRedirectUris");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ClientScopes");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ClientSecrets");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "IdentityClaims");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ApiScopes");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Clients");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "IdentityResources");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ApiResources");
         }
     }

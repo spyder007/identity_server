@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace spydersoft.Identity.Models.AccountViewModels
 {
@@ -13,7 +9,7 @@ namespace spydersoft.Identity.Models.AccountViewModels
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        [Display(Name="Remember Login")]
+        [Display(Name = "Remember Login")]
         public bool RememberLogin { get; set; }
         public string ReturnUrl { get; set; }
     }

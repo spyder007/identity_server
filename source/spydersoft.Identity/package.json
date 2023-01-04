@@ -24,7 +24,6 @@
     "gulp-sass": "^5.0.0",
     "sass": "^1.42.1"
   },
-  "scripts": {},
   "browserslist": [
     "Chrome >= 45",
     "Firefox ESR",

@@ -2,28 +2,31 @@
 // See LICENSE in the project root for license information.
 
 
-using IdentityModel;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
+
+using IdentityModel;
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+
 using spydersoft.Identity.Attributes;
 using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.AccountViewModels;
 using spydersoft.Identity.Models.Identity;
 using spydersoft.Identity.Services;
-using Microsoft.AspNetCore.WebUtilities;
-using System.Text;
 
 namespace spydersoft.Identity.Controllers
 {
@@ -70,7 +73,7 @@ namespace spydersoft.Identity.Controllers
         public async Task<IActionResult> Login(string returnUrl)
         {
             // build a model so we know what to show on the login page
-            var vm = await BuildLoginViewModelAsync(returnUrl);
+            LoginViewModel vm = await BuildLoginViewModelAsync(returnUrl);
 
             if (vm.IsExternalLoginOnly)
             {
@@ -89,7 +92,7 @@ namespace spydersoft.Identity.Controllers
         public async Task<IActionResult> Login(LoginInputModel model, string button)
         {
             // check if we are in the context of an authorization request
-            var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+            AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
 
             // the user clicked the "cancel" button
             if (button != "login")
@@ -120,10 +123,10 @@ namespace spydersoft.Identity.Controllers
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
+                Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
-                    var user = await _userManager.FindByNameAsync(model.Username);
+                    ApplicationUser user = await _userManager.FindByNameAsync(model.Username);
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId));
 
                     if (context != null)
@@ -160,16 +163,16 @@ namespace spydersoft.Identity.Controllers
                     return RedirectToAction(nameof(LoginWith2fa), new { rememberMe = model.RememberLogin, returnUrl = model.ReturnUrl });
                 }
 
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
+                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId: context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
 
             // something went wrong, show form with error
-            var vm = await BuildLoginViewModelAsync(model);
+            LoginViewModel vm = await BuildLoginViewModelAsync(model);
             return View(vm);
         }
 
-        
+
         /// <summary>
         /// Show logout page
         /// </summary>
@@ -177,9 +180,9 @@ namespace spydersoft.Identity.Controllers
         public async Task<IActionResult> Logout(string logoutId)
         {
             // build a model so the logout page knows what to display
-            var vm = await BuildLogoutViewModelAsync(logoutId);
+            LogoutViewModel vm = await BuildLogoutViewModelAsync(logoutId);
 
-            if (vm.ShowLogoutPrompt == false)
+            if (!vm.ShowLogoutPrompt)
             {
                 // if the request for logout was properly authenticated from IdentityServer, then
                 // we don't need to show the prompt and can just log the user out directly.
@@ -197,7 +200,7 @@ namespace spydersoft.Identity.Controllers
         public async Task<IActionResult> Logout(LogoutInputModel model)
         {
             // build a model so the logged out page knows what to display
-            var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
+            LoggedOutViewModel vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
             if (User?.Identity.IsAuthenticated == true)
             {
@@ -214,7 +217,7 @@ namespace spydersoft.Identity.Controllers
                 // build a return URL so the upstream provider will redirect back
                 // to us after the user has logged out. this allows us to then
                 // complete our single sign-out processing.
-                string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
+                var url = Url.Action("Logout", new { logoutId = vm.LogoutId });
 
                 // this triggers a redirect to the external provider for sign-out
                 return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
@@ -236,16 +239,17 @@ namespace spydersoft.Identity.Controllers
             return View();
         }
 
+
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ForgotPassword()
+        public IActionResult ForgotPasswordConfirmation()
         {
             return View();
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ForgotPasswordConfirmation()
+        public IActionResult ForgotPassword()
         {
             return View();
         }
@@ -257,8 +261,8 @@ namespace spydersoft.Identity.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(model.Email);
-                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                ApplicationUser user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null || !await _userManager.IsEmailConfirmedAsync(user))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     return RedirectToAction(nameof(ForgotPasswordConfirmation));
@@ -281,14 +285,14 @@ namespace spydersoft.Identity.Controllers
         public async Task<IActionResult> LoginWith2fa(bool rememberMe, string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            ApplicationUser user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 
             if (user == null)
             {
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             }
 
-            var model = new LoginWith2faViewModel()
+            var model = new LoginWith2FaViewModel()
             {
                 RememberMe = rememberMe,
                 ReturnUrl = returnUrl
@@ -298,7 +302,7 @@ namespace spydersoft.Identity.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> LoginWith2fa(LoginWith2faViewModel model)
+        public async Task<IActionResult> LoginWith2fa(LoginWith2FaViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -307,7 +311,7 @@ namespace spydersoft.Identity.Controllers
 
             var returnUrl = model.ReturnUrl ?? Url.Content("~/");
 
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            ApplicationUser user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
             if (user == null)
             {
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
@@ -315,11 +319,10 @@ namespace spydersoft.Identity.Controllers
 
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
-            var result =
+            Microsoft.AspNetCore.Identity.SignInResult result =
                 await _signInManager.TwoFactorAuthenticatorSignInAsync(authenticatorCode, model.RememberMe,
                     model.RememberMachine);
-
-            var userId = await _userManager.GetUserIdAsync(user);
+            _ = await _userManager.GetUserIdAsync(user);
 
             if (result.Succeeded)
             {
@@ -360,13 +363,13 @@ namespace spydersoft.Identity.Controllers
             {
                 return View(model);
             }
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            ApplicationUser user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            IdentityResult result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
@@ -391,16 +394,18 @@ namespace spydersoft.Identity.Controllers
                 return RedirectToPage("/Index");
             }
 
-            var user = _userManager.FindByIdAsync(userId).Result;
+            ApplicationUser user = _userManager.FindByIdAsync(userId).Result;
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{userId}'.");
             }
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
-            var result = _userManager.ConfirmEmailAsync(user, code).Result;
-            var model = new BaseModel();
-            model.Message = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            IdentityResult result = _userManager.ConfirmEmailAsync(user, code).Result;
+            var model = new BaseModel
+            {
+                Message = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email."
+            };
             return View(model);
         }
 
@@ -409,7 +414,7 @@ namespace spydersoft.Identity.Controllers
         /*****************************************/
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
         {
-            var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
+            AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
             {
                 var local = context.IdP == Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider;
@@ -430,7 +435,7 @@ namespace spydersoft.Identity.Controllers
                 return vm;
             }
 
-            var schemes = await _schemeProvider.GetAllSchemesAsync();
+            System.Collections.Generic.IEnumerable<AuthenticationScheme> schemes = await _schemeProvider.GetAllSchemesAsync();
 
             var providers = schemes
                 .Where(x => x.DisplayName != null)
@@ -443,7 +448,7 @@ namespace spydersoft.Identity.Controllers
             var allowLocal = true;
             if (context?.Client.ClientId != null)
             {
-                var client = await _clientStore.FindEnabledClientByIdAsync(context.Client.ClientId);
+                Client client = await _clientStore.FindEnabledClientByIdAsync(context.Client.ClientId);
                 if (client != null)
                 {
                     allowLocal = client.EnableLocalLogin;
@@ -467,7 +472,7 @@ namespace spydersoft.Identity.Controllers
 
         private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginInputModel model)
         {
-            var vm = await BuildLoginViewModelAsync(model.ReturnUrl);
+            LoginViewModel vm = await BuildLoginViewModelAsync(model.ReturnUrl);
             vm.Username = model.Username;
             vm.RememberLogin = model.RememberLogin;
             return vm;
@@ -484,7 +489,7 @@ namespace spydersoft.Identity.Controllers
                 return vm;
             }
 
-            var context = await _interaction.GetLogoutContextAsync(logoutId);
+            LogoutRequest context = await _interaction.GetLogoutContextAsync(logoutId);
             if (context?.ShowSignoutPrompt == false)
             {
                 // it's safe to automatically sign-out
@@ -500,7 +505,7 @@ namespace spydersoft.Identity.Controllers
         private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
         {
             // get context information (client name, post logout redirect URI and iframe for federated signout)
-            var logout = await _interaction.GetLogoutContextAsync(logoutId);
+            LogoutRequest logout = await _interaction.GetLogoutContextAsync(logoutId);
 
             var vm = new LoggedOutViewModel
             {
@@ -514,18 +519,12 @@ namespace spydersoft.Identity.Controllers
             if (User?.Identity.IsAuthenticated == true)
             {
                 var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-                if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
+                if (idp is not null and not Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
                 {
-                    var handler = await _authenticationHandler.GetHandlerAsync(HttpContext, idp);
+                    IAuthenticationHandler handler = await _authenticationHandler.GetHandlerAsync(HttpContext, idp);
                     if (handler is IAuthenticationSignOutHandler)
                     {
-                        if (vm.LogoutId == null)
-                        {
-                            // if there's no current logout context, we need to create one
-                            // this captures necessary info from the current logged in user
-                            // before we signout and redirect away to the external IdP for signout
-                            vm.LogoutId = await _interaction.CreateLogoutContextAsync();
-                        }
+                        vm.LogoutId ??= await _interaction.CreateLogoutContextAsync();
 
                         vm.ExternalAuthenticationScheme = idp;
                     }

@@ -1,9 +1,11 @@
-﻿using Duende.IdentityServer;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
+using Duende.IdentityServer;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace spydersoft.Identity.Models.Admin.ClientViewModels
 {
@@ -11,9 +13,9 @@ namespace spydersoft.Identity.Models.Admin.ClientViewModels
     {
         public override ClientScopeViewModel GetChild(ClientViewModel parent, ConfigurationDbContext configDbContext)
         {
-            var child = base.GetChild(parent, configDbContext);
+            ClientScopeViewModel child = base.GetChild(parent, configDbContext);
             child.Scopes = configDbContext.ApiScopes.Select(scope => scope.Name).ToList();
-            
+
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Address);
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Email);
             child.Scopes.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
@@ -21,12 +23,12 @@ namespace spydersoft.Identity.Models.Admin.ClientViewModels
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Phone);
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Profile);
 
-            var client = configDbContext.Clients.Include(c => c.AllowedScopes).FirstOrDefault(c => c.Id == parent.Id);
+            Duende.IdentityServer.EntityFramework.Entities.Client client = configDbContext.Clients.Include(c => c.AllowedScopes).FirstOrDefault(c => c.Id == parent.Id);
             if (client != null)
             {
-                foreach (var scope in client.AllowedScopes)
+                foreach (Duende.IdentityServer.EntityFramework.Entities.ClientScope scope in client.AllowedScopes)
                 {
-                    child.Scopes.Remove(scope.Scope);
+                    _ = child.Scopes.Remove(scope.Scope);
                 }
             }
 
@@ -42,6 +44,6 @@ namespace spydersoft.Identity.Models.Admin.ClientViewModels
         [Display(Name = "Scope")]
         public string Scope { get; set; }
 
-        public List<string> Scopes { get; set;  }
+        public List<string> Scopes { get; set; }
     }
 }

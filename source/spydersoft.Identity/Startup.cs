@@ -1,30 +1,27 @@
-﻿using Duende.IdentityServer.EntityFramework.DbContexts;
-using Duende.IdentityServer.EntityFramework.Mappers;
+﻿using System.Reflection;
+
+using Duende.IdentityServer;
+
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using spydersoft.Identity.Data;
-using spydersoft.Identity.Models;
-using spydersoft.Identity.Services;
-using System.Linq;
-using System.Reflection;
-using AutoMapper;
-using Duende.IdentityServer;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Hosting;
+
 using OpenTelemetry.Metrics;
-using Serilog;
-using Serilog.Sinks.SystemConsole.Themes;
-using spydersoft.Identity.Extensions;
-using spydersoft.Identity.Models.Identity;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Microsoft.AspNetCore.DataProtection;
+
+using spydersoft.Identity.Data;
+using spydersoft.Identity.Extensions;
+using spydersoft.Identity.Models.Identity;
 using spydersoft.Identity.Options;
+using spydersoft.Identity.Services;
 
 namespace spydersoft.Identity
 {
@@ -43,15 +40,10 @@ namespace spydersoft.Identity
             var connString = Configuration.GetConnectionString("IdentityConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
-            services.Configure<SendgridOptions>(Configuration.GetSection(SendgridOptions.Name));
+            _ = services.Configure<SendgridOptions>(Configuration.GetSection(SendgridOptions.Name));
 
-            services.AddOpenTelemetryTracing(builder =>
-            {
-                builder
-                    .AddZipkinExporter(config =>
-                    {
-                        config.Endpoint = new System.Uri(Configuration.GetValue<string>("Zipkin:Host"));
-                    })
+            _ = services.AddOpenTelemetryTracing(builder => _ = builder
+                    .AddZipkinExporter(config => config.Endpoint = new System.Uri(Configuration.GetValue<string>("Zipkin:Host")))
                     .AddSource(IdentityServerConstants.Tracing.Basic)
                     .AddSource(IdentityServerConstants.Tracing.Cache)
                     .AddSource(IdentityServerConstants.Tracing.Services)
@@ -63,59 +55,48 @@ namespace spydersoft.Identity
                             .AddService(Configuration.GetValue<string>("Zipkin:ServiceName")))
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
-                    .AddSqlClientInstrumentation();
-            });
+                    .AddSqlClientInstrumentation());
 
-            services.AddOpenTelemetryMetrics(builder =>
-            {
-                builder.AddPrometheusExporter()
+            _ = services.AddOpenTelemetryMetrics(builder => _ = builder.AddPrometheusExporter()
                     .AddHttpClientInstrumentation()
-                    .AddAspNetCoreInstrumentation();
-            });
+                    .AddAspNetCoreInstrumentation());
 
-            services.ConfigureNonBreakingSameSiteCookies();
-            services.AddHttpContextAccessor();
+            _ = services.ConfigureNonBreakingSameSiteCookies();
+            _ = services.AddHttpContextAccessor();
             // Add framework services.
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
-            
-            services.AddDbContext<DataProtectionDbContext>(options => options.UseSqlServer(connString));
-            services.AddDataProtection()
+            _ = services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
+
+            _ = services.AddDbContext<DataProtectionDbContext>(options => options.UseSqlServer(connString));
+            _ = services.AddDataProtection()
                 .SetApplicationName("identity-server")
                 .PersistKeysToDbContext<DataProtectionDbContext>();
 
             var cacheConnection = Configuration.GetConnectionString("RedisCache");
             if (!string.IsNullOrEmpty(cacheConnection))
             {
-                services.AddStackExchangeRedisCache(options => { options.Configuration = cacheConnection; });
+                _ = services.AddStackExchangeRedisCache(options => options.Configuration = cacheConnection);
             }
 
-            services.AddAutoMapper(typeof(Startup));
-            //services.AddSingleton(Data.AutoMapper.GetMapperConfiguration());
-            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-                {
-                    options.User.RequireUniqueEmail = true;
-                })
+            _ = services.AddAutoMapper(typeof(Startup));
+            _ = services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.User.RequireUniqueEmail = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
+            _ = services.AddTransient<IEmailSender, EmailSender>();
 
-            services.AddMvc(options =>
+            _ = services.AddMvc(options =>
             {
                 options.SuppressAsyncSuffixInActionNames = false;
                 options.EnableEndpointRouting = false;
             });
 
-            services.AddIdentityServer()
+            _ = services.AddIdentityServer()
                 .AddAspNetIdentity<ApplicationUser>()
                 // this adds the config data from DB (clients, resources)
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
+                .AddConfigurationStore(options => options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
-                })
+                            sql => sql.MigrationsAssembly(migrationsAssembly)))
                 // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
@@ -128,15 +109,15 @@ namespace spydersoft.Identity
                     options.TokenCleanupInterval = 30;
                 });
 
-            services.AddAuthentication()
+            _ = services.AddAuthentication()
                 .AddGoogle(option =>
                 {
                     option.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
                     option.ClientId = Configuration.GetValue<string>("ProviderSettings:GoogleClientId");
                     option.ClientSecret = Configuration.GetValue<string>("ProviderSettings:GoogleClientSecret");
                 });
-            services.AddAuthorization();
-            services.AddHealthChecks()
+            _ = services.AddAuthorization();
+            _ = services.AddHealthChecks()
                 .AddSqlServer(connString, null, "sqlserver", null, new[] { "ready" }, null, null);
         }
 
@@ -148,46 +129,32 @@ namespace spydersoft.Identity
             var dbInitialize = new DatabaseInitializer(app);
             dbInitialize.InitializeDatabase();
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                //app.UseBrowserLink();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
-            
-            app.UseHealthChecks("/healthz", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
-            app.UseHealthChecks("/readyz", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
-            app.UseHealthChecks("/livez", new HealthCheckOptions { Predicate = _ => false });
-            app.UseCookiePolicy();
-            app.UseStaticFiles();
+            _ = env.IsDevelopment() ? app.UseDeveloperExceptionPage() : app.UseExceptionHandler("/Home/Error");
+
+            _ = app.UseHealthChecks("/healthz", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
+            _ = app.UseHealthChecks("/readyz", new HealthCheckOptions { Predicate = check => check.Tags.Contains("ready") });
+            _ = app.UseHealthChecks("/livez", new HealthCheckOptions { Predicate = _ => false });
+            _ = app.UseCookiePolicy();
+            _ = app.UseStaticFiles();
             var forwardedHeadersOptions = new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             };
             forwardedHeadersOptions.KnownNetworks.Clear();
             forwardedHeadersOptions.KnownProxies.Clear();
-            
-            app.UseForwardedHeaders(forwardedHeadersOptions);
-            app.UseOpenTelemetryPrometheusScrapingEndpoint();
-            app.UseAuthentication();
-            app.UseRouting();
-            app.UseIdentityServer();
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-            
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
+
+            _ = app.UseForwardedHeaders(forwardedHeadersOptions);
+            _ = app.UseOpenTelemetryPrometheusScrapingEndpoint();
+            _ = app.UseAuthentication();
+            _ = app.UseRouting();
+            _ = app.UseIdentityServer();
+            _ = app.UseAuthorization();
+            _ = app.UseEndpoints(endpoints => _ = endpoints.MapControllers());
+
+            _ = app.UseMvc(routes => _ = routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action}/{id?}",
-                    defaults: new { controller = "Home", action = "Index" });
-            });
+                    defaults: new { controller = "Home", action = "Index" }));
         }
 
 

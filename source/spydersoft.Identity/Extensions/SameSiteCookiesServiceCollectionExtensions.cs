@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +46,7 @@ namespace spydersoft.Identity.Extensions
         /// <returns>The modified <see cref="IServiceCollection" />.</returns>
         public static IServiceCollection ConfigureNonBreakingSameSiteCookies(this IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
+            _ = services.Configure<CookiePolicyOptions>(options =>
             {
                 options.MinimumSameSitePolicy = Unspecified;
                 options.OnAppendCookie = cookieContext =>
@@ -133,12 +134,7 @@ namespace spydersoft.Identity.Extensions
 
             var chromeVersion = GetChromeVersion(userAgent);
 
-            if (chromeVersion >= 80)
-            {
-                return true;
-            }
-
-            return false;
+            return chromeVersion >= 80;
         }
 
         private static int GetChromeVersion(string userAgent)

@@ -1,11 +1,14 @@
-﻿using AutoMapper;
-using Duende.IdentityServer.EntityFramework.DbContexts;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using spydersoft.Identity.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using AutoMapper;
+
+using Duende.IdentityServer.EntityFramework.DbContexts;
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 using spydersoft.Identity.Models.Admin;
 
 namespace spydersoft.Identity.Controllers.Admin
@@ -92,8 +95,8 @@ namespace spydersoft.Identity.Controllers.Admin
             {
                 collectionViewModel.NewItem.ParentId = id.Value;
                 AddObject(entity, collectionViewModel.NewItem);
-                ConfigDbContext.Update(entity);
-                await ConfigDbContext.SaveChangesAsync();
+                _ = ConfigDbContext.Update(entity);
+                _ = await ConfigDbContext.SaveChangesAsync();
                 return GetIndexRedirect(new { id = id.Value });
             }
 
@@ -124,8 +127,8 @@ namespace spydersoft.Identity.Controllers.Admin
 
             RemoveObject(entity, id.Value);
 
-            ConfigDbContext.Update(entity);
-            await ConfigDbContext.SaveChangesAsync();
+            _ = ConfigDbContext.Update(entity);
+            _ = await ConfigDbContext.SaveChangesAsync();
 
             return GetIndexRedirect(new { id = parentId.Value });
         }
@@ -137,16 +140,16 @@ namespace spydersoft.Identity.Controllers.Admin
         private void RemoveObject(TEntity mainEntity, int id)
         {
             List<TChildEntity> collection = GetCollection(mainEntity);
-            var prop = FindItemInCollection(collection, id);
+            TChildEntity prop = FindItemInCollection(collection, id);
             if (prop != null)
             {
-                collection.Remove(prop);
+                _ = collection.Remove(prop);
             }
         }
 
         private void AddObject(TEntity mainEntity, TChildViewModel newItem)
         {
-            var newEntity = Mapper.Map<TChildEntity>(newItem);
+            TChildEntity newEntity = Mapper.Map<TChildEntity>(newItem);
             SetAdditionalProperties(newEntity);
             GetCollection(mainEntity).Add(newEntity);
         }

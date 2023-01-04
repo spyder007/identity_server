@@ -1,11 +1,13 @@
-﻿using SendGrid.Helpers.Mail;
-using SendGrid;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using spydersoft.Identity.Options;
+﻿using System;
 using System.Text.RegularExpressions;
-using System;
+using System.Threading.Tasks;
+
+using Microsoft.Extensions.Options;
+
+using SendGrid;
+using SendGrid.Helpers.Mail;
+
+using spydersoft.Identity.Options;
 
 namespace spydersoft.Identity.Services
 {
@@ -13,7 +15,7 @@ namespace spydersoft.Identity.Services
     // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
     public class EmailSender : IEmailSender
     {
-        private SendgridOptions _options;
+        private readonly SendgridOptions _options;
 
         public EmailSender(IOptions<SendgridOptions> options)
         {
@@ -26,16 +28,16 @@ namespace spydersoft.Identity.Services
         }
 
 
-        private async void SendEmail(string email, string subject, string message)
+        private async Task SendEmail(string email, string subject, string message)
         {
             var client = new SendGridClient(_options.ApiKey);
             var from = new EmailAddress(_options.EmailFromAddress, _options.EmailFrom);
             var to = new EmailAddress(email);
             var htmlContent = message;
             var plainContent = HtmlToPlainText(message);
-            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainContent, htmlContent);
+            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainContent, htmlContent);
             msg.SetClickTracking(false, false);
-            var response = await client.SendEmailAsync(msg);
+            _ = await client.SendEmailAsync(msg);
         }
 
         private static string HtmlToPlainText(string html)

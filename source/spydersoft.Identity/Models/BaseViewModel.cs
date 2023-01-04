@@ -1,19 +1,23 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 
-public abstract class BaseViewModel
+
+namespace spydersoft.Identity.Models
 {
-    protected BaseViewModel()
+    public abstract class BaseViewModel
     {
-        // apply any DefaultValueAttribute settings to their properties
-        var propertyInfos = GetType().GetProperties();
-        foreach (var propertyInfo in propertyInfos)
+        protected BaseViewModel()
         {
-            var attributes = propertyInfo.GetCustomAttributes(typeof(DefaultValueAttribute), true);
-            if (attributes.Any())
+            // apply any DefaultValueAttribute settings to their properties
+            System.Reflection.PropertyInfo[] propertyInfos = GetType().GetProperties();
+            foreach (System.Reflection.PropertyInfo propertyInfo in propertyInfos)
             {
-                var attribute = (DefaultValueAttribute)attributes[0];
-                propertyInfo.SetValue(this, attribute.Value, null);
+                var attributes = propertyInfo.GetCustomAttributes(typeof(DefaultValueAttribute), true);
+                if (attributes.Any())
+                {
+                    var attribute = (DefaultValueAttribute)attributes[0];
+                    propertyInfo.SetValue(this, attribute.Value, null);
+                }
             }
         }
     }
