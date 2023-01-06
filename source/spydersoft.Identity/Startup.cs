@@ -41,6 +41,7 @@ namespace spydersoft.Identity
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             _ = services.Configure<SendgridOptions>(Configuration.GetSection(SendgridOptions.Name));
+            _ = services.Configure<ConsentOptions>(Configuration.GetSection(ConsentOptions.SettingsKey));
 
             _ = services.AddOpenTelemetryTracing(builder => _ = builder
                     .AddZipkinExporter(config => config.Endpoint = new System.Uri(Configuration.GetValue<string>("Zipkin:Host")))

@@ -15,9 +15,12 @@ namespace spydersoft.Identity.Models.Admin.ApiResourceViewModels
             child.Scopes = configDbContext.ApiScopes.Select(scope => scope.Name).ToList();
 
             Duende.IdentityServer.EntityFramework.Entities.ApiResource api = configDbContext.ApiResources.Include(api => api.Scopes).FirstOrDefault(api => api.Id == parent.Id);
-            foreach (Duende.IdentityServer.EntityFramework.Entities.ApiResourceScope scope in api.Scopes)
+            if (api != null)
             {
-                _ = child.Scopes.Remove(scope.Scope);
+                foreach (Duende.IdentityServer.EntityFramework.Entities.ApiResourceScope scope in api.Scopes)
+                {
+                    _ = child.Scopes.Remove(scope.Scope);
+                }
             }
 
             return child;

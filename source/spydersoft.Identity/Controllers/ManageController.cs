@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
+using spydersoft.Identity.Exceptions;
 using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.Identity;
 using spydersoft.Identity.Models.ManageViewModels;
@@ -27,7 +28,9 @@ namespace spydersoft.Identity.Controllers
         private readonly ILogger _logger;
         private readonly UrlEncoder _urlEncoder;
 
+#pragma warning disable S1075 // URIs should not be hardcoded
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+#pragma warning restore S1075 // URIs should not be hardcoded
 
         public ManageController(
           UserManager<ApplicationUser> userManager,
@@ -49,11 +52,7 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             var model = new IndexViewModel
             {
@@ -77,11 +76,7 @@ namespace spydersoft.Identity.Controllers
                 return View(model);
             }
 
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             var email = user.Email;
             if (model.Email != email)
@@ -116,11 +111,7 @@ namespace spydersoft.Identity.Controllers
                 return View(model);
             }
 
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             var userId = await _userManager.GetUserIdAsync(user);
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -137,11 +128,7 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             var hasPassword = await _userManager.HasPasswordAsync(user);
             if (!hasPassword)
@@ -162,11 +149,7 @@ namespace spydersoft.Identity.Controllers
                 return View(model);
             }
 
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             IdentityResult changePasswordResult = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
             if (!changePasswordResult.Succeeded)
@@ -185,11 +168,7 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> SetPassword()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             var hasPassword = await _userManager.HasPasswordAsync(user);
 
@@ -211,11 +190,7 @@ namespace spydersoft.Identity.Controllers
                 return View(model);
             }
 
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             IdentityResult addPasswordResult = await _userManager.AddPasswordAsync(user, model.NewPassword);
             if (!addPasswordResult.Succeeded)
@@ -233,11 +208,7 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> ExternalLogins()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             var model = new ExternalLoginsViewModel { CurrentLogins = await _userManager.GetLoginsAsync(user) };
             model.OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
@@ -265,16 +236,12 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> LinkLoginCallback()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
             if (info == null)
             {
-                throw new ApplicationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
+                throw new ObjectLoadException("externallogininfo", user.Id);
             }
 
             IdentityResult result = await _userManager.AddLoginAsync(user, info);
@@ -294,11 +261,7 @@ namespace spydersoft.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel model)
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             IdentityResult result = await _userManager.RemoveLoginAsync(user, model.LoginProvider, model.ProviderKey);
             if (!result.Succeeded)
@@ -314,11 +277,7 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> TwoFactorAuthentication()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             var model = new TwoFactorAuthenticationViewModel
             {
@@ -333,10 +292,8 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Disable2faWarning()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            return user == null
-                ? throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.")
-                : !user.TwoFactorEnabled
+            ApplicationUser user = await ValidateContextUser();
+            return !user.TwoFactorEnabled
                 ? throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.")
                 : (IActionResult)View(nameof(Disable2fa));
         }
@@ -345,11 +302,7 @@ namespace spydersoft.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Disable2fa()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             IdentityResult disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2faResult.Succeeded)
@@ -364,11 +317,7 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> EnableAuthenticator()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             var unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
             if (string.IsNullOrEmpty(unformattedKey))
@@ -395,11 +344,7 @@ namespace spydersoft.Identity.Controllers
                 return View(model);
             }
 
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             // Strip spaces and hypens
             var verificationCode = model.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
@@ -428,11 +373,7 @@ namespace spydersoft.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetAuthenticator()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             _ = await _userManager.SetTwoFactorEnabledAsync(user, false);
             _ = await _userManager.ResetAuthenticatorKeyAsync(user);
@@ -444,11 +385,7 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> GenerateRecoveryCodes()
         {
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
+            ApplicationUser user = await ValidateContextUser();
 
             if (!user.TwoFactorEnabled)
             {
@@ -473,13 +410,13 @@ namespace spydersoft.Identity.Controllers
 
 
 
-        private string FormatKey(string unformattedKey)
+        private static string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
             var currentPosition = 0;
             while (currentPosition + 4 < unformattedKey.Length)
             {
-                _ = result.Append(unformattedKey.Substring(currentPosition, 4)).Append(" ");
+                _ = result.Append(unformattedKey.AsSpan(currentPosition, 4)).Append(' ');
                 currentPosition += 4;
             }
             if (currentPosition < unformattedKey.Length)
@@ -497,6 +434,12 @@ namespace spydersoft.Identity.Controllers
                 _urlEncoder.Encode("spydersoft.Identity"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
+        }
+
+        private async Task<ApplicationUser> ValidateContextUser()
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+            return user ?? throw new ObjectLoadException("user", _userManager.GetUserId(User));
         }
 
         #endregion Helpers

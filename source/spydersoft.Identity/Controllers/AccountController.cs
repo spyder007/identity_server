@@ -153,8 +153,7 @@ namespace spydersoft.Identity.Controllers
                     }
                     else
                     {
-                        // user might have clicked on a malicious link - should be logged
-                        throw new Exception("invalid return URL");
+                        ModelState.AddModelError("ReturnUrl", "invalid return url");
                     }
                 }
 
@@ -348,7 +347,7 @@ namespace spydersoft.Identity.Controllers
         {
             if (code == null)
             {
-                throw new ApplicationException("A code must be supplied for password reset.");
+                throw new ArgumentNullException(nameof(code), "A code must be supplied for password reset.");
             }
             var model = new ResetPasswordViewModel { Code = code };
             return View(model);

@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <DockerTargetOS>Windows</DockerTargetOS>
     <UserSecretsId>d3b43c4b-2060-4431-a793-ba16056bd7c6</UserSecretsId>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>

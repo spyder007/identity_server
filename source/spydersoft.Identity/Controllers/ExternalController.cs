@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using spydersoft.Identity.Attributes;
+using spydersoft.Identity.Exceptions;
 using spydersoft.Identity.Extensions;
 using spydersoft.Identity.Models.Identity;
 
@@ -66,7 +67,7 @@ namespace spydersoft.Identity.Controllers
             if (!Url.IsLocalUrl(returnUrl) && !_interaction.IsValidReturnUrl(returnUrl))
             {
                 // user might have clicked on a malicious link - should be logged
-                throw new Exception("invalid return URL");
+                throw new ArgumentException("invalid return URL", nameof(returnUrl));
             }
 
             // start challenge and roundtrip the return URL and scheme 
@@ -232,7 +233,7 @@ namespace spydersoft.Identity.Controllers
                 IdentityResult createResult = await _userManager.CreateAsync(user);
                 if (!createResult.Succeeded)
                 {
-                    throw new Exception(createResult.Errors.First().Description);
+                    throw new IdentityResultException(createResult);
                 }
             }
 
@@ -242,7 +243,7 @@ namespace spydersoft.Identity.Controllers
                 identityResult = await _userManager.AddClaimsAsync(user, filtered);
                 if (!identityResult.Succeeded)
                 {
-                    throw new Exception(identityResult.Errors.First().Description);
+                    throw new IdentityResultException(identityResult);
                 }
             }
 

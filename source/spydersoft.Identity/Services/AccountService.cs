@@ -4,7 +4,6 @@
 using System.Threading.Tasks;
 
 using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Stores;
 
 using IdentityModel;
 
@@ -17,23 +16,17 @@ namespace spydersoft.Identity.Services
 {
     public class AccountService
     {
-        private readonly IClientStore _clientStore;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IAuthenticationHandlerProvider _authenticationHandler;
 
         public AccountService(
             IIdentityServerInteractionService interaction,
             IHttpContextAccessor httpContextAccessor,
-            IAuthenticationSchemeProvider schemeProvider,
-            IClientStore clientStore,
             IAuthenticationHandlerProvider authenticationHandler)
         {
             _interaction = interaction;
             _httpContextAccessor = httpContextAccessor;
-            _schemeProvider = schemeProvider;
-            _clientStore = clientStore;
             _authenticationHandler = authenticationHandler;
         }
 

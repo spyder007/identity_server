@@ -32,6 +32,27 @@ namespace spydersoft.Identity.Controllers.Admin.Client
         }
 
         [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id.HasValue)
+            {
+                Duende.IdentityServer.EntityFramework.Entities.Client client = ConfigDbContext.Clients.FirstOrDefault(c => c.Id == id.Value);
+                if (client == null)
+                {
+                    return GetErrorAction("Could not load client");
+                }
+
+                _ = ConfigDbContext.Clients.Remove(client);
+                _ = await ConfigDbContext.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        #endregion Client List Actions
+
+        #region Main Tab
+        [HttpGet]
         public IActionResult Edit(int? id)
         {
             ClientViewModel clientModel;
@@ -55,28 +76,6 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
             return View(clientModel);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id.HasValue)
-            {
-                Duende.IdentityServer.EntityFramework.Entities.Client client = ConfigDbContext.Clients.FirstOrDefault(c => c.Id == id.Value);
-                if (client == null)
-                {
-                    return GetErrorAction("Could not load client");
-                }
-
-                _ = ConfigDbContext.Clients.Remove(client);
-                _ = await ConfigDbContext.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        #endregion Client List Actions
-
-        #region Main Tab
 
         [HttpPost]
         public async Task<IActionResult> Edit(int? id, ClientViewModel client)

@@ -10,39 +10,37 @@ using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Stores;
 using Duende.IdentityServer.Validation;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 using spydersoft.Identity.Models.Consent;
+using spydersoft.Identity.Options;
 
 namespace spydersoft.Identity.Services
 {
     public class ConsentService
     {
-        private readonly IClientStore _clientStore;
-        private readonly IResourceStore _resourceStore;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly ILogger _logger;
         private readonly IEventService _events;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly ConsentOptions _consentOptions;
 
         public ConsentService(
             IIdentityServerInteractionService interaction,
-            IClientStore clientStore,
-            IResourceStore resourceStore,
             IEventService events,
             ILogger logger,
-            IHttpContextAccessor contextAccessor)
+            IHttpContextAccessor contextAccessor,
+            IOptions<ConsentOptions> consentOptions)
         {
             _interaction = interaction;
-            _clientStore = clientStore;
-            _resourceStore = resourceStore;
             _events = events;
             _logger = logger;
             _contextAccessor = contextAccessor;
+            _consentOptions = consentOptions.Value;
         }
 
         public async Task<ProcessConsentResult> ProcessConsent(ConsentInputModel model)
@@ -79,7 +77,7 @@ namespace spydersoft.Identity.Services
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())
                 {
                     IEnumerable<string> scopes = model.ScopesConsented;
-                    if (!ConsentOptions.EnableOfflineAccess)
+                    if (!_consentOptions.EnableOfflineAccess)
                     {
                         scopes = scopes.Where(x => x != Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess);
                     }
@@ -96,12 +94,12 @@ namespace spydersoft.Identity.Services
                 }
                 else
                 {
-                    result.ValidationError = ConsentOptions.MustChooseOneErrorMessage;
+                    result.ValidationError = _consentOptions.MustChooseOneErrorMessage;
                 }
             }
             else
             {
-                result.ValidationError = ConsentOptions.InvalidSelectionErrorMessage;
+                result.ValidationError = _consentOptions.InvalidSelectionErrorMessage;
             }
 
             if (grantedConsent != null)
@@ -131,7 +129,7 @@ namespace spydersoft.Identity.Services
             }
             else
             {
-                _logger.LogError("No consent request matching request: {0}", returnUrl);
+                _logger.LogError("No consent request matching request: {returnUrl}", returnUrl);
             }
 
             return null;
@@ -167,7 +165,7 @@ namespace spydersoft.Identity.Services
                     apiScopes.Add(scopeVm);
                 }
             }
-            if (ConsentOptions.EnableOfflineAccess && request.ValidatedResources.Resources.OfflineAccess)
+            if (_consentOptions.EnableOfflineAccess && request.ValidatedResources.Resources.OfflineAccess)
             {
                 apiScopes.Add(GetOfflineAccessScope(vm.ScopesConsented.Contains(Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess) || model == null));
             }
@@ -176,7 +174,7 @@ namespace spydersoft.Identity.Services
             return vm;
         }
 
-        private ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
+        private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
         {
             return new ScopeViewModel
             {
@@ -212,8 +210,8 @@ namespace spydersoft.Identity.Services
         {
             return new ScopeViewModel
             {
-                DisplayName = ConsentOptions.OfflineAccessDisplayName,
-                Description = ConsentOptions.OfflineAccessDescription,
+                DisplayName = _consentOptions.OfflineAccessDisplayName,
+                Description = _consentOptions.OfflineAccessDescription,
                 Emphasize = true,
                 Checked = check
             };

@@ -58,31 +58,6 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             return list;
         }
 
-        [HttpGet]
-        public IActionResult Edit(int? id)
-        {
-            IdentityResourceViewModel identityResourceViewModel;
-            if (!id.HasValue)
-            {
-                identityResourceViewModel = new IdentityResourceViewModel();
-                ViewData["Title"] = "New Identity Resource";
-            }
-            else
-            {
-                Duende.IdentityServer.EntityFramework.Entities.IdentityResource identityResource = ConfigDbContext.IdentityResources.FirstOrDefault(ir => ir.Id == id.Value);
-                if (identityResource == null)
-                {
-                    return GetErrorAction("Could not load identity resource");
-                }
-
-                identityResourceViewModel = new IdentityResourceViewModel(id.Value);
-                _ = Mapper.Map(identityResource, identityResourceViewModel);
-                identityResourceViewModel.Id = id.Value;
-                ViewData["Title"] = $"Edit {identityResourceViewModel.NavBar.Name}";
-            }
-
-            return View(identityResourceViewModel);
-        }
 
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
@@ -119,6 +94,32 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             return RedirectToAction(nameof(Index));
         }
 
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            IdentityResourceViewModel identityResourceViewModel;
+            if (!id.HasValue)
+            {
+                identityResourceViewModel = new IdentityResourceViewModel();
+                ViewData["Title"] = "New Identity Resource";
+            }
+            else
+            {
+                Duende.IdentityServer.EntityFramework.Entities.IdentityResource identityResource = ConfigDbContext.IdentityResources.FirstOrDefault(ir => ir.Id == id.Value);
+                if (identityResource == null)
+                {
+                    return GetErrorAction("Could not load identity resource");
+                }
+
+                identityResourceViewModel = new IdentityResourceViewModel(id.Value);
+                _ = Mapper.Map(identityResource, identityResourceViewModel);
+                identityResourceViewModel.Id = id.Value;
+                ViewData["Title"] = $"Edit {identityResourceViewModel.NavBar.Name}";
+            }
+
+            return View(identityResourceViewModel);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Edit(int? id, IdentityResourceViewModel identityResource)

@@ -22,6 +22,7 @@ using Microsoft.Extensions.Options;
 using spydersoft.Identity.Attributes;
 using spydersoft.Identity.Models.Consent;
 using spydersoft.Identity.Models.Device;
+using spydersoft.Identity.Options;
 
 namespace spydersoft.Identity.Controllers
 {
@@ -33,17 +34,20 @@ namespace spydersoft.Identity.Controllers
         private readonly IEventService _events;
         private readonly IOptions<IdentityServerOptions> _options;
         private readonly ILogger<DeviceController> _logger;
+        private readonly ConsentOptions _consentOptions;
 
         public DeviceController(
             IDeviceFlowInteractionService interaction,
             IEventService eventService,
             IOptions<IdentityServerOptions> options,
-            ILogger<DeviceController> logger)
+            ILogger<DeviceController> logger,
+            IOptions<ConsentOptions> consentOptions)
         {
             _interaction = interaction;
             _events = eventService;
             _options = options;
             _logger = logger;
+            _consentOptions = consentOptions.Value;
         }
 
         [HttpGet]
@@ -114,7 +118,7 @@ namespace spydersoft.Identity.Controllers
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())
                 {
                     IEnumerable<string> scopes = model.ScopesConsented;
-                    if (!ConsentOptions.EnableOfflineAccess)
+                    if (!_consentOptions.EnableOfflineAccess)
                     {
                         scopes = scopes.Where(x => x != Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess);
                     }
@@ -131,12 +135,12 @@ namespace spydersoft.Identity.Controllers
                 }
                 else
                 {
-                    result.ValidationError = ConsentOptions.MustChooseOneErrorMessage;
+                    result.ValidationError = _consentOptions.MustChooseOneErrorMessage;
                 }
             }
             else
             {
-                result.ValidationError = ConsentOptions.InvalidSelectionErrorMessage;
+                result.ValidationError = _consentOptions.InvalidSelectionErrorMessage;
             }
 
             if (grantedConsent != null)
@@ -191,7 +195,7 @@ namespace spydersoft.Identity.Controllers
                     apiScopes.Add(scopeVm);
                 }
             }
-            if (ConsentOptions.EnableOfflineAccess && request.ValidatedResources.Resources.OfflineAccess)
+            if (_consentOptions.EnableOfflineAccess && request.ValidatedResources.Resources.OfflineAccess)
             {
                 apiScopes.Add(GetOfflineAccessScope(vm.ScopesConsented.Contains(Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess) || model == null));
             }
@@ -230,8 +234,8 @@ namespace spydersoft.Identity.Controllers
             return new ScopeViewModel
             {
                 Value = Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess,
-                DisplayName = ConsentOptions.OfflineAccessDisplayName,
-                Description = ConsentOptions.OfflineAccessDescription,
+                DisplayName = _consentOptions.OfflineAccessDisplayName,
+                Description = _consentOptions.OfflineAccessDescription,
                 Emphasize = true,
                 Checked = check
             };

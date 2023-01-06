@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -17,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using spydersoft.Identity.Exceptions;
 using spydersoft.Identity.Models.Identity;
 
 namespace spydersoft.Identity.Data
@@ -151,7 +151,7 @@ namespace spydersoft.Identity.Data
                 IdentityResult result = userMgr.CreateAsync(adminUser, "Ch@ng3m3").Result;
                 if (!result.Succeeded)
                 {
-                    throw new Exception(result.Errors.First().Description);
+                    throw new IdentityResultException(result);
                 }
 
                 adminUser = userMgr.FindByNameAsync("admin").Result;
@@ -167,13 +167,13 @@ namespace spydersoft.Identity.Data
                             }).Result;
                 if (!result.Succeeded)
                 {
-                    throw new Exception(result.Errors.First().Description);
+                    throw new IdentityResultException(result);
                 }
 
                 result = userMgr.AddToRoleAsync(adminUser, "admin").Result;
                 if (!result.Succeeded)
                 {
-                    throw new Exception(result.Errors.First().Description);
+                    throw new IdentityResultException(result);
                 }
 
                 _log.LogInformation("admin created");

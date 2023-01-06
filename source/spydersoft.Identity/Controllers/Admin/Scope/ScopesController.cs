@@ -32,6 +32,27 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
         }
 
         [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id.HasValue)
+            {
+                Duende.IdentityServer.EntityFramework.Entities.ApiScope apiScope = ConfigDbContext.ApiScopes.FirstOrDefault(c => c.Id == id.Value);
+                if (apiScope == null)
+                {
+                    return GetErrorAction("Could not load scope");
+                }
+
+                _ = ConfigDbContext.ApiScopes.Remove(apiScope);
+                _ = await ConfigDbContext.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        #endregion Client List Actions
+
+        #region Main Tab
+        [HttpGet]
         public IActionResult Edit(int? id)
         {
             ScopeViewModel scopeViewModel;
@@ -55,28 +76,6 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
 
             return View(scopeViewModel);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id.HasValue)
-            {
-                Duende.IdentityServer.EntityFramework.Entities.ApiScope apiScope = ConfigDbContext.ApiScopes.FirstOrDefault(c => c.Id == id.Value);
-                if (apiScope == null)
-                {
-                    return GetErrorAction("Could not load scope");
-                }
-
-                _ = ConfigDbContext.ApiScopes.Remove(apiScope);
-                _ = await ConfigDbContext.SaveChangesAsync();
-            }
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        #endregion Client List Actions
-
-        #region Main Tab
 
         [HttpPost]
         public async Task<IActionResult> Edit(int? id, ScopeViewModel client)

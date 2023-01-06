@@ -24,6 +24,7 @@ pr: none
 extends:
   template: stages/stages-build-docker-update-helm/v1.yml@templates
   parameters:
+    buildProject: source/spydersoft.Identity.sln
     publishProject: source/spydersoft.Identity/spydersoft.Identity.csproj
     artifactName: identityServer
     artifactZipName: spydersoft.Identity
@@ -33,6 +34,7 @@ extends:
     helmfileRepoName: helmfileconfig
     sonar_endpoint_name: sonarqube
     sonar_project_key: identity_identity_AYV-QkChmblgg6j_jAeV
+    sonar_project_name: identity_server
     execute_sonar: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
     execute_tests: true
     prebuildSteps:
@@ -49,3 +51,6 @@ extends:
         inputs:
           script: 'gulp build:dist'
           workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
+    preTestSteps:
+      - pwsh:
+          Copy-Item $(Build.SourcesDirectory)/source/spydersoft.identity.tests/bin/Release/net6.0/refs/Microsoft.AspNetCore.Http.Features.dll $(Build.SourcesDirectory)/source/spydersoft.identity.tests/bin/Release/net6.0
