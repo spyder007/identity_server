@@ -84,7 +84,7 @@ namespace spydersoft.Identity.Controllers
                 IdentityResult setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
                 if (!setEmailResult.Succeeded)
                 {
-                    throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
+                    throw new IdentityResultException(setEmailResult);
                 }
             }
 
@@ -94,7 +94,7 @@ namespace spydersoft.Identity.Controllers
                 IdentityResult setPhoneResult = await _userManager.SetPhoneNumberAsync(user, model.PhoneNumber);
                 if (!setPhoneResult.Succeeded)
                 {
-                    throw new ApplicationException($"Unexpected error occurred setting phone number for user with ID '{user.Id}'.");
+                    throw new IdentityResultException(setPhoneResult);
                 }
             }
 
@@ -247,7 +247,7 @@ namespace spydersoft.Identity.Controllers
             IdentityResult result = await _userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {
-                throw new ApplicationException($"Unexpected error occurred adding external login for user with ID '{user.Id}'.");
+                throw new IdentityResultException(result);
             }
 
             // Clear the existing external cookie to ensure a clean login process
@@ -266,7 +266,7 @@ namespace spydersoft.Identity.Controllers
             IdentityResult result = await _userManager.RemoveLoginAsync(user, model.LoginProvider, model.ProviderKey);
             if (!result.Succeeded)
             {
-                throw new ApplicationException($"Unexpected error occurred removing external login for user with ID '{user.Id}'.");
+                throw new IdentityResultException(result);
             }
 
             await _signInManager.SignInAsync(user, isPersistent: false);
@@ -307,7 +307,7 @@ namespace spydersoft.Identity.Controllers
             IdentityResult disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
             if (!disable2faResult.Succeeded)
             {
-                throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.");
+                throw new IdentityResultException(disable2faResult);
             }
 
             _logger.LogInformation("User with ID {UserId} has disabled 2fa.", user.Id);
@@ -389,7 +389,7 @@ namespace spydersoft.Identity.Controllers
 
             if (!user.TwoFactorEnabled)
             {
-                throw new ApplicationException($"Cannot generate recovery codes for user with ID '{user.Id}' as they do not have 2FA enabled.");
+                return BadRequest("Multifactor Authentication Unavailable.");
             }
 
             System.Collections.Generic.IEnumerable<string> recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);

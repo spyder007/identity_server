@@ -1,11 +1,11 @@
 ﻿/// <binding AfterBuild='build:dist' />
 'use strict';
 
-var gulp = require('gulp');
-var sass = require('gulp-sass')(require('sass'));
-var autoprefixer = require('gulp-autoprefixer');
-var cleanCSS = require('gulp-clean-css');
-var rename = require('gulp-rename');
+const gulp = require('gulp');
+const sass = require('gulp-sass')(require('sass'));
+const autoprefixer = require('gulp-autoprefixer');
+const cleanCSS = require('gulp-clean-css');
+const rename = require('gulp-rename');
 
 gulp.paths = {
     dist: 'wwwroot/',
@@ -105,14 +105,22 @@ gulp.libsToCopy = [
                 dest: "{libDest}{libName}"
             }
         ]
-    }
+    },
+    {
+        lib: "moment",
+        jobs: [
+            {
+                src: "/min/*",
+                dest: "{libDest}{libName}"
+            }
+        ]
+    },
 ];
 
 
 var paths = gulp.paths;
 
 gulp.pkg = require('./package.json');
-var pkg = gulp.pkg;
 
 gulp.task('sass', function () {
     return gulp.src(paths.styles + '/scss/style.scss')
@@ -157,8 +165,6 @@ function copyLibrary(libName, src, dest) {
     gulp.src(fullSource)
         .pipe(gulp.dest(fullDest));
 }
-
-
 
 gulp.task('build:dist', gulp.series('sass', 'copy:assets', "copy:libraries"));
 

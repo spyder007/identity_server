@@ -240,9 +240,6 @@ h6,
 .text-regular {
   font-weight: 400; }
 
-.text-light {
-  font-weight: 300; }
-
 .text-sm {
   font-size: 14px;
   line-height: 22px; }
@@ -587,19 +584,6 @@ h6,
   width: 100%; }
   .danger-alert .alert .alert-heading {
     color: #d50100;
-    margin-bottom: 15px; }
-
-/* Alert warning */
-.warning-alert .left {
-  background: #f7c800; }
-
-.warning-alert .alert {
-  color: #f7c800;
-  border: 1px solid #f7c800;
-  background: rgba(247, 200, 0, 0.2);
-  width: 100%; }
-  .warning-alert .alert .alert-heading {
-    color: #f7c800;
     margin-bottom: 15px; }
 
 /* Alert warning */
@@ -1747,38 +1731,6 @@ h6,
         width: auto; } }
 
 /* ============ signup css ============= */
-.auth-row {
-  background: #fff;
-  border-radius: 4px;
-  overflow: hidden; }
-
-.auth-cover-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 45px;
-  position: relative;
-  z-index: 1;
-  height: 100%; }
-  @media (max-width: 767px) {
-    .auth-cover-wrapper {
-      padding: 30px 20px; } }
-  .auth-cover-wrapper .auth-cover .title {
-    text-align: cover;
-    margin-bottom: 40px; }
-    @media (max-width: 767px) {
-      .auth-cover-wrapper .auth-cover .title h1 {
-        font-size: 24px; } }
-  .auth-cover-wrapper .auth-cover .cover-image {
-    max-width: 100%;
-    margin: auto; }
-    .auth-cover-wrapper .auth-cover .cover-image img {
-      width: 100%; }
-  .auth-cover-wrapper .auth-cover .shape-image {
-    position: absolute;
-    z-index: -1;
-    right: 0;
-    bottom: 5%; }
 
 .signup-wrapper {
   background: #fff;
@@ -3667,9 +3619,6 @@ h6,
 .deactive-bg {
   background-color: #cbe1ff; }
 
-.deactive-bg {
-  background-color: #cbe1ff; }
-
 .gray-bg {
   background-color: #5d657b; }
 
@@ -3705,13 +3654,12 @@ h6,
   color: #262d3f !important; }
 
 .text-light {
-  color: #efefef !important; }
+    color: #efefef !important;
+    font-weight: 300;
+}
 
 .text-active {
   color: #2f80ed !important; }
-
-.text-deactive {
-  color: #cbe1ff !important; }
 
 .text-deactive {
   color: #cbe1ff !important; }

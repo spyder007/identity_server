@@ -94,23 +94,6 @@
   }
 }
 
-/* Alert warning */
-.warning-alert {
-  .left {
-    background: $warning;
-  }
-  .alert {
-    color: $warning;
-    border: 1px solid $warning;
-    background: rgba($warning, 0.2);
-    width: 100%;
-
-    .alert-heading {
-      color: $warning;
-      margin-bottom: 15px;
-    }
-  }
-}
 /* Alert info */
 .info-alert {
   .left {

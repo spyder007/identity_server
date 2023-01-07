@@ -181,7 +181,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             return typeToAdd?.ToEntity();
         }
 
-        private List<IdentityResource> GetStandardTypes()
+        private static List<IdentityResource> GetStandardTypes()
         {
             return new List<IdentityResource>()
             {

@@ -26,5 +26,21 @@ namespace spydersoft.identity.tests
                 Assert.That(options, Has.Property("EmailFromAddress").TypeOf<string>());
             });
         }
+
+        [Test]
+        public void ConsentOptionsPropertyTest()
+        {
+            // All properties in ConsentOptions should have a default value, if they do not, this test will fail.
+            var options = new ConsentOptions();
+            Assert.Multiple(() =>
+            {
+                Assert.That(options, Is.Not.Null);
+                Assert.That(options, Has.Property("EnableOfflineAccess").TypeOf<bool>());
+                Assert.That(options, Has.Property("OfflineAccessDisplayName").TypeOf<string>());
+                Assert.That(options, Has.Property("OfflineAccessDescription").TypeOf<string>());
+                Assert.That(options, Has.Property("MustChooseOneErrorMessage").TypeOf<string>());
+                Assert.That(options, Has.Property("InvalidSelectionErrorMessage").TypeOf<string>());
+            });
+        }
     }
 }

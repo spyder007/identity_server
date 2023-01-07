@@ -47,32 +47,26 @@ namespace spydersoft.Identity.Data
             Task persistedGrantTask =
                 DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>(), "ASP Net Grants Database");
 
-            Task.WaitAll(persistedGrantTask);
-
             Task appDbTask =
                 DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>(), "ASP Net User Database ");
 
-            Task.WaitAll(appDbTask);
-
             Task configTask =
                 DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>(), "Identity Server 4 Configuration Database");
-
-            Task.WaitAll(configTask);
 
             Task dataProtectTask =
                 DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<DataProtectionDbContext>(),
                     "Data Protection Database");
 
-            Task.WaitAll(dataProtectTask);
+            Task.WaitAll(dataProtectTask, persistedGrantTask, appDbTask, configTask);
         }
 
         private async Task DoMigrationIfNeeded(DbContext context, string databaseName)
         {
-            _log.LogDebug("Checking {0} for pending migrations.", databaseName);
+            _log.LogDebug("Checking {database} for pending migrations.", databaseName);
             var hasMigrations = (await context.Database.GetPendingMigrationsAsync()).Any();
             if (hasMigrations)
             {
-                _log.LogInformation("Migrating {0}.", databaseName);
+                _log.LogInformation("Migrating {database}.", databaseName);
                 await context.Database.MigrateAsync();
             }
         }
@@ -135,7 +129,7 @@ namespace spydersoft.Identity.Data
 
                 if (!result.Succeeded)
                 {
-                    _log.LogError("Unable to create admin role : {0}", result.ToString());
+                    _log.LogError("Unable to create admin role : {error}", result.ToString());
                 }
             }
 
@@ -192,7 +186,7 @@ namespace spydersoft.Identity.Data
 
         #region Identity Server Configuration Object Creators
 
-        private IEnumerable<IdentityResource> GetIdentityResources()
+        private static IEnumerable<IdentityResource> GetIdentityResources()
         {
             return new List<IdentityResource>
             {
@@ -201,21 +195,21 @@ namespace spydersoft.Identity.Data
             };
         }
 
-        private IEnumerable<ApiResource> GetApiResources()
+        private static IEnumerable<ApiResource> GetApiResources()
         {
             return new List<ApiResource>
             {
-                new ApiResource("api", "My API")
+                new ("api", "My API")
             };
         }
 
         // clients want to access resources (aka scopes)
-        private IEnumerable<Client> GetClients()
+        private static IEnumerable<Client> GetClients()
         {
             // client credentials client
             return new List<Client>
             {
-                new Client
+                new ()
                 {
                     ClientId = "client",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
@@ -228,7 +222,7 @@ namespace spydersoft.Identity.Data
                 },
 
                 // resource owner password grant client
-                new Client
+                new ()
                 {
                     ClientId = "ro.client",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
@@ -241,7 +235,7 @@ namespace spydersoft.Identity.Data
                 },
 
                 // OpenID Connect hybrid flow and client credentials client (MVC)
-                new Client
+                new ()
                 {
                     ClientId = "mvc",
                     ClientName = "MVC Client",

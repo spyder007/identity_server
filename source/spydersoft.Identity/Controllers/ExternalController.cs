@@ -32,7 +32,6 @@ namespace spydersoft.Identity.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
         private readonly IEventService _events;
         private readonly ILogger<ExternalController> _logger;
 
@@ -40,14 +39,12 @@ namespace spydersoft.Identity.Controllers
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IIdentityServerInteractionService interaction,
-            IClientStore clientStore,
             IEventService events,
             ILogger<ExternalController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _interaction = interaction;
-            _clientStore = clientStore;
             _events = events;
             _logger = logger;
         }
@@ -95,7 +92,7 @@ namespace spydersoft.Identity.Controllers
             AuthenticateResult result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
             if (result?.Succeeded != true)
             {
-                throw new Exception("External authentication error");
+                return BadRequest("Cookie Authentication Failed.");
             }
 
             if (_logger.IsEnabled(LogLevel.Debug))

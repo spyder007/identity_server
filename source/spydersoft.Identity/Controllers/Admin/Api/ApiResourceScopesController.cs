@@ -41,15 +41,5 @@ namespace spydersoft.Identity.Controllers.Admin.Api
         }
 
         #endregion BaseApiCollectionController Implementation
-
-
-        private ApiResourceScope GetScope(int? apiId, int? id)
-        {
-            ApiResource apiResource = ConfigDbContext.ApiResources.Include(a => a.Scopes).FirstOrDefault(c => c.Id == apiId.Value);
-
-            ApiResourceScope apiScope = apiResource?.Scopes.FirstOrDefault(s => s.Id == id.Value);
-
-            return apiScope;
-        }
     }
 }

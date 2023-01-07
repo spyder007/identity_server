@@ -33,30 +33,18 @@ namespace spydersoft.Identity.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IClientStore _clientStore;
-        private readonly IAuthenticationSchemeProvider _schemeProvider;
-        private readonly IEventService _events;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<RegisterController> _logger;
-
-        [TempData]
-        public string ErrorMessage { get; set; }
 
         public RegisterController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IClientStore clientStore,
-            IAuthenticationSchemeProvider schemeProvider,
-            IEventService events,
             ILogger<RegisterController> logger,
             IMapper mapper,
             IEmailSender emailSender) : base(mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _clientStore = clientStore;
-            _schemeProvider = schemeProvider;
-            _events = events;
             _logger = logger;
             _emailSender = emailSender;
         }

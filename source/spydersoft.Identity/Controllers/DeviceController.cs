@@ -53,6 +53,7 @@ namespace spydersoft.Identity.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            _logger.LogInformation("Processing Device Verification Code");
             var userCodeParamName = _options.Value.UserInteraction.DeviceVerificationUserCodeParameter;
             string userCode = Request.Query[userCodeParamName];
             if (string.IsNullOrWhiteSpace(userCode))
@@ -84,7 +85,7 @@ namespace spydersoft.Identity.Controllers
         {
             if (model == null)
             {
-                throw new ArgumentNullException(nameof(model));
+                return BadRequest();
             }
 
             ProcessConsentResult result = await ProcessConsent(model);
@@ -204,7 +205,7 @@ namespace spydersoft.Identity.Controllers
             return vm;
         }
 
-        private ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
+        private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
         {
             return new ScopeViewModel
             {
@@ -217,7 +218,7 @@ namespace spydersoft.Identity.Controllers
             };
         }
 
-        public ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
+        public static ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
         {
             return new ScopeViewModel
             {
