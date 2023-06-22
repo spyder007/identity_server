@@ -39,9 +39,9 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="GravatarHelper.AspNetCore" Version="1.1.0" />
-    <PackageReference Include="Duende.IdentityServer" Version="6.2.0" />
-    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="6.2.0" />
-    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="6.2.0" />
+    <PackageReference Include="Duende.IdentityServer" Version="6.3.2" />
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="6.3.2" />
+    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="6.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="6.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="6.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="6.0.12" />
@@ -49,7 +49,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.12" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.10">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.12">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
