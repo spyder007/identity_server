@@ -284,9 +284,8 @@ namespace spydersoft.Identity.Controllers
         public async Task<IActionResult> LoginWith2fa(bool rememberMe, string returnUrl = null)
         {
             // Ensure the user has gone through the username & password screen first
-            ApplicationUser user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 
-            if (user == null)
+            if (await _signInManager.GetTwoFactorAuthenticationUserAsync() == null)
             {
                 throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             }
@@ -310,12 +309,7 @@ namespace spydersoft.Identity.Controllers
 
             var returnUrl = model.ReturnUrl ?? Url.Content("~/");
 
-            ApplicationUser user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
-            {
-                throw new InvalidOperationException($"Unable to load two-factor authentication user.");
-            }
-
+            ApplicationUser user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
             Microsoft.AspNetCore.Identity.SignInResult result =
@@ -408,9 +402,7 @@ namespace spydersoft.Identity.Controllers
             return View(model);
         }
 
-        /*****************************************/
         /* helper APIs for the AccountController */
-        /*****************************************/
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
         {
             AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(returnUrl);

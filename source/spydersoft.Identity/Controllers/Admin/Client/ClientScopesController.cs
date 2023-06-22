@@ -37,7 +37,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override ClientScope FindItemInCollection(List<ClientScope> collection, int id)
         {
-            return collection.FirstOrDefault(s => s.Id == id);
+            return collection.Find(s => s.Id == id);
         }
 
         protected override List<ClientScope> GetCollection(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)

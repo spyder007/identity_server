@@ -238,12 +238,7 @@ namespace spydersoft.Identity.Controllers
         {
             ApplicationUser user = await ValidateContextUser();
 
-            ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync(user.Id);
-            if (info == null)
-            {
-                throw new ObjectLoadException("externallogininfo", user.Id);
-            }
-
+            ExternalLoginInfo info = await _signInManager.GetExternalLoginInfoAsync(user.Id) ?? throw new ObjectLoadException("externallogininfo", user.Id);
             IdentityResult result = await _userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
             {

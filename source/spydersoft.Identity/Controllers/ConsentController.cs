@@ -91,9 +91,7 @@ namespace spydersoft.Identity.Controllers
             return result.ShowView ? View("Index", result.ViewModel) : (IActionResult)View("Error");
         }
 
-        /*****************************************/
         /* helper APIs for the ConsentController */
-        /*****************************************/
         private async Task<ProcessConsentResult> ProcessConsent(ConsentInputModel model)
         {
             var result = new ProcessConsentResult();
