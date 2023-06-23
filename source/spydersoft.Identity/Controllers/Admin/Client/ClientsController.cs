@@ -7,9 +7,9 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 using Microsoft.AspNetCore.Mvc;
 
-using spydersoft.Identity.Models.Admin.ClientViewModels;
+using Spydersoft.Identity.Models.Admin.ClientViewModels;
 
-namespace spydersoft.Identity.Controllers.Admin.Client
+namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientsController : BaseAdminController
     {

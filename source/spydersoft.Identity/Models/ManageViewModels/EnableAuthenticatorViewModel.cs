@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace spydersoft.Identity.Models.ManageViewModels
+namespace Spydersoft.Identity.Models.ManageViewModels
 {
     public class EnableAuthenticatorViewModel
     {

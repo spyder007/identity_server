@@ -11,13 +11,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
-using spydersoft.Identity.Exceptions;
-using spydersoft.Identity.Extensions;
-using spydersoft.Identity.Models.Identity;
-using spydersoft.Identity.Models.ManageViewModels;
-using spydersoft.Identity.Services;
+using Spydersoft.Identity.Exceptions;
+using Spydersoft.Identity.Extensions;
+using Spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Models.ManageViewModels;
+using Spydersoft.Identity.Services;
 
-namespace spydersoft.Identity.Controllers
+namespace Spydersoft.Identity.Controllers
 {
     [Authorize]
     public class ManageController : Controller
@@ -426,7 +426,7 @@ namespace spydersoft.Identity.Controllers
         {
             return string.Format(
                 AuthenicatorUriFormat,
-                _urlEncoder.Encode("spydersoft.Identity"),
+                _urlEncoder.Encode("Spydersoft.Identity"),
                 _urlEncoder.Encode(email),
                 unformattedKey);
         }

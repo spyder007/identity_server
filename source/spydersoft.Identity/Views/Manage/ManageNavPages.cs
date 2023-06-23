@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
-namespace spydersoft.Identity.Views.Manage
+namespace Spydersoft.Identity.Views.Manage
 {
     public static class ManageNavPages
     {

@@ -1,4 +1,4 @@
-﻿namespace spydersoft.Identity.Models.AccountViewModels
+﻿namespace Spydersoft.Identity.Models.AccountViewModels
 {
     public class RedirectViewModel
     {

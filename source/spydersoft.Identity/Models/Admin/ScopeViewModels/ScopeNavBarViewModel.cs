@@ -1,4 +1,4 @@
-﻿namespace spydersoft.Identity.Models.Admin.ScopeViewModels
+﻿namespace Spydersoft.Identity.Models.Admin.ScopeViewModels
 {
     public class ScopeNavBarViewModel : BaseAdminNavBar<ScopeViewModel>
     {

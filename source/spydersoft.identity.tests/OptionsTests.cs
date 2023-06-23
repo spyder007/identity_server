@@ -1,6 +1,6 @@
-using spydersoft.Identity.Options;
+using Spydersoft.Identity.Options;
 
-namespace spydersoft.identity.tests
+namespace Spydersoft.Identity.tests
 {
     public class Tests
     {

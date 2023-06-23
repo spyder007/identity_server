@@ -5,11 +5,11 @@ using AutoMapper;
 using Duende.IdentityServer.EntityFramework.Entities;
 using Duende.IdentityServer.Models;
 
-using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
-using spydersoft.Identity.Models.Admin.ClientViewModels;
-using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
-using spydersoft.Identity.Models.Admin.ScopeViewModels;
-using spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Models.Admin.ApiResourceViewModels;
+using Spydersoft.Identity.Models.Admin.ClientViewModels;
+using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
+using Spydersoft.Identity.Models.Admin.ScopeViewModels;
+using Spydersoft.Identity.Models.Identity;
 
 using ApiResource = Duende.IdentityServer.EntityFramework.Entities.ApiResource;
 using ApiScope = Duende.IdentityServer.EntityFramework.Entities.ApiScope;
@@ -17,7 +17,7 @@ using Client = Duende.IdentityServer.EntityFramework.Entities.Client;
 using ClientClaim = Duende.IdentityServer.EntityFramework.Entities.ClientClaim;
 using IdentityResource = Duende.IdentityServer.EntityFramework.Entities.IdentityResource;
 
-namespace spydersoft.Identity.Data
+namespace Spydersoft.Identity.Data
 {
     public class AutoMapper : Profile
     {

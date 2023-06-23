@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace spydersoft.Identity.Models.Identity
+namespace Spydersoft.Identity.Models.Identity
 {
     public class ApplicationRolesViewModel
     {

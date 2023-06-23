@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace spydersoft.Identity.Models.Admin.ApiResourceViewModels
+namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
     public class ApiResourcesViewModel
     {

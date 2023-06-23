@@ -1,4 +1,4 @@
-﻿namespace spydersoft.Identity.Models.Admin
+﻿namespace Spydersoft.Identity.Models.Admin
 {
     public class BaseAdminChildItemViewModel : BaseAdminViewModel
     {

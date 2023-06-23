@@ -11,9 +11,9 @@ using Duende.IdentityServer.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
-using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
+using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
-namespace spydersoft.Identity.Controllers.Admin.Identity
+namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
     public class IdentityResourcesController : BaseAdminController
     {

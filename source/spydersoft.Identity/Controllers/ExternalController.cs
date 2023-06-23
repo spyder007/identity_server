@@ -18,12 +18,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using spydersoft.Identity.Attributes;
-using spydersoft.Identity.Exceptions;
-using spydersoft.Identity.Extensions;
-using spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Attributes;
+using Spydersoft.Identity.Exceptions;
+using Spydersoft.Identity.Extensions;
+using Spydersoft.Identity.Models.Identity;
 
-namespace spydersoft.Identity.Controllers
+namespace Spydersoft.Identity.Controllers
 {
     [SecurityHeaders]
     [AllowAnonymous]

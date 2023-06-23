@@ -1,4 +1,4 @@
-﻿namespace spydersoft.Identity.Models.ManageViewModels
+﻿namespace Spydersoft.Identity.Models.ManageViewModels
 {
     public class RemoveLoginViewModel
     {

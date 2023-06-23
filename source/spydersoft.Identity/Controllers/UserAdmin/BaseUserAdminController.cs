@@ -2,9 +2,9 @@
 
 using Microsoft.AspNetCore.Identity;
 
-using spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Models.Identity;
 
-namespace spydersoft.Identity.Controllers.UserAdmin
+namespace Spydersoft.Identity.Controllers.UserAdmin
 {
     public class BaseUserAdminController : BaseController
     {

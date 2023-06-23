@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Security.Claims;
 
-namespace spydersoft.Identity.Models.Identity
+namespace Spydersoft.Identity.Models.Identity
 {
     public class ApplicationRoleViewModel
     {

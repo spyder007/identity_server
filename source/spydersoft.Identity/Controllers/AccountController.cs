@@ -22,13 +22,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
-using spydersoft.Identity.Attributes;
-using spydersoft.Identity.Extensions;
-using spydersoft.Identity.Models.AccountViewModels;
-using spydersoft.Identity.Models.Identity;
-using spydersoft.Identity.Services;
+using Spydersoft.Identity.Attributes;
+using Spydersoft.Identity.Extensions;
+using Spydersoft.Identity.Models.AccountViewModels;
+using Spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Services;
 
-namespace spydersoft.Identity.Controllers
+namespace Spydersoft.Identity.Controllers
 {
     [SecurityHeaders]
     [AllowAnonymous]

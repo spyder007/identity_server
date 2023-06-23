@@ -16,10 +16,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using spydersoft.Identity.Exceptions;
-using spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Exceptions;
+using Spydersoft.Identity.Models.Identity;
 
-namespace spydersoft.Identity.Data
+namespace Spydersoft.Identity.Data
 {
     public class DatabaseInitializer
     {

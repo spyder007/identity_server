@@ -2,7 +2,7 @@
 using System.Linq;
 
 
-namespace spydersoft.Identity.Models
+namespace Spydersoft.Identity.Models
 {
     public abstract class BaseViewModel
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace spydersoft.Identity.Models.Grants
+namespace Spydersoft.Identity.Models.Grants
 {
     public class GrantsViewModel
     {

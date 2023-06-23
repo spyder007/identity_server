@@ -3,7 +3,7 @@
 
 using Duende.IdentityServer.Models;
 
-namespace spydersoft.Identity.Models.Consent
+namespace Spydersoft.Identity.Models.Consent
 {
     public class ProcessConsentResult
     {

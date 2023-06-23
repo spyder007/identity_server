@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using spydersoft.Identity.Data;
+using Spydersoft.Identity.Data;
 
 #nullable disable
 
-namespace spydersoft.Identity.Data.Migrations.DataProtectionDb
+namespace Spydersoft.Identity.Data.Migrations.DataProtectionDb
 {
     [DbContext(typeof(DataProtectionDbContext))]
     [Migration("20221025164846_DataProtect_Create")]

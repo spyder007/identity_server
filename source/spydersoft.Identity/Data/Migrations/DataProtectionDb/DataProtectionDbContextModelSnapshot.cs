@@ -3,11 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using spydersoft.Identity.Data;
+using Spydersoft.Identity.Data;
 
 #nullable disable
 
-namespace spydersoft.Identity.Data.Migrations.DataProtectionDb
+namespace Spydersoft.Identity.Data.Migrations.DataProtectionDb
 {
     [DbContext(typeof(DataProtectionDbContext))]
     partial class DataProtectionDbContextModelSnapshot : ModelSnapshot

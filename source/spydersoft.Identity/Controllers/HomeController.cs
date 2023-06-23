@@ -7,10 +7,10 @@ using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
-using spydersoft.Identity.Models;
-using spydersoft.Identity.Models.Home;
+using Spydersoft.Identity.Models;
+using Spydersoft.Identity.Models.Home;
 
-namespace spydersoft.Identity.Controllers
+namespace Spydersoft.Identity.Controllers
 {
     public class HomeController : Controller
     {

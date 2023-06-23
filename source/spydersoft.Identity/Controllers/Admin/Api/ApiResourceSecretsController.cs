@@ -10,11 +10,11 @@ using Duende.IdentityServer.Models;
 
 using Microsoft.EntityFrameworkCore;
 
-using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
+using Spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 using ApiResource = Duende.IdentityServer.EntityFramework.Entities.ApiResource;
 
-namespace spydersoft.Identity.Controllers.Admin.Api
+namespace Spydersoft.Identity.Controllers.Admin.Api
 {
     public class ApiResourceSecretsController : BaseApiResourceCollectionController<ApiResourceSecretViewModel, ApiResourceSecretsViewModel, ApiResourceSecret>
     {

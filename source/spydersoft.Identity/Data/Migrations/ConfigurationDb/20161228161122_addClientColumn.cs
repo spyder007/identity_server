@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
+namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
 #pragma warning disable IDE1006 // Naming Styles
     public partial class addClientColumn : Migration

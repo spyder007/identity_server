@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace spydersoft.Identity.Exceptions
+namespace Spydersoft.Identity.Exceptions
 {
     [Serializable]
     public class ObjectLoadException : Exception

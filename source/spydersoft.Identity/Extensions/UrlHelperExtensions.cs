@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using spydersoft.Identity.Controllers;
+using Spydersoft.Identity.Controllers;
 
-namespace spydersoft.Identity.Extensions
+namespace Spydersoft.Identity.Extensions
 {
     public static class UrlHelperExtensions
     {

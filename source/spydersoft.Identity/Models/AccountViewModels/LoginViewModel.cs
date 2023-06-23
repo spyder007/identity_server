@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace spydersoft.Identity.Models.AccountViewModels
+namespace Spydersoft.Identity.Models.AccountViewModels
 {
     public class LoginViewModel : LoginInputModel
     {

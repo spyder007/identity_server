@@ -7,6 +7,7 @@
     <RunSettingsFilePath>$(MSBuildProjectDirectory)\coverlet.runsettings</RunSettingsFilePath>
     <IsPackable>false</IsPackable>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <RootNamespace>Spydersoft.Identity.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

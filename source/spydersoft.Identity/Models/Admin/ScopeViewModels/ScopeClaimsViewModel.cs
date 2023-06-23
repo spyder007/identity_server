@@ -1,5 +1,5 @@
 ﻿
-namespace spydersoft.Identity.Models.Admin.ScopeViewModels
+namespace Spydersoft.Identity.Models.Admin.ScopeViewModels
 {
     public class ScopeClaimsViewModel : BaseScopeCollectionViewModel<ScopeClaimViewModel>
     {

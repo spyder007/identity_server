@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 
-namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
+namespace Spydersoft.Identity.Data.Migrations.AspNetIdentity
 {
     public partial class Duende60 : Migration
     {

@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-using spydersoft.Identity.Models.AccountViewModels;
+using Spydersoft.Identity.Models.AccountViewModels;
 
-namespace spydersoft.Identity.Extensions
+namespace Spydersoft.Identity.Extensions
 {
     public static class Extensions
     {

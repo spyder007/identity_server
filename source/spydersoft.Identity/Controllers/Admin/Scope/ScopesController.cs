@@ -7,9 +7,9 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 using Microsoft.AspNetCore.Mvc;
 
-using spydersoft.Identity.Models.Admin.ScopeViewModels;
+using Spydersoft.Identity.Models.Admin.ScopeViewModels;
 
-namespace spydersoft.Identity.Controllers.Admin.Scope
+namespace Spydersoft.Identity.Controllers.Admin.Scope
 {
     public class ScopesController : BaseAdminController
     {

@@ -2,7 +2,7 @@
 
 using Duende.IdentityServer.EntityFramework.DbContexts;
 
-namespace spydersoft.Identity.Models.Admin
+namespace Spydersoft.Identity.Models.Admin
 {
     public abstract class BaseAdminChildCollectionViewModel<TChildItemViewModel, TParentItemViewModel>
         where TChildItemViewModel : BaseAdminChildItemViewModel, new()

@@ -2,9 +2,9 @@
 // See LICENSE in the project root for license information.
 
 
-using spydersoft.Identity.Models.Consent;
+using Spydersoft.Identity.Models.Consent;
 
-namespace spydersoft.Identity.Models.Device
+namespace Spydersoft.Identity.Models.Device
 {
     public class DeviceAuthorizationInputModel : ConsentInputModel
     {

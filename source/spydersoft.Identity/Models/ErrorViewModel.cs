@@ -3,7 +3,7 @@
 
 using Duende.IdentityServer.Models;
 
-namespace spydersoft.Identity.Models
+namespace Spydersoft.Identity.Models
 {
     public class ErrorViewModel
     {

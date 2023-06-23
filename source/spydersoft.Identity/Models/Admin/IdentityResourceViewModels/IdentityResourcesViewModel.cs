@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Linq;
 
-namespace spydersoft.Identity.Models.Admin.IdentityResourceViewModels
+namespace Spydersoft.Identity.Models.Admin.IdentityResourceViewModels
 {
     public class IdentityResourcesViewModel
     {

@@ -18,12 +18,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-using spydersoft.Identity.Attributes;
-using spydersoft.Identity.Extensions;
-using spydersoft.Identity.Models.Consent;
-using spydersoft.Identity.Options;
+using Spydersoft.Identity.Attributes;
+using Spydersoft.Identity.Extensions;
+using Spydersoft.Identity.Models.Consent;
+using Spydersoft.Identity.Options;
 
-namespace spydersoft.Identity.Controllers
+namespace Spydersoft.Identity.Controllers
 {
     /// <summary>
     /// This controller processes the consent UI

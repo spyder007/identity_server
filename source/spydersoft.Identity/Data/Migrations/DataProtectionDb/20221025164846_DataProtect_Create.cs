@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 
-namespace spydersoft.Identity.Data.Migrations.DataProtectionDb
+namespace Spydersoft.Identity.Data.Migrations.DataProtectionDb
 {
     public partial class DataProtect_Create : Migration
     {

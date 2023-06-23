@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 
-namespace spydersoft.Identity.Data.Migrations.ConfigurationDb
+namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
     [DbContext(typeof(ConfigurationDbContext))]
     [Migration("20161228161122_addClientColumn")]

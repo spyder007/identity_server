@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace spydersoft.Identity.Models.Consent
+namespace Spydersoft.Identity.Models.Consent
 {
     public class ConsentViewModel : ConsentInputModel
     {

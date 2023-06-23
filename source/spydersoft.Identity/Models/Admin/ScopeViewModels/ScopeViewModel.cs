@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace spydersoft.Identity.Models.Admin.ScopeViewModels
+namespace Spydersoft.Identity.Models.Admin.ScopeViewModels
 {
     public class ScopeViewModel : BaseAdminViewModel
     {

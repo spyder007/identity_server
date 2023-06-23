@@ -1,7 +1,7 @@
 ﻿using System;
 
 using Microsoft.EntityFrameworkCore.Migrations;
-namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
+namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
 #pragma warning disable IDE1006 // Naming Styles
     public partial class IdentityServer3to4 : Migration

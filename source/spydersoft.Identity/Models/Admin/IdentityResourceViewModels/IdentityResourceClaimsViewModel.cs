@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace spydersoft.Identity.Models.Admin.IdentityResourceViewModels
+namespace Spydersoft.Identity.Models.Admin.IdentityResourceViewModels
 {
     public class IdentityResourceClaimsViewModel : BaseIdentityResourceCollectionViewModel<IdentityResourceClaimViewModel>
     {

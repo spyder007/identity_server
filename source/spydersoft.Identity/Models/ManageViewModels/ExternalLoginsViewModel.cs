@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
-namespace spydersoft.Identity.Models.ManageViewModels
+namespace Spydersoft.Identity.Models.ManageViewModels
 {
     public class ExternalLoginsViewModel
     {

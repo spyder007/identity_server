@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 
-namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
+namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
     public partial class Duende60 : Migration
     {

@@ -7,7 +7,7 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace spydersoft.Identity.Models.Admin.ClientViewModels
+namespace Spydersoft.Identity.Models.Admin.ClientViewModels
 {
     public class ClientScopesViewModel : BaseClientCollectionViewModel<ClientScopeViewModel>
     {

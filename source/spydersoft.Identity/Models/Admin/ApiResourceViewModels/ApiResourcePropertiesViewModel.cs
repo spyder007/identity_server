@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace spydersoft.Identity.Models.Admin.ApiResourceViewModels
+namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
     public class ApiResourcePropertiesViewModel : BaseApiResourceCollectionViewModel<ApiResourcePropertyViewModel>
     {

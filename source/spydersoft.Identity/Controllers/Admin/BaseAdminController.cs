@@ -4,7 +4,7 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 using Microsoft.AspNetCore.Authorization;
 
-namespace spydersoft.Identity.Controllers.Admin
+namespace Spydersoft.Identity.Controllers.Admin
 {
     [Authorize(Roles = "admin")]
     public class BaseAdminController : BaseController

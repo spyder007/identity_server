@@ -7,12 +7,12 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 using Microsoft.EntityFrameworkCore;
 
-using spydersoft.Identity.Models.Admin;
-using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
+using Spydersoft.Identity.Models.Admin;
+using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 using IS4Entities = Duende.IdentityServer.EntityFramework.Entities;
 
-namespace spydersoft.Identity.Controllers.Admin.Identity
+namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
     public abstract class BaseIdentityResourceCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity>
         : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, IdentityResourceViewModel, IS4Entities.IdentityResource, TChildEntity>

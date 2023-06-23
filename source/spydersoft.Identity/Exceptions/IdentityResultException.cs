@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 using Microsoft.AspNetCore.Identity;
 
-namespace spydersoft.Identity.Exceptions
+namespace Spydersoft.Identity.Exceptions
 {
     [Serializable]
     public class IdentityResultException : Exception

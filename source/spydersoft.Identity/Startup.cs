@@ -17,13 +17,13 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
-using spydersoft.Identity.Data;
-using spydersoft.Identity.Extensions;
-using spydersoft.Identity.Models.Identity;
-using spydersoft.Identity.Options;
-using spydersoft.Identity.Services;
+using Spydersoft.Identity.Data;
+using Spydersoft.Identity.Extensions;
+using Spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Options;
+using Spydersoft.Identity.Services;
 
-namespace spydersoft.Identity
+namespace Spydersoft.Identity
 {
     public class Startup
     {

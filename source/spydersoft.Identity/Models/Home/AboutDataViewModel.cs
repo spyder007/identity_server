@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace spydersoft.Identity.Models.Home
+namespace Spydersoft.Identity.Models.Home
 {
     public class AboutDataViewModel
     {

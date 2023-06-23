@@ -1,4 +1,4 @@
-﻿namespace spydersoft.Identity.Models.Admin.ClientViewModels
+﻿namespace Spydersoft.Identity.Models.Admin.ClientViewModels
 {
     public class BaseClientCollectionViewModel<TChildViewModel> : BaseAdminChildCollectionViewModel<TChildViewModel, ClientViewModel>
         where TChildViewModel : BaseAdminChildItemViewModel, new()

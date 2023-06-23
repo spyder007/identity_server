@@ -4,7 +4,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace spydersoft.Identity.Attributes
+namespace Spydersoft.Identity.Attributes
 {
 
     public class SecurityHeadersAttribute : ActionFilterAttribute

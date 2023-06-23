@@ -12,6 +12,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>d3b43c4b-2060-4431-a793-ba16056bd7c6</UserSecretsId>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <RootNamespace>Spydersoft.Identity</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

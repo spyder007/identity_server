@@ -8,9 +8,9 @@ using Duende.IdentityServer.EntityFramework.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
-using spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
+using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
-namespace spydersoft.Identity.Controllers.Admin.Identity
+namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
     public class IdentityResourcePropertiesController : BaseIdentityResourceCollectionController<IdentityResourcePropertyViewModel, IdentityResourcePropertiesViewModel, IdentityResourceProperty>
     {

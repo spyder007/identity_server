@@ -8,9 +8,9 @@ using Duende.IdentityServer.EntityFramework.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
-using spydersoft.Identity.Models.Admin.ScopeViewModels;
+using Spydersoft.Identity.Models.Admin.ScopeViewModels;
 
-namespace spydersoft.Identity.Controllers.Admin.Scope
+namespace Spydersoft.Identity.Controllers.Admin.Scope
 {
     public class ScopeClaimsController : BaseScopeCollectionController<ScopeClaimViewModel, ScopeClaimsViewModel, ApiScopeClaim>
     {

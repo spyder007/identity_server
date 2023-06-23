@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace spydersoft.Identity.Services
+namespace Spydersoft.Identity.Services
 {
     public interface IEmailSender
     {

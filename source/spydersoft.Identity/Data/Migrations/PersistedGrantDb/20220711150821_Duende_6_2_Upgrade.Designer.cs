@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace spydersoft.Identity.Data.Migrations.PersistedGrantDb
+namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
     [DbContext(typeof(PersistedGrantDbContext))]
     [Migration("20220711150821_Duende_6_2_Upgrade")]

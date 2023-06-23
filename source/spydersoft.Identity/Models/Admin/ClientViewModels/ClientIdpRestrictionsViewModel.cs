@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace spydersoft.Identity.Models.Admin.ClientViewModels
+namespace Spydersoft.Identity.Models.Admin.ClientViewModels
 {
     public class ClientIdpRestrictionsViewModel : BaseClientCollectionViewModel<ClientIdpRestrictionViewModel>
     {

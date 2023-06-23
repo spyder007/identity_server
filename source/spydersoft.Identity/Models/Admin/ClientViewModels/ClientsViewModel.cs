@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace spydersoft.Identity.Models.Admin.ClientViewModels
+namespace Spydersoft.Identity.Models.Admin.ClientViewModels
 {
     public class ClientsViewModel
     {

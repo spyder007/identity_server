@@ -7,12 +7,12 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 using Microsoft.EntityFrameworkCore;
 
-using spydersoft.Identity.Models.Admin;
-using spydersoft.Identity.Models.Admin.ScopeViewModels;
+using Spydersoft.Identity.Models.Admin;
+using Spydersoft.Identity.Models.Admin.ScopeViewModels;
 
 using IS4Entities = Duende.IdentityServer.EntityFramework.Entities;
 
-namespace spydersoft.Identity.Controllers.Admin.Scope
+namespace Spydersoft.Identity.Controllers.Admin.Scope
 {
     public abstract class BaseScopeCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity>
         : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, ScopeViewModel, IS4Entities.ApiScope, TChildEntity>

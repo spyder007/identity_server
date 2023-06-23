@@ -19,12 +19,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-using spydersoft.Identity.Attributes;
-using spydersoft.Identity.Models.Consent;
-using spydersoft.Identity.Models.Device;
-using spydersoft.Identity.Options;
+using Spydersoft.Identity.Attributes;
+using Spydersoft.Identity.Models.Consent;
+using Spydersoft.Identity.Models.Device;
+using Spydersoft.Identity.Options;
 
-namespace spydersoft.Identity.Controllers
+namespace Spydersoft.Identity.Controllers
 {
     [Authorize]
     [SecurityHeaders]

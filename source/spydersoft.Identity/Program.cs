@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 
 using Serilog;
 
-using spydersoft.Identity;
+using Spydersoft.Identity;
 
 IConfigurationRoot baseConfig = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")

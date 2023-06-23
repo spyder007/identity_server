@@ -1,4 +1,4 @@
-﻿namespace spydersoft.Identity.Models.Admin.ApiResourceViewModels
+﻿namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
     public class BaseApiResourceCollectionViewModel<T> : BaseAdminChildCollectionViewModel<T, ApiResourceViewModel> where T : BaseAdminChildItemViewModel, new()
     {

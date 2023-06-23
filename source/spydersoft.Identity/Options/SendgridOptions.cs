@@ -1,4 +1,4 @@
-﻿namespace spydersoft.Identity.Options
+﻿namespace Spydersoft.Identity.Options
 {
     public class SendgridOptions
     {

@@ -8,9 +8,9 @@ using Duende.IdentityServer.EntityFramework.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
-using spydersoft.Identity.Models.Admin.ApiResourceViewModels;
+using Spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
-namespace spydersoft.Identity.Controllers.Admin.Api
+namespace Spydersoft.Identity.Controllers.Admin.Api
 {
     public class ApiResourcePropertiesController : BaseApiResourceCollectionController<ApiResourcePropertyViewModel, ApiResourcePropertiesViewModel, ApiResourceProperty>
     {

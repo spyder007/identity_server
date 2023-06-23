@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace spydersoft.Identity.Extensions
+namespace Spydersoft.Identity.Extensions
 {
     public static class SameSiteCookiesServiceCollectionExtensions
     {

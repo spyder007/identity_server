@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace spydersoft.Identity.Data
+namespace Spydersoft.Identity.Data
 {
     public class DataProtectionDbContext : DbContext, IDataProtectionKeyContext
     {

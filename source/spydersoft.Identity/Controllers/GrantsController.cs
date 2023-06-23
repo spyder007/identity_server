@@ -14,10 +14,10 @@ using Duende.IdentityServer.Stores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using spydersoft.Identity.Attributes;
-using spydersoft.Identity.Models.Grants;
+using Spydersoft.Identity.Attributes;
+using Spydersoft.Identity.Models.Grants;
 
-namespace spydersoft.Identity.Controllers
+namespace Spydersoft.Identity.Controllers
 {
     /// <summary>
     /// This sample controller allows a user to revoke grants given to clients

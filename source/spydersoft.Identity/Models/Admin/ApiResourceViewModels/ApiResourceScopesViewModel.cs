@@ -5,7 +5,7 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace spydersoft.Identity.Models.Admin.ApiResourceViewModels
+namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
     public class ApiResourceScopesViewModel : BaseApiResourceCollectionViewModel<ApiResourceScopeViewModel>
     {

@@ -10,9 +10,9 @@ using Duende.IdentityServer.Models;
 
 using Microsoft.EntityFrameworkCore;
 
-using spydersoft.Identity.Models.Admin.ClientViewModels;
+using Spydersoft.Identity.Models.Admin.ClientViewModels;
 
-namespace spydersoft.Identity.Controllers.Admin.Client
+namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     public class ClientSecretsController : BaseClientCollectionController<ClientSecretViewModel, ClientSecretsViewModel, ClientSecret>
     {

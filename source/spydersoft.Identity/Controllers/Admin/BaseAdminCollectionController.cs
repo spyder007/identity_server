@@ -9,9 +9,9 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using spydersoft.Identity.Models.Admin;
+using Spydersoft.Identity.Models.Admin;
 
-namespace spydersoft.Identity.Controllers.Admin
+namespace Spydersoft.Identity.Controllers.Admin
 {
     public abstract class BaseAdminCollectionController<TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity> : BaseAdminController
            where TChildViewModel : BaseAdminChildItemViewModel, new()

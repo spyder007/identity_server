@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using spydersoft.Identity.Data;
+using Spydersoft.Identity.Data;
 
-namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
+namespace Spydersoft.Identity.Data.Migrations.AspNetIdentity
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20211013200757_AddNameToApplicationUser")]
@@ -125,7 +125,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("spydersoft.Identity.Models.Identity.ApplicationRole", b =>
+            modelBuilder.Entity("Spydersoft.Identity.Models.Identity.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -152,7 +152,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
                     b.ToTable("AspNetRoles");
                 });
 
-            modelBuilder.Entity("spydersoft.Identity.Models.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("Spydersoft.Identity.Models.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -222,7 +222,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("spydersoft.Identity.Models.Identity.ApplicationRole", null)
+                    b.HasOne("Spydersoft.Identity.Models.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -231,7 +231,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("spydersoft.Identity.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Spydersoft.Identity.Models.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -240,7 +240,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("spydersoft.Identity.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Spydersoft.Identity.Models.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -249,13 +249,13 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("spydersoft.Identity.Models.Identity.ApplicationRole", null)
+                    b.HasOne("Spydersoft.Identity.Models.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("spydersoft.Identity.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Spydersoft.Identity.Models.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -264,7 +264,7 @@ namespace spydersoft.Identity.Data.Migrations.AspNetIdentity
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("spydersoft.Identity.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Spydersoft.Identity.Models.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

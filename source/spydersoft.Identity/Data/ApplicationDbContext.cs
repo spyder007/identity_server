@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-using spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Models.Identity;
 
-namespace spydersoft.Identity.Data
+namespace Spydersoft.Identity.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {

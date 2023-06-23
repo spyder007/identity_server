@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace spydersoft.Identity.Extensions
+namespace Spydersoft.Identity.Extensions
 {
     public static class NavHelperExtensions
     {
