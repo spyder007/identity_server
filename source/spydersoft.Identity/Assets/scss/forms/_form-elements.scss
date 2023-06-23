@@ -3,14 +3,14 @@
 /* ===== input style ===== */
 .input-style-1 {
   position: relative;
-  margin-bottom: 30px;
+  margin-bottom: .25em;
 
   label {
     font-size: 14px;
     font-weight: 500;
     color: $dark;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: .2em;
   }
 
   input,
@@ -19,7 +19,7 @@
     background: rgba($light, 0.5);
     border: 1px solid $light-2;
     border-radius: 4px;
-    padding: 16px;
+    padding: .2em;
     color: $gray;
     resize: none;
 

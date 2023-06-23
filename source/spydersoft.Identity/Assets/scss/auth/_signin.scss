@@ -52,15 +52,18 @@
   padding: 60px;
   min-height: 600px;
   display: flex;
+  flex-flow: column;
   align-items: center;
-  justify-content: center;
 
   @media #{$lg} {
     padding: 40px;
   }
 
   @media #{$xs} {
-    padding: 30px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
   }
   .form-wrapper {
     width: 100%;

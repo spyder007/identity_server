@@ -9,16 +9,6 @@
 
 <section class="signin-section">
     <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
-        </div>
         <div class="row g-0 auth-row">
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="auth-cover-wrapper bg-primary-100">
@@ -40,6 +30,9 @@
             </div>
             <div class="col-lg-6">
                 <div class="signin-wrapper">
+                    <div class="title">
+                        <h2>@ViewData["Title"]</h2>
+                    </div>
                     <div class="form-wrapper">
                         <form asp-route-returnurl="@Model.ReturnUrl" method="post">
                             <div asp-validation-summary="All" class="text-danger"></div>
@@ -61,7 +54,7 @@
                                 </div>
                                 <!-- end col -->
                                 <div class="col-xxl-6 col-lg-12 col-md-6">
-                                    <div class="form-check checkbox-style mb-30">
+                                    <div class="form-check checkbox-style">
                                         <label asp-for="RememberLogin">
                                             <input asp-for="RememberLogin" class="form-check-input" />
                                             @Html.DisplayNameFor(m => m.RememberLogin)
@@ -87,11 +80,11 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="singin-option pt-40">
+                        <div class="singin-option pt-20">
                             <p class="text-sm text-medium text-center text-gray">
                                 Easy Sign In With
                             </p>
-                            <div class="button-group pt-40 pb-40 d-flex justify-content-center flex-wrap">
+                            <div class="button-group pt-20 pb-20 d-flex justify-content-center flex-wrap">
                                 @if (Model.VisibleExternalProviders.Any())
                                 {
                                     @foreach (var provider in Model.VisibleExternalProviders)
