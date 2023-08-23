@@ -32,7 +32,7 @@ namespace spydersoft.Identity.Controllers.Admin.Scope
 
         protected override ApiScopeClaim FindItemInCollection(List<ApiScopeClaim> collection, int id)
         {
-            return collection.FirstOrDefault(c => c.Id == id);
+            return collection.Find(c => c.Id == id);
         }
 
         protected override List<ApiScopeClaim> GetCollection(ApiScope mainEntity)

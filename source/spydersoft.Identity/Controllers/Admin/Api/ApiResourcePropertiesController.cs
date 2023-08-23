@@ -32,7 +32,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         protected override ApiResourceProperty FindItemInCollection(List<ApiResourceProperty> collection, int id)
         {
-            return collection.FirstOrDefault(c => c.Id == id);
+            return collection.Find(c => c.Id == id);
         }
 
         protected override List<ApiResourceProperty> GetCollection(ApiResource mainEntity)

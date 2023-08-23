@@ -33,7 +33,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override ClientGrantType FindItemInCollection(List<ClientGrantType> collection, int id)
         {
-            return collection.FirstOrDefault(g => g.Id == id);
+            return collection.Find(g => g.Id == id);
         }
 
         protected override List<ClientGrantType> GetCollection(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)

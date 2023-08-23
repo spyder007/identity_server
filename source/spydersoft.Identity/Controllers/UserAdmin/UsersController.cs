@@ -52,7 +52,7 @@ namespace spydersoft.Identity.Controllers.UserAdmin
                 IQueryable<string> allRoles = RoleManager.Roles.Select(r => r.Name);
                 viewModel.Roles = roles.AsQueryable();
                 var userRoles = roles.ToList();
-                viewModel.AvailableRoles = allRoles.Where(r => userRoles.All(ur => ur != r));
+                viewModel.AvailableRoles = allRoles.Where(r => userRoles.TrueForAll(ur => ur != r));
 
                 System.Collections.Generic.IList<Claim> userClaims = await UserManager.GetClaimsAsync(viewModel.User);
                 viewModel.Claims = Mapper.ProjectTo<ClaimModel>(userClaims.AsQueryable());

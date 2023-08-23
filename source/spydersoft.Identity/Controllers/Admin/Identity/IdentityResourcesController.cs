@@ -168,7 +168,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
         }
         #endregion Controller Actions
 
-        private Duende.IdentityServer.EntityFramework.Entities.IdentityResource GetStandardProfile(string modelSelectedAvailableResource)
+        private static Duende.IdentityServer.EntityFramework.Entities.IdentityResource GetStandardProfile(string modelSelectedAvailableResource)
         {
             if (string.IsNullOrWhiteSpace(modelSelectedAvailableResource))
             {
@@ -176,7 +176,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
             }
 
             List<IdentityResource> standardTypes = GetStandardTypes();
-            IdentityResource typeToAdd = standardTypes.FirstOrDefault(t => t.Name == modelSelectedAvailableResource);
+            IdentityResource typeToAdd = standardTypes.Find(t => t.Name == modelSelectedAvailableResource);
 
             return typeToAdd?.ToEntity();
         }

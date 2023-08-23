@@ -33,7 +33,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override IS4Entities.ClientRedirectUri FindItemInCollection(List<IS4Entities.ClientRedirectUri> collection, int id)
         {
-            return collection.FirstOrDefault(r => r.Id == id);
+            return collection.Find(r => r.Id == id);
         }
 
         protected override List<IS4Entities.ClientRedirectUri> GetCollection(IS4Entities.Client mainEntity)

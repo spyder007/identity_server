@@ -37,7 +37,7 @@ namespace spydersoft.Identity.Controllers.Admin.Identity
 
         protected override IdentityResourceClaim FindItemInCollection(List<IdentityResourceClaim> collection, int id)
         {
-            return collection.FirstOrDefault(ic => ic.Id == id);
+            return collection.Find(ic => ic.Id == id);
         }
 
         #endregion BaseIdentityResourceCollectionController Implementation
