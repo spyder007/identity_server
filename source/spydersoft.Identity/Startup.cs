@@ -40,6 +40,11 @@ namespace spydersoft.Identity
             var connString = Configuration.GetConnectionString("IdentityConnection");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
+            if (!string.IsNullOrWhiteSpace(Configuration.GetValue<string>("ApplicationInsights:ConnectionString")))
+            {
+                _ = services.AddApplicationInsightsTelemetry();
+            }
+
             _ = services.Configure<SendgridOptions>(Configuration.GetSection(SendgridOptions.Name));
             _ = services.Configure<ConsentOptions>(Configuration.GetSection(ConsentOptions.SettingsKey));
 

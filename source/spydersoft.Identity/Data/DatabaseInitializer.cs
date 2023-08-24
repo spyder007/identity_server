@@ -81,7 +81,7 @@ namespace spydersoft.Identity.Data
             SeedAspNetIdentityDatabase(serviceScope);
         }
 
-        private void SeedIdentityServerConfigurationDatabase(IServiceScope serviceScope)
+        private static void SeedIdentityServerConfigurationDatabase(IServiceScope serviceScope)
         {
             ConfigurationDbContext context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
 
