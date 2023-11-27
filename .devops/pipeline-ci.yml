@@ -32,10 +32,10 @@ extends:
     dockerImageName: spydersoft/identity/identity_server
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
-    sonar_endpoint_name: sonarqube
-    sonar_project_key: identity_identity_AYV-QkChmblgg6j_jAeV
+    sonar_endpoint_name: sonarcloud-spydersoft
+    sonar_project_key: spyder007_identity_server
     sonar_project_name: identity_server
-    execute_sonar: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}
+    execute_sonar: true
     execute_tests: true
     prebuildSteps:
       - task: Npm@1
