@@ -151,13 +151,13 @@ namespace spydersoft.Identity.Data
                 adminUser = userMgr.FindByNameAsync("admin").Result;
 
                 result = userMgr.AddClaimsAsync(adminUser, new Claim[]{
-                                new Claim(JwtClaimTypes.Name, "System Administrator"),
-                                new Claim(JwtClaimTypes.GivenName, "System"),
-                                new Claim(JwtClaimTypes.FamilyName, "administrator"),
-                                new Claim(JwtClaimTypes.Email, "admin@localhost.net"),
-                                new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                                new Claim(JwtClaimTypes.WebSite, "123 NoWhere"),
-                                new Claim(JwtClaimTypes.Address, /*lang=json*/ @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServerConstants.ClaimValueTypes.Json)
+                                new(JwtClaimTypes.Name, "System Administrator"),
+                                new(JwtClaimTypes.GivenName, "System"),
+                                new(JwtClaimTypes.FamilyName, "administrator"),
+                                new(JwtClaimTypes.Email, "admin@localhost.net"),
+                                new(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                                new(JwtClaimTypes.WebSite, "123 NoWhere"),
+                                new(JwtClaimTypes.Address, /*lang=json*/ @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServerConstants.ClaimValueTypes.Json)
                             }).Result;
                 if (!result.Succeeded)
                 {
