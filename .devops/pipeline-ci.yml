@@ -37,6 +37,7 @@ extends:
     sonar_project_name: identity_server
     execute_sonar: true
     execute_tests: true
+    use_sonarcloud: true
     prebuildSteps:
       - task: Npm@1
         displayName: NPM Install
