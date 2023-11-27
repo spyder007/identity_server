@@ -38,6 +38,7 @@ extends:
     execute_sonar: true
     execute_tests: true
     use_sonarcloud: true
+    sonar_cloud_organization: spydersoft-mjg
     prebuildSteps:
       - task: Npm@1
         displayName: NPM Install
