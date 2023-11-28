@@ -3,7 +3,7 @@ resources:
   repositories:
     - repository: templates
       type: github
-      endpoint: spyder007
+      endpoint: spydersoft-gh
       name: spydersoft-consulting/azure-devops-templates
     - repository: helmfileconfig
       type: github
