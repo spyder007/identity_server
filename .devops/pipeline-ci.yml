@@ -2,13 +2,13 @@
 resources:
   repositories:
     - repository: templates
-      type: BitBucket
-      endpoint: "Bitbucket - spydersoft"
-      name: spydersoftteam/azure-devops-templates
+      type: github
+      endpoint: spyder007
+      name: spydersoft-consulting/azure-devops-templates
     - repository: helmfileconfig
-      type: BitBucket
-      endpoint: Bitbucket - spydersoft
-      name: spydersoftteam/id-helm-config-repo
+      type: github
+      endpoint: spyder007
+      name: spyder007/id-helm-config-repo
 
 trigger:
   branches:

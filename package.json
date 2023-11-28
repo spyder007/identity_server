@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "bitbucket-spydersoft:spydersoftteam/identity_server"
+    "url": "https://github.com/spyder007/identity_server"
   },
   "lint-staged": {
     "*.cs": "dotnet format './source/' --include"
