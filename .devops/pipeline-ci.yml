@@ -8,7 +8,7 @@ resources:
     - repository: helmfileconfig
       type: github
       endpoint: spyder007
-      name: spyder007/id-helm-config-repo
+      name: spyder007/id-helm-config
 
 trigger:
   branches:
