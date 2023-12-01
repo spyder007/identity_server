@@ -33,7 +33,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override ClientCorsOrigin FindItemInCollection(List<ClientCorsOrigin> collection, int id)
         {
-            return collection.FirstOrDefault(cors => cors.Id == id);
+            return collection.Find(cors => cors.Id == id);
         }
 
         protected override List<ClientCorsOrigin> GetCollection(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)

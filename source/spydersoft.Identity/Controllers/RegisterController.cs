@@ -4,12 +4,8 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using Duende.IdentityServer.Services;
-using Duende.IdentityServer.Stores;
-
 using IdentityModel;
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

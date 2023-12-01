@@ -91,9 +91,7 @@ namespace spydersoft.Identity.Controllers
             return result.ShowView ? View("Index", result.ViewModel) : (IActionResult)View("Error");
         }
 
-        /*****************************************/
         /* helper APIs for the ConsentController */
-        /*****************************************/
         private async Task<ProcessConsentResult> ProcessConsent(ConsentInputModel model)
         {
             var result = new ProcessConsentResult();
@@ -108,7 +106,7 @@ namespace spydersoft.Identity.Controllers
             ConsentResponse grantedConsent = null;
 
             // user clicked 'no' - send back the standard 'access_denied' response
-            if (model?.Button == "no")
+            if (model.Button == "no")
             {
                 grantedConsent = new ConsentResponse { Error = AuthorizationError.AccessDenied };
 
@@ -116,7 +114,7 @@ namespace spydersoft.Identity.Controllers
                 await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues));
             }
             // user clicked 'yes' - validate the data
-            else if (model?.Button == "yes")
+            else if (model.Button == "yes")
             {
                 // if the user consented to some scope, build the response model
                 if (model.ScopesConsented != null && model.ScopesConsented.Any())

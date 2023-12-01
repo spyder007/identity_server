@@ -33,7 +33,7 @@ namespace spydersoft.Identity.Controllers.Admin.Client
 
         protected override ClientIdPRestriction FindItemInCollection(List<ClientIdPRestriction> collection, int id)
         {
-            return collection.FirstOrDefault(idp => idp.Id == id);
+            return collection.Find(idp => idp.Id == id);
         }
 
         protected override List<ClientIdPRestriction> GetCollection(Duende.IdentityServer.EntityFramework.Entities.Client mainEntity)

@@ -43,7 +43,8 @@ namespace spydersoft.Identity
             _ = services.Configure<SendgridOptions>(Configuration.GetSection(SendgridOptions.Name));
             _ = services.Configure<ConsentOptions>(Configuration.GetSection(ConsentOptions.SettingsKey));
 
-            _ = services.AddOpenTelemetryTracing(builder => _ = builder
+            _ = services.AddOpenTelemetry()
+                .WithTracing(builder => _ = builder
                     .AddZipkinExporter(config => config.Endpoint = new System.Uri(Configuration.GetValue<string>("Zipkin:Host")))
                     .AddSource(IdentityServerConstants.Tracing.Basic)
                     .AddSource(IdentityServerConstants.Tracing.Cache)
@@ -56,11 +57,11 @@ namespace spydersoft.Identity
                             .AddService(Configuration.GetValue<string>("Zipkin:ServiceName")))
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
-                    .AddSqlClientInstrumentation());
+                    .AddSqlClientInstrumentation())
 
-            _ = services.AddOpenTelemetryMetrics(builder => _ = builder.AddPrometheusExporter()
-                    .AddHttpClientInstrumentation()
-                    .AddAspNetCoreInstrumentation());
+                .WithMetrics(builder => _ = builder.AddPrometheusExporter()
+                        .AddHttpClientInstrumentation()
+                        .AddAspNetCoreInstrumentation());
 
             _ = services.ConfigureNonBreakingSameSiteCookies();
             _ = services.AddHttpContextAccessor();
@@ -119,7 +120,7 @@ namespace spydersoft.Identity
                 });
             _ = services.AddAuthorization();
             _ = services.AddHealthChecks()
-                .AddSqlServer(connString, null, "sqlserver", null, new[] { "ready" }, null, null);
+                .AddSqlServer(connString, null, null, "sqlserver", null, new[] { "ready" }, null);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

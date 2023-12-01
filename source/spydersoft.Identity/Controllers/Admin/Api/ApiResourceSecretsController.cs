@@ -43,7 +43,7 @@ namespace spydersoft.Identity.Controllers.Admin.Api
 
         protected override ApiResourceSecret FindItemInCollection(List<ApiResourceSecret> collection, int id)
         {
-            return collection.FirstOrDefault(s => s.Id == id);
+            return collection.Find(s => s.Id == id);
         }
 
         protected override List<ApiResourceSecret> GetCollection(ApiResource mainEntity)
