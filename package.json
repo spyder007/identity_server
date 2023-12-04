@@ -4,7 +4,7 @@
   "description": "When upgrading the ASP.NET Identity Packages or the Duende IdentityServer Packages, it may be necessary to add additional DB migrations.  This can be done by going into the Package Manager Console and typing the following:",
   "main": "index.js",
   "scripts": {
-    "test": "dotnet test source/spydersoft.identity.tests/spydersoft.identity.tests.csproj",
+    "test": "dotnet test source/Spydersoft.identity.tests/Spydersoft.identity.tests.csproj",
     "prepare": "husky install"
   },
   "repository": {

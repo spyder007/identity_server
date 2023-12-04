@@ -1,0 +1,87 @@
+﻿@using Spydersoft.Identity.Models.Admin.ApiResourceViewModels
+@model ApiResourceSecretsViewModel
+<section>
+    <div class="container-fluid">
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                        <h2>@ViewData["Title"]</h2>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <div class="row">
+            <div class="card-style mb-30">
+                <form asp-action="Save" asp-route-id="@Model.Id">
+
+                    @await Html.PartialAsync("_apiNavBar", Model.NavBar)
+
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>@Html.LabelFor(model => model.NewItem.Description)</th>
+                                <th>@Html.LabelFor(model => model.NewItem.Type)</th>
+                                <th>@Html.LabelFor(model => model.NewItem.Value)</th>
+                                <th>@Html.LabelFor(model => model.NewItem.Created)</th>
+                                <th>@Html.LabelFor(model => model.NewItem.Expiration)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var apiSecret in Model.ItemsList)
+                        {
+                            <tr>
+                                <td>@apiSecret.Description</td>
+                                <td>@apiSecret.Type</td>
+                                <td>@apiSecret.Value</td>
+                                <td>@apiSecret.Created</td>
+                                <td>@apiSecret.Expiration</td>
+                                <td><a asp-action="Delete" asp-route-id="@apiSecret.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Description" pf-validation-for="NewItem.Description" pf-validationerror-class="is-invalid" />
+                                    <span asp-validation-for="NewItem.Description" class="invalid-feedback"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="txtValue" asp-for="NewItem.Type" readonly />
+                                    @Html.HiddenFor(model => model.NewItem.Type)
+                                </div>
+                            </td>
+                            <td>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="txtValue" asp-for="NewItem.Value" pf-validation-for="NewItem.Value" pf-validationerror-class="is-invalid" />
+                                    <span asp-validation-for="NewItem.Value" class="invalid-feedback"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="mb-3">
+                                    <input type="datetime" class="form-control" id="txtCreated" asp-for="NewItem.Created" readonly />
+                                </div>
+                            </td>
+                            <td>
+                                <div class="mb-3">
+                                    <input type="datetime" class="form-control" id="txtExpiration" asp-for="NewItem.Expiration" pf-validation-for="NewItem.Expiration" pf-validationerror-class="is-invalid" />
+                                    <span asp-validation-for="NewItem.Expiration" class="invalid-feedback"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="mb-3">
+                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
+                                </div>
+                            </td>
+
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

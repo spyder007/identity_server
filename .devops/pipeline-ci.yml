@@ -24,10 +24,10 @@ pr: none
 extends:
   template: stages/stages-build-docker-update-helm/v1.yml@templates
   parameters:
-    buildProject: source/spydersoft.Identity.sln
-    publishProject: source/spydersoft.Identity/spydersoft.Identity.csproj
+    buildProject: source/Spydersoft.Identity.sln
+    publishProject: source/Spydersoft.Identity/Spydersoft.Identity.csproj
     artifactName: identityServer
-    artifactZipName: spydersoft.Identity
+    artifactZipName: Spydersoft.Identity
     dockerImageFileName: identity_server
     dockerImageName: spydersoft/identity/identity_server
     imageTagVariableName: identity_server
@@ -43,16 +43,16 @@ extends:
       - task: Npm@1
         displayName: NPM Install
         inputs:
-          workingDir: $(Build.SourcesDirectory)/source/spydersoft.Identity
+          workingDir: $(Build.SourcesDirectory)/source/Spydersoft.Identity
           command: install
       - task: CmdLine@2
         inputs:
           script: 'npm install gulp' 
-          workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
+          workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
       - task: CmdLine@2
         inputs:
           script: 'gulp build:dist'
-          workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
+          workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
     preTestSteps:
       - pwsh:
-          Copy-Item $(Build.SourcesDirectory)/source/spydersoft.identity.tests/bin/Release/net6.0/refs/Microsoft.AspNetCore.Http.Features.dll $(Build.SourcesDirectory)/source/spydersoft.identity.tests/bin/Release/net6.0
+          Copy-Item $(Build.SourcesDirectory)/source/Spydersoft.identity.tests/bin/Release/net6.0/refs/Microsoft.AspNetCore.Http.Features.dll $(Build.SourcesDirectory)/source/Spydersoft.identity.tests/bin/Release/net6.0

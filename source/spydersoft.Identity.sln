@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "spydersoft.Identity", "spydersoft.Identity\spydersoft.Identity.csproj", "{0C9542C0-E49B-44B8-9E1D-F9AAA5227248}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spydersoft.Identity", "Spydersoft.Identity\Spydersoft.Identity.csproj", "{0C9542C0-E49B-44B8-9E1D-F9AAA5227248}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "spydersoft.identity.tests", "spydersoft.identity.tests\spydersoft.identity.tests.csproj", "{BD9E7722-7364-426B-813E-F64E2FEA3019}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spydersoft.identity.tests", "Spydersoft.identity.tests\Spydersoft.identity.tests.csproj", "{BD9E7722-7364-426B-813E-F64E2FEA3019}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
