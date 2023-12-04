@@ -2019,23 +2019,24 @@ h6,
       .sidebar-nav-wrapper .sidebar-nav ul .nav-item.nav-item-has-children > a::before {
         opacity: 1;
         visibility: visible; }
-      .sidebar-nav-wrapper .sidebar-nav ul .nav-item.nav-item-has-children > a::after {
-        content: "\ea5e";
-        font: normal normal normal 1em/1 "LineIcons";
-        position: absolute;
-        right: 25px;
-        top: 16px;
-        font-size: 12px;
-        -webkit-transition: all 0.3s ease-out 0s;
-        -moz-transition: all 0.3s ease-out 0s;
-        -ms-transition: all 0.3s ease-out 0s;
-        -o-transition: all 0.3s ease-out 0s;
-        transition: all 0.3s ease-out 0s;
-        -webkit-transform: rotate(180deg);
-        -moz-transform: rotate(180deg);
-        -ms-transform: rotate(180deg);
-        -o-transform: rotate(180deg);
-        transform: rotate(180deg); }
+        .sidebar-nav-wrapper .sidebar-nav ul .nav-item.nav-item-has-children > a::after {
+            content: "\ea5e";
+            font: normal normal normal 1em/1 "LineIcons", sans-serif;
+            position: absolute;
+            right: 25px;
+            top: 16px;
+            font-size: 12px;
+            -webkit-transition: all 0.3s ease-out 0s;
+            -moz-transition: all 0.3s ease-out 0s;
+            -ms-transition: all 0.3s ease-out 0s;
+            -o-transition: all 0.3s ease-out 0s;
+            transition: all 0.3s ease-out 0s;
+            -webkit-transform: rotate(180deg);
+            -moz-transform: rotate(180deg);
+            -ms-transform: rotate(180deg);
+            -o-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
       .sidebar-nav-wrapper .sidebar-nav ul .nav-item.nav-item-has-children > a.collapsed {
         color: #5d657b; }
         .sidebar-nav-wrapper .sidebar-nav ul .nav-item.nav-item-has-children > a.collapsed::before {
