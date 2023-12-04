@@ -37,6 +37,7 @@ extends:
     sonar_project_name: identity_server
     execute_sonar: true
     execute_tests: true
+    test_projects: '**/*.Tests/*.csproj'
     use_sonarcloud: true
     sonar_cloud_organization: spydersoft-mjg
     prebuildSteps:
