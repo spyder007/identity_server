@@ -118,7 +118,7 @@ gulp.libsToCopy = [
 ];
 
 
-var paths = gulp.paths;
+const paths = gulp.paths;
 
 gulp.pkg = require('./package.json');
 
@@ -156,9 +156,9 @@ gulp.task('copy:libraries',
 
 function copyLibrary(libName, src, dest) {
 
-    var fullSource = paths.node_modules + libName + src;
+    let fullSource = paths.node_modules + libName + src;
 
-    var fullDest = dest.replace("{libDest}", paths.libDest).replace("{libName}", libName);
+    let fullDest = dest.replace("{libDest}", paths.libDest).replace("{libName}", libName);
     fullDest = paths.dist + fullDest;
 
     console.log("Copying " + fullSource + " to " + fullDest);

@@ -19,12 +19,11 @@
         menuToggleButtonIcon.classList.remove("lni-menu");
         menuToggleButtonIcon.classList.add("lni-chevron-left");
       }
-    } else {
-      if (menuToggleButtonIcon.classList.contains("lni-chevron-left")) {
+    } else if (menuToggleButtonIcon.classList.contains("lni-chevron-left")) {
         menuToggleButtonIcon.classList.remove("lni-chevron-left");
         menuToggleButtonIcon.classList.add("lni-menu");
-      }
     }
+    
   });
   overlay.addEventListener("click", () => {
     sidebarNavWrapper.classList.remove("active");

@@ -199,36 +199,34 @@
             }
         }
     }
-}
 
-.sidebar-nav-wrapper {
-  &.style-2 {
-    .sidebar-nav {
-      ul {
-        .nav-item {
-          &.nav-item-has-children {
+    &.style-2 {
+        .sidebar-nav {
             ul {
-              li {
-                a {
-                  &.active,
-                  &:hover {
-                    color: $white;
-                    border-color: $primary;
-                    background: $primary;
+                .nav-item {
+                    &.nav-item-has-children {
+                        ul {
+                            li {
+                                a {
+                                    &.active,
+                                    &:hover {
+                                        color: $white;
+                                        border-color: $primary;
+                                        background: $primary;
 
-                    span.pro-badge {
-                      background: $white;
-                      color: $primary;
+                                        span.pro-badge {
+                                            background: $white;
+                                            color: $primary;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                  }
                 }
-              }
             }
-          }
         }
-      }
     }
-  }
 }
 
 .overlay {
