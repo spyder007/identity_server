@@ -93,13 +93,13 @@ namespace Spydersoft.Identity
                 options.EnableEndpointRouting = false;
             });
 
+            // this adds the Configuration Store (clients, resources) and then
+            // the Operation Store (codes, tokens, consents)
             _ = services.AddIdentityServer()
                 .AddAspNetIdentity<ApplicationUser>()
-                // this adds the config data from DB (clients, resources)
                 .AddConfigurationStore(options => options.ConfigureDbContext = builder =>
                         builder.UseSqlServer(connString,
                             sql => sql.MigrationsAssembly(migrationsAssembly)))
-                // this adds the operational data from DB (codes, tokens, consents)
                 .AddOperationalStore(options =>
                 {
                     options.ConfigureDbContext = builder =>
