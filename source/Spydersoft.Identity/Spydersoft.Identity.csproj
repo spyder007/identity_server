@@ -12,6 +12,15 @@
     <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>d3b43c4b-2060-4431-a793-ba16056bd7c6</UserSecretsId>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>7</WarningLevel>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <WarningLevel>7</WarningLevel>
   </PropertyGroup>
 
   <ItemGroup>

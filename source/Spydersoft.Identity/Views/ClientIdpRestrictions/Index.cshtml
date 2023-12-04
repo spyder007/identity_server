@@ -17,7 +17,7 @@
             <div class="card-style mb-30">
                 <form asp-action="Save" asp-route-id="@Model.Id">
                     @await Html.PartialAsync("_clientNavBar", Model.NavBar)
-                    <table class="table">
+                    <table class="table" aria-label="Client IDP Restrictions">
                         <thead class="thead-dark">
                             <tr>
                                 <th>@Html.LabelFor(model => model.NewItem.Provider)</th>

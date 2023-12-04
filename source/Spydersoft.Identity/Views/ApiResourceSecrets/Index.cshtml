@@ -19,7 +19,7 @@
 
                     @await Html.PartialAsync("_apiNavBar", Model.NavBar)
 
-                    <table class="table">
+                    <table class="table" aria-label="API Resource Secrets">
                         <thead class="thead-dark">
                             <tr>
                                 <th>@Html.LabelFor(model => model.NewItem.Description)</th>

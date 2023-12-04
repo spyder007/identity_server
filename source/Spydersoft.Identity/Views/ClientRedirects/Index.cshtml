@@ -18,7 +18,7 @@
                 <form asp-action="Save" asp-route-id="@Model.Id">
 
                     @await Html.PartialAsync("_clientNavBar", Model.NavBar)
-                    <table class="table striped-table">
+                    <table class="table striped-table" aria-label="Client Redirects">
                         <thead class="thead-dark">
                             <tr>
                                 <th>@Html.LabelFor(model => model.NewItem.RedirectUri)</th>

@@ -19,7 +19,7 @@
                 <form asp-action="Save" asp-route-id="@Model.Id">
                     @await Html.PartialAsync("_scopeNavBar", Model.NavBar)
 
-                    <table class="table">
+                    <table class="table" aria-label="Scope Claims">
                         <thead class="thead-dark">
                             <tr>
                                 <th>@Html.LabelFor(model => model.NewItem.Type)</th>
