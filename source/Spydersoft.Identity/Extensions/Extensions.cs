@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 using Spydersoft.Identity.Models.AccountViewModels;
+using Spydersoft.Identity.Models.Consent;
 
 namespace Spydersoft.Identity.Extensions
 {
@@ -36,6 +37,19 @@ namespace Spydersoft.Identity.Extensions
             {
                 modelState.AddModelError(string.Empty, error.Description);
             }
+        }
+
+        public static ScopeViewModel CreateScopeViewModel(this IdentityResource identity, bool check)
+        {
+            return new ScopeViewModel
+            {
+                Value = identity.Name,
+                DisplayName = identity.DisplayName ?? identity.Name,
+                Description = identity.Description,
+                Emphasize = identity.Emphasize,
+                Required = identity.Required,
+                Checked = check || identity.Required
+            };
         }
     }
 

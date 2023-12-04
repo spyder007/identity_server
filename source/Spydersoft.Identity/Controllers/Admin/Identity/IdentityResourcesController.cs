@@ -168,7 +168,7 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
         }
         #endregion Controller Actions
 
-        private Duende.IdentityServer.EntityFramework.Entities.IdentityResource GetStandardProfile(string modelSelectedAvailableResource)
+        private static Duende.IdentityServer.EntityFramework.Entities.IdentityResource GetStandardProfile(string modelSelectedAvailableResource)
         {
             if (string.IsNullOrWhiteSpace(modelSelectedAvailableResource))
             {

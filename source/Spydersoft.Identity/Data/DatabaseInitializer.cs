@@ -87,6 +87,7 @@ namespace Spydersoft.Identity.Data
 
             if (!context.Clients.Any())
             {
+                _log.LogInformation("No Clients Found. Creating sample Clients");
                 foreach (Client client in GetClients())
                 {
                     _ = context.Clients.Add(client.ToEntity());
@@ -97,6 +98,7 @@ namespace Spydersoft.Identity.Data
 
             if (!context.IdentityResources.Any())
             {
+                _log.LogInformation("No Resources Found. Creating sample Resources");
                 foreach (IdentityResource resource in GetIdentityResources())
                 {
                     _ = context.IdentityResources.Add(resource.ToEntity());
@@ -107,6 +109,7 @@ namespace Spydersoft.Identity.Data
 
             if (!context.ApiResources.Any())
             {
+                _log.LogInformation("No API Resources Found. Creating sample API Resources");
                 foreach (ApiResource resource in GetApiResources())
                 {
                     _ = context.ApiResources.Add(resource.ToEntity());
@@ -180,9 +183,6 @@ namespace Spydersoft.Identity.Data
         }
 
         #endregion Seeding Functions
-
-
-
 
         #region Identity Server Configuration Object Creators
 
@@ -262,6 +262,5 @@ namespace Spydersoft.Identity.Data
             };
         }
         #endregion Identity Server Configuration Object Creators
-
     }
 }

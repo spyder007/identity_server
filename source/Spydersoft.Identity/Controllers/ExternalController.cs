@@ -157,7 +157,7 @@ namespace Spydersoft.Identity.Controllers
             // depending on the external provider, some other claim type might be used
             Claim userIdClaim = externalUser.FindFirst(JwtClaimTypes.Subject) ??
                               externalUser.FindFirst(ClaimTypes.NameIdentifier) ??
-                              throw new Exception("Unknown userid");
+                              throw new IdentityServerException("Unknown userid");
 
             // remove the user id claim so we don't include it as an extra claim if/when we provision the user
             var claims = externalUser.Claims.ToList();
@@ -172,7 +172,7 @@ namespace Spydersoft.Identity.Controllers
             return (user, provider, providerUserId, claims);
         }
 
-        private async Task<ApplicationUser> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
+        private List<Claim> GetFilteredClaims(IEnumerable<Claim> claims, string email)
         {
             // create a list of claims that we want to transfer into our store
             var filtered = new List<Claim>();
@@ -209,12 +209,19 @@ namespace Spydersoft.Identity.Controllers
             }
 
             // email
-            var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ??
-               claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             if (email != null)
             {
                 filtered.Add(new Claim(JwtClaimTypes.Email, email));
             }
+            return filtered;
+        }
+
+        private async Task<ApplicationUser> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
+        {
+            var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ?? claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+            List<Claim> filtered = GetFilteredClaims(claims, email);
+
+            var name = filtered.Find(x => x.Type == JwtClaimTypes.Name)?.Value;
 
             // If this email already exists in the system, we will link the claims and login to the external provider
             ApplicationUser user = await _userManager.FindByEmailAsync(email);
@@ -224,7 +231,7 @@ namespace Spydersoft.Identity.Controllers
                 {
                     UserName = string.IsNullOrWhiteSpace(email) ? Guid.NewGuid().ToString() : email,
                     Email = email,
-                    Name = name ?? "Unknown User"
+                    Name = name
                 };
                 IdentityResult createResult = await _userManager.CreateAsync(user);
                 if (!createResult.Succeeded)
@@ -244,12 +251,12 @@ namespace Spydersoft.Identity.Controllers
             }
 
             identityResult = await _userManager.AddLoginAsync(user, new UserLoginInfo(provider, providerUserId, provider));
-            return !identityResult.Succeeded ? throw new Exception(identityResult.Errors.First().Description) : user;
+            return !identityResult.Succeeded ? throw new IdentityServerException(identityResult.Errors.First().Description) : user;
         }
 
         // if the external login is OIDC-based, there are certain things we need to preserve to make logout work
         // this will be different for WS-Fed, SAML2p or other protocols
-        private void ProcessLoginCallback(AuthenticateResult externalResult, List<Claim> localClaims, AuthenticationProperties localSignInProps)
+        private static void ProcessLoginCallback(AuthenticateResult externalResult, List<Claim> localClaims, AuthenticationProperties localSignInProps)
         {
             // if the external system sent a session id claim, copy it over
             // so we can use it for single sign-out

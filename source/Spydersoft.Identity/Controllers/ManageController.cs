@@ -289,7 +289,7 @@ namespace Spydersoft.Identity.Controllers
         {
             ApplicationUser user = await ValidateContextUser();
             return !user.TwoFactorEnabled
-                ? throw new ApplicationException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.")
+                ? throw new IdentityServerException($"Unexpected error occured disabling 2FA for user with ID '{user.Id}'.")
                 : (IActionResult)View(nameof(Disable2fa));
         }
 

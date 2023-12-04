@@ -196,7 +196,7 @@ namespace Spydersoft.Identity.Controllers
                 AllowRememberConsent = request.Client.AllowRememberConsent
             };
 
-            vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources.Select(x => x.CreateScopeViewModel(vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
 
             var apiScopes = new List<ScopeViewModel>();
             foreach (ParsedScopeValue parsedScope in request.ValidatedResources.ParsedScopes)
@@ -215,19 +215,6 @@ namespace Spydersoft.Identity.Controllers
             vm.ApiScopes = apiScopes;
 
             return vm;
-        }
-
-        private ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
-        {
-            return new ScopeViewModel
-            {
-                Value = identity.Name,
-                DisplayName = identity.DisplayName ?? identity.Name,
-                Description = identity.Description,
-                Emphasize = identity.Emphasize,
-                Required = identity.Required,
-                Checked = check || identity.Required
-            };
         }
 
         public ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
