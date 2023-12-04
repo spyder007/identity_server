@@ -49,7 +49,7 @@ namespace Spydersoft.Identity
 
             _ = services.AddOpenTelemetry()
                 .WithTracing(builder => _ = builder
-                    .AddZipkinExporter(config => config.Endpoint = new System.Uri(Configuration.GetValue<string>(zipkinSettings.Host)))
+                    .AddZipkinExporter(config => config.Endpoint = new System.Uri(zipkinSettings.Host))
                     .AddSource(IdentityServerConstants.Tracing.Basic)
                     .AddSource(IdentityServerConstants.Tracing.Cache)
                     .AddSource(IdentityServerConstants.Tracing.Services)
@@ -58,7 +58,7 @@ namespace Spydersoft.Identity
 
                     .SetResourceBuilder(
                         ResourceBuilder.CreateDefault()
-                            .AddService(Configuration.GetValue<string>(zipkinSettings.ServiceName)))
+                            .AddService(zipkinSettings.ServiceName))
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
                     .AddSqlClientInstrumentation())
@@ -120,8 +120,8 @@ namespace Spydersoft.Identity
                 .AddGoogle(option =>
                 {
                     option.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                    option.ClientId = Configuration.GetValue<string>(providerSettings.GoogleClientId);
-                    option.ClientSecret = Configuration.GetValue<string>(providerSettings.GoogleClientSecret);
+                    option.ClientId = providerSettings.GoogleClientId;
+                    option.ClientSecret = providerSettings.GoogleClientSecret;
                 });
             _ = services.AddAuthorization();
             _ = services.AddHealthChecks()
