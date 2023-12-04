@@ -38,14 +38,18 @@ namespace Spydersoft.Identity
         public void ConfigureServices(IServiceCollection services)
         {
             var connString = Configuration.GetConnectionString("IdentityConnection");
+            var cacheConnection = Configuration.GetConnectionString("RedisCache");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             _ = services.Configure<SendgridOptions>(Configuration.GetSection(SendgridOptions.Name));
             _ = services.Configure<ConsentOptions>(Configuration.GetSection(ConsentOptions.SettingsKey));
 
+            var zipkinSettings = new ZipkinOptions();
+            Configuration.GetSection(ZipkinOptions.SettingsKey).Bind(zipkinSettings);
+
             _ = services.AddOpenTelemetry()
                 .WithTracing(builder => _ = builder
-                    .AddZipkinExporter(config => config.Endpoint = new System.Uri(Configuration.GetValue<string>("Zipkin:Host")))
+                    .AddZipkinExporter(config => config.Endpoint = new System.Uri(Configuration.GetValue<string>(zipkinSettings.Host)))
                     .AddSource(IdentityServerConstants.Tracing.Basic)
                     .AddSource(IdentityServerConstants.Tracing.Cache)
                     .AddSource(IdentityServerConstants.Tracing.Services)
@@ -54,7 +58,7 @@ namespace Spydersoft.Identity
 
                     .SetResourceBuilder(
                         ResourceBuilder.CreateDefault()
-                            .AddService(Configuration.GetValue<string>("Zipkin:ServiceName")))
+                            .AddService(Configuration.GetValue<string>(zipkinSettings.ServiceName)))
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
                     .AddSqlClientInstrumentation())
@@ -73,7 +77,6 @@ namespace Spydersoft.Identity
                 .SetApplicationName("identity-server")
                 .PersistKeysToDbContext<DataProtectionDbContext>();
 
-            var cacheConnection = Configuration.GetConnectionString("RedisCache");
             if (!string.IsNullOrEmpty(cacheConnection))
             {
                 _ = services.AddStackExchangeRedisCache(options => options.Configuration = cacheConnection);
@@ -111,12 +114,14 @@ namespace Spydersoft.Identity
                     options.TokenCleanupInterval = 30;
                 });
 
+            var providerSettings = new ProviderOptions();
+            Configuration.GetSection(ProviderOptions.SettingsKey).Bind(providerSettings);
             _ = services.AddAuthentication()
                 .AddGoogle(option =>
                 {
                     option.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                    option.ClientId = Configuration.GetValue<string>("ProviderSettings:GoogleClientId");
-                    option.ClientSecret = Configuration.GetValue<string>("ProviderSettings:GoogleClientSecret");
+                    option.ClientId = Configuration.GetValue<string>(providerSettings.GoogleClientId);
+                    option.ClientSecret = Configuration.GetValue<string>(providerSettings.GoogleClientSecret);
                 });
             _ = services.AddAuthorization();
             _ = services.AddHealthChecks()
