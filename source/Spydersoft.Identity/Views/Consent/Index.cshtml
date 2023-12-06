@@ -1,0 +1,95 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Spydersoft.Identity.Models.Consent.ConsentViewModel
+<form asp-action="Index" class="consent-form">
+    <div class="card">
+        <div class="card-header">
+            <div>
+                @if (Model.ClientLogoUrl != null)
+                {
+                    <div class="client-logo"><img src="@Model.ClientLogoUrl" alt="Logo"></div>
+                }
+                <h3>
+                    @Model.ClientName
+
+                </h3>
+                <p>is requesting your permission</p>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div>
+                @await Html.PartialAsync("_ValidationSummary")
+
+
+                <input type="hidden" asp-for="ReturnUrl" />
+
+                <div class="alert alert-info">Uncheck the permissions you do not wish to grant.</div>
+
+                @if (Model.IdentityScopes.Any())
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><span class="fa fa-user"></span> Personal Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                @foreach (var scope in Model.IdentityScopes)
+                                {
+                                    @await Html.PartialAsync("_ScopeListItem", scope)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (Model.ApiScopes.Any())
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <h3><span class="fa fa-tasks"></span> Application Access</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group">
+                                @foreach (var scope in Model.ApiScopes)
+                                {
+                                    @await Html.PartialAsync("_ScopeListItem", scope)
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="glyphicon glyphicon-tasks"></span>
+                            Description
+                        </div>
+                        <div class="card-body">
+                            <input class="form-control" placeholder="Description or name of device" asp-for="Description" autofocus>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.AllowRememberConsent)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" asp-for="RememberConsent" />
+                        <label class="form-check-label">Remember My Decision</label>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="card-footer">
+            <button name="button" value="yes" class="btn btn-success" autofocus>Yes, Allow</button>
+            <button name="button" value="no" class="btn btn-danger">No, Do Not Allow</button>
+            @if (Model.ClientUrl != null)
+            {
+                <a class="pull-right btn btn-secondary" target="_blank" href="@Model.ClientUrl">
+                    <span class="fa fa-info-circle"></span>
+                    <strong>@Model.ClientName</strong>
+                </a>
+            }
+        </div>
+    </div>
+</form>

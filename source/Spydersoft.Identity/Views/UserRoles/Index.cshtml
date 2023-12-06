@@ -1,0 +1,42 @@
+﻿@using Spydersoft.Identity.Models.Identity
+@model ApplicationRolesViewModel
+<section>
+    <div class="container-fluid">
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                        <h2>@ViewData["Title"]</h2>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <div class="row">
+            <div class="card-style mb-30">
+                <div class="table-responsive">
+                    <table class="table" aria-label="User Roles">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Actions&nbsp;<a asp-action="Edit"><span class="fa fa-plus"></span></a></th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var role in Model.Roles)
+                        {
+                            <tr>
+                                <td>@role.Name</td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@role.Id"><span class="fa fa-edit"></span></a>
+                                    <a asp-action="Delete" asp-route-id="@role.Id" title="Delete"><span class="fa fa-trash"></span></a>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
