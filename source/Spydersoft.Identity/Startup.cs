@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 
 using Duende.IdentityServer;
 
@@ -19,7 +20,6 @@ using OpenTelemetry.Trace;
 
 using Spydersoft.Identity.Data;
 using Spydersoft.Identity.Extensions;
-using Spydersoft.Identity.Middleware;
 using Spydersoft.Identity.Models.Identity;
 using Spydersoft.Identity.Options;
 using Spydersoft.Identity.Services;
@@ -95,7 +95,7 @@ namespace Spydersoft.Identity
             {
                 options.SuppressAsyncSuffixInActionNames = false;
                 options.EnableEndpointRouting = false;
-                _ = options.Filters.Add<ActivityIdHeaderResultFilter>();
+                //_ = options.Filters.Add<ActivityIdHeaderResultFilter>();
             });
 
             // this adds the Configuration Store (clients, resources) and then
@@ -151,7 +151,11 @@ namespace Spydersoft.Identity
             };
             forwardedHeadersOptions.KnownNetworks.Clear();
             forwardedHeadersOptions.KnownProxies.Clear();
-
+            _ = app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("x-request-id", Activity.Current?.Id);
+                await next();
+            });
             _ = app.UseForwardedHeaders(forwardedHeadersOptions);
             _ = app.UseOpenTelemetryPrometheusScrapingEndpoint();
             _ = app.UseAuthentication();
