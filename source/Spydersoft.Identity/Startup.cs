@@ -19,6 +19,7 @@ using OpenTelemetry.Trace;
 
 using Spydersoft.Identity.Data;
 using Spydersoft.Identity.Extensions;
+using Spydersoft.Identity.Middleware;
 using Spydersoft.Identity.Models.Identity;
 using Spydersoft.Identity.Options;
 using Spydersoft.Identity.Services;
@@ -94,6 +95,7 @@ namespace Spydersoft.Identity
             {
                 options.SuppressAsyncSuffixInActionNames = false;
                 options.EnableEndpointRouting = false;
+                _ = options.Filters.Add<ActivityIdHeaderResultFilter>();
             });
 
             // this adds the Configuration Store (clients, resources) and then
