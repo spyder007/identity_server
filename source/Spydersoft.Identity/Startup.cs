@@ -95,7 +95,6 @@ namespace Spydersoft.Identity
             {
                 options.SuppressAsyncSuffixInActionNames = false;
                 options.EnableEndpointRouting = false;
-                //_ = options.Filters.Add<ActivityIdHeaderResultFilter>();
             });
 
             // this adds the Configuration Store (clients, resources) and then
