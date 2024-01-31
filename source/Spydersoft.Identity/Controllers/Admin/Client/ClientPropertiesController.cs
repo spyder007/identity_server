@@ -12,11 +12,8 @@ using Spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Client
 {
-    public class ClientPropertiesController : BaseClientCollectionController<ClientPropertyViewModel, ClientPropertiesViewModel, ClientProperty>
+    public class ClientPropertiesController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientPropertyViewModel, ClientPropertiesViewModel, ClientProperty>(context, mapper)
     {
-        public ClientPropertiesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseClientCollectionController Implementation
 

@@ -12,16 +12,10 @@ using Spydersoft.Identity.Models.Home;
 
 namespace Spydersoft.Identity.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment hostingEnvironment) : Controller
     {
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IWebHostEnvironment _hostingEnvironment;
-
-        public HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment hostingEnvironment)
-        {
-            _interaction = interaction;
-            _hostingEnvironment = hostingEnvironment;
-        }
+        private readonly IIdentityServerInteractionService _interaction = interaction;
+        private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
 
         public IActionResult Index()
         {

@@ -16,11 +16,8 @@ using ApiResource = Duende.IdentityServer.EntityFramework.Entities.ApiResource;
 
 namespace Spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiResourceSecretsController : BaseApiResourceCollectionController<ApiResourceSecretViewModel, ApiResourceSecretsViewModel, ApiResourceSecret>
+    public class ApiResourceSecretsController(ConfigurationDbContext context, IMapper mapper) : BaseApiResourceCollectionController<ApiResourceSecretViewModel, ApiResourceSecretsViewModel, ApiResourceSecret>(context, mapper)
     {
-        public ApiResourceSecretsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseApiCollectionController Implementation
 

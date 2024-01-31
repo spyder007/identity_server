@@ -1,12 +1,7 @@
 ﻿namespace Spydersoft.Identity.Models.Admin.ScopeViewModels
 {
-    public class ScopeNavBarViewModel : BaseAdminNavBar<ScopeViewModel>
+    public class ScopeNavBarViewModel(ScopeViewModel parent) : BaseAdminNavBar<ScopeViewModel>(parent)
     {
-        public ScopeNavBarViewModel(ScopeViewModel parent) : base(parent)
-        {
-
-        }
-
         public override string Name => Parent.Name;
 
     }

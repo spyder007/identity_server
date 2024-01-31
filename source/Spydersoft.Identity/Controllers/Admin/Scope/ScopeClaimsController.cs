@@ -12,11 +12,8 @@ using Spydersoft.Identity.Models.Admin.ScopeViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Scope
 {
-    public class ScopeClaimsController : BaseScopeCollectionController<ScopeClaimViewModel, ScopeClaimsViewModel, ApiScopeClaim>
+    public class ScopeClaimsController(ConfigurationDbContext context, IMapper mapper) : BaseScopeCollectionController<ScopeClaimViewModel, ScopeClaimsViewModel, ApiScopeClaim>(context, mapper)
     {
-        public ScopeClaimsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseApiCollectionController Implementation
 

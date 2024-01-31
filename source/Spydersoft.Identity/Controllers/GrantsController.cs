@@ -24,23 +24,15 @@ namespace Spydersoft.Identity.Controllers
     /// </summary>
     [SecurityHeaders]
     [Authorize]
-    public class GrantsController : Controller
+    public class GrantsController(IIdentityServerInteractionService interaction,
+        IClientStore clients,
+        IResourceStore resources,
+        IEventService events) : Controller
     {
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clients;
-        private readonly IResourceStore _resources;
-        private readonly IEventService _events;
-
-        public GrantsController(IIdentityServerInteractionService interaction,
-            IClientStore clients,
-            IResourceStore resources,
-            IEventService events)
-        {
-            _interaction = interaction;
-            _clients = clients;
-            _resources = resources;
-            _events = events;
-        }
+        private readonly IIdentityServerInteractionService _interaction = interaction;
+        private readonly IClientStore _clients = clients;
+        private readonly IResourceStore _resources = resources;
+        private readonly IEventService _events = events;
 
         /// <summary>
         /// Show list of grants
@@ -74,7 +66,7 @@ namespace Spydersoft.Identity.Controllers
                 Duende.IdentityServer.Models.Client client = await _clients.FindClientByIdAsync(grant.ClientId);
                 if (client != null)
                 {
-                    Duende.IdentityServer.Models.Resources resources = await _resources.FindResourcesByScopeAsync(grant.Scopes);
+                    Duende.IdentityServer.Models.Resources resourcesByScope = await _resources.FindResourcesByScopeAsync(grant.Scopes);
 
                     var item = new GrantViewModel()
                     {
@@ -85,8 +77,8 @@ namespace Spydersoft.Identity.Controllers
                         Description = grant.Description,
                         Created = grant.CreationTime,
                         Expires = grant.Expiration,
-                        IdentityGrantNames = resources.IdentityResources.Select(x => x.DisplayName ?? x.Name).ToArray(),
-                        ApiGrantNames = resources.ApiScopes.Select(x => x.DisplayName ?? x.Name).ToArray()
+                        IdentityGrantNames = resourcesByScope.IdentityResources.Select(x => x.DisplayName ?? x.Name).ToArray(),
+                        ApiGrantNames = resourcesByScope.ApiScopes.Select(x => x.DisplayName ?? x.Name).ToArray()
                     };
 
                     list.Add(item);

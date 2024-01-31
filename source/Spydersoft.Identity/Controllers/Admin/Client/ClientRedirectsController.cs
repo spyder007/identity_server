@@ -13,11 +13,8 @@ using IS4Entities = Duende.IdentityServer.EntityFramework.Entities;
 
 namespace Spydersoft.Identity.Controllers.Admin.Client
 {
-    public class ClientRedirectsController : BaseClientCollectionController<ClientRedirectViewModel, ClientRedirectsViewModel, IS4Entities.ClientRedirectUri>
+    public class ClientRedirectsController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientRedirectViewModel, ClientRedirectsViewModel, IS4Entities.ClientRedirectUri>(context, mapper)
     {
-        public ClientRedirectsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseClientCollectinoController Implementation
 

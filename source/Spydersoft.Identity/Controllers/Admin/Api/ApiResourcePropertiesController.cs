@@ -12,11 +12,8 @@ using Spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiResourcePropertiesController : BaseApiResourceCollectionController<ApiResourcePropertyViewModel, ApiResourcePropertiesViewModel, ApiResourceProperty>
+    public class ApiResourcePropertiesController(ConfigurationDbContext context, IMapper mapper) : BaseApiResourceCollectionController<ApiResourcePropertyViewModel, ApiResourcePropertiesViewModel, ApiResourceProperty>(context, mapper)
     {
-        public ApiResourcePropertiesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseApiCollectionController Implementation
 

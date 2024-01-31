@@ -14,7 +14,7 @@ namespace Spydersoft.Identity.Models.Admin.ClientViewModels
         public override ClientScopeViewModel GetChild(ClientViewModel parent, ConfigurationDbContext configDbContext)
         {
             ClientScopeViewModel child = base.GetChild(parent, configDbContext);
-            child.Scopes = configDbContext.ApiScopes.Select(scope => scope.Name).ToList();
+            child.Scopes = [.. configDbContext.ApiScopes.Select(scope => scope.Name)];
 
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Address);
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Email);

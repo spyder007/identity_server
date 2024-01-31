@@ -15,11 +15,8 @@ using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
-    public class IdentityResourcesController : BaseAdminController
+    public class IdentityResourcesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminController(dbContext, mapper)
     {
-        public IdentityResourcesController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
-        {
-        }
 
         #region Controller Actions
 
@@ -183,14 +180,14 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
 
         private static List<IdentityResource> GetStandardTypes()
         {
-            return new List<IdentityResource>()
-            {
+            return
+            [
                 new IdentityResources.Profile(),
                 new IdentityResources.Address(),
                 new IdentityResources.Email(),
                 new IdentityResources.OpenId(),
                 new IdentityResources.Phone()
-            };
+            ];
         }
     }
 }

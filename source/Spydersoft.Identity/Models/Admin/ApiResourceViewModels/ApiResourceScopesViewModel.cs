@@ -12,7 +12,7 @@ namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
         public override ApiResourceScopeViewModel GetChild(ApiResourceViewModel parent, ConfigurationDbContext configDbContext)
         {
             ApiResourceScopeViewModel child = base.GetChild(parent, configDbContext);
-            child.Scopes = configDbContext.ApiScopes.Select(scope => scope.Name).ToList();
+            child.Scopes = [.. configDbContext.ApiScopes.Select(scope => scope.Name)];
 
             Duende.IdentityServer.EntityFramework.Entities.ApiResource api = configDbContext.ApiResources.Include(api => api.Scopes).FirstOrDefault(api => api.Id == parent.Id);
             if (api != null)

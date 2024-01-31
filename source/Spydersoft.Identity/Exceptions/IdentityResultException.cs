@@ -1,21 +1,11 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Serialization;
 
 using Microsoft.AspNetCore.Identity;
 
 namespace Spydersoft.Identity.Exceptions
 {
-    [Serializable]
-    public class IdentityResultException : Exception
+    public class IdentityResultException(IdentityResult result) : Exception(result.Errors.First().Description)
     {
-        protected IdentityResultException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-
-        }
-        public IdentityResultException(IdentityResult result) : base(result.Errors.First().Description)
-        {
-
-        }
     }
 }

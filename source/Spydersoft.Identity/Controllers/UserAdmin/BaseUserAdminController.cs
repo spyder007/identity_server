@@ -6,15 +6,9 @@ using Spydersoft.Identity.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers.UserAdmin
 {
-    public class BaseUserAdminController : BaseController
+    public class BaseUserAdminController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) : BaseController(mapper)
     {
-        public BaseUserAdminController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) : base(mapper)
-        {
-            UserManager = userManager;
-            RoleManager = roleManager;
-        }
-
-        protected UserManager<ApplicationUser> UserManager { get; }
-        protected RoleManager<ApplicationRole> RoleManager { get; }
+        protected UserManager<ApplicationUser> UserManager { get; } = userManager;
+        protected RoleManager<ApplicationRole> RoleManager { get; } = roleManager;
     }
 }

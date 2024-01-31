@@ -11,13 +11,8 @@ using Spydersoft.Identity.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers.UserAdmin
 {
-    public class UsersController : BaseUserAdminController
+    public class UsersController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) : BaseUserAdminController(userManager, roleManager, mapper)
     {
-        public UsersController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper)
-            : base(userManager, roleManager, mapper)
-        {
-        }
-
         [HttpGet]
         public IActionResult Index()
         {

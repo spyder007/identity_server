@@ -11,11 +11,8 @@ using Spydersoft.Identity.Models.Admin.ScopeViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Scope
 {
-    public class ScopesController : BaseAdminController
+    public class ScopesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminController(dbContext, mapper)
     {
-        public ScopesController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
-        {
-        }
 
         #region Client List Actions
 

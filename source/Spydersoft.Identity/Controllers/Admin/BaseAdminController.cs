@@ -7,13 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 namespace Spydersoft.Identity.Controllers.Admin
 {
     [Authorize(Roles = "admin")]
-    public class BaseAdminController : BaseController
+    public class BaseAdminController(ConfigurationDbContext context, IMapper mapper) : BaseController(mapper)
     {
-        public BaseAdminController(ConfigurationDbContext context, IMapper mapper) : base(mapper)
-        {
-            ConfigDbContext = context;
-        }
-
-        protected ConfigurationDbContext ConfigDbContext { get; set; }
+        protected ConfigurationDbContext ConfigDbContext { get; set; } = context;
     }
 }

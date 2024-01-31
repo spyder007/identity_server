@@ -12,11 +12,8 @@ using Spydersoft.Identity.Models.Admin.ScopeViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Scope
 {
-    public class ScopePropertiesController : BaseScopeCollectionController<ScopePropertyViewModel, ScopePropertiesViewModel, ApiScopeProperty>
+    public class ScopePropertiesController(ConfigurationDbContext context, IMapper mapper) : BaseScopeCollectionController<ScopePropertyViewModel, ScopePropertiesViewModel, ApiScopeProperty>(context, mapper)
     {
-        public ScopePropertiesController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseApiCollectionController Implementation
 

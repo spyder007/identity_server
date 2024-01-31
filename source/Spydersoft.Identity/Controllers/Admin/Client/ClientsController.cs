@@ -11,11 +11,8 @@ using Spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Client
 {
-    public class ClientsController : BaseAdminController
+    public class ClientsController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminController(dbContext, mapper)
     {
-        public ClientsController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
-        {
-        }
 
         #region Client List Actions
 

@@ -12,13 +12,10 @@ using Spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Client
 {
-    public class ClientScopesController : BaseClientCollectionController<ClientScopeViewModel, ClientScopesViewModel, ClientScope>
+    public class ClientScopesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseClientCollectionController<ClientScopeViewModel, ClientScopesViewModel, ClientScope>(dbContext, mapper)
     {
-        #region Constructor
 
-        public ClientScopesController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
-        {
-        }
+        #region Constructor
 
         #endregion Constructor
 

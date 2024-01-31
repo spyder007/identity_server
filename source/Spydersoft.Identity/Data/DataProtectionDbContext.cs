@@ -3,13 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Spydersoft.Identity.Data
 {
-    public class DataProtectionDbContext : DbContext, IDataProtectionKeyContext
+    public class DataProtectionDbContext(DbContextOptions<DataProtectionDbContext> options) : DbContext(options), IDataProtectionKeyContext
     {
-        public DataProtectionDbContext(DbContextOptions<DataProtectionDbContext> options)
-            : base(options)
-        {
-        }
-
         public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
     }
 }

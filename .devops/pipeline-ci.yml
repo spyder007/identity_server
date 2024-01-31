@@ -54,6 +54,3 @@ extends:
         inputs:
           script: 'gulp build:dist'
           workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
-    preTestSteps:
-      - pwsh:
-          Copy-Item $(Build.SourcesDirectory)/source/Spydersoft.Identity.Tests/bin/Release/net6.0/refs/Microsoft.AspNetCore.Http.Features.dll $(Build.SourcesDirectory)/source/Spydersoft.Identity.Tests/bin/Release/net6.0

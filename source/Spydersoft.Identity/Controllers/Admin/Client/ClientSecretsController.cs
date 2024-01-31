@@ -14,11 +14,8 @@ using Spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Client
 {
-    public class ClientSecretsController : BaseClientCollectionController<ClientSecretViewModel, ClientSecretsViewModel, ClientSecret>
+    public class ClientSecretsController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientSecretViewModel, ClientSecretsViewModel, ClientSecret>(context, mapper)
     {
-        public ClientSecretsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseClientCollectionController Implementation
 

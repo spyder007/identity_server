@@ -11,12 +11,8 @@ using Spydersoft.Identity.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers.UserAdmin
 {
-    public class UserRolesController : BaseUserAdminController
+    public class UserRolesController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) : BaseUserAdminController(userManager, roleManager, mapper)
     {
-        public UserRolesController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper)
-            : base(userManager, roleManager, mapper)
-        {
-        }
 
         #region Role List
 
