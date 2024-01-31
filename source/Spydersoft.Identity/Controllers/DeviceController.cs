@@ -28,27 +28,18 @@ namespace Spydersoft.Identity.Controllers
 {
     [Authorize]
     [SecurityHeaders]
-    public class DeviceController : Controller
+    public class DeviceController(
+        IDeviceFlowInteractionService interaction,
+        IEventService eventService,
+        IOptions<IdentityServerOptions> options,
+        ILogger<DeviceController> logger,
+        IOptions<ConsentOptions> consentOptions) : Controller
     {
-        private readonly IDeviceFlowInteractionService _interaction;
-        private readonly IEventService _events;
-        private readonly IOptions<IdentityServerOptions> _options;
-        private readonly ILogger<DeviceController> _logger;
-        private readonly ConsentOptions _consentOptions;
-
-        public DeviceController(
-            IDeviceFlowInteractionService interaction,
-            IEventService eventService,
-            IOptions<IdentityServerOptions> options,
-            ILogger<DeviceController> logger,
-            IOptions<ConsentOptions> consentOptions)
-        {
-            _interaction = interaction;
-            _events = eventService;
-            _options = options;
-            _logger = logger;
-            _consentOptions = consentOptions.Value;
-        }
+        private readonly IDeviceFlowInteractionService _interaction = interaction;
+        private readonly IEventService _events = eventService;
+        private readonly IOptions<IdentityServerOptions> _options = options;
+        private readonly ILogger<DeviceController> _logger = logger;
+        private readonly ConsentOptions _consentOptions = consentOptions.Value;
 
         [HttpGet]
         public async Task<IActionResult> Index()

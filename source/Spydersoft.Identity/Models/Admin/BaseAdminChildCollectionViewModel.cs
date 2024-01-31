@@ -10,7 +10,7 @@ namespace Spydersoft.Identity.Models.Admin
     {
         protected BaseAdminChildCollectionViewModel()
         {
-            ItemsList = new List<TChildItemViewModel>();
+            ItemsList = [];
             NewItem = new TChildItemViewModel();
         }
 

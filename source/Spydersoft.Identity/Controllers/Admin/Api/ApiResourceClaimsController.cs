@@ -12,11 +12,8 @@ using Spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiResourceClaimsController : BaseApiResourceCollectionController<ApiResourceClaimViewModel, ApiResourceClaimsViewModel, ApiResourceClaim>
+    public class ApiResourceClaimsController(ConfigurationDbContext context, IMapper mapper) : BaseApiResourceCollectionController<ApiResourceClaimViewModel, ApiResourceClaimsViewModel, ApiResourceClaim>(context, mapper)
     {
-        public ApiResourceClaimsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseApiCollectionController Implementation
 

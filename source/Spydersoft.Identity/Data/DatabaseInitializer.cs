@@ -21,15 +21,10 @@ using Spydersoft.Identity.Models.Identity;
 
 namespace Spydersoft.Identity.Data
 {
-    public class DatabaseInitializer
+    public class DatabaseInitializer(IApplicationBuilder app)
     {
-        private readonly IApplicationBuilder _app;
+        private readonly IApplicationBuilder _app = app;
         private ILogger _log;
-
-        public DatabaseInitializer(IApplicationBuilder app)
-        {
-            _app = app;
-        }
 
         public void InitializeDatabase()
         {

@@ -25,25 +25,18 @@ namespace Spydersoft.Identity.Controllers
 {
     [SecurityHeaders]
     [AllowAnonymous]
-    public class RegisterController : BaseController
+    public class RegisterController(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        ILogger<RegisterController> logger,
+        IMapper mapper,
+        IEmailSender emailSender) : BaseController(mapper)
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IEmailSender _emailSender;
-        private readonly ILogger<RegisterController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly IEmailSender _emailSender = emailSender;
+        private readonly ILogger<RegisterController> _logger = logger;
 
-        public RegisterController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            ILogger<RegisterController> logger,
-            IMapper mapper,
-            IEmailSender emailSender) : base(mapper)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _logger = logger;
-            _emailSender = emailSender;
-        }
         [HttpGet]
         public IActionResult Index(string returnUrl = null)
         {

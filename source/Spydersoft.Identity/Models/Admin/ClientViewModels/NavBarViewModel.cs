@@ -1,12 +1,7 @@
 ﻿namespace Spydersoft.Identity.Models.Admin.ClientViewModels
 {
-    public class NavBarViewModel : BaseAdminNavBar<ClientViewModel>
+    public class NavBarViewModel(ClientViewModel parent) : BaseAdminNavBar<ClientViewModel>(parent)
     {
-        public NavBarViewModel(ClientViewModel parent) : base(parent)
-        {
-
-        }
-
         public override string Name => Parent.ClientName;
 
     }

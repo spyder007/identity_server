@@ -12,11 +12,8 @@ using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
-    public class IdentityResourceClaimsController : BaseIdentityResourceCollectionController<IdentityResourceClaimViewModel, IdentityResourceClaimsViewModel, IdentityResourceClaim>
+    public class IdentityResourceClaimsController(ConfigurationDbContext context, IMapper mapper) : BaseIdentityResourceCollectionController<IdentityResourceClaimViewModel, IdentityResourceClaimsViewModel, IdentityResourceClaim>(context, mapper)
     {
-        public IdentityResourceClaimsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseIdentityResourceCollectionController Implementation
 

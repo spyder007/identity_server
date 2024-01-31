@@ -12,11 +12,8 @@ using Spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Api
 {
-    public class ApiResourcesController : BaseAdminController
+    public class ApiResourcesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminController(dbContext, mapper)
     {
-        public ApiResourcesController(ConfigurationDbContext dbContext, IMapper mapper) : base(dbContext, mapper)
-        {
-        }
 
         #region Client List Actions
 

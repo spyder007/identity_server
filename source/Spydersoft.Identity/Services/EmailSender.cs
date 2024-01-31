@@ -13,14 +13,9 @@ namespace Spydersoft.Identity.Services
 {
     // This class is used by the application to send email for account confirmation and password reset.
     // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
-    public class EmailSender : IEmailSender
+    public class EmailSender(IOptions<SendgridOptions> options) : IEmailSender
     {
-        private readonly SendgridOptions _options;
-
-        public EmailSender(IOptions<SendgridOptions> options)
-        {
-            _options = options.Value;
-        }
+        private readonly SendgridOptions _options = options.Value;
 
         public Task SendEmailAsync(string email, string subject, string message)
         {

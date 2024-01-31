@@ -32,39 +32,26 @@ namespace Spydersoft.Identity.Controllers
 {
     [SecurityHeaders]
     [AllowAnonymous]
-    public class AccountController : Controller
+    public class AccountController(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        IIdentityServerInteractionService interaction,
+        IClientStore clientStore,
+        IAuthenticationSchemeProvider schemeProvider,
+        IAuthenticationHandlerProvider authenticationHandler,
+        IEventService events,
+        ILogger<AccountController> logger,
+        IEmailSender emailSender) : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
-        private readonly IAuthenticationSchemeProvider _schemeProvider;
-        private readonly IAuthenticationHandlerProvider _authenticationHandler;
-        private readonly IEventService _events;
-        private readonly ILogger<AccountController> _logger;
-        private readonly IEmailSender _emailSender;
-
-        public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
-            IIdentityServerInteractionService interaction,
-            IClientStore clientStore,
-            IAuthenticationSchemeProvider schemeProvider,
-            IAuthenticationHandlerProvider authenticationHandler,
-            IEventService events,
-            ILogger<AccountController> logger,
-            IEmailSender emailSender)
-        {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _interaction = interaction;
-            _clientStore = clientStore;
-            _schemeProvider = schemeProvider;
-            _events = events;
-            _logger = logger;
-            _emailSender = emailSender;
-            _authenticationHandler = authenticationHandler;
-        }
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly IIdentityServerInteractionService _interaction = interaction;
+        private readonly IClientStore _clientStore = clientStore;
+        private readonly IAuthenticationSchemeProvider _schemeProvider = schemeProvider;
+        private readonly IAuthenticationHandlerProvider _authenticationHandler = authenticationHandler;
+        private readonly IEventService _events = events;
+        private readonly ILogger<AccountController> _logger = logger;
+        private readonly IEmailSender _emailSender = emailSender;
 
         /// <summary>
         /// Entry point into the login workflow
@@ -302,8 +289,6 @@ namespace Spydersoft.Identity.Controllers
                 return View();
             }
 
-            var returnUrl = model.ReturnUrl ?? Url.Content("~/");
-
             ApplicationUser user = await _signInManager.GetTwoFactorAuthenticationUserAsync() ?? throw new InvalidOperationException($"Unable to load two-factor authentication user.");
             var authenticatorCode = model.TwoFactorCode.Replace(" ", string.Empty).Replace("-", string.Empty);
 
@@ -315,11 +300,7 @@ namespace Spydersoft.Identity.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
-                if (!string.IsNullOrEmpty(model.ReturnUrl))
-                {
-                    return Redirect(model.ReturnUrl);
-                }
-                return RedirectToPage("~/");
+                return !string.IsNullOrEmpty(model.ReturnUrl) ? Redirect(model.ReturnUrl) : RedirectToPage("~/");
             }
             else if (result.IsLockedOut)
             {

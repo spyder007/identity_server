@@ -4,15 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Spydersoft.Identity.Controllers
 {
-    public class BaseController : Controller
+    public class BaseController(IMapper mapper) : Controller
     {
 
-        public IMapper Mapper { get; }
-
-        public BaseController(IMapper mapper)
-        {
-            Mapper = mapper;
-        }
+        public IMapper Mapper { get; } = mapper;
 
         public IActionResult GetErrorAction(string errorMessage)
         {

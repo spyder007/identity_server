@@ -12,11 +12,8 @@ using Spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Client
 {
-    public class ClientIdpRestrictionsController : BaseClientCollectionController<ClientIdpRestrictionViewModel, ClientIdpRestrictionsViewModel, ClientIdPRestriction>
+    public class ClientIdpRestrictionsController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientIdpRestrictionViewModel, ClientIdpRestrictionsViewModel, ClientIdPRestriction>(context, mapper)
     {
-        public ClientIdpRestrictionsController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
 
         #region BaseClientCollectionController Implementation
 

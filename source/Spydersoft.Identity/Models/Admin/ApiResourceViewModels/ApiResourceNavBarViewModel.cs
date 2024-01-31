@@ -1,11 +1,7 @@
 ﻿namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
-    public class ApiResourceNavBarViewModel : BaseAdminNavBar<ApiResourceViewModel>
+    public class ApiResourceNavBarViewModel(ApiResourceViewModel parent) : BaseAdminNavBar<ApiResourceViewModel>(parent)
     {
-        public ApiResourceNavBarViewModel(ApiResourceViewModel parent) : base(parent)
-        {
-        }
-
         public override string Name => Parent.Name;
     }
 }

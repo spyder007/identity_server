@@ -30,24 +30,16 @@ namespace Spydersoft.Identity.Controllers
     /// </summary>
     [SecurityHeaders]
     [Authorize]
-    public class ConsentController : Controller
+    public class ConsentController(
+        IIdentityServerInteractionService interaction,
+        IEventService events,
+        ILogger<ConsentController> logger,
+        IOptions<ConsentOptions> consentOptions) : Controller
     {
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IEventService _events;
-        private readonly ILogger<ConsentController> _logger;
-        private readonly ConsentOptions _consentOptions;
-
-        public ConsentController(
-            IIdentityServerInteractionService interaction,
-            IEventService events,
-            ILogger<ConsentController> logger,
-            IOptions<ConsentOptions> consentOptions)
-        {
-            _interaction = interaction;
-            _events = events;
-            _logger = logger;
-            _consentOptions = consentOptions.Value;
-        }
+        private readonly IIdentityServerInteractionService _interaction = interaction;
+        private readonly IEventService _events = events;
+        private readonly ILogger<ConsentController> _logger = logger;
+        private readonly ConsentOptions _consentOptions = consentOptions.Value;
 
         /// <summary>
         /// Shows the consent screen
