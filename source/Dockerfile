@@ -9,26 +9,26 @@ FROM node:12.19-slim AS node-builder
 WORKDIR /src
 COPY . .
 
-WORKDIR /src/spydersoft.Identity
+WORKDIR /src/Spydersoft.Identity
 RUN npm install && npm install gulp-cli -g
 RUN gulp build:dist
 
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
-COPY ["spydersoft.Identity/spydersoft.Identity.csproj", "spydersoft.Identity/"]
+COPY ["Spydersoft.Identity/Spydersoft.Identity.csproj", "Spydersoft.Identity/"]
 
-RUN dotnet restore "spydersoft.Identity/spydersoft.Identity.csproj"
+RUN dotnet restore "Spydersoft.Identity/Spydersoft.Identity.csproj"
 COPY . .
-WORKDIR /src/spydersoft.Identity
+WORKDIR /src/Spydersoft.Identity
 
-RUN dotnet build "spydersoft.Identity.csproj" -c Release -o /app
+RUN dotnet build "Spydersoft.Identity.csproj" -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "spydersoft.Identity.csproj" -c Release -o /app
+RUN dotnet publish "Spydersoft.Identity.csproj" -c Release -o /app
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-COPY --from=node-builder /src/spydersoft.Identity/wwwroot ./wwwroot
-ENTRYPOINT ["dotnet", "spydersoft.Identity.dll"]
+COPY --from=node-builder /src/Spydersoft.Identity/wwwroot ./wwwroot
+ENTRYPOINT ["dotnet", "Spydersoft.Identity.dll"]

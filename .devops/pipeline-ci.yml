@@ -2,13 +2,13 @@
 resources:
   repositories:
     - repository: templates
-      type: BitBucket
-      endpoint: "Bitbucket - spydersoft"
-      name: spydersoftteam/azure-devops-templates
+      type: github
+      endpoint: spydersoft-gh
+      name: spydersoft-consulting/azure-devops-templates
     - repository: helmfileconfig
-      type: BitBucket
-      endpoint: Bitbucket - spydersoft
-      name: spydersoftteam/id-helm-config-repo
+      type: github
+      endpoint: spyder007
+      name: spyder007/id-helm-config
 
 trigger:
   branches:
@@ -24,24 +24,36 @@ pr: none
 extends:
   template: stages/stages-build-docker-update-helm/v1.yml@templates
   parameters:
-    publishProject: source/spydersoft.Identity/spydersoft.Identity.csproj
+    buildProject: source/Spydersoft.Identity.sln
+    publishProject: source/Spydersoft.Identity/Spydersoft.Identity.csproj
     artifactName: identityServer
-    artifactZipName: spydersoft.Identity
+    artifactZipName: Spydersoft.Identity
     dockerImageFileName: identity_server
     dockerImageName: spydersoft/identity/identity_server
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
+    sonar_endpoint_name: sonarcloud-spydersoft
+    sonar_project_key: spyder007_identity_server
+    sonar_project_name: identity_server
+    execute_sonar: true
+    execute_tests: true
+    test_projects: '**/*.Tests/*.csproj'
+    use_sonarcloud: true
+    sonar_cloud_organization: spydersoft-mjg
     prebuildSteps:
       - task: Npm@1
         displayName: NPM Install
         inputs:
-          workingDir: $(Build.SourcesDirectory)/source/spydersoft.Identity
+          workingDir: $(Build.SourcesDirectory)/source/Spydersoft.Identity
           command: install
       - task: CmdLine@2
         inputs:
           script: 'npm install gulp' 
-          workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
+          workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
       - task: CmdLine@2
         inputs:
           script: 'gulp build:dist'
-          workingDirectory: $(Build.SourcesDirectory)/source/spydersoft.Identity
+          workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
+    preTestSteps:
+      - pwsh:
+          Copy-Item $(Build.SourcesDirectory)/source/Spydersoft.Identity.Tests/bin/Release/net6.0/refs/Microsoft.AspNetCore.Http.Features.dll $(Build.SourcesDirectory)/source/Spydersoft.Identity.Tests/bin/Release/net6.0

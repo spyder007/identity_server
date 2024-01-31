@@ -44,3 +44,4 @@ identityserver4_log.txt
 **/node_modules/**
 *.rsa
 **/charts/*.tgz
+**/TestResults/**

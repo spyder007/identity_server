@@ -1,0 +1,33 @@
+﻿@model LogoutViewModel
+
+<section class="signin-section">
+    <div class="container-fluid">
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                        <h2>Sign out</h2>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+
+        <div class="row g-0">
+            <div class="signin-wrapper">
+                <div class="form-wrapper">
+                    <p class="text-sm mb-25">
+                        Would you like to sign out?
+                    </p>
+                    <form asp-action="Logout">
+                        <input type="hidden" name="logoutId" value="@Model.LogoutId" />
+                        <div class="input-style-1">
+                            <button class="btn btn-primary">Yes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

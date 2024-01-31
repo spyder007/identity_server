@@ -1,0 +1,24 @@
+{
+  "name": "identity_server",
+  "version": "1.0.0",
+  "description": "When upgrading the ASP.NET Identity Packages or the Duende IdentityServer Packages, it may be necessary to add additional DB migrations.  This can be done by going into the Package Manager Console and typing the following:",
+  "main": "index.js",
+  "scripts": {
+    "test": "dotnet test source/Spydersoft.Identity.Tests/Spydersoft.Identity.Tests.csproj",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/spyder007/identity_server"
+  },
+  "lint-staged": {
+    "*.cs": "dotnet format './source/' --include"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "husky": "^8.0.0",
+    "lint-staged": "^13.1.0"
+  }
+}

@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Spydersoft</title>
+    <link rel="shortcut icon" href="images/favicon.svg">
+
+
+    <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+    <!-- Main styles for this application -->
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/lineicons.css" />
+        <link rel="stylesheet" href="~/css/materialdesignicons.min.css" />
+        <link rel="stylesheet" href="~/css/style.css">
+        <link href="~/lib/font-awesome/css/all.css" rel="stylesheet">
+    </environment>
+
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/lineicons.css" />
+        <link rel="stylesheet" href="~/css/materialdesignicons.min.css" />
+        <link rel="stylesheet" href="~/css/style.css">
+        <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="~/css/style.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <aside class="sidebar-nav-wrapper">
+        <div class="navbar-logo">
+            <a href="/">
+                <img src="~/images/logo/logo.svg" alt="logo" width="200" height="45"  />
+            </a>
+        </div>
+        @await Html.PartialAsync("_SidebarNav")
+    </aside>
+    <div class="overlay"></div>
+
+    <!-- Main content -->
+    <main class="main-wrapper">
+        @await Html.PartialAsync("_AppHeader")
+
+        @RenderBody()
+
+        <!-- /.conainer-fluid -->
+        @await Html.PartialAsync("_Footer")
+    </main>
+
+
+
+    <environment names="Development">
+        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="~/lib/moment/moment.min.js"></script>
+        <script src="~/js/polyfill.js"></script>
+        <script src="~/js/main.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="~/lib/moment/moment.min.js"></script>
+        <script src="~/js/polyfill.js"></script>
+        <script src="~/js/main.js"></script>
+    </environment>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,55 @@
+﻿@using Spydersoft.Identity.Models.Admin.ClientViewModels
+@model ClientPostLogoutRedirectUrisViewModel
+
+<section>
+    <div class="container-fluid">
+        <div class="title-wrapper pt-30">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="title mb-30">
+                        <h2>@ViewData["Title"]</h2>
+                    </div>
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+        <div class="row">
+            <div class="card-style mb-30">
+                <form asp-action="Save" asp-route-id="@Model.Id">
+                    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
+                    <table class="table" aria-label="Client Post Logout URLs">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>@Html.LabelFor(model => model.NewItem.PostLogoutRedirectUri)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var redirectViewModel in Model.ItemsList)
+                        {
+                            <tr>
+                                <td>@redirectViewModel.PostLogoutRedirectUri</td>
+                                <td><a asp-action="Delete" asp-route-id="@redirectViewModel.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.PostLogoutRedirectUri" pf-validation-for="NewItem.PostLogoutRedirectUri" pf-validationerror-class="is-invalid" />
+                                    <span asp-validation-for="NewItem.PostLogoutRedirectUri" class="invalid-feedback"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="mb-3">
+                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
+                                </div>
+                            </td>
+
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
