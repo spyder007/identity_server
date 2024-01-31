@@ -315,7 +315,11 @@ namespace Spydersoft.Identity.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
-                return LocalRedirect(returnUrl);
+                if (!string.IsNullOrEmpty(model.ReturnUrl))
+                {
+                    return Redirect(model.ReturnUrl);
+                }
+                return RedirectToPage("~/");
             }
             else if (result.IsLockedOut)
             {
