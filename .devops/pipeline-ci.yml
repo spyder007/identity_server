@@ -21,17 +21,26 @@ trigger:
 
 pr: none
 
+
 extends:
-  template: stages/stages-build-docker-update-helm/v1.yml@templates
+  template: pipelines/build-api/v1.yml@templates
   parameters:
     buildProject: source/Spydersoft.Identity.sln
-    publishProject: source/Spydersoft.Identity/Spydersoft.Identity.csproj
+    publishProject: src/Spydersoft.TechRadar.Data.Api.csproj
+    netCoreVersion: '8.0.x'
     artifactName: identityServer
     artifactZipName: Spydersoft.Identity
     dockerImageFileName: identity_server
     dockerImageName: spydersoft/identity/identity_server
+    dockerFilePath: Dockerfile.simple
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
+    ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+      updateHelmConfig: false
+      buildAndPublishDockerImage: false
+    ${{ else }}:
+      updateHelmConfig: true
+      buildAndPublishDockerImage: true
     sonar_endpoint_name: sonarcloud-spydersoft
     sonar_project_key: spyder007_identity_server
     sonar_project_name: identity_server
