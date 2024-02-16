@@ -26,6 +26,11 @@ using Spydersoft.Identity.Options;
 
 namespace Spydersoft.Identity.Controllers
 {
+    /// <summary>
+    /// Class DeviceController.
+    /// Implements the <see cref="Controller" />
+    /// </summary>
+    /// <seealso cref="Controller" />
     [Authorize]
     [SecurityHeaders]
     public class DeviceController(
@@ -35,12 +40,31 @@ namespace Spydersoft.Identity.Controllers
         ILogger<DeviceController> logger,
         IOptions<ConsentOptions> consentOptions) : Controller
     {
+        /// <summary>
+        /// The interaction
+        /// </summary>
         private readonly IDeviceFlowInteractionService _interaction = interaction;
+        /// <summary>
+        /// The events
+        /// </summary>
         private readonly IEventService _events = eventService;
+        /// <summary>
+        /// The options
+        /// </summary>
         private readonly IOptions<IdentityServerOptions> _options = options;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<DeviceController> _logger = logger;
+        /// <summary>
+        /// The consent options
+        /// </summary>
         private readonly ConsentOptions _consentOptions = consentOptions.Value;
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -62,6 +86,11 @@ namespace Spydersoft.Identity.Controllers
             return View("UserCodeConfirmation", vm);
         }
 
+        /// <summary>
+        /// Users the code capture.
+        /// </summary>
+        /// <param name="userCode">The user code.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserCodeCapture(string userCode)
@@ -70,6 +99,11 @@ namespace Spydersoft.Identity.Controllers
             return vm == null ? View("Error") : (IActionResult)View("UserCodeConfirmation", vm);
         }
 
+        /// <summary>
+        /// Callbacks the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Callback(DeviceAuthorizationInputModel model)
@@ -83,6 +117,11 @@ namespace Spydersoft.Identity.Controllers
             return result.HasValidationError ? View("Error") : (IActionResult)View("Success");
         }
 
+        /// <summary>
+        /// Processes the consent.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Spydersoft.Identity.Models.Consent.ProcessConsentResult.</returns>
         private async Task<ProcessConsentResult> ProcessConsent(DeviceAuthorizationInputModel model)
         {
             var result = new ProcessConsentResult();
@@ -153,12 +192,25 @@ namespace Spydersoft.Identity.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Build view model as an asynchronous operation.
+        /// </summary>
+        /// <param name="userCode">The user code.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>A Task&lt;Spydersoft.Identity.Models.Device.DeviceAuthorizationViewModel&gt; representing the asynchronous operation.</returns>
         private async Task<DeviceAuthorizationViewModel> BuildViewModelAsync(string userCode, DeviceAuthorizationInputModel model = null)
         {
             DeviceFlowAuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(userCode);
             return request != null ? CreateConsentViewModel(userCode, model, request) : null;
         }
 
+        /// <summary>
+        /// Creates the consent view model.
+        /// </summary>
+        /// <param name="userCode">The user code.</param>
+        /// <param name="model">The model.</param>
+        /// <param name="request">The request.</param>
+        /// <returns>Spydersoft.Identity.Models.Device.DeviceAuthorizationViewModel.</returns>
         private DeviceAuthorizationViewModel CreateConsentViewModel(string userCode, DeviceAuthorizationInputModel model, DeviceFlowAuthorizationRequest request)
         {
             var vm = new DeviceAuthorizationViewModel
@@ -167,7 +219,7 @@ namespace Spydersoft.Identity.Controllers
                 Description = model?.Description,
 
                 RememberConsent = model?.RememberConsent ?? true,
-                ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>(),
+                ScopesConsented = model?.ScopesConsented ?? [],
 
                 ClientName = request.Client.ClientName ?? request.Client.ClientId,
                 ClientUrl = request.Client.ClientUri,
@@ -196,6 +248,12 @@ namespace Spydersoft.Identity.Controllers
             return vm;
         }
 
+        /// <summary>
+        /// Creates the scope view model.
+        /// </summary>
+        /// <param name="identity">The identity.</param>
+        /// <param name="check">The check.</param>
+        /// <returns>Spydersoft.Identity.Models.Consent.ScopeViewModel.</returns>
         private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
         {
             return new ScopeViewModel
@@ -209,6 +267,13 @@ namespace Spydersoft.Identity.Controllers
             };
         }
 
+        /// <summary>
+        /// Creates the scope view model.
+        /// </summary>
+        /// <param name="parsedScopeValue">The parsed scope value.</param>
+        /// <param name="apiScope">The API scope.</param>
+        /// <param name="check">The check.</param>
+        /// <returns>Spydersoft.Identity.Models.Consent.ScopeViewModel.</returns>
         public static ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
         {
             return new ScopeViewModel
@@ -221,6 +286,11 @@ namespace Spydersoft.Identity.Controllers
                 Checked = check || apiScope.Required
             };
         }
+        /// <summary>
+        /// Gets the offline access scope.
+        /// </summary>
+        /// <param name="check">The check.</param>
+        /// <returns>Spydersoft.Identity.Models.Consent.ScopeViewModel.</returns>
         private ScopeViewModel GetOfflineAccessScope(bool check)
         {
             return new ScopeViewModel

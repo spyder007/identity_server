@@ -7,10 +7,19 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
+    /// <summary>
+    /// Class addClientColumn.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(ConfigurationDbContext))]
     [Migration("20161228161122_addClientColumn")]
     partial class addClientColumn
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder

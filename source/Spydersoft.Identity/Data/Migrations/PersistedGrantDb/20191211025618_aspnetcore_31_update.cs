@@ -3,9 +3,18 @@
 namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
 #pragma warning disable IDE1006 // Naming Styles
+    /// <summary>
+    /// Class aspnetcore_31_update.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     public partial class aspnetcore_31_update : Migration
 #pragma warning restore IDE1006 // Naming Styles
     {
+        /// <summary>
+        /// Ups the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.DropIndex(
@@ -20,9 +29,13 @@ namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
             _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
                 table: "PersistedGrants",
-                columns: new[] { "SubjectId", "ClientId", "Type" });
+                columns: ["SubjectId", "ClientId", "Type"]);
         }
 
+        /// <summary>
+        /// Downs the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.DropIndex(
@@ -36,7 +49,7 @@ namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
             _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type_Expiration",
                 table: "PersistedGrants",
-                columns: new[] { "SubjectId", "ClientId", "Type", "Expiration" });
+                columns: ["SubjectId", "ClientId", "Type", "Expiration"]);
         }
     }
 }

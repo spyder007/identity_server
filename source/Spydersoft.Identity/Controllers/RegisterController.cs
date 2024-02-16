@@ -18,11 +18,13 @@ using Spydersoft.Identity.Models.AccountViewModels;
 using Spydersoft.Identity.Models.Identity;
 using Spydersoft.Identity.Services;
 
-/// <summary>
-/// The Controllers namespace.
-/// </summary>
 namespace Spydersoft.Identity.Controllers
 {
+    /// <summary>
+    /// Class RegisterController.
+    /// Implements the <see cref="BaseController" />
+    /// </summary>
+    /// <seealso cref="BaseController" />
     [SecurityHeaders]
     [AllowAnonymous]
     public class RegisterController(
@@ -32,11 +34,28 @@ namespace Spydersoft.Identity.Controllers
         IMapper mapper,
         IEmailSender emailSender) : BaseController(mapper)
     {
+        /// <summary>
+        /// The user manager
+        /// </summary>
         private readonly UserManager<ApplicationUser> _userManager = userManager;
+        /// <summary>
+        /// The sign in manager
+        /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        /// <summary>
+        /// The email sender
+        /// </summary>
         private readonly IEmailSender _emailSender = emailSender;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<RegisterController> _logger = logger;
 
+        /// <summary>
+        /// Indexes the specified return URL.
+        /// </summary>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public IActionResult Index(string returnUrl = null)
         {
@@ -44,6 +63,12 @@ namespace Spydersoft.Identity.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Indexes the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(RegisterViewModel model, string returnUrl = null)

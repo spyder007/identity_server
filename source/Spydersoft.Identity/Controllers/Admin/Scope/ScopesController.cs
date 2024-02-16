@@ -11,11 +11,20 @@ using Spydersoft.Identity.Models.Admin.ScopeViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Scope
 {
+    /// <summary>
+    /// Class ScopesController.
+    /// Implements the <see cref="BaseAdminController" />
+    /// </summary>
+    /// <seealso cref="BaseAdminController" />
     public class ScopesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminController(dbContext, mapper)
     {
 
         #region Client List Actions
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         public IActionResult Index()
         {
             ViewData["Title"] = "Registered Scopes";
@@ -28,6 +37,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Scope
             return View(scopesModel);
         }
 
+        /// <summary>
+        /// Deletes the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -49,6 +63,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Scope
         #endregion Client List Actions
 
         #region Main Tab
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public IActionResult Edit(int? id)
         {
@@ -74,6 +93,12 @@ namespace Spydersoft.Identity.Controllers.Admin.Scope
             return View(scopeViewModel);
         }
 
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="client">The client.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> Edit(int? id, ScopeViewModel client)
         {

@@ -5,9 +5,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
 #pragma warning disable IDE1006 // Naming Styles
+    /// <summary>
+    /// Class IS4_2_5_3_Update.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     public partial class IS4_2_5_3_Update : Migration
 #pragma warning restore IDE1006 // Naming Styles
     {
+        /// <summary>
+        /// Ups the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.DropIndex(
@@ -31,7 +40,7 @@ namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
             _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type_Expiration",
                 table: "PersistedGrants",
-                columns: new[] { "SubjectId", "ClientId", "Type", "Expiration" });
+                columns: ["SubjectId", "ClientId", "Type", "Expiration"]);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",
@@ -45,6 +54,10 @@ namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
                 column: "Expiration");
         }
 
+        /// <summary>
+        /// Downs the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.DropTable(
@@ -57,7 +70,7 @@ namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
             _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
                 table: "PersistedGrants",
-                columns: new[] { "SubjectId", "ClientId", "Type" });
+                columns: ["SubjectId", "ClientId", "Type"]);
         }
     }
 }

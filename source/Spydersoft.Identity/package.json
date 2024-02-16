@@ -4,28 +4,28 @@
   "private": true,
   "description": "Identity Server 5 Implementation",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.0.0",
-    "bootstrap": "^5.1.2",
-    "chart.js": "3.5.1",
+    "@fortawesome/fontawesome-free": "^6.5.1",
+    "bootstrap": "^5.3.2",
+    "chart.js": "4.4.1",
     "davidshimjs-qrcodejs": "^0.0.2",
     "flag-icon-css": "3.5.0",
-    "fullcalendar": "^6.0.2",
-    "gulp": "^4.0.2",
-    "jquery": "^3.6.0",
-    "jquery-validation": "^1.19.3",
-    "jquery-validation-unobtrusive": "^3.2.12",
-    "moment": "^2.29.4",
+    "fullcalendar": "^6.1.10",
+    "jquery": "^3.7.1",
+    "jquery-validation": "^1.20.0",
+    "jquery-validation-unobtrusive": "^4.0.0",
+    "moment": "^2.30.1",
     "pace-progress": "1.0.2",
     "popper.js": "^1.16.1",
     "simple-line-icons": "^2.5.5",
-    "simplebar": "^5.3.6"
+    "simplebar": "^6.2.5"
   },
   "devDependencies": {
-    "gulp-autoprefixer": "^6.1.0",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^9.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-rename": "^2.0.0",
-    "gulp-sass": "^5.0.0",
-    "sass": "^1.42.1"
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.71.0"
   },
   "browserslist": [
     "Chrome >= 45",

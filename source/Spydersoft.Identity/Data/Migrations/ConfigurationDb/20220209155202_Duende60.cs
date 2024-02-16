@@ -5,8 +5,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
+    /// <summary>
+    /// Class Duende60.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     public partial class Duende60 : Migration
     {
+        /// <summary>
+        /// Ups the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.DropIndex(
@@ -156,13 +165,13 @@ namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
             _ = migrationBuilder.CreateIndex(
                 name: "IX_IdentityResourceProperties_IdentityResourceId_Key",
                 table: "IdentityResourceProperties",
-                columns: new[] { "IdentityResourceId", "Key" },
+                columns: ["IdentityResourceId", "Key"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_IdentityResourceClaims_IdentityResourceId_Type",
                 table: "IdentityResourceClaims",
-                columns: new[] { "IdentityResourceId", "Type" },
+                columns: ["IdentityResourceId", "Type"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
@@ -174,82 +183,86 @@ namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientScopes_ClientId_Scope",
                 table: "ClientScopes",
-                columns: new[] { "ClientId", "Scope" },
+                columns: ["ClientId", "Scope"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientRedirectUris_ClientId_RedirectUri",
                 table: "ClientRedirectUris",
-                columns: new[] { "ClientId", "RedirectUri" },
+                columns: ["ClientId", "RedirectUri"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientProperties_ClientId_Key",
                 table: "ClientProperties",
-                columns: new[] { "ClientId", "Key" },
+                columns: ["ClientId", "Key"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientPostLogoutRedirectUris_ClientId_PostLogoutRedirectUri",
                 table: "ClientPostLogoutRedirectUris",
-                columns: new[] { "ClientId", "PostLogoutRedirectUri" },
+                columns: ["ClientId", "PostLogoutRedirectUri"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientIdPRestrictions_ClientId_Provider",
                 table: "ClientIdPRestrictions",
-                columns: new[] { "ClientId", "Provider" },
+                columns: ["ClientId", "Provider"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientGrantTypes_ClientId_GrantType",
                 table: "ClientGrantTypes",
-                columns: new[] { "ClientId", "GrantType" },
+                columns: ["ClientId", "GrantType"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientCorsOrigins_ClientId_Origin",
                 table: "ClientCorsOrigins",
-                columns: new[] { "ClientId", "Origin" },
+                columns: ["ClientId", "Origin"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ClientClaims_ClientId_Type_Value",
                 table: "ClientClaims",
-                columns: new[] { "ClientId", "Type", "Value" },
+                columns: ["ClientId", "Type", "Value"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiScopeProperties_ScopeId_Key",
                 table: "ApiScopeProperties",
-                columns: new[] { "ScopeId", "Key" },
+                columns: ["ScopeId", "Key"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiScopeClaims_ScopeId_Type",
                 table: "ApiScopeClaims",
-                columns: new[] { "ScopeId", "Type" },
+                columns: ["ScopeId", "Type"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiResourceScopes_ApiResourceId_Scope",
                 table: "ApiResourceScopes",
-                columns: new[] { "ApiResourceId", "Scope" },
+                columns: ["ApiResourceId", "Scope"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiResourceProperties_ApiResourceId_Key",
                 table: "ApiResourceProperties",
-                columns: new[] { "ApiResourceId", "Key" },
+                columns: ["ApiResourceId", "Key"],
                 unique: true);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_ApiResourceClaims_ApiResourceId_Type",
                 table: "ApiResourceClaims",
-                columns: new[] { "ApiResourceId", "Type" },
+                columns: ["ApiResourceId", "Type"],
                 unique: true);
         }
 
+        /// <summary>
+        /// Downs the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.DropIndex(

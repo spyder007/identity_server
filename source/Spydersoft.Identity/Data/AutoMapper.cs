@@ -19,9 +19,17 @@ using IdentityResource = Duende.IdentityServer.EntityFramework.Entities.Identity
 
 namespace Spydersoft.Identity.Data
 {
+    /// <summary>
+    /// Class AutoMapper.
+    /// Implements the <see cref="Profile" />
+    /// </summary>
+    /// <seealso cref="Profile" />
     public class AutoMapper : Profile
     {
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutoMapper"/> class.
+        /// </summary>
         public AutoMapper()
         {
             PopulateIdentityMappings();
@@ -31,6 +39,9 @@ namespace Spydersoft.Identity.Data
             PopulateScopeResourceMappings();
         }
 
+        /// <summary>
+        /// Populates the identity mappings.
+        /// </summary>
         private void PopulateIdentityMappings()
         {
             _ = CreateMap<ApplicationRole, ApplicationRole>()
@@ -52,6 +63,9 @@ namespace Spydersoft.Identity.Data
                 .ReverseMap();
         }
 
+        /// <summary>
+        /// Populates the client mappings.
+        /// </summary>
         private void PopulateClientMappings()
         {
             _ = CreateMap<ClientViewModel, Client>()
@@ -111,6 +125,9 @@ namespace Spydersoft.Identity.Data
                 .ReverseMap();
         }
 
+        /// <summary>
+        /// Populates the API resource mappings.
+        /// </summary>
         private void PopulateApiResourceMappings()
         {
             _ = CreateMap<ApiResourceViewModel, ApiResource>()
@@ -143,6 +160,9 @@ namespace Spydersoft.Identity.Data
 
         }
 
+        /// <summary>
+        /// Populates the scope resource mappings.
+        /// </summary>
         private void PopulateScopeResourceMappings()
         {
             _ = CreateMap<ScopeViewModel, ApiScope>()
@@ -162,6 +182,9 @@ namespace Spydersoft.Identity.Data
                 .ReverseMap();
         }
 
+        /// <summary>
+        /// Populates the identity resource mappings.
+        /// </summary>
         private void PopulateIdentityResourceMappings()
         {
             _ = CreateMap<IdentityResourceViewModel, IdentityResource>()

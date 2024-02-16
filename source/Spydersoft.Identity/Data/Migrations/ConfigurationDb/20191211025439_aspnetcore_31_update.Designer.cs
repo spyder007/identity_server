@@ -9,10 +9,19 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
+    /// <summary>
+    /// Class aspnetcore_31_update.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(ConfigurationDbContext))]
     [Migration("20191211025439_aspnetcore_31_update")]
     partial class aspnetcore_31_update
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

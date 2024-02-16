@@ -7,10 +7,19 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
+    /// <summary>
+    /// Class InitialIdentityServerConfigurationDbMigration.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(ConfigurationDbContext))]
     [Migration("20161208145715_InitialIdentityServerConfigurationDbMigration")]
     partial class InitialIdentityServerConfigurationDbMigration
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder

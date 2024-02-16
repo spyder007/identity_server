@@ -10,9 +10,18 @@ using Spydersoft.Identity.Data;
 
 namespace Spydersoft.Identity.Data.Migrations.AspNetIdentity
 {
+    /// <summary>
+    /// Class ApplicationDbContextModelSnapshot.
+    /// Implements the <see cref="ModelSnapshot" />
+    /// </summary>
+    /// <seealso cref="ModelSnapshot" />
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
+        /// <summary>
+        /// Builds the model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

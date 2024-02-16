@@ -12,11 +12,20 @@ using Spydersoft.Identity.Models.Admin.ApiResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Api
 {
+    /// <summary>
+    /// Class ApiResourcesController.
+    /// Implements the <see cref="BaseAdminController" />
+    /// </summary>
+    /// <seealso cref="BaseAdminController" />
     public class ApiResourcesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminController(dbContext, mapper)
     {
 
         #region Client List Actions
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         public IActionResult Index()
         {
             var apisViewModel = new ApiResourcesViewModel
@@ -28,6 +37,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
             return View(apisViewModel);
         }
 
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public IActionResult Edit(int? id)
         {
@@ -53,6 +67,12 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
             return View(apiModel);
         }
 
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="apiViewModel">The API view model.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> Edit(int? id, ApiResourceViewModel apiViewModel)
         {
@@ -99,6 +119,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
             return View(apiViewModel);
         }
 
+        /// <summary>
+        /// Deletes the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {

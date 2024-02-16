@@ -4,9 +4,18 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
 #pragma warning disable IDE1006 // Naming Styles
+    /// <summary>
+    /// Class IdentityServer3to4.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     public partial class IdentityServer3to4 : Migration
 #pragma warning restore IDE1006 // Naming Styles
     {
+        /// <summary>
+        /// Ups the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.AddColumn<DateTime>(
@@ -42,10 +51,14 @@ namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
             _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_SessionId_Type",
                 table: "PersistedGrants",
-                columns: new[] { "SubjectId", "SessionId", "Type" });
+                columns: ["SubjectId", "SessionId", "Type"]);
 
         }
 
+        /// <summary>
+        /// Downs the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.DropIndex(

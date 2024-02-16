@@ -11,11 +11,20 @@ using Spydersoft.Identity.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers.UserAdmin
 {
+    /// <summary>
+    /// Class UserRolesController.
+    /// Implements the <see cref="BaseUserAdminController" />
+    /// </summary>
+    /// <seealso cref="BaseUserAdminController" />
     public class UserRolesController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) : BaseUserAdminController(userManager, roleManager, mapper)
     {
 
         #region Role List
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         public IActionResult Index()
         {
             var viewModel = new ApplicationRolesViewModel
@@ -30,6 +39,11 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
 
         #region Role Editing and Deletion
 
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -56,6 +70,12 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="roleModel">The role model.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> Edit(string id, ApplicationRoleViewModel roleModel)
         {
@@ -79,6 +99,11 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
             return View(roleModel);
         }
 
+        /// <summary>
+        /// Deletes the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
@@ -100,6 +125,12 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
 
         #region Role Claim Add / Deletion
 
+        /// <summary>
+        /// Adds the claim.
+        /// </summary>
+        /// <param name="roleid">The roleid.</param>
+        /// <param name="viewModel">The view model.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> AddClaim(string roleid, ApplicationRoleViewModel viewModel)
         {
@@ -113,6 +144,12 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
             return !result.Succeeded ? GetErrorAction(result.ToString()) : RedirectToAction(nameof(Edit), new { id = roleid });
         }
 
+        /// <summary>
+        /// Deletes the claim.
+        /// </summary>
+        /// <param name="roleid">The roleid.</param>
+        /// <param name="claimtype">The claimtype.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> DeleteClaim(string roleid, string claimtype)
         {

@@ -9,10 +9,19 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
+    /// <summary>
+    /// Class IdentityServer3to4.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(PersistedGrantDbContext))]
     [Migration("20201005143523_IdentityServer3to4")]
     partial class IdentityServer3to4
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

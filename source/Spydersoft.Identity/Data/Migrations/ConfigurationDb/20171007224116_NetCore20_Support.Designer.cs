@@ -10,10 +10,19 @@ using System;
 
 namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
+    /// <summary>
+    /// Class NetCore20_Support.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(ConfigurationDbContext))]
     [Migration("20171007224116_NetCore20_Support")]
     partial class NetCore20_Support
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

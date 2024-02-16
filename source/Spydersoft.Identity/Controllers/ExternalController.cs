@@ -24,6 +24,11 @@ using Spydersoft.Identity.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers
 {
+    /// <summary>
+    /// Class ExternalController.
+    /// Implements the <see cref="Controller" />
+    /// </summary>
+    /// <seealso cref="Controller" />
     [SecurityHeaders]
     [AllowAnonymous]
     public class ExternalController(
@@ -33,15 +38,34 @@ namespace Spydersoft.Identity.Controllers
         IEventService events,
         ILogger<ExternalController> logger) : Controller
     {
+        /// <summary>
+        /// The user manager
+        /// </summary>
         private readonly UserManager<ApplicationUser> _userManager = userManager;
+        /// <summary>
+        /// The sign in manager
+        /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        /// <summary>
+        /// The interaction
+        /// </summary>
         private readonly IIdentityServerInteractionService _interaction = interaction;
+        /// <summary>
+        /// The events
+        /// </summary>
         private readonly IEventService _events = events;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<ExternalController> _logger = logger;
 
         /// <summary>
         /// initiate roundtrip to external authentication provider
         /// </summary>
+        /// <param name="scheme">The scheme.</param>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
+        /// <exception cref="ArgumentException">invalid return URL, nameof(returnUrl)</exception>
         [HttpGet]
         public IActionResult Challenge(string scheme, string returnUrl)
         {
@@ -75,6 +99,7 @@ namespace Spydersoft.Identity.Controllers
         /// <summary>
         /// Post processing of external authentication
         /// </summary>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Callback()
         {
@@ -138,6 +163,11 @@ namespace Spydersoft.Identity.Controllers
             return Redirect(returnUrl);
         }
 
+        /// <summary>
+        /// Find user from external provider as an asynchronous operation.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <returns>A Task&lt;(Spydersoft.Identity.Models.Identity.ApplicationUser user, string provider, string providerUserId, System.Collections.Generic.IEnumerable&lt;System.Security.Claims.Claim&gt; claims)&gt; representing the asynchronous operation.</returns>
         private async Task<(ApplicationUser user, string provider, string providerUserId, IEnumerable<Claim> claims)>
             FindUserFromExternalProviderAsync(AuthenticateResult result)
         {
@@ -163,6 +193,12 @@ namespace Spydersoft.Identity.Controllers
             return (user, provider, providerUserId, claims);
         }
 
+        /// <summary>
+        /// Gets the filtered claims.
+        /// </summary>
+        /// <param name="claims">The claims.</param>
+        /// <param name="email">The email.</param>
+        /// <returns>System.Collections.Generic.List&lt;System.Security.Claims.Claim&gt;.</returns>
         private List<Claim> GetFilteredClaims(IEnumerable<Claim> claims, string email)
         {
             // create a list of claims that we want to transfer into our store
@@ -207,6 +243,15 @@ namespace Spydersoft.Identity.Controllers
             return filtered;
         }
 
+        /// <summary>
+        /// Automatic provision user as an asynchronous operation.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <param name="providerUserId">The provider user identifier.</param>
+        /// <param name="claims">The claims.</param>
+        /// <returns>A Task&lt;Spydersoft.Identity.Models.Identity.ApplicationUser&gt; representing the asynchronous operation.</returns>
+        /// <exception cref="IdentityResultException">createResult</exception>
+        /// <exception cref="IdentityResultException">identityResult</exception>
         private async Task<ApplicationUser> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
         {
             var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ?? claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
@@ -247,6 +292,12 @@ namespace Spydersoft.Identity.Controllers
 
         // if the external login is OIDC-based, there are certain things we need to preserve to make logout work
         // this will be different for WS-Fed, SAML2p or other protocols
+        /// <summary>
+        /// Processes the login callback.
+        /// </summary>
+        /// <param name="externalResult">The external result.</param>
+        /// <param name="localClaims">The local claims.</param>
+        /// <param name="localSignInProps">The local sign in props.</param>
         private static void ProcessLoginCallback(AuthenticateResult externalResult, List<Claim> localClaims, AuthenticationProperties localSignInProps)
         {
             // if the external system sent a session id claim, copy it over
@@ -261,7 +312,7 @@ namespace Spydersoft.Identity.Controllers
             var idToken = externalResult.Properties.GetTokenValue("id_token");
             if (idToken != null)
             {
-                localSignInProps.StoreTokens(new[] { new AuthenticationToken { Name = "id_token", Value = idToken } });
+                localSignInProps.StoreTokens([new AuthenticationToken { Name = "id_token", Value = idToken }]);
             }
         }
     }

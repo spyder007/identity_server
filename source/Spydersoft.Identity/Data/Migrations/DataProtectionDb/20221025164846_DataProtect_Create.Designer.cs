@@ -10,10 +10,19 @@ using Spydersoft.Identity.Data;
 
 namespace Spydersoft.Identity.Data.Migrations.DataProtectionDb
 {
+    /// <summary>
+    /// Class DataProtect_Create.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(DataProtectionDbContext))]
     [Migration("20221025164846_DataProtect_Create")]
     partial class DataProtect_Create
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

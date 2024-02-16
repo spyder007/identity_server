@@ -12,16 +12,35 @@ using Spydersoft.Identity.Models.Home;
 
 namespace Spydersoft.Identity.Controllers
 {
+    /// <summary>
+    /// Class HomeController.
+    /// Implements the <see cref="Controller" />
+    /// </summary>
+    /// <seealso cref="Controller" />
     public class HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment hostingEnvironment) : Controller
     {
+        /// <summary>
+        /// The interaction
+        /// </summary>
         private readonly IIdentityServerInteractionService _interaction = interaction;
+        /// <summary>
+        /// The hosting environment
+        /// </summary>
         private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         public IActionResult Index()
         {
             return View();
         }
 
+        /// <summary>
+        /// Abouts this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         public IActionResult About()
         {
             var aboutDataFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "about_data.json");
@@ -30,6 +49,10 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Contacts this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -40,6 +63,8 @@ namespace Spydersoft.Identity.Controllers
         /// <summary>
         /// Shows the error page
         /// </summary>
+        /// <param name="errorId">The error identifier.</param>
+        /// <returns>IActionResult.</returns>
         public async Task<IActionResult> Error(string errorId)
         {
             var vm = new ErrorViewModel();

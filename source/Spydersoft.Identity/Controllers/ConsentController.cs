@@ -36,16 +36,28 @@ namespace Spydersoft.Identity.Controllers
         ILogger<ConsentController> logger,
         IOptions<ConsentOptions> consentOptions) : Controller
     {
+        /// <summary>
+        /// The interaction
+        /// </summary>
         private readonly IIdentityServerInteractionService _interaction = interaction;
+        /// <summary>
+        /// The events
+        /// </summary>
         private readonly IEventService _events = events;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<ConsentController> _logger = logger;
+        /// <summary>
+        /// The consent options
+        /// </summary>
         private readonly ConsentOptions _consentOptions = consentOptions.Value;
 
         /// <summary>
         /// Shows the consent screen
         /// </summary>
-        /// <param name="returnUrl"></param>
-        /// <returns></returns>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Index(string returnUrl)
         {
@@ -56,6 +68,8 @@ namespace Spydersoft.Identity.Controllers
         /// <summary>
         /// Handles the consent screen postback
         /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ConsentInputModel model)
@@ -84,6 +98,11 @@ namespace Spydersoft.Identity.Controllers
         }
 
         /* helper APIs for the ConsentController */
+        /// <summary>
+        /// Processes the consent.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Spydersoft.Identity.Models.Consent.ProcessConsentResult.</returns>
         private async Task<ProcessConsentResult> ProcessConsent(ConsentInputModel model)
         {
             var result = new ProcessConsentResult();
@@ -155,6 +174,12 @@ namespace Spydersoft.Identity.Controllers
             return result;
         }
 
+        /// <summary>
+        /// Build view model as an asynchronous operation.
+        /// </summary>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>A Task&lt;Spydersoft.Identity.Models.Consent.ConsentViewModel&gt; representing the asynchronous operation.</returns>
         private async Task<ConsentViewModel> BuildViewModelAsync(string returnUrl, ConsentInputModel model = null)
         {
             AuthorizationRequest request = await _interaction.GetAuthorizationContextAsync(returnUrl);
@@ -170,6 +195,13 @@ namespace Spydersoft.Identity.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Creates the consent view model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <param name="request">The request.</param>
+        /// <returns>Spydersoft.Identity.Models.Consent.ConsentViewModel.</returns>
         private ConsentViewModel CreateConsentViewModel(
             ConsentInputModel model, string returnUrl,
             AuthorizationRequest request)
@@ -177,7 +209,7 @@ namespace Spydersoft.Identity.Controllers
             var vm = new ConsentViewModel
             {
                 RememberConsent = model?.RememberConsent ?? true,
-                ScopesConsented = model?.ScopesConsented ?? Enumerable.Empty<string>(),
+                ScopesConsented = model?.ScopesConsented ?? [],
                 Description = model?.Description,
 
                 ReturnUrl = returnUrl,
@@ -209,6 +241,13 @@ namespace Spydersoft.Identity.Controllers
             return vm;
         }
 
+        /// <summary>
+        /// Creates the scope view model.
+        /// </summary>
+        /// <param name="parsedScopeValue">The parsed scope value.</param>
+        /// <param name="apiScope">The API scope.</param>
+        /// <param name="check">The check.</param>
+        /// <returns>Spydersoft.Identity.Models.Consent.ScopeViewModel.</returns>
         public ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
         {
             var displayName = apiScope.DisplayName ?? apiScope.Name;
@@ -228,6 +267,11 @@ namespace Spydersoft.Identity.Controllers
             };
         }
 
+        /// <summary>
+        /// Gets the offline access scope.
+        /// </summary>
+        /// <param name="check">The check.</param>
+        /// <returns>Spydersoft.Identity.Models.Consent.ScopeViewModel.</returns>
         private ScopeViewModel GetOfflineAccessScope(bool check)
         {
             return new ScopeViewModel
