@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     /// <summary>
     /// Class ClientClaimsController.
-    /// Implements the <see cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientClaimViewModel, Models.Admin.ClientViewModels.ClientClaimsViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientClaim}" />
+    /// Implements the <see cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientClaimViewModel, Models.Admin.ClientViewModels.ClientClaimsViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientClaim}" />
+    /// <seealso cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ClientClaimsController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientClaimViewModel, ClientClaimsViewModel, ClientClaim>(context, mapper)
     {
 

@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Scope
 {
     /// <summary>
     /// Class ScopeClaimsController.
-    /// Implements the <see cref="Scope.BaseScopeCollectionController{Models.Admin.ScopeViewModels.ScopeClaimViewModel, Models.Admin.ScopeViewModels.ScopeClaimsViewModel, Duende.IdentityServer.EntityFramework.Entities.ApiScopeClaim}" />
+    /// Implements the <see cref="BaseScopeCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Scope.BaseScopeCollectionController{Models.Admin.ScopeViewModels.ScopeClaimViewModel, Models.Admin.ScopeViewModels.ScopeClaimsViewModel, Duende.IdentityServer.EntityFramework.Entities.ApiScopeClaim}" />
+    /// <seealso cref="BaseScopeCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ScopeClaimsController(ConfigurationDbContext context, IMapper mapper) : BaseScopeCollectionController<ScopeClaimViewModel, ScopeClaimsViewModel, ApiScopeClaim>(context, mapper)
     {
 

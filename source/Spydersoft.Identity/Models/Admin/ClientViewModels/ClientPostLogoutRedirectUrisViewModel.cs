@@ -4,9 +4,9 @@ namespace Spydersoft.Identity.Models.Admin.ClientViewModels
 {
     /// <summary>
     /// Class ClientPostLogoutRedirectUrisViewModel.
-    /// Implements the <see cref="ClientViewModels.BaseClientCollectionViewModel{ClientViewModels.ClientPostLogoutRedirectUriViewModel}" />
+    /// Implements the <see cref="BaseClientCollectionViewModel{TChildViewModel}" />
     /// </summary>
-    /// <seealso cref="ClientViewModels.BaseClientCollectionViewModel{ClientViewModels.ClientPostLogoutRedirectUriViewModel}" />
+    /// <seealso cref="BaseClientCollectionViewModel{TChildViewModel}" />
     public class ClientPostLogoutRedirectUrisViewModel : BaseClientCollectionViewModel<ClientPostLogoutRedirectUriViewModel>
     {
     }

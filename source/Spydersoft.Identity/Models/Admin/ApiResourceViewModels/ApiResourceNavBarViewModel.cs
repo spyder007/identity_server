@@ -2,9 +2,9 @@
 {
     /// <summary>
     /// Class ApiResourceNavBarViewModel.
-    /// Implements the <see cref="Admin.BaseAdminNavBar{ApiResourceViewModels.ApiResourceViewModel}" />
+    /// Implements the <see cref="BaseAdminNavBar{TMainViewModel}" />
     /// </summary>
-    /// <seealso cref="Admin.BaseAdminNavBar{ApiResourceViewModels.ApiResourceViewModel}" />
+    /// <seealso cref="BaseAdminNavBar{TMainViewModel}" />
     public class ApiResourceNavBarViewModel(ApiResourceViewModel parent) : BaseAdminNavBar<ApiResourceViewModel>(parent)
     {
         /// <summary>

@@ -2,10 +2,10 @@
 {
     /// <summary>
     /// Class BaseApiResourceCollectionViewModel.
-    /// Implements the <see cref="Admin.BaseAdminChildCollectionViewModel{T, ApiResourceViewModels.ApiResourceViewModel}" />
+    /// Implements the <see cref="BaseAdminChildCollectionViewModel{TChildItemViewModel, TParentItemViewModel}" />
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <seealso cref="Admin.BaseAdminChildCollectionViewModel{T, ApiResourceViewModels.ApiResourceViewModel}" />
+    /// <seealso cref="BaseAdminChildCollectionViewModel{TChildItemViewModel, TParentItemViewModel}" />
     public class BaseApiResourceCollectionViewModel<T> : BaseAdminChildCollectionViewModel<T, ApiResourceViewModel> where T : BaseAdminChildItemViewModel, new()
     {
         /// <summary>

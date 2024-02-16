@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     /// <summary>
     /// Class ClientIdpRestrictionsController.
-    /// Implements the <see cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientIdpRestrictionViewModel, Models.Admin.ClientViewModels.ClientIdpRestrictionsViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientIdPRestriction}" />
+    /// Implements the <see cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientIdpRestrictionViewModel, Models.Admin.ClientViewModels.ClientIdpRestrictionsViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientIdPRestriction}" />
+    /// <seealso cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ClientIdpRestrictionsController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientIdpRestrictionViewModel, ClientIdpRestrictionsViewModel, ClientIdPRestriction>(context, mapper)
     {
 

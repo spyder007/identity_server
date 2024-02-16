@@ -4,9 +4,9 @@ namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
     /// <summary>
     /// Class ApiResourceClaimsViewModel.
-    /// Implements the <see cref="ApiResourceViewModels.BaseApiResourceCollectionViewModel{ApiResourceViewModels.ApiResourceClaimViewModel}" />
+    /// Implements the <see cref="BaseApiResourceCollectionViewModel{T}" />
     /// </summary>
-    /// <seealso cref="ApiResourceViewModels.BaseApiResourceCollectionViewModel{ApiResourceViewModels.ApiResourceClaimViewModel}" />
+    /// <seealso cref="BaseApiResourceCollectionViewModel{T}" />
     public class ApiResourceClaimsViewModel : BaseApiResourceCollectionViewModel<ApiResourceClaimViewModel>
     {
     }

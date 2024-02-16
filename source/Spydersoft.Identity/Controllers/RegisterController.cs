@@ -18,9 +18,6 @@ using Spydersoft.Identity.Models.AccountViewModels;
 using Spydersoft.Identity.Models.Identity;
 using Spydersoft.Identity.Services;
 
-/// <summary>
-/// The Controllers namespace.
-/// </summary>
 namespace Spydersoft.Identity.Controllers
 {
     /// <summary>

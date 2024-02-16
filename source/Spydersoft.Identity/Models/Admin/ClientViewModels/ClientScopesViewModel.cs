@@ -11,9 +11,9 @@ namespace Spydersoft.Identity.Models.Admin.ClientViewModels
 {
     /// <summary>
     /// Class ClientScopesViewModel.
-    /// Implements the <see cref="ClientViewModels.BaseClientCollectionViewModel`1" />
+    /// Implements the <see cref="BaseClientCollectionViewModel{TChildViewModel}" />
     /// </summary>
-    /// <seealso cref="ClientViewModels.BaseClientCollectionViewModel`1" />
+    /// <seealso cref="BaseClientCollectionViewModel{TChildViewModel}" />
     public class ClientScopesViewModel : BaseClientCollectionViewModel<ClientScopeViewModel>
     {
         /// <summary>

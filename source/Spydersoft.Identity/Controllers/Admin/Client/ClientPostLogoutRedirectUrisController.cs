@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     /// <summary>
     /// Class ClientPostLogoutRedirectUrisController.
-    /// Implements the <see cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientPostLogoutRedirectUriViewModel, Models.Admin.ClientViewModels.ClientPostLogoutRedirectUrisViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientPostLogoutRedirectUri}" />
+    /// Implements the <see cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientPostLogoutRedirectUriViewModel, Models.Admin.ClientViewModels.ClientPostLogoutRedirectUrisViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientPostLogoutRedirectUri}" />
+    /// <seealso cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ClientPostLogoutRedirectUrisController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientPostLogoutRedirectUriViewModel, ClientPostLogoutRedirectUrisViewModel, ClientPostLogoutRedirectUri>(context, mapper)
     {
 

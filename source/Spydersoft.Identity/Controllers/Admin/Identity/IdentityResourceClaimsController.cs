@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
     /// <summary>
     /// Class IdentityResourceClaimsController.
-    /// Implements the <see cref="Identity.BaseIdentityResourceCollectionController{Models.Admin.IdentityResourceViewModels.IdentityResourceClaimViewModel, Models.Admin.IdentityResourceViewModels.IdentityResourceClaimsViewModel, Duende.IdentityServer.EntityFramework.Entities.IdentityResourceClaim}" />
+    /// Implements the <see cref="BaseIdentityResourceCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Identity.BaseIdentityResourceCollectionController{Models.Admin.IdentityResourceViewModels.IdentityResourceClaimViewModel, Models.Admin.IdentityResourceViewModels.IdentityResourceClaimsViewModel, Duende.IdentityServer.EntityFramework.Entities.IdentityResourceClaim}" />
+    /// <seealso cref="BaseIdentityResourceCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class IdentityResourceClaimsController(ConfigurationDbContext context, IMapper mapper) : BaseIdentityResourceCollectionController<IdentityResourceClaimViewModel, IdentityResourceClaimsViewModel, IdentityResourceClaim>(context, mapper)
     {
 

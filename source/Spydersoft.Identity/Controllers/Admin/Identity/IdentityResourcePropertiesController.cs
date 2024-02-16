@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
     /// <summary>
     /// Class IdentityResourcePropertiesController.
-    /// Implements the <see cref="Identity.BaseIdentityResourceCollectionController{Models.Admin.IdentityResourceViewModels.IdentityResourcePropertyViewModel, Models.Admin.IdentityResourceViewModels.IdentityResourcePropertiesViewModel, Duende.IdentityServer.EntityFramework.Entities.IdentityResourceProperty}" />
+    /// Implements the <see cref="BaseIdentityResourceCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Identity.BaseIdentityResourceCollectionController{Models.Admin.IdentityResourceViewModels.IdentityResourcePropertyViewModel, Models.Admin.IdentityResourceViewModels.IdentityResourcePropertiesViewModel, Duende.IdentityServer.EntityFramework.Entities.IdentityResourceProperty}" />
+    /// <seealso cref="BaseIdentityResourceCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class IdentityResourcePropertiesController(ConfigurationDbContext context, IMapper mapper) : BaseIdentityResourceCollectionController<IdentityResourcePropertyViewModel, IdentityResourcePropertiesViewModel, IdentityResourceProperty>(context, mapper)
     {
 

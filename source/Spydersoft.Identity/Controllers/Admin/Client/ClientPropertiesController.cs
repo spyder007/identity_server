@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     /// <summary>
     /// Class ClientPropertiesController.
-    /// Implements the <see cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientPropertyViewModel, Models.Admin.ClientViewModels.ClientPropertiesViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientProperty}" />
+    /// Implements the <see cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientPropertyViewModel, Models.Admin.ClientViewModels.ClientPropertiesViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientProperty}" />
+    /// <seealso cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ClientPropertiesController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientPropertyViewModel, ClientPropertiesViewModel, ClientProperty>(context, mapper)
     {
 

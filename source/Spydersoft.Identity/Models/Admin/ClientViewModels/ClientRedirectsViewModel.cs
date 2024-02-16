@@ -4,9 +4,9 @@ namespace Spydersoft.Identity.Models.Admin.ClientViewModels
 {
     /// <summary>
     /// Class ClientRedirectsViewModel.
-    /// Implements the <see cref="ClientViewModels.BaseClientCollectionViewModel{ClientViewModels.ClientRedirectViewModel}" />
+    /// Implements the <see cref="BaseClientCollectionViewModel{TChildViewModel}" />
     /// </summary>
-    /// <seealso cref="ClientViewModels.BaseClientCollectionViewModel{ClientViewModels.ClientRedirectViewModel}" />
+    /// <seealso cref="BaseClientCollectionViewModel{TChildViewModel}" />
     public class ClientRedirectsViewModel : BaseClientCollectionViewModel<ClientRedirectViewModel>
     {
     }

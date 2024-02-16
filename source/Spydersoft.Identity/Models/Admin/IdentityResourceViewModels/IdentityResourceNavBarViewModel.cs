@@ -2,9 +2,9 @@
 {
     /// <summary>
     /// Class IdentityResourceNavBarViewModel.
-    /// Implements the <see cref="Admin.BaseAdminNavBar{IdentityResourceViewModels.IdentityResourceViewModel}" />
+    /// Implements the <see cref="BaseAdminNavBar{TMainViewModel}" />
     /// </summary>
-    /// <seealso cref="Admin.BaseAdminNavBar{IdentityResourceViewModels.IdentityResourceViewModel}" />
+    /// <seealso cref="BaseAdminNavBar{TMainViewModel}" />
     public class IdentityResourceNavBarViewModel(IdentityResourceViewModel parent) : BaseAdminNavBar<IdentityResourceViewModel>(parent)
     {
         /// <summary>

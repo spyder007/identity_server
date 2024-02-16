@@ -15,9 +15,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     /// <summary>
     /// Class ClientRedirectsController.
-    /// Implements the <see cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientRedirectViewModel, Models.Admin.ClientViewModels.ClientRedirectsViewModel, IS4Entities.ClientRedirectUri}" />
+    /// Implements the <see cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientRedirectViewModel, Models.Admin.ClientViewModels.ClientRedirectsViewModel, IS4Entities.ClientRedirectUri}" />
+    /// <seealso cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ClientRedirectsController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientRedirectViewModel, ClientRedirectsViewModel, IS4Entities.ClientRedirectUri>(context, mapper)
     {
 

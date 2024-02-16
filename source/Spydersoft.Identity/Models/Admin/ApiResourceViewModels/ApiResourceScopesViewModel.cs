@@ -9,9 +9,9 @@ namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
     /// <summary>
     /// Class ApiResourceScopesViewModel.
-    /// Implements the <see cref="ApiResourceViewModels.BaseApiResourceCollectionViewModel`1" />
+    /// Implements the <see cref="BaseApiResourceCollectionViewModel{T}" />
     /// </summary>
-    /// <seealso cref="ApiResourceViewModels.BaseApiResourceCollectionViewModel`1" />
+    /// <seealso cref="BaseApiResourceCollectionViewModel{T}" />
     public class ApiResourceScopesViewModel : BaseApiResourceCollectionViewModel<ApiResourceScopeViewModel>
     {
         /// <summary>

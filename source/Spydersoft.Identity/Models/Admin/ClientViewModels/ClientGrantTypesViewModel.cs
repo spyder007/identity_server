@@ -4,9 +4,9 @@ namespace Spydersoft.Identity.Models.Admin.ClientViewModels
 {
     /// <summary>
     /// Class ClientGrantTypesViewModel.
-    /// Implements the <see cref="ClientViewModels.BaseClientCollectionViewModel{ClientViewModels.ClientGrantTypeViewModel}" />
+    /// Implements the <see cref="BaseClientCollectionViewModel{TChildViewModel}" />
     /// </summary>
-    /// <seealso cref="ClientViewModels.BaseClientCollectionViewModel{ClientViewModels.ClientGrantTypeViewModel}" />
+    /// <seealso cref="BaseClientCollectionViewModel{TChildViewModel}" />
     public class ClientGrantTypesViewModel : BaseClientCollectionViewModel<ClientGrantTypeViewModel>
     {
     }

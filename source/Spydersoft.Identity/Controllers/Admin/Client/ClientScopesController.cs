@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     /// <summary>
     /// Class ClientScopesController.
-    /// Implements the <see cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientScopeViewModel, Models.Admin.ClientViewModels.ClientScopesViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientScope}" />
+    /// Implements the <see cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientScopeViewModel, Models.Admin.ClientViewModels.ClientScopesViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientScope}" />
+    /// <seealso cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ClientScopesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseClientCollectionController<ClientScopeViewModel, ClientScopesViewModel, ClientScope>(dbContext, mapper)
     {
 

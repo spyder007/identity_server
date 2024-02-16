@@ -4,9 +4,9 @@ namespace Spydersoft.Identity.Models.Admin.ScopeViewModels
 {
     /// <summary>
     /// Class ScopePropertiesViewModel.
-    /// Implements the <see cref="ScopeViewModels.BaseScopeCollectionViewModel{ScopeViewModels.ScopePropertyViewModel}" />
+    /// Implements the <see cref="BaseScopeCollectionViewModel{T}" />
     /// </summary>
-    /// <seealso cref="ScopeViewModels.BaseScopeCollectionViewModel{ScopeViewModels.ScopePropertyViewModel}" />
+    /// <seealso cref="BaseScopeCollectionViewModel{T}" />
     public class ScopePropertiesViewModel : BaseScopeCollectionViewModel<ScopePropertyViewModel>
     {
     }

@@ -16,12 +16,12 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
     /// <summary>
     /// Class BaseIdentityResourceCollectionController.
-    /// Implements the <see cref="Admin.BaseAdminCollectionController{TSingleViewModel, TCollectionViewModel, Models.Admin.IdentityResourceViewModels.IdentityResourceViewModel, IS4Entities.IdentityResource, TChildEntity}" />
+    /// Implements the <see cref="BaseAdminCollectionController{TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity}" />
     /// </summary>
     /// <typeparam name="TSingleViewModel">The type of the t single view model.</typeparam>
     /// <typeparam name="TCollectionViewModel">The type of the t collection view model.</typeparam>
     /// <typeparam name="TChildEntity">The type of the t child entity.</typeparam>
-    /// <seealso cref="Admin.BaseAdminCollectionController{TSingleViewModel, TCollectionViewModel, Models.Admin.IdentityResourceViewModels.IdentityResourceViewModel, IS4Entities.IdentityResource, TChildEntity}" />
+    /// <seealso cref="BaseAdminCollectionController{TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity}" />
     public abstract class BaseIdentityResourceCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity>(ConfigurationDbContext context, IMapper mapper)
         : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, IdentityResourceViewModel, IS4Entities.IdentityResource, TChildEntity>(context, mapper)
         where TSingleViewModel : BaseAdminChildItemViewModel, new()

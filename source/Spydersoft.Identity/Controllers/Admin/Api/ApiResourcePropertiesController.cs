@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
 {
     /// <summary>
     /// Class ApiResourcePropertiesController.
-    /// Implements the <see cref="Api.BaseApiResourceCollectionController{Models.Admin.ApiResourceViewModels.ApiResourcePropertyViewModel, Models.Admin.ApiResourceViewModels.ApiResourcePropertiesViewModel, Duende.IdentityServer.EntityFramework.Entities.ApiResourceProperty}" />
+    /// Implements the <see cref="BaseApiResourceCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Api.BaseApiResourceCollectionController{Models.Admin.ApiResourceViewModels.ApiResourcePropertyViewModel, Models.Admin.ApiResourceViewModels.ApiResourcePropertiesViewModel, Duende.IdentityServer.EntityFramework.Entities.ApiResourceProperty}" />
+    /// <seealso cref="BaseApiResourceCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ApiResourcePropertiesController(ConfigurationDbContext context, IMapper mapper) : BaseApiResourceCollectionController<ApiResourcePropertyViewModel, ApiResourcePropertiesViewModel, ApiResourceProperty>(context, mapper)
     {
 

@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
 {
     /// <summary>
     /// Class ApiResourceClaimsController.
-    /// Implements the <see cref="Api.BaseApiResourceCollectionController{Models.Admin.ApiResourceViewModels.ApiResourceClaimViewModel, Models.Admin.ApiResourceViewModels.ApiResourceClaimsViewModel, Duende.IdentityServer.EntityFramework.Entities.ApiResourceClaim}" />
+    /// Implements the <see cref="BaseApiResourceCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Api.BaseApiResourceCollectionController{Models.Admin.ApiResourceViewModels.ApiResourceClaimViewModel, Models.Admin.ApiResourceViewModels.ApiResourceClaimsViewModel, Duende.IdentityServer.EntityFramework.Entities.ApiResourceClaim}" />
+    /// <seealso cref="BaseApiResourceCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ApiResourceClaimsController(ConfigurationDbContext context, IMapper mapper) : BaseApiResourceCollectionController<ApiResourceClaimViewModel, ApiResourceClaimsViewModel, ApiResourceClaim>(context, mapper)
     {
 

@@ -4,9 +4,9 @@ namespace Spydersoft.Identity.Models.Admin.IdentityResourceViewModels
 {
     /// <summary>
     /// Class IdentityResourcePropertiesViewModel.
-    /// Implements the <see cref="IdentityResourceViewModels.BaseIdentityResourceCollectionViewModel{IdentityResourceViewModels.IdentityResourcePropertyViewModel}" />
+    /// Implements the <see cref="BaseIdentityResourceCollectionViewModel{T}" />
     /// </summary>
-    /// <seealso cref="IdentityResourceViewModels.BaseIdentityResourceCollectionViewModel{IdentityResourceViewModels.IdentityResourcePropertyViewModel}" />
+    /// <seealso cref="BaseIdentityResourceCollectionViewModel{T}" />
     public class IdentityResourcePropertiesViewModel : BaseIdentityResourceCollectionViewModel<IdentityResourcePropertyViewModel>
     {
     }

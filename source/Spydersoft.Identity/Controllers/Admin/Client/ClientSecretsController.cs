@@ -16,9 +16,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     /// <summary>
     /// Class ClientSecretsController.
-    /// Implements the <see cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientSecretViewModel, Models.Admin.ClientViewModels.ClientSecretsViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientSecret}" />
+    /// Implements the <see cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientSecretViewModel, Models.Admin.ClientViewModels.ClientSecretsViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientSecret}" />
+    /// <seealso cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ClientSecretsController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientSecretViewModel, ClientSecretsViewModel, ClientSecret>(context, mapper)
     {
 

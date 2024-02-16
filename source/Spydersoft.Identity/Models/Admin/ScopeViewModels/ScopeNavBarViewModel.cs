@@ -2,9 +2,9 @@
 {
     /// <summary>
     /// Class ScopeNavBarViewModel.
-    /// Implements the <see cref="Admin.BaseAdminNavBar{ScopeViewModels.ScopeViewModel}" />
+    /// Implements the <see cref="BaseAdminNavBar{TMainViewModel}" />
     /// </summary>
-    /// <seealso cref="Admin.BaseAdminNavBar{ScopeViewModels.ScopeViewModel}" />
+    /// <seealso cref="BaseAdminNavBar{TMainViewModel}" />
     public class ScopeNavBarViewModel(ScopeViewModel parent) : BaseAdminNavBar<ScopeViewModel>(parent)
     {
         /// <summary>

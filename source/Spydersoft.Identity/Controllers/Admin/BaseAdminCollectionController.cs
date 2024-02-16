@@ -23,22 +23,19 @@ namespace Spydersoft.Identity.Controllers.Admin
     /// <typeparam name="TEntity">The type of the t entity.</typeparam>
     /// <typeparam name="TChildEntity">The type of the t child entity.</typeparam>
     /// <seealso cref="BaseAdminController" />
-    public abstract class BaseAdminCollectionController<TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity> : BaseAdminController
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="BaseAdminCollectionController{TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity}"/> class.
+    /// </remarks>
+    /// <param name="context">The context.</param>
+    /// <param name="mapper">The mapper.</param>
+    public abstract class BaseAdminCollectionController<TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity>(ConfigurationDbContext context, IMapper mapper) : BaseAdminController(context, mapper)
            where TChildViewModel : BaseAdminChildItemViewModel, new()
            where TChildCollectionViewModel : BaseAdminChildCollectionViewModel<TChildViewModel, TMainEntityViewModel>, new()
            where TMainEntityViewModel : BaseAdminViewModel, new()
            where TEntity : class
     {
-        #region Constructor
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseAdminCollectionController{TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity}"/> class.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="mapper">The mapper.</param>
-        protected BaseAdminCollectionController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
-        {
-        }
+        #region Constructor
 
         #endregion Constructor
 

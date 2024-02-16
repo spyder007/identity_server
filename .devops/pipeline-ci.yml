@@ -55,10 +55,12 @@ extends:
           workingDir: $(Build.SourcesDirectory)/source/Spydersoft.Identity
           command: install
       - task: CmdLine@2
+        displayName: 'Gulp Install'
         inputs:
           script: 'npm install gulp' 
           workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
       - task: CmdLine@2
+        displayName: 'Gulp Build'
         inputs:
           script: 'gulp build:dist'
           workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity

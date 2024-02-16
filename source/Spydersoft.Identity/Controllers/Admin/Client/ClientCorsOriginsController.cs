@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     /// <summary>
     /// Class ClientCorsOriginsController.
-    /// Implements the <see cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientCorsOriginViewModel, Models.Admin.ClientViewModels.ClientCorsOriginsViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientCorsOrigin}" />
+    /// Implements the <see cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientCorsOriginViewModel, Models.Admin.ClientViewModels.ClientCorsOriginsViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientCorsOrigin}" />
+    /// <seealso cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ClientCorsOriginsController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientCorsOriginViewModel, ClientCorsOriginsViewModel, ClientCorsOrigin>(context, mapper)
     {
 

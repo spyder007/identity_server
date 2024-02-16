@@ -7,9 +7,9 @@ namespace Spydersoft.Identity.Data
 {
     /// <summary>
     /// Class ApplicationDbContext.
-    /// Implements the <see cref="Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext{Models.Identity.ApplicationUser, Models.Identity.ApplicationRole, System.String}" />
+    /// Implements the <see cref="IdentityDbContext{TUser, TRole, TKey}" />
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext{Models.Identity.ApplicationUser, Models.Identity.ApplicationRole, System.String}" />
+    /// <seealso cref="IdentityDbContext{TUser, TRole, TKey}" />
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, ApplicationRole, string>(options)
     {
     }

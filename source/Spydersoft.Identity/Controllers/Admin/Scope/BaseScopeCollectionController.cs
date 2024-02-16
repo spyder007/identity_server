@@ -16,12 +16,12 @@ namespace Spydersoft.Identity.Controllers.Admin.Scope
 {
     /// <summary>
     /// Class BaseScopeCollectionController.
-    /// Implements the <see cref="Admin.BaseAdminCollectionController{TSingleViewModel, TCollectionViewModel, Models.Admin.ScopeViewModels.ScopeViewModel, IS4Entities.ApiScope, TChildEntity}" />
+    /// Implements the <see cref="BaseAdminCollectionController{TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity}" />
     /// </summary>
     /// <typeparam name="TSingleViewModel">The type of the t single view model.</typeparam>
     /// <typeparam name="TCollectionViewModel">The type of the t collection view model.</typeparam>
     /// <typeparam name="TChildEntity">The type of the t child entity.</typeparam>
-    /// <seealso cref="Admin.BaseAdminCollectionController{TSingleViewModel, TCollectionViewModel, Models.Admin.ScopeViewModels.ScopeViewModel, IS4Entities.ApiScope, TChildEntity}" />
+    /// <seealso cref="BaseAdminCollectionController{TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity}" />
     public abstract class BaseScopeCollectionController<TSingleViewModel, TCollectionViewModel, TChildEntity>(ConfigurationDbContext context, IMapper mapper)
         : BaseAdminCollectionController<TSingleViewModel, TCollectionViewModel, ScopeViewModel, IS4Entities.ApiScope, TChildEntity>(context, mapper)
         where TSingleViewModel : BaseAdminChildItemViewModel, new()

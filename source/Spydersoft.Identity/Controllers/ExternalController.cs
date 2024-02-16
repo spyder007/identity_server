@@ -167,7 +167,7 @@ namespace Spydersoft.Identity.Controllers
         /// Find user from external provider as an asynchronous operation.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <returns>A Task&lt;(Spydersoft.Identity.Models.Identity.ApplicationUser user, string provider, string providerUserId, System.Collections.Generic.IEnumerable<System.Security.Claims.Claim> claims)&gt; representing the asynchronous operation.</returns>
+        /// <returns>A Task&lt;(Spydersoft.Identity.Models.Identity.ApplicationUser user, string provider, string providerUserId, System.Collections.Generic.IEnumerable&lt;System.Security.Claims.Claim&gt; claims)&gt; representing the asynchronous operation.</returns>
         private async Task<(ApplicationUser user, string provider, string providerUserId, IEnumerable<Claim> claims)>
             FindUserFromExternalProviderAsync(AuthenticateResult result)
         {

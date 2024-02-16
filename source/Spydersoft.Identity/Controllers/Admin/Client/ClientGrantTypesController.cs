@@ -14,9 +14,9 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 {
     /// <summary>
     /// Class ClientGrantTypesController.
-    /// Implements the <see cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientGrantTypeViewModel, Models.Admin.ClientViewModels.ClientGrantTypesViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientGrantType}" />
+    /// Implements the <see cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     /// </summary>
-    /// <seealso cref="Client.BaseClientCollectionController{Models.Admin.ClientViewModels.ClientGrantTypeViewModel, Models.Admin.ClientViewModels.ClientGrantTypesViewModel, Duende.IdentityServer.EntityFramework.Entities.ClientGrantType}" />
+    /// <seealso cref="BaseClientCollectionController{TSingleViewModel, TCollectionViewModel, TChildEntity}" />
     public class ClientGrantTypesController(ConfigurationDbContext context, IMapper mapper) : BaseClientCollectionController<ClientGrantTypeViewModel, ClientGrantTypesViewModel, ClientGrantType>(context, mapper)
     {
 

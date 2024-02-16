@@ -2,9 +2,9 @@
 {
     /// <summary>
     /// Class NavBarViewModel.
-    /// Implements the <see cref="Admin.BaseAdminNavBar{ClientViewModels.ClientViewModel}" />
+    /// Implements the <see cref="BaseAdminNavBar{TMainViewModel}" />
     /// </summary>
-    /// <seealso cref="Admin.BaseAdminNavBar{ClientViewModels.ClientViewModel}" />
+    /// <seealso cref="BaseAdminNavBar{TMainViewModel}" />
     public class NavBarViewModel(ClientViewModel parent) : BaseAdminNavBar<ClientViewModel>(parent)
     {
         /// <summary>
