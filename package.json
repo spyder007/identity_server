@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "dotnet test source/Spydersoft.Identity.Tests/Spydersoft.Identity.Tests.csproj",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "repository": {
     "type": "git",
@@ -18,7 +18,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "husky": "^8.0.0",
-    "lint-staged": "^13.1.0"
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
   }
 }
