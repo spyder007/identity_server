@@ -127,23 +127,22 @@ namespace Spydersoft.Identity.Controllers
             if (!ModelState.IsValid)
             {
                 // something went wrong, show form with error
-                LoginViewModel vm = await BuildLoginViewModelAsync(model);
-                return View(vm);
+                return View(await BuildLoginViewModelAsync(model));
             }
 
             Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: true);
             if (!result.Succeeded)
             {
+                if (result.RequiresTwoFactor)
+                {
+                    return RedirectToAction(nameof(LoginWith2fa), new { rememberMe = model.RememberLogin, returnUrl = model.ReturnUrl });
+                }
+
                 await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId: context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+                return View(await BuildLoginViewModelAsync(model));
             }
 
-            // Password validation succeeded
-
-            if (result.RequiresTwoFactor)
-            {
-                return RedirectToAction(nameof(LoginWith2fa), new { rememberMe = model.RememberLogin, returnUrl = model.ReturnUrl });
-            }
 
             ApplicationUser user = await _userManager.FindByNameAsync(model.Username);
             await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId));
@@ -173,9 +172,10 @@ namespace Spydersoft.Identity.Controllers
             else
             {
                 ModelState.AddModelError("ReturnUrl", "invalid return url");
-                LoginViewModel vm = await BuildLoginViewModelAsync(model);
-                return View(vm);
             }
+
+
+            return View(await BuildLoginViewModelAsync(model));
         }
 
 
