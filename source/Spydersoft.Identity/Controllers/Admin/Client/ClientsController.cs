@@ -11,11 +11,20 @@ using Spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Client
 {
+    /// <summary>
+    /// Class ClientsController.
+    /// Implements the <see cref="BaseAdminController" />
+    /// </summary>
+    /// <seealso cref="BaseAdminController" />
     public class ClientsController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminController(dbContext, mapper)
     {
 
         #region Client List Actions
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         public IActionResult Index()
         {
             ViewData["Title"] = "Registered Clients";
@@ -28,6 +37,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
             return View(clientsModel);
         }
 
+        /// <summary>
+        /// Deletes the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -49,6 +63,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
         #endregion Client List Actions
 
         #region Main Tab
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public IActionResult Edit(int? id)
         {
@@ -74,6 +93,12 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
             return View(clientModel);
         }
 
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="client">The client.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> Edit(int? id, ClientViewModel client)
         {

@@ -11,6 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
+    /// <summary>
+    /// Class Update_DuendeIdentityServer_v7_0.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(ConfigurationDbContext))]
     [Migration("20240131152414_Update_DuendeIdentityServer_v7_0")]
     partial class Update_DuendeIdentityServer_v7_0

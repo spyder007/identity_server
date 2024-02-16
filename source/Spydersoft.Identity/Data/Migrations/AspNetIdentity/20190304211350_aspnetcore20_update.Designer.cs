@@ -9,10 +9,19 @@ using Spydersoft.Identity.Data;
 
 namespace Spydersoft.Identity.Data.Migrations.AspNetIdentity
 {
+    /// <summary>
+    /// Class aspnetcore20_update.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20190304211350_aspnetcore20_update")]
     partial class aspnetcore20_update
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

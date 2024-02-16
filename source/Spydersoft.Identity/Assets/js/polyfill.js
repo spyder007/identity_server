@@ -1,7 +1,12 @@
 
 !function() {
+  /// <summary>
+  /// </summary>
   "use strict";
   function o() {
+      /// <summary>
+      /// oes this instance.
+      /// </summary>
       var o = window,
           t = document;
       if (!("scrollBehavior" in t.documentElement.style && !0 !== o.__forceSmoothScrollPolyfill__)) {
@@ -17,12 +22,18 @@
               s = o.performance && o.performance.now ? o.performance.now.bind(o.performance) : Date.now,
               c = (l = o.navigator.userAgent, new RegExp(["MSIE ", "Trident/", "Edge/"].join("|")).test(l) ? 1 : 0);
           o.scroll = o.scrollTo = function() {
+              /// <summary>
+              /// </summary>
               void 0 !== arguments[0] && (!0 !== f(arguments[0]) ? h.call(o, t.body, void 0 !== arguments[0].left ? ~~arguments[0].left : o.scrollX || o.pageXOffset, void 0 !== arguments[0].top ? ~~arguments[0].top : o.scrollY || o.pageYOffset) : i.scroll.call(o, void 0 !== arguments[0].left ? arguments[0].left : "object" != typeof arguments[0] ? arguments[0] : o.scrollX || o.pageXOffset, void 0 !== arguments[0].top ? arguments[0].top : void 0 !== arguments[1] ? arguments[1] : o.scrollY || o.pageYOffset))
           },
           o.scrollBy = function() {
+              /// <summary>
+              /// </summary>
               void 0 !== arguments[0] && (f(arguments[0]) ? i.scrollBy.call(o, void 0 !== arguments[0].left ? arguments[0].left : "object" != typeof arguments[0] ? arguments[0] : 0, void 0 !== arguments[0].top ? arguments[0].top : void 0 !== arguments[1] ? arguments[1] : 0) : h.call(o, t.body, ~~arguments[0].left + (o.scrollX || o.pageXOffset), ~~arguments[0].top + (o.scrollY || o.pageYOffset)))
           },
           e.prototype.scroll = e.prototype.scrollTo = function() {
+              /// <summary>
+              /// </summary>
               if (void 0 !== arguments[0])
                   if (!0 !== f(arguments[0])) {
                       var o = arguments[0].left,
@@ -35,6 +46,8 @@
                   }
           },
           e.prototype.scrollBy = function() {
+              /// <summary>
+              /// </summary>
               void 0 !== arguments[0] && (!0 !== f(arguments[0]) ? this.scroll({
                   left: ~~arguments[0].left + this.scrollLeft,
                   top: ~~arguments[0].top + this.scrollTop,
@@ -42,8 +55,13 @@
               }) : i.elementScroll.call(this, void 0 !== arguments[0].left ? ~~arguments[0].left + this.scrollLeft : ~~arguments[0] + this.scrollLeft, void 0 !== arguments[0].top ? ~~arguments[0].top + this.scrollTop : ~~arguments[1] + this.scrollTop))
           },
           e.prototype.scrollIntoView = function() {
+              /// <summary>
+              /// </summary>
               if (!0 !== f(arguments[0])) {
                   var l = function(o) {
+                          /// <summary>
+                          /// </summary>
+                          /// <param name="o">The o.</param>
                           for (; o !== t.body && !1 === (e = p(l = o, "Y") && a(l, "Y"), r = p(l, "X") && a(l, "X"), e || r);)
                               o = o.parentNode || o.host;
                           var l,
@@ -67,10 +85,19 @@
           }
       }
       function n(o, t) {
+          /// <summary>
+          /// ns the specified o.
+          /// </summary>
+          /// <param name="o">The o.</param>
+          /// <param name="t">The t.</param>
           this.scrollLeft = o,
           this.scrollTop = t
       }
       function f(o) {
+          /// <summary>
+          /// fs the specified o.
+          /// </summary>
+          /// <param name="o">The o.</param>
           if (null === o || "object" != typeof o || void 0 === o.behavior || "auto" === o.behavior || "instant" === o.behavior)
               return !0;
           if ("object" == typeof o && "smooth" === o.behavior)
@@ -78,13 +105,27 @@
           throw new TypeError("behavior member of ScrollOptions " + o.behavior + " is not a valid value for enumeration ScrollBehavior.")
       }
       function p(o, t) {
+          /// <summary>
+          /// ps the specified o.
+          /// </summary>
+          /// <param name="o">The o.</param>
+          /// <param name="t">The t.</param>
           return "Y" === t ? o.clientHeight + c < o.scrollHeight : "X" === t ? o.clientWidth + c < o.scrollWidth : void 0
       }
       function a(t, l) {
+          /// <summary>
+          /// as the specified t.
+          /// </summary>
+          /// <param name="t">The t.</param>
+          /// <param name="l">The l.</param>
           var e = o.getComputedStyle(t, null)["overflow" + l];
           return "auto" === e || "scroll" === e
       }
       function d(t) {
+          /// <summary>
+          /// ds the specified t.
+          /// </summary>
+          /// <param name="t">The t.</param>
           var l,
               e,
               i,
@@ -98,6 +139,12 @@
           e === t.x && i === t.y || o.requestAnimationFrame(d.bind(o, t))
       }
       function h(l, e, r) {
+          /// <summary>
+          /// hes the specified l.
+          /// </summary>
+          /// <param name="l">The l.</param>
+          /// <param name="e">The e.</param>
+          /// <param name="r">The r.</param>
           var c,
               f,
               p,

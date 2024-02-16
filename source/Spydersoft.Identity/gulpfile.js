@@ -123,6 +123,8 @@ const paths = gulp.paths;
 gulp.pkg = require('./package.json');
 
 gulp.task('sass', function () {
+    /// <summary>
+    /// </summary>
     return gulp.src(paths.styles + '/scss/style.scss')
         .pipe(sass())
         .pipe(autoprefixer())
@@ -133,10 +135,14 @@ gulp.task('sass', function () {
 });
 
 gulp.task('sass:watch', function () {
+    /// <summary>
+    /// </summary>
     gulp.watch(paths.styles + 'scss/**/*.scss', ['sass']);
 });
 
 gulp.task('copy:assets', function () {
+    /// <summary>
+    /// </summary>
     return gulp.src(paths.assets + '**/*')
         .pipe(gulp.dest(paths.dist));
 });
@@ -144,10 +150,19 @@ gulp.task('copy:assets', function () {
 
 gulp.task('copy:libraries',
     function (cb) {
+        /// <summary>
+        /// </summary>
+        /// <param name="cb">The cb.</param>
         gulp.libsToCopy.forEach(function (lib) {
+            /// <summary>
+            /// </summary>
+            /// <param name="lib">The library.</param>
             console.log("Copying " + lib.lib);
 
             lib.jobs.forEach(function (job) {
+                /// <summary>
+                /// </summary>
+                /// <param name="job">The job.</param>
                 copyLibrary(lib.lib, job.src, job.dest);
             });
         });
@@ -156,6 +171,12 @@ gulp.task('copy:libraries',
 
 function copyLibrary(libName, src, dest) {
 
+    /// <summary>
+    /// Copies the library.
+    /// </summary>
+    /// <param name="libName">Name of the library.</param>
+    /// <param name="src">The source.</param>
+    /// <param name="dest">The dest.</param>
     let fullSource = paths.node_modules + libName + src;
 
     let fullDest = dest.replace("{libDest}", paths.libDest).replace("{libName}", libName);

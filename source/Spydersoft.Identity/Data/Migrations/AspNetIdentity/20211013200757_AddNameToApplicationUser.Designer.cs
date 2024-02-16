@@ -9,10 +9,19 @@ using Spydersoft.Identity.Data;
 
 namespace Spydersoft.Identity.Data.Migrations.AspNetIdentity
 {
+    /// <summary>
+    /// Class AddNameToApplicationUser.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20211013200757_AddNameToApplicationUser")]
     partial class AddNameToApplicationUser
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

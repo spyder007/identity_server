@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Spydersoft.Identity.Extensions
 {
+    /// <summary>
+    /// Class SameSiteCookiesServiceCollectionExtensions.
+    /// </summary>
     public static class SameSiteCookiesServiceCollectionExtensions
     {
         /// <summary>
@@ -22,12 +25,13 @@ namespace Spydersoft.Identity.Extensions
         /// add the <seealso cref="Microsoft.AspNetCore.CookiePolicy.CookiePolicyMiddleware" />
         /// into the pipeline before sending any cookies!
         /// </summary>
-        /// <remarks>
-        /// Minimum ASPNET Core Version required for this code:
-        ///   - 2.1.14
-        ///   - 2.2.8
-        ///   - 3.0.1
-        ///   - 3.1.0-preview1
+        /// <param name="services">The service collection to register <see cref="CookiePolicyOptions" /> into.</param>
+        /// <returns>The modified <see cref="IServiceCollection" />.</returns>
+        /// <remarks>Minimum ASPNET Core Version required for this code:
+        /// - 2.1.14
+        /// - 2.2.8
+        /// - 3.0.1
+        /// - 3.1.0-preview1
         /// Starting with version 80 of Chrome (to be released in February 2020)
         /// cookies with NO SameSite attribute are treated as SameSite=Lax.
         /// In order to always get the cookies send they need to be set to
@@ -40,10 +44,7 @@ namespace Spydersoft.Identity.Extensions
         /// - https://tools.ietf.org/html/draft-west-cookie-incrementalism-00
         /// - https://www.chromium.org/updates/same-site
         /// - https://devblogs.microsoft.com/aspnet/upcoming-samesite-cookie-changes-in-asp-net-and-asp-net-core/
-        /// - https://bugs.webkit.org/show_bug.cgi?id=198181
-        /// </remarks>
-        /// <param name="services">The service collection to register <see cref="CookiePolicyOptions" /> into.</param>
-        /// <returns>The modified <see cref="IServiceCollection" />.</returns>
+        /// - https://bugs.webkit.org/show_bug.cgi?id=198181</remarks>
         public static IServiceCollection ConfigureNonBreakingSameSiteCookies(this IServiceCollection services)
         {
             _ = services.Configure<CookiePolicyOptions>(options =>
@@ -58,6 +59,11 @@ namespace Spydersoft.Identity.Extensions
             return services;
         }
 
+        /// <summary>
+        /// Checks the same site.
+        /// </summary>
+        /// <param name="httpContext">The HTTP context.</param>
+        /// <param name="options">The options.</param>
         private static void CheckSameSite(HttpContext httpContext, CookieOptions options)
         {
             if (options.SameSite == SameSiteMode.None)
@@ -76,12 +82,10 @@ namespace Spydersoft.Identity.Extensions
         /// For those the <see cref="CookieOptions.SameSite" /> property should be
         /// set to <see cref="Unspecified" />.
         /// </summary>
-        /// <remarks>
-        /// This code is taken from Microsoft:
-        /// https://devblogs.microsoft.com/aspnet/upcoming-samesite-cookie-changes-in-asp-net-and-asp-net-core/
-        /// </remarks>
         /// <param name="userAgent">The user agent string to check.</param>
         /// <returns>Whether the specified user agent (browser) accepts SameSite=None or not.</returns>
+        /// <remarks>This code is taken from Microsoft:
+        /// https://devblogs.microsoft.com/aspnet/upcoming-samesite-cookie-changes-in-asp-net-and-asp-net-core/</remarks>
         private static bool DisallowsSameSiteNone(string userAgent)
         {
             // Cover all iOS based browsers here. This includes:
@@ -137,6 +141,11 @@ namespace Spydersoft.Identity.Extensions
             return chromeVersion >= 80;
         }
 
+        /// <summary>
+        /// Gets the chrome version.
+        /// </summary>
+        /// <param name="userAgent">The user agent.</param>
+        /// <returns>System.Int32.</returns>
         private static int GetChromeVersion(string userAgent)
         {
             try

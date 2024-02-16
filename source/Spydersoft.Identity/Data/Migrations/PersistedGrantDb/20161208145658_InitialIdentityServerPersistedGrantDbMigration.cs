@@ -4,8 +4,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
+    /// <summary>
+    /// Class InitialIdentityServerPersistedGrantDbMigration.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     public partial class InitialIdentityServerPersistedGrantDbMigration : Migration
     {
+        /// <summary>
+        /// Ups the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.CreateTable(
@@ -30,14 +39,18 @@ namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
             _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId",
                 table: "PersistedGrants",
-                columns: new[] { "SubjectId", "ClientId" });
+                columns: ["SubjectId", "ClientId"]);
 
             _ = migrationBuilder.CreateIndex(
                 name: "IX_PersistedGrants_SubjectId_ClientId_Type",
                 table: "PersistedGrants",
-                columns: new[] { "SubjectId", "ClientId", "Type" });
+                columns: ["SubjectId", "ClientId", "Type"]);
         }
 
+        /// <summary>
+        /// Downs the specified migration builder.
+        /// </summary>
+        /// <param name="migrationBuilder">The migration builder.</param>
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.DropTable(

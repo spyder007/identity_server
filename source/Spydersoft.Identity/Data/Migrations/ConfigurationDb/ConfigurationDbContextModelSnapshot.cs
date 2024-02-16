@@ -10,9 +10,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Spydersoft.Identity.Data.Migrations.ConfigurationDb
 {
+    /// <summary>
+    /// Class ConfigurationDbContextModelSnapshot.
+    /// Implements the <see cref="ModelSnapshot" />
+    /// </summary>
+    /// <seealso cref="ModelSnapshot" />
     [DbContext(typeof(ConfigurationDbContext))]
     partial class ConfigurationDbContextModelSnapshot : ModelSnapshot
     {
+        /// <summary>
+        /// Builds the model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

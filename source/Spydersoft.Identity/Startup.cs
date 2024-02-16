@@ -25,11 +25,22 @@ using Spydersoft.Identity.Services;
 
 namespace Spydersoft.Identity
 {
+    /// <summary>
+    /// Class Startup.
+    /// </summary>
     public class Startup(IConfiguration configuration)
     {
+        /// <summary>
+        /// Gets the configuration.
+        /// </summary>
+        /// <value>The configuration.</value>
         public IConfiguration Configuration { get; } = configuration;
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// Configures the services.
+        /// </summary>
+        /// <param name="services">The services.</param>
         public void ConfigureServices(IServiceCollection services)
         {
             var connString = Configuration.GetConnectionString("IdentityConnection");
@@ -120,10 +131,15 @@ namespace Spydersoft.Identity
                 });
             _ = services.AddAuthorization();
             _ = services.AddHealthChecks()
-                .AddSqlServer(connString, null, null, "sqlserver", null, new[] { "ready" }, null);
+                .AddSqlServer(connString, null, null, "sqlserver", null, ["ready"], null);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        /// <summary>
+        /// Configures the specified application.
+        /// </summary>
+        /// <param name="app">The application.</param>
+        /// <param name="env">The env.</param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // this will do the initial DB population, but we only need to do it once

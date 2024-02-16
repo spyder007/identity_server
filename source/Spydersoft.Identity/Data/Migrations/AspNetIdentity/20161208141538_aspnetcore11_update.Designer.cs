@@ -6,10 +6,19 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Spydersoft.Identity.Data.Migrations.AspNetIdentity
 {
+    /// <summary>
+    /// Class aspnetcore11_update.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20161208141538_aspnetcore11_update")]
     partial class aspnetcore11_update
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder

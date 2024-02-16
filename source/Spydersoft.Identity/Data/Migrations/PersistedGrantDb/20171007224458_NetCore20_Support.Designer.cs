@@ -9,10 +9,19 @@ using System;
 
 namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
+    /// <summary>
+    /// Class NetCore20_Support.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(PersistedGrantDbContext))]
     [Migration("20171007224458_NetCore20_Support")]
     partial class NetCore20_Support
     {
+        /// <summary>
+        /// Builds the target model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

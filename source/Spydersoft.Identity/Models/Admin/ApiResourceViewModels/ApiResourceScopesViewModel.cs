@@ -7,8 +7,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 {
+    /// <summary>
+    /// Class ApiResourceScopesViewModel.
+    /// Implements the <see cref="ApiResourceViewModels.BaseApiResourceCollectionViewModel`1" />
+    /// </summary>
+    /// <seealso cref="ApiResourceViewModels.BaseApiResourceCollectionViewModel`1" />
     public class ApiResourceScopesViewModel : BaseApiResourceCollectionViewModel<ApiResourceScopeViewModel>
     {
+        /// <summary>
+        /// Gets the child.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="configDbContext">The configuration database context.</param>
+        /// <returns>Spydersoft.Identity.Models.Admin.ApiResourceViewModels.ApiResourceScopeViewModel.</returns>
         public override ApiResourceScopeViewModel GetChild(ApiResourceViewModel parent, ConfigurationDbContext configDbContext)
         {
             ApiResourceScopeViewModel child = base.GetChild(parent, configDbContext);
@@ -27,14 +38,30 @@ namespace Spydersoft.Identity.Models.Admin.ApiResourceViewModels
         }
     }
 
+    /// <summary>
+    /// Class ApiResourceScopeViewModel.
+    /// Implements the <see cref="BaseAdminChildItemViewModel" />
+    /// </summary>
+    /// <seealso cref="BaseAdminChildItemViewModel" />
     public class ApiResourceScopeViewModel : BaseAdminChildItemViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApiResourceScopeViewModel"/> class.
+        /// </summary>
         public ApiResourceScopeViewModel()
         {
         }
 
+        /// <summary>
+        /// Gets or sets the scope.
+        /// </summary>
+        /// <value>The scope.</value>
         public string Scope { get; set; }
 
+        /// <summary>
+        /// Gets or sets the scopes.
+        /// </summary>
+        /// <value>The scopes.</value>
         public List<string> Scopes { get; set; }
     }
 

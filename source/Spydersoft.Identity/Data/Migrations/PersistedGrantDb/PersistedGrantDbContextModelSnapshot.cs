@@ -10,9 +10,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
+    /// <summary>
+    /// Class PersistedGrantDbContextModelSnapshot.
+    /// Implements the <see cref="ModelSnapshot" />
+    /// </summary>
+    /// <seealso cref="ModelSnapshot" />
     [DbContext(typeof(PersistedGrantDbContext))]
     partial class PersistedGrantDbContextModelSnapshot : ModelSnapshot
     {
+        /// <summary>
+        /// Builds the model.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder.</param>
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618

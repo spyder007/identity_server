@@ -4,8 +4,14 @@ using System.Linq;
 
 namespace Spydersoft.Identity.Models
 {
+    /// <summary>
+    /// Class BaseViewModel.
+    /// </summary>
     public abstract class BaseViewModel
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseViewModel"/> class.
+        /// </summary>
         protected BaseViewModel()
         {
             // apply any DefaultValueAttribute settings to their properties

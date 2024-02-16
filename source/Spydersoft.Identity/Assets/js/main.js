@@ -7,6 +7,8 @@
   const overlay = document.querySelector(".overlay");
 
   menuToggleButton.addEventListener("click", () => {
+    /// <summary>
+    /// </summary>
     sidebarNavWrapper.classList.toggle("active");
     overlay.classList.add("active");
     mainWrapper.classList.toggle("active");
@@ -26,6 +28,8 @@
     
   });
   overlay.addEventListener("click", () => {
+    /// <summary>
+    /// </summary>
     sidebarNavWrapper.classList.remove("active");
     overlay.classList.remove("active");
     mainWrapper.classList.remove("active");

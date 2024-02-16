@@ -13,6 +13,16 @@ using Spydersoft.Identity.Models.Admin;
 
 namespace Spydersoft.Identity.Controllers.Admin
 {
+    /// <summary>
+    /// Class BaseAdminCollectionController.
+    /// Implements the <see cref="BaseAdminController" />
+    /// </summary>
+    /// <typeparam name="TChildViewModel">The type of the t child view model.</typeparam>
+    /// <typeparam name="TChildCollectionViewModel">The type of the t child collection view model.</typeparam>
+    /// <typeparam name="TMainEntityViewModel">The type of the t main entity view model.</typeparam>
+    /// <typeparam name="TEntity">The type of the t entity.</typeparam>
+    /// <typeparam name="TChildEntity">The type of the t child entity.</typeparam>
+    /// <seealso cref="BaseAdminController" />
     public abstract class BaseAdminCollectionController<TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity> : BaseAdminController
            where TChildViewModel : BaseAdminChildItemViewModel, new()
            where TChildCollectionViewModel : BaseAdminChildCollectionViewModel<TChildViewModel, TMainEntityViewModel>, new()
@@ -21,6 +31,11 @@ namespace Spydersoft.Identity.Controllers.Admin
     {
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseAdminCollectionController{TChildViewModel, TChildCollectionViewModel, TMainEntityViewModel, TEntity, TChildEntity}"/> class.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="mapper">The mapper.</param>
         protected BaseAdminCollectionController(ConfigurationDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
@@ -29,26 +44,66 @@ namespace Spydersoft.Identity.Controllers.Admin
 
         #region BaseClientCollectionController Interface
 
+        /// <summary>
+        /// Populates the item list.
+        /// </summary>
+        /// <param name="mainEntity">The main entity.</param>
+        /// <returns>IEnumerable&lt;TChildViewModel&gt;.</returns>
         protected abstract IEnumerable<TChildViewModel> PopulateItemList(TEntity mainEntity);
 
+        /// <summary>
+        /// Adds the includes.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <returns>IQueryable&lt;TEntity&gt;.</returns>
         protected abstract IQueryable<TEntity> AddIncludes(DbSet<TEntity> query);
 
+        /// <summary>
+        /// Gets the collection.
+        /// </summary>
+        /// <param name="mainEntity">The main entity.</param>
+        /// <returns>List&lt;TChildEntity&gt;.</returns>
         protected abstract List<TChildEntity> GetCollection(TEntity mainEntity);
 
+        /// <summary>
+        /// Finds the item in collection.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <param name="id">The identifier.</param>
+        /// <returns>TChildEntity.</returns>
         protected abstract TChildEntity FindItemInCollection(List<TChildEntity> collection, int id);
 
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>IActionResult.</returns>
         protected virtual IActionResult GetView(TChildCollectionViewModel model)
         {
             return View(nameof(Index), model);
         }
 
+        /// <summary>
+        /// Gets the index redirect.
+        /// </summary>
+        /// <param name="routeValues">The route values.</param>
+        /// <returns>IActionResult.</returns>
         protected virtual IActionResult GetIndexRedirect(object routeValues)
         {
             return RedirectToAction(nameof(Index), routeValues);
         }
 
+        /// <summary>
+        /// Gets the main entity.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>TEntity.</returns>
         protected abstract TEntity GetMainEntity(int id);
 
+        /// <summary>
+        /// Sets the additional properties.
+        /// </summary>
+        /// <param name="newItem">The new item.</param>
         protected virtual void SetAdditionalProperties(TChildEntity newItem)
         {
         }
@@ -57,6 +112,11 @@ namespace Spydersoft.Identity.Controllers.Admin
 
         #region Controller Actions
 
+        /// <summary>
+        /// Indexes the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public IActionResult Index(int? id)
         {
@@ -78,6 +138,12 @@ namespace Spydersoft.Identity.Controllers.Admin
             return View(collectionViewModel);
         }
 
+        /// <summary>
+        /// Saves the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="collectionViewModel">The collection view model.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> Save(int? id, TChildCollectionViewModel collectionViewModel)
         {
@@ -106,6 +172,12 @@ namespace Spydersoft.Identity.Controllers.Admin
             return GetView(collectionViewModel);
         }
 
+        /// <summary>
+        /// Deletes the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="parentId">The parent identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(int? id, int? parentId)
         {
@@ -137,6 +209,11 @@ namespace Spydersoft.Identity.Controllers.Admin
 
         #region Private Methods
 
+        /// <summary>
+        /// Removes the object.
+        /// </summary>
+        /// <param name="mainEntity">The main entity.</param>
+        /// <param name="id">The identifier.</param>
         private void RemoveObject(TEntity mainEntity, int id)
         {
             List<TChildEntity> collection = GetCollection(mainEntity);
@@ -147,6 +224,11 @@ namespace Spydersoft.Identity.Controllers.Admin
             }
         }
 
+        /// <summary>
+        /// Adds the object.
+        /// </summary>
+        /// <param name="mainEntity">The main entity.</param>
+        /// <param name="newItem">The new item.</param>
         private void AddObject(TEntity mainEntity, TChildViewModel newItem)
         {
             TChildEntity newEntity = Mapper.Map<TChildEntity>(newItem);

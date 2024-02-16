@@ -19,6 +19,11 @@ using Spydersoft.Identity.Services;
 
 namespace Spydersoft.Identity.Controllers
 {
+    /// <summary>
+    /// Class ManageController.
+    /// Implements the <see cref="Controller" />
+    /// </summary>
+    /// <seealso cref="Controller" />
     [Authorize]
     public class ManageController(
       UserManager<ApplicationUser> userManager,
@@ -27,18 +32,44 @@ namespace Spydersoft.Identity.Controllers
       ILogger<ManageController> logger,
       UrlEncoder urlEncoder) : Controller
     {
+        /// <summary>
+        /// The user manager
+        /// </summary>
         private readonly UserManager<ApplicationUser> _userManager = userManager;
+        /// <summary>
+        /// The sign in manager
+        /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        /// <summary>
+        /// The email sender
+        /// </summary>
         private readonly IEmailSender _emailSender = emailSender;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger _logger = logger;
+        /// <summary>
+        /// The URL encoder
+        /// </summary>
         private readonly UrlEncoder _urlEncoder = urlEncoder;
 
 #pragma warning disable S1075 // URIs should not be hardcoded
+        /// <summary>
+        /// The authenicator URI format
+        /// </summary>
         private const string AuthenicatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
 
+        /// <summary>
+        /// Gets or sets the status message.
+        /// </summary>
+        /// <value>The status message.</value>
         [TempData]
         public string StatusMessage { get; set; }
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -57,6 +88,12 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Indexes the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>IActionResult.</returns>
+        /// <exception cref="IdentityResultException"></exception>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(IndexViewModel model)
@@ -92,6 +129,11 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Sends the verification email.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SendVerificationEmail(IndexViewModel model)
@@ -115,6 +157,10 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Changes the password.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> ChangePassword()
         {
@@ -130,6 +176,11 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Changes the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -155,6 +206,10 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction(nameof(ChangePassword));
         }
 
+        /// <summary>
+        /// Sets the password.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> SetPassword()
         {
@@ -171,6 +226,11 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Sets the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
@@ -195,6 +255,10 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction(nameof(SetPassword));
         }
 
+        /// <summary>
+        /// Externals the logins.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> ExternalLogins()
         {
@@ -210,6 +274,11 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Links the login.
+        /// </summary>
+        /// <param name="provider">The provider.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LinkLogin(string provider)
@@ -223,6 +292,12 @@ namespace Spydersoft.Identity.Controllers
             return new ChallengeResult(provider, properties);
         }
 
+        /// <summary>
+        /// Links the login callback.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
+        /// <exception cref="ObjectLoadException">externallogininfo</exception>
+        /// <exception cref="IdentityResultException"></exception>
         [HttpGet]
         public async Task<IActionResult> LinkLoginCallback()
         {
@@ -242,6 +317,12 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction(nameof(ExternalLogins));
         }
 
+        /// <summary>
+        /// Removes the login.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>IActionResult.</returns>
+        /// <exception cref="IdentityResultException"></exception>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel model)
@@ -259,6 +340,10 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction(nameof(ExternalLogins));
         }
 
+        /// <summary>
+        /// Twoes the factor authentication.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> TwoFactorAuthentication()
         {
@@ -274,6 +359,11 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Disable2fas the warning.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
+        /// <exception cref="IdentityServerException">Unexpected error occured disabling 2FA for user with ID '{user.Id}'.</exception>
         [HttpGet]
         public async Task<IActionResult> Disable2faWarning()
         {
@@ -283,6 +373,11 @@ namespace Spydersoft.Identity.Controllers
                 : (IActionResult)View(nameof(Disable2fa));
         }
 
+        /// <summary>
+        /// Disable2fas this instance.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
+        /// <exception cref="IdentityResultException"></exception>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Disable2fa()
@@ -299,6 +394,10 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction(nameof(TwoFactorAuthentication));
         }
 
+        /// <summary>
+        /// Enables the authenticator.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> EnableAuthenticator()
         {
@@ -320,6 +419,11 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Enables the authenticator.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnableAuthenticator(EnableAuthenticatorViewModel model)
@@ -348,12 +452,20 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction(nameof(GenerateRecoveryCodes));
         }
 
+        /// <summary>
+        /// Resets the authenticator warning.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public IActionResult ResetAuthenticatorWarning()
         {
             return View(nameof(ResetAuthenticator));
         }
 
+        /// <summary>
+        /// Resets the authenticator.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetAuthenticator()
@@ -367,6 +479,10 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction(nameof(EnableAuthenticator));
         }
 
+        /// <summary>
+        /// Generates the recovery codes.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> GenerateRecoveryCodes()
         {
@@ -385,6 +501,10 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Users the claims information.
+        /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public IActionResult UserClaimsInfo()
         {
@@ -395,6 +515,11 @@ namespace Spydersoft.Identity.Controllers
 
 
 
+        /// <summary>
+        /// Formats the key.
+        /// </summary>
+        /// <param name="unformattedKey">The unformatted key.</param>
+        /// <returns>System.String.</returns>
         private static string FormatKey(string unformattedKey)
         {
             var result = new StringBuilder();
@@ -412,6 +537,12 @@ namespace Spydersoft.Identity.Controllers
             return result.ToString().ToLowerInvariant();
         }
 
+        /// <summary>
+        /// Generates the qr code URI.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="unformattedKey">The unformatted key.</param>
+        /// <returns>System.String.</returns>
         private string GenerateQrCodeUri(string email, string unformattedKey)
         {
             return string.Format(
@@ -421,6 +552,11 @@ namespace Spydersoft.Identity.Controllers
                 unformattedKey);
         }
 
+        /// <summary>
+        /// Validates the context user.
+        /// </summary>
+        /// <returns>ApplicationUser.</returns>
+        /// <exception cref="ObjectLoadException">user</exception>
         private async Task<ApplicationUser> ValidateContextUser()
         {
             ApplicationUser user = await _userManager.GetUserAsync(User);

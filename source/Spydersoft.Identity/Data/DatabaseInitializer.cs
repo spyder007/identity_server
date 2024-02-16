@@ -21,11 +21,23 @@ using Spydersoft.Identity.Models.Identity;
 
 namespace Spydersoft.Identity.Data
 {
+    /// <summary>
+    /// Class DatabaseInitializer.
+    /// </summary>
     public class DatabaseInitializer(IApplicationBuilder app)
     {
+        /// <summary>
+        /// The application
+        /// </summary>
         private readonly IApplicationBuilder _app = app;
+        /// <summary>
+        /// The log
+        /// </summary>
         private ILogger _log;
 
+        /// <summary>
+        /// Initializes the database.
+        /// </summary>
         public void InitializeDatabase()
         {
             using IServiceScope serviceScope = _app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
@@ -37,6 +49,10 @@ namespace Spydersoft.Identity.Data
 
         #region Database Migration Methods
 
+        /// <summary>
+        /// Performs the database migrations.
+        /// </summary>
+        /// <param name="serviceScope">The service scope.</param>
         private void PerformDatabaseMigrations(IServiceScope serviceScope)
         {
             Task persistedGrantTask =
@@ -55,6 +71,12 @@ namespace Spydersoft.Identity.Data
             Task.WaitAll(dataProtectTask, persistedGrantTask, appDbTask, configTask);
         }
 
+        /// <summary>
+        /// Does the migration if needed.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="databaseName">Name of the database.</param>
+        /// <returns>System.Threading.Tasks.Task.</returns>
         private async Task DoMigrationIfNeeded(DbContext context, string databaseName)
         {
             _log.LogDebug("Checking {database} for pending migrations.", databaseName);
@@ -70,12 +92,20 @@ namespace Spydersoft.Identity.Data
 
         #region Seeding Functions
 
+        /// <summary>
+        /// Seeds the database.
+        /// </summary>
+        /// <param name="serviceScope">The service scope.</param>
         private void SeedDatabase(IServiceScope serviceScope)
         {
             SeedIdentityServerConfigurationDatabase(serviceScope);
             SeedAspNetIdentityDatabase(serviceScope);
         }
 
+        /// <summary>
+        /// Seeds the identity server configuration database.
+        /// </summary>
+        /// <param name="serviceScope">The service scope.</param>
         private void SeedIdentityServerConfigurationDatabase(IServiceScope serviceScope)
         {
             ConfigurationDbContext context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
@@ -114,6 +144,11 @@ namespace Spydersoft.Identity.Data
             }
         }
 
+        /// <summary>
+        /// Seeds the ASP net identity database.
+        /// </summary>
+        /// <param name="serviceScope">The service scope.</param>
+        /// <exception cref="IdentityResultException">result</exception>
         private void SeedAspNetIdentityDatabase(IServiceScope serviceScope)
         {
             RoleManager<ApplicationRole> roleMgr = serviceScope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
@@ -148,15 +183,15 @@ namespace Spydersoft.Identity.Data
 
                 adminUser = userMgr.FindByNameAsync("admin").Result;
 
-                result = userMgr.AddClaimsAsync(adminUser, new Claim[]{
+                result = userMgr.AddClaimsAsync(adminUser, [
                                 new(JwtClaimTypes.Name, "System Administrator"),
-                                new(JwtClaimTypes.GivenName, "System"),
-                                new(JwtClaimTypes.FamilyName, "administrator"),
-                                new(JwtClaimTypes.Email, "admin@localhost.net"),
-                                new(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                                new(JwtClaimTypes.WebSite, "123 NoWhere"),
-                                new(JwtClaimTypes.Address, /*lang=json*/ @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServerConstants.ClaimValueTypes.Json)
-                            }).Result;
+                    new(JwtClaimTypes.GivenName, "System"),
+                    new(JwtClaimTypes.FamilyName, "administrator"),
+                    new(JwtClaimTypes.Email, "admin@localhost.net"),
+                    new(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
+                    new(JwtClaimTypes.WebSite, "123 NoWhere"),
+                    new(JwtClaimTypes.Address, /*lang=json*/ @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServerConstants.ClaimValueTypes.Json)
+                            ]).Result;
                 if (!result.Succeeded)
                 {
                     throw new IdentityResultException(result);
@@ -181,30 +216,42 @@ namespace Spydersoft.Identity.Data
 
         #region Identity Server Configuration Object Creators
 
+        /// <summary>
+        /// Gets the identity resources.
+        /// </summary>
+        /// <returns>System.Collections.Generic.IEnumerable&lt;Duende.IdentityServer.Models.IdentityResource&gt;.</returns>
         private static IEnumerable<IdentityResource> GetIdentityResources()
         {
-            return new List<IdentityResource>
-            {
+            return
+            [
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-            };
+            ];
         }
 
+        /// <summary>
+        /// Gets the API resources.
+        /// </summary>
+        /// <returns>System.Collections.Generic.IEnumerable&lt;Duende.IdentityServer.Models.ApiResource&gt;.</returns>
         private static IEnumerable<ApiResource> GetApiResources()
         {
-            return new List<ApiResource>
-            {
-                new ("api", "My API")
-            };
+            return
+            [
+                new("api", "My API")
+            ];
         }
 
         // clients want to access resources (aka scopes)
+        /// <summary>
+        /// Gets the clients.
+        /// </summary>
+        /// <returns>System.Collections.Generic.IEnumerable&lt;Duende.IdentityServer.Models.Client&gt;.</returns>
         private static IEnumerable<Client> GetClients()
         {
             // client credentials client
-            return new List<Client>
-            {
-                new ()
+            return
+            [
+                new()
                 {
                     ClientId = "client",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
@@ -217,7 +264,7 @@ namespace Spydersoft.Identity.Data
                 },
 
                 // resource owner password grant client
-                new ()
+                new()
                 {
                     ClientId = "ro.client",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
@@ -230,7 +277,7 @@ namespace Spydersoft.Identity.Data
                 },
 
                 // OpenID Connect hybrid flow and client credentials client (MVC)
-                new ()
+                new()
                 {
                     ClientId = "mvc",
                     ClientName = "MVC Client",
@@ -254,7 +301,7 @@ namespace Spydersoft.Identity.Data
                     },
                     AllowOfflineAccess = true
                 }
-            };
+            ];
         }
         #endregion Identity Server Configuration Object Creators
     }

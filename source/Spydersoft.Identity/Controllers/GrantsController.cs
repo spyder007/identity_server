@@ -29,14 +29,27 @@ namespace Spydersoft.Identity.Controllers
         IResourceStore resources,
         IEventService events) : Controller
     {
+        /// <summary>
+        /// The interaction
+        /// </summary>
         private readonly IIdentityServerInteractionService _interaction = interaction;
+        /// <summary>
+        /// The clients
+        /// </summary>
         private readonly IClientStore _clients = clients;
+        /// <summary>
+        /// The resources
+        /// </summary>
         private readonly IResourceStore _resources = resources;
+        /// <summary>
+        /// The events
+        /// </summary>
         private readonly IEventService _events = events;
 
         /// <summary>
         /// Show list of grants
         /// </summary>
+        /// <returns>IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Index()
         {
@@ -46,6 +59,8 @@ namespace Spydersoft.Identity.Controllers
         /// <summary>
         /// Handle postback to revoke a client
         /// </summary>
+        /// <param name="clientId">The client identifier.</param>
+        /// <returns>IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Revoke(string clientId)
@@ -56,6 +71,10 @@ namespace Spydersoft.Identity.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Build view model as an asynchronous operation.
+        /// </summary>
+        /// <returns>A Task&lt;GrantsViewModel&gt; representing the asynchronous operation.</returns>
         private async Task<GrantsViewModel> BuildViewModelAsync()
         {
             IEnumerable<Duende.IdentityServer.Models.Grant> grants = await _interaction.GetAllUserGrantsAsync();

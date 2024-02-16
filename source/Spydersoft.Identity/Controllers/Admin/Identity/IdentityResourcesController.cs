@@ -15,11 +15,20 @@ using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
+    /// <summary>
+    /// Class IdentityResourcesController.
+    /// Implements the <see cref="BaseAdminController" />
+    /// </summary>
+    /// <seealso cref="BaseAdminController" />
     public class IdentityResourcesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminController(dbContext, mapper)
     {
 
         #region Controller Actions
 
+        /// <summary>
+        /// Indexes this instance.
+        /// </summary>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         public IActionResult Index()
         {
             ViewData["Title"] = "Registered Identity Resources";
@@ -36,6 +45,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
             return View(identityResourcesViewModel);
         }
 
+        /// <summary>
+        /// Gets all standards as view models.
+        /// </summary>
+        /// <param name="currentList">The current list.</param>
+        /// <returns>System.Collections.Generic.List&lt;Spydersoft.Identity.Models.Admin.IdentityResourceViewModels.IdentityResourceViewModel&gt;.</returns>
         private List<IdentityResourceViewModel> GetAllStandardsAsViewModels(IQueryable<IdentityResourceViewModel> currentList)
         {
             var list = new List<IdentityResourceViewModel>();
@@ -56,6 +70,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
         }
 
 
+        /// <summary>
+        /// Deletes the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -74,6 +93,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
             return RedirectToAction(nameof(Index));
         }
 
+        /// <summary>
+        /// Adds the standard.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> AddStandard(IdentityResourcesViewModel model)
         {
@@ -92,6 +116,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
         }
 
 
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         public IActionResult Edit(int? id)
         {
@@ -118,6 +147,12 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
             return View(identityResourceViewModel);
         }
 
+        /// <summary>
+        /// Edits the specified identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="identityResource">The identity resource.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> Edit(int? id, IdentityResourceViewModel identityResource)
         {
@@ -165,6 +200,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
         }
         #endregion Controller Actions
 
+        /// <summary>
+        /// Gets the standard profile.
+        /// </summary>
+        /// <param name="modelSelectedAvailableResource">The model selected available resource.</param>
+        /// <returns>Duende.IdentityServer.EntityFramework.Entities.IdentityResource.</returns>
         private static Duende.IdentityServer.EntityFramework.Entities.IdentityResource GetStandardProfile(string modelSelectedAvailableResource)
         {
             if (string.IsNullOrWhiteSpace(modelSelectedAvailableResource))
@@ -178,6 +218,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
             return typeToAdd?.ToEntity();
         }
 
+        /// <summary>
+        /// Gets the standard types.
+        /// </summary>
+        /// <returns>System.Collections.Generic.List&lt;Duende.IdentityServer.Models.IdentityResource&gt;.</returns>
         private static List<IdentityResource> GetStandardTypes()
         {
             return

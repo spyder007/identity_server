@@ -30,6 +30,11 @@ using Spydersoft.Identity.Services;
 
 namespace Spydersoft.Identity.Controllers
 {
+    /// <summary>
+    /// Class AccountController.
+    /// Implements the <see cref="Controller" />
+    /// </summary>
+    /// <seealso cref="Controller" />
     [SecurityHeaders]
     [AllowAnonymous]
     public class AccountController(
@@ -43,19 +48,48 @@ namespace Spydersoft.Identity.Controllers
         ILogger<AccountController> logger,
         IEmailSender emailSender) : Controller
     {
+        /// <summary>
+        /// The user manager
+        /// </summary>
         private readonly UserManager<ApplicationUser> _userManager = userManager;
+        /// <summary>
+        /// The sign in manager
+        /// </summary>
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        /// <summary>
+        /// The interaction
+        /// </summary>
         private readonly IIdentityServerInteractionService _interaction = interaction;
+        /// <summary>
+        /// The client store
+        /// </summary>
         private readonly IClientStore _clientStore = clientStore;
+        /// <summary>
+        /// The scheme provider
+        /// </summary>
         private readonly IAuthenticationSchemeProvider _schemeProvider = schemeProvider;
+        /// <summary>
+        /// The authentication handler
+        /// </summary>
         private readonly IAuthenticationHandlerProvider _authenticationHandler = authenticationHandler;
+        /// <summary>
+        /// The events
+        /// </summary>
         private readonly IEventService _events = events;
+        /// <summary>
+        /// The logger
+        /// </summary>
         private readonly ILogger<AccountController> _logger = logger;
+        /// <summary>
+        /// The email sender
+        /// </summary>
         private readonly IEmailSender _emailSender = emailSender;
 
         /// <summary>
         /// Entry point into the login workflow
         /// </summary>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl)
         {
@@ -74,6 +108,9 @@ namespace Spydersoft.Identity.Controllers
         /// <summary>
         /// Handle postback from username/password login
         /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="button">The button.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginInputModel model, string button)
@@ -162,6 +199,8 @@ namespace Spydersoft.Identity.Controllers
         /// <summary>
         /// Show logout page
         /// </summary>
+        /// <param name="logoutId">The logout identifier.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> Logout(string logoutId)
         {
@@ -181,6 +220,8 @@ namespace Spydersoft.Identity.Controllers
         /// <summary>
         /// Handle logout page postback
         /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(LogoutInputModel model)
@@ -212,12 +253,20 @@ namespace Spydersoft.Identity.Controllers
             return View("LoggedOut", vm);
         }
 
+        /// <summary>
+        /// Accesses the denied.
+        /// </summary>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         public IActionResult AccessDenied()
         {
             return View();
         }
 
+        /// <summary>
+        /// Lockouts this instance.
+        /// </summary>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Lockout()
@@ -226,6 +275,10 @@ namespace Spydersoft.Identity.Controllers
         }
 
 
+        /// <summary>
+        /// Forgots the password confirmation.
+        /// </summary>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPasswordConfirmation()
@@ -233,6 +286,10 @@ namespace Spydersoft.Identity.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Forgots the password.
+        /// </summary>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ForgotPassword()
@@ -240,6 +297,11 @@ namespace Spydersoft.Identity.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Forgots the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -267,6 +329,12 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Logins the with2fa.
+        /// </summary>
+        /// <param name="rememberMe">The remember me.</param>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         public async Task<IActionResult> LoginWith2fa(bool rememberMe, string returnUrl = null)
         {
@@ -281,6 +349,11 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Logins the with2fa.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         public async Task<IActionResult> LoginWith2fa(LoginWith2FaViewModel model)
         {
@@ -315,6 +388,12 @@ namespace Spydersoft.Identity.Controllers
             }
         }
 
+        /// <summary>
+        /// Resets the password.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
+        /// <exception cref="ArgumentNullException">nameof(code), A code must be supplied for password reset.</exception>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPassword(string code = null)
@@ -327,6 +406,11 @@ namespace Spydersoft.Identity.Controllers
             return View(model);
         }
 
+        /// <summary>
+        /// Resets the password.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -351,6 +435,10 @@ namespace Spydersoft.Identity.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Resets the password confirmation.
+        /// </summary>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ResetPasswordConfirmation()
@@ -358,6 +446,12 @@ namespace Spydersoft.Identity.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Confirms the email.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="code">The code.</param>
+        /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpGet]
         [AllowAnonymous]
         public IActionResult ConfirmEmail(string userId, string code)
@@ -383,6 +477,11 @@ namespace Spydersoft.Identity.Controllers
         }
 
         /* helper APIs for the AccountController */
+        /// <summary>
+        /// Build login view model as an asynchronous operation.
+        /// </summary>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>A Task&lt;Spydersoft.Identity.Models.AccountViewModels.LoginViewModel&gt; representing the asynchronous operation.</returns>
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
         {
             AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(returnUrl);
@@ -400,7 +499,7 @@ namespace Spydersoft.Identity.Controllers
 
                 if (!local)
                 {
-                    vm.ExternalProviders = new[] { new ExternalProvider { AuthenticationScheme = context.IdP } };
+                    vm.ExternalProviders = [new ExternalProvider { AuthenticationScheme = context.IdP }];
                 }
 
                 return vm;
@@ -437,10 +536,15 @@ namespace Spydersoft.Identity.Controllers
                 EnableLocalLogin = allowLocal && AccountOptions.AllowLocalLogin,
                 ReturnUrl = returnUrl,
                 Username = context?.LoginHint,
-                ExternalProviders = providers.ToArray()
+                ExternalProviders = [.. providers]
             };
         }
 
+        /// <summary>
+        /// Build login view model as an asynchronous operation.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>A Task&lt;Spydersoft.Identity.Models.AccountViewModels.LoginViewModel&gt; representing the asynchronous operation.</returns>
         private async Task<LoginViewModel> BuildLoginViewModelAsync(LoginInputModel model)
         {
             LoginViewModel vm = await BuildLoginViewModelAsync(model.ReturnUrl);
@@ -449,6 +553,11 @@ namespace Spydersoft.Identity.Controllers
             return vm;
         }
 
+        /// <summary>
+        /// Build logout view model as an asynchronous operation.
+        /// </summary>
+        /// <param name="logoutId">The logout identifier.</param>
+        /// <returns>A Task&lt;Spydersoft.Identity.Models.AccountViewModels.LogoutViewModel&gt; representing the asynchronous operation.</returns>
         private async Task<LogoutViewModel> BuildLogoutViewModelAsync(string logoutId)
         {
             var vm = new LogoutViewModel { LogoutId = logoutId, ShowLogoutPrompt = AccountOptions.ShowLogoutPrompt };
@@ -473,6 +582,11 @@ namespace Spydersoft.Identity.Controllers
             return vm;
         }
 
+        /// <summary>
+        /// Build logged out view model as an asynchronous operation.
+        /// </summary>
+        /// <param name="logoutId">The logout identifier.</param>
+        /// <returns>A Task&lt;Spydersoft.Identity.Models.AccountViewModels.LoggedOutViewModel&gt; representing the asynchronous operation.</returns>
         private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
         {
             // get context information (client name, post logout redirect URI and iframe for federated signout)

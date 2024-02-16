@@ -8,8 +8,17 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Spydersoft.Identity.Attributes
 {
 
+    /// <summary>
+    /// Class SecurityHeadersAttribute.
+    /// Implements the <see cref="ActionFilterAttribute" />
+    /// </summary>
+    /// <seealso cref="ActionFilterAttribute" />
     public class SecurityHeadersAttribute : ActionFilterAttribute
     {
+        /// <summary>
+        /// Called when [result executing].
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void OnResultExecuting(ResultExecutingContext context)
         {
             IActionResult result = context.Result;

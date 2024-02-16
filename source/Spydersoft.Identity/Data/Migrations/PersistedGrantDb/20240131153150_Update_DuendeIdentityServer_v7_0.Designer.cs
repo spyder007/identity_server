@@ -11,6 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Spydersoft.Identity.Data.Migrations.PersistedGrantDb
 {
+    /// <summary>
+    /// Class Update_DuendeIdentityServer_v7_0.
+    /// Implements the <see cref="Migration" />
+    /// </summary>
+    /// <seealso cref="Migration" />
     [DbContext(typeof(PersistedGrantDbContext))]
     [Migration("20240131153150_Update_DuendeIdentityServer_v7_0")]
     partial class Update_DuendeIdentityServer_v7_0
