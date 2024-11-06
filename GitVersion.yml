@@ -9,11 +9,3 @@ branches:
   #   increment: Minor
   feature:
     mode: ContinuousDelivery
-  tags:
-    mode: ManualDeployment
-    label: ''
-    increment: Inherit
-    prevent-increment:
-      when-current-commit-tagged: true
-    track-merge-message: true
-    regex: ^tags?[/-](?<BranchName>.+)
