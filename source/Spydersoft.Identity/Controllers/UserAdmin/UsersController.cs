@@ -58,10 +58,10 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
 
                 viewModel.IsNewUser = false;
                 System.Collections.Generic.IList<string> roles = await UserManager.GetRolesAsync(viewModel.User);
-                IQueryable<string> allRoles = RoleManager.Roles.Select(r => r.Name);
+                var allRoles = RoleManager.Roles.Select(r => r.Name).ToList();
                 viewModel.Roles = roles.AsQueryable();
                 var userRoles = roles.ToList();
-                viewModel.AvailableRoles = allRoles.Where(r => userRoles.TrueForAll(ur => ur != r));
+                viewModel.AvailableRoles = allRoles.Where(allRole => userRoles.TrueForAll(ur => ur != allRole)).AsQueryable();
 
                 System.Collections.Generic.IList<Claim> userClaims = await UserManager.GetClaimsAsync(viewModel.User);
                 viewModel.Claims = Mapper.ProjectTo<ClaimModel>(userClaims.AsQueryable());

@@ -11,6 +11,9 @@ resources:
       name: spyder007/id-helm-config
 
 trigger:
+  tags:
+    include:
+    - "*"
   branches:
     include:
       - main
@@ -19,12 +22,14 @@ trigger:
     exclude:
       - README.md
 
-pr: none
+pr:
+- main
 
 
 extends:
   template: pipelines/build-api/v1.yml@templates
   parameters:
+    gitVersionSpec: '6.x'
     buildProject: source/Spydersoft.Identity.sln
     publishProject: src/Spydersoft.TechRadar.Data.Api.csproj
     netCoreVersion: '8.0.x'
@@ -34,7 +39,8 @@ extends:
     dockerFilePath: Dockerfile.simple
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
-    ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+    #if it's a PR or build from main, don't update helmfile config or build/publish docker image
+    ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
       updateHelmConfig: false
       buildAndPublishDockerImage: false
     ${{ else }}:
