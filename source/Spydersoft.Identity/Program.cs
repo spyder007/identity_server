@@ -138,7 +138,7 @@ try
     forwardedHeadersOptions.KnownProxies.Clear();
 
     _ = app.UseForwardedHeaders(forwardedHeadersOptions)
-        .UseOpenTelemetryPrometheusScrapingEndpoint()
+        //.UseOpenTelemetryPrometheusScrapingEndpoint()
         .UseAuthentication()
         .UseRouting()
         .UseIdentityServer()
