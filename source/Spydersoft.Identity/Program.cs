@@ -48,7 +48,7 @@ try
             .AddSqlClientInstrumentation(),
         additionalMetricsConfiguration: null,
         additionalLogConfiguration: null)
-        .AddSpydersoftSerilog();
+        .AddSpydersoftSerilog(true);
 
     AppHealthCheckOptions healthCheckOptions = builder.AddSpydersoftHealthChecks();
 
@@ -117,7 +117,7 @@ try
         });
     _ = builder.Services.AddAuthorization();
     _ = builder.Services.AddHealthChecks()
-        .AddSqlServer(connString, null, null, "sqlserver", null, ["ready"], null);
+        .AddSqlServer(connString, name: "sqlserver", tags: ["ready"]);
 
     WebApplication app = builder.Build();
     // this will do the initial DB population, but we only need to do it once
