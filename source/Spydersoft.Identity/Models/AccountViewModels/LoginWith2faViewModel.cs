@@ -22,7 +22,7 @@ namespace Spydersoft.Identity.Models.AccountViewModels
         /// </summary>
         /// <value><c>true</c> if [remember machine]; otherwise, <c>false</c>.</value>
         [Display(Name = "Remember this machine")]
-        public bool RememberMachine { get; set; }
+        public bool RememberMachine { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether [remember me].

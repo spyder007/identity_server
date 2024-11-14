@@ -17,13 +17,13 @@ namespace Spydersoft.Identity.Models.ManageViewModels
         /// Gets or sets a value indicating whether this instance is email confirmed.
         /// </summary>
         /// <value><c>true</c> if this instance is email confirmed; otherwise, <c>false</c>.</value>
-        public bool IsEmailConfirmed { get; set; }
+        public bool IsEmailConfirmed { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is phone confirmed.
         /// </summary>
         /// <value><c>true</c> if this instance is phone confirmed; otherwise, <c>false</c>.</value>
-        public bool IsPhoneConfirmed { get; set; }
+        public bool IsPhoneConfirmed { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the email.
@@ -46,6 +46,6 @@ namespace Spydersoft.Identity.Models.ManageViewModels
         /// Gets or sets the status message.
         /// </summary>
         /// <value>The status message.</value>
-        public string StatusMessage { get; set; }
+        public string StatusMessage { get; set; } = string.Empty;
     }
 }

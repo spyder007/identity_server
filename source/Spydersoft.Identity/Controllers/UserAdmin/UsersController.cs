@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using Spydersoft.Identity.Constants;
 using Spydersoft.Identity.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers.UserAdmin
@@ -41,6 +42,12 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         public async Task<IActionResult> Edit(string id)
         {
             var viewModel = new UserViewModel();
+
+            if (!ModelState.IsValid)
+            {
+                return View(viewModel);
+            }
+
             if (string.IsNullOrEmpty(id))
             {
                 viewModel.User = new ApplicationUser();
@@ -109,6 +116,11 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction("Invalid ID provided");
+            }
+
             if (string.IsNullOrEmpty(id))
             {
                 return GetErrorAction("Invalid ID provided");
@@ -136,10 +148,15 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         [HttpPost]
         public async Task<IActionResult> AddRole(string userid, UserViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidUser);
+            }
+
             ApplicationUser current = await UserManager.FindByIdAsync(userid);
             if (current == null)
             {
-                return GetErrorAction("Invalid user");
+                return GetErrorAction(Messages.InvalidUser);
             }
 
             IdentityResult result = await UserManager.AddToRoleAsync(current, model.SelectedAvailableRole);
@@ -155,10 +172,14 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         [HttpGet]
         public async Task<IActionResult> DeleteRole(string userid, string role)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRole);
+            }
             ApplicationUser current = await UserManager.FindByIdAsync(userid);
             if (current == null)
             {
-                return GetErrorAction("Invalid role");
+                return GetErrorAction(Messages.InvalidRole);
             }
 
             IdentityResult result = await UserManager.RemoveFromRoleAsync(current, role);
@@ -178,10 +199,15 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         [HttpPost]
         public async Task<IActionResult> AddClaim(string userid, UserViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidUser);
+            }
+
             ApplicationUser current = await UserManager.FindByIdAsync(userid);
             if (current == null)
             {
-                return GetErrorAction("Invalid user");
+                return GetErrorAction(Messages.InvalidUser);
             }
 
             IdentityResult result = await UserManager.AddClaimAsync(current, Mapper.Map<Claim>(model.NewClaim));
@@ -197,10 +223,15 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         [HttpGet]
         public async Task<IActionResult> DeleteClaim(string userid, string claimtype)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRole);
+            }
+
             ApplicationUser current = await UserManager.FindByIdAsync(userid);
             if (current == null)
             {
-                return GetErrorAction("Invalid role");
+                return GetErrorAction(Messages.InvalidRole);
             }
 
             System.Collections.Generic.IList<Claim> claims = await UserManager.GetClaimsAsync(current);

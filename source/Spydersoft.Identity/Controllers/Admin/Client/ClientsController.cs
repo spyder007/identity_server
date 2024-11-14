@@ -7,6 +7,7 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 using Microsoft.AspNetCore.Mvc;
 
+using Spydersoft.Identity.Constants;
 using Spydersoft.Identity.Models.Admin.ClientViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Client
@@ -45,6 +46,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             if (id.HasValue)
             {
                 Duende.IdentityServer.EntityFramework.Entities.Client client = ConfigDbContext.Clients.FirstOrDefault(c => c.Id == id.Value);
@@ -71,6 +76,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             ClientViewModel clientModel;
             if (!id.HasValue)
             {

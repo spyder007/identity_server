@@ -1,4 +1,5 @@
-﻿@using Spydersoft.Identity.Models.Identity
+﻿@using Spydersoft.Identity.Extensions
+@using Spydersoft.Identity.Models.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
@@ -21,7 +22,7 @@
                     <div class="info">
                         <h6>@UserManager.GetUserAsync(User).Result.Name</h6>
                         <div class="image">
-                            <img gravatar-email="@UserManager.GetUserAsync(User).Result.Email" gravatar-size="80" alt="My Gravatar" class="img-avatar" />
+                            <img src="@UserManager.GetUserAsync(User).Result.Email.ToGravatarUrl()" alt="My Gravatar" class="img-avatar" />
                             <span class="status"></span>
                         </div>
                     </div>
@@ -60,7 +61,7 @@ else
             <div class="profile-info">
                 <div class="info">
                     <div class="image">
-                        <img gravatar-email="" gravatar-size="80" alt="My Gravatar" class="img-avatar" />
+                        <img src="string.Empty.ToGravatarUrl()" alt="My Gravatar" class="img-avatar" />
                         <span class="status"></span>
                     </div>
                 </div>

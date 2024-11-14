@@ -24,7 +24,7 @@ namespace Spydersoft.Identity.Models.Consent
         /// Gets or sets a value indicating whether [remember consent].
         /// </summary>
         /// <value><c>true</c> if [remember consent]; otherwise, <c>false</c>.</value>
-        public bool RememberConsent { get; set; }
+        public bool RememberConsent { get; set; } = false;
         /// <summary>
         /// Gets or sets the return URL.
         /// </summary>

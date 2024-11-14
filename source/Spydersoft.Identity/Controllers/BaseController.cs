@@ -2,6 +2,8 @@
 
 using Microsoft.AspNetCore.Mvc;
 
+using Spydersoft.Identity.Constants;
+
 namespace Spydersoft.Identity.Controllers
 {
     /// <summary>
@@ -25,7 +27,7 @@ namespace Spydersoft.Identity.Controllers
         /// <returns>IActionResult.</returns>
         public IActionResult GetErrorAction(string errorMessage)
         {
-            return RedirectToAction(nameof(HomeController.Error), "Home", new { errorId = errorMessage });
+            return RedirectToAction(nameof(HomeController.Error), "Home", new { errorId = ModelState.IsValid ? errorMessage : Messages.InvalidRequest });
         }
         /// <summary>
         /// Redirects to local.

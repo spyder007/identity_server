@@ -11,6 +11,7 @@ using Duende.IdentityServer.Models;
 
 using Microsoft.AspNetCore.Mvc;
 
+using Spydersoft.Identity.Constants;
 using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Identity
@@ -78,6 +79,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             if (id.HasValue)
             {
                 Duende.IdentityServer.EntityFramework.Entities.IdentityResource identityResource = ConfigDbContext.IdentityResources.FirstOrDefault(ir => ir.Id == id.Value);
@@ -101,6 +106,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
         [HttpPost]
         public async Task<IActionResult> AddStandard(IdentityResourcesViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             if (!string.IsNullOrWhiteSpace(model.SelectedAvailableResource))
             {
                 Duende.IdentityServer.EntityFramework.Entities.IdentityResource resource = GetStandardProfile(model.SelectedAvailableResource);
@@ -124,6 +133,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             IdentityResourceViewModel identityResourceViewModel;
             if (!id.HasValue)
             {

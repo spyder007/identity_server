@@ -45,6 +45,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
         [HttpGet]
         public IActionResult Edit(int? id)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             ApiResourceViewModel apiModel;
             if (!id.HasValue)
             {
@@ -127,6 +132,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
         [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             if (id.HasValue)
             {
                 Duende.IdentityServer.EntityFramework.Entities.ApiResource api = ConfigDbContext.ApiResources.FirstOrDefault(c => c.Id == id.Value);

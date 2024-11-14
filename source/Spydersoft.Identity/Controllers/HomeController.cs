@@ -68,6 +68,10 @@ namespace Spydersoft.Identity.Controllers
         public async Task<IActionResult> Error(string errorId)
         {
             var vm = new ErrorViewModel();
+            if (!ModelState.IsValid)
+            {
+                return View(vm);
+            }
 
             // retrieve error details from identityserver
             ErrorMessage message = await _interaction.GetErrorContextAsync(errorId);

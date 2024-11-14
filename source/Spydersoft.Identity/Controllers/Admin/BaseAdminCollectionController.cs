@@ -9,6 +9,7 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
+using Spydersoft.Identity.Constants;
 using Spydersoft.Identity.Models.Admin;
 
 namespace Spydersoft.Identity.Controllers.Admin
@@ -117,6 +118,10 @@ namespace Spydersoft.Identity.Controllers.Admin
         [HttpGet]
         public IActionResult Index(int? id)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             var collectionViewModel = new TChildCollectionViewModel();
             if (id.HasValue)
             {
@@ -178,6 +183,10 @@ namespace Spydersoft.Identity.Controllers.Admin
         [HttpGet]
         public async Task<IActionResult> Delete(int? id, int? parentId)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             if (!id.HasValue)
             {
                 return GetErrorAction("No Item ID Supplied");
@@ -215,7 +224,7 @@ namespace Spydersoft.Identity.Controllers.Admin
         {
             List<TChildEntity> collection = GetCollection(mainEntity);
             TChildEntity prop = FindItemInCollection(collection, id);
-            if (prop != null)
+            if (!Equals(prop, default(TChildEntity)))
             {
                 _ = collection.Remove(prop);
             }
