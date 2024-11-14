@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
+using Spydersoft.Identity.Constants;
 using Spydersoft.Identity.Exceptions;
 using Spydersoft.Identity.Extensions;
 using Spydersoft.Identity.Models.Identity;
@@ -283,6 +284,10 @@ namespace Spydersoft.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LinkLogin(string provider)
         {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction(nameof(ExternalLogins));
+            }
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
@@ -327,6 +332,11 @@ namespace Spydersoft.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                throw new IdentityServerException(Messages.InvalidRequest);
+            }
+
             ApplicationUser user = await ValidateContextUser();
 
             IdentityResult result = await _userManager.RemoveLoginAsync(user, model.LoginProvider, model.ProviderKey);

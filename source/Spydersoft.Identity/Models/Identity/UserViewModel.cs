@@ -21,7 +21,7 @@ namespace Spydersoft.Identity.Models.Identity
         /// Gets or sets a value indicating whether this instance is new user.
         /// </summary>
         /// <value><c>true</c> if this instance is new user; otherwise, <c>false</c>.</value>
-        public bool IsNewUser { get; set; }
+        public bool IsNewUser { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the roles.

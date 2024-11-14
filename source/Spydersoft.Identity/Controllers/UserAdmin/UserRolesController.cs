@@ -7,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using Spydersoft.Identity.Constants;
 using Spydersoft.Identity.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers.UserAdmin
@@ -47,6 +48,10 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             var viewModel = new ApplicationRoleViewModel();
             if (string.IsNullOrEmpty(id))
             {
@@ -107,6 +112,10 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             if (string.IsNullOrEmpty(id))
             {
                 return GetErrorAction("Invalid ID provided");
@@ -134,10 +143,14 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         [HttpPost]
         public async Task<IActionResult> AddClaim(string roleid, ApplicationRoleViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
             ApplicationRole current = await RoleManager.FindByIdAsync(roleid);
             if (current == null)
             {
-                return GetErrorAction("Invalid role");
+                return GetErrorAction(Messages.InvalidRole);
             }
 
             IdentityResult result = await RoleManager.AddClaimAsync(current, new Claim(viewModel.NewClaim.Type, viewModel.NewClaim.Value));
@@ -153,10 +166,15 @@ namespace Spydersoft.Identity.Controllers.UserAdmin
         [HttpGet]
         public async Task<IActionResult> DeleteClaim(string roleid, string claimtype)
         {
+            if (!ModelState.IsValid)
+            {
+                return GetErrorAction(Messages.InvalidRequest);
+            }
+
             ApplicationRole current = await RoleManager.FindByIdAsync(roleid);
             if (current == null)
             {
-                return GetErrorAction("Invalid role");
+                return GetErrorAction(Messages.InvalidRole);
             }
 
             System.Collections.Generic.IList<Claim> claims = await RoleManager.GetClaimsAsync(current);

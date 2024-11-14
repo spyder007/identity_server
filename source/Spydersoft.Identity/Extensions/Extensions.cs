@@ -37,7 +37,7 @@ namespace Spydersoft.Identity.Extensions
         public static IActionResult LoadingPage(this Controller controller, string viewName, string redirectUri)
         {
             controller.HttpContext.Response.StatusCode = 200;
-            controller.HttpContext.Response.Headers["Location"] = "";
+            controller.HttpContext.Response.Headers.Location = string.Empty;
 
             return controller.View(viewName, new RedirectViewModel { RedirectUrl = redirectUri });
         }

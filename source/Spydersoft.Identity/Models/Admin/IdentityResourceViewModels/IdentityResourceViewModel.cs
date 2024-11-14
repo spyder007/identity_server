@@ -101,7 +101,7 @@ namespace Spydersoft.Identity.Models.Admin.IdentityResourceViewModels
         /// </summary>
         /// <value><c>true</c> if [non editable]; otherwise, <c>false</c>.</value>
         [Display(Name = "Non Editable")]
-        public bool NonEditable { get; set; }
+        public bool NonEditable { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the updated.

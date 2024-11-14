@@ -506,7 +506,7 @@ namespace Spydersoft.Identity.Controllers
                 {
                     allowLocal = client.EnableLocalLogin;
 
-                    if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Any())
+                    if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Count > 0)
                     {
                         providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
                     }

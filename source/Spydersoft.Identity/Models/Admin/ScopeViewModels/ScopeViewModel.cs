@@ -67,21 +67,21 @@ namespace Spydersoft.Identity.Models.Admin.ScopeViewModels
         /// </summary>
         /// <value><c>true</c> if emphasize; otherwise, <c>false</c>.</value>
         [Display(Name = "Emphasize")]
-        public bool Emphasize { get; set; }
+        public bool Emphasize { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="ScopeViewModel"/> is required.
         /// </summary>
         /// <value><c>true</c> if required; otherwise, <c>false</c>.</value>
         [Display(Name = "Required")]
-        public bool Required { get; set; }
+        public bool Required { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether [show in discovery document].
         /// </summary>
         /// <value><c>true</c> if [show in discovery document]; otherwise, <c>false</c>.</value>
         [Display(Name = "Show in Discovery Document")]
-        public bool ShowInDiscoveryDocument { get; set; }
+        public bool ShowInDiscoveryDocument { get; set; } = false;
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="ScopeViewModel"/> is enabled.
