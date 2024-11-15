@@ -35,10 +35,12 @@ extends:
     netCoreVersion: '8.0.x'
     artifactName: identityServer
     artifactZipName: Spydersoft.Identity
-    dockerImageName: spydersoft/identity/identity_server
+    dockerImageName: spyder007/identity_server
     dockerFilePath: Dockerfile.simple
+    containerRegistryName: github-spydersoft-docker
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
+    externalFeedCredentials: SpydersoftGithub
     #if it's a PR or build from main, don't update helmfile config or build/publish docker image
     ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
       updateHelmConfig: false

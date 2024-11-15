@@ -2,6 +2,10 @@
 #For more information, please see https://aka.ms/containercompat
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy AS base
+LABEL org.opencontainers.image.source=https://github.com/spyder007/identity_server
+LABEL org.opencontainers.image.description="Spydersoft Identity Server"
+LABEL org.opencontainers.image.licenses=MIT
+
 WORKDIR /app
 COPY . /app
 # Create a group and user so we are not running our container and application as root and thus user 0 which is a security issue.
