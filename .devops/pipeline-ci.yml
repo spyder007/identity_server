@@ -39,6 +39,7 @@ extends:
     dockerFilePath: Dockerfile.simple
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
+    externalFeedCredentials: SpydersoftGithub
     #if it's a PR or build from main, don't update helmfile config or build/publish docker image
     ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
       updateHelmConfig: false
