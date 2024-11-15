@@ -37,7 +37,7 @@ extends:
     artifactZipName: Spydersoft.Identity
     dockerImageName: spyder007/identity_server
     dockerFilePath: Dockerfile.simple
-    containerRegistryName: public-github-spydersoft-docker
+    containerRegistryName: github-spydersoft-docker
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
     externalFeedCredentials: SpydersoftGithub
