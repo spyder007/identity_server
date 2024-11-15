@@ -35,8 +35,9 @@ extends:
     netCoreVersion: '8.0.x'
     artifactName: identityServer
     artifactZipName: Spydersoft.Identity
-    dockerImageName: spydersoft/identity/identity_server
+    dockerImageName: spyder007/identity_server
     dockerFilePath: Dockerfile.simple
+    containerRegistryName: public-github-spydersoft-docker
     imageTagVariableName: identity_server
     helmfileRepoName: helmfileconfig
     externalFeedCredentials: SpydersoftGithub
