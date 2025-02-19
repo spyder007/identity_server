@@ -45,13 +45,14 @@ extends:
     ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
       updateHelmConfig: false
       buildAndPublishDockerImage: false
+      executeSonar: true
     ${{ else }}:
       updateHelmConfig: true
       buildAndPublishDockerImage: true
+      executeSonar: false
     sonarEndpointName: sonarcloud-spydersoft
     sonarProjectKey: spyder007_identity_server
     sonarProjectName: identity_server
-    executeSonar: true
     executeTests: true
     testProjects: '**/*.Tests/*.csproj'
     useSonarCloud: true
