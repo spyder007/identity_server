@@ -3,12 +3,11 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+using Duende.IdentityModel;
 using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Duende.IdentityServer.Models;
-
-using IdentityModel;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;

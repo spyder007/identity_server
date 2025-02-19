@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 
-using IdentityModel;
+using Duende.IdentityModel;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
