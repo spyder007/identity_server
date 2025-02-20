@@ -4,11 +4,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
+using Duende.IdentityModel;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Services;
-
-using IdentityModel;
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -277,7 +276,7 @@ namespace Spydersoft.Identity.Controllers
             }
 
             IdentityResult identityResult;
-            if (filtered.Any())
+            if (filtered.Count > 0)
             {
                 identityResult = await _userManager.AddClaimsAsync(user, filtered);
                 if (!identityResult.Succeeded)
