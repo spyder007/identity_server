@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <UserSecretsId>d3b43c4b-2060-4431-a793-ba16056bd7c6</UserSecretsId>
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -44,30 +44,30 @@
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.2" />
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
-    <PackageReference Include="Azure.Identity" Version="1.13.2" />
-    <PackageReference Include="Duende.IdentityServer" Version="7.1.0" />
-    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.1.0" />
-    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="[8.0.13, 9)" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="[8.0.13, 9)" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="[8.0.13, 9)" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="[8.0.13, 9)" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="[8.0.13, 9)" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="[8.0.13, 9)" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="[8.0.13, 9)" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="[8.0.13, 9)">
+    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
+    <PackageReference Include="AutoMapper" Version="15.0.1" />
+    <PackageReference Include="Azure.Identity" Version="1.14.2" />
+    <PackageReference Include="Duende.IdentityServer" Version="7.2.4" />
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.2.4" />
+    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.2.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="9.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="[8.0.13, 9)" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.7" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="[8.0.1, 9)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="[8.0.1, 9)" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.9.0-beta.1" />
     <PackageReference Include="SendGrid" Version="9.29.3" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.6.0.109712">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.15.0.120848">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
