@@ -74,7 +74,9 @@ try
         _ = builder.Services.AddStackExchangeRedisCache(options => options.Configuration = cacheConnection);
     }
 
-    _ = builder.Services.AddAutoMapper(typeof(Program));
+    var automapperLicense = builder.Configuration.GetValue<string>("AutoMapper:License");
+
+    _ = builder.Services.AddAutoMapper(cfg => cfg.LicenseKey = automapperLicense, typeof(Program));
     _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.User.RequireUniqueEmail = true)
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
