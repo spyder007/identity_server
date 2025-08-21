@@ -172,7 +172,8 @@ namespace Spydersoft.Identity.Data
             {
                 adminUser = new ApplicationUser
                 {
-                    UserName = "admin"
+                    UserName = "admin",
+                    Email = "admin@localhost.net"
                 };
                 IdentityResult result = userMgr.CreateAsync(adminUser, "Ch@ng3m3").Result;
                 if (!result.Succeeded)
