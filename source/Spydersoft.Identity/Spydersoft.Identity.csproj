@@ -31,40 +31,34 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\AspNetIdentity\20191211025217_aspnetcore_31_update.cs" />
-    <Compile Remove="Data\Migrations\AspNetIdentity\20191211025217_aspnetcore_31_update.Designer.cs" />
-    <Compile Remove="Data\Migrations\AspNetIdentity\20201005143913_IdentityServer3to4.cs" />
-    <Compile Remove="Data\Migrations\AspNetIdentity\20201005143913_IdentityServer3to4.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
     <Folder Include="Models\UserAdmin\" />
     <Folder Include="Styles\" />
     <Folder Include="wwwroot\" />
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
     <PackageReference Include="AutoMapper" Version="15.0.1" />
-    <PackageReference Include="Azure.Identity" Version="1.14.2" />
-    <PackageReference Include="Duende.IdentityServer" Version="7.2.4" />
-    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.2.4" />
-    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.2.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="9.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.7">
+    <PackageReference Include="Azure.Identity" Version="1.15.0" />
+    <PackageReference Include="Duende.IdentityServer" Version="7.3.1" />
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.3.1" />
+    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.3.1" />
+    <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="[8.0.1, 9)" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="[8.0.1, 9)" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
     <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.9.0-beta.1" />
     <PackageReference Include="SendGrid" Version="9.29.3" />
     <PackageReference Include="SonarAnalyzer.CSharp" Version="10.15.0.120848">

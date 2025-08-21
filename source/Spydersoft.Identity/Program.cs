@@ -62,9 +62,10 @@ try
     _ = builder.Services.ConfigureNonBreakingSameSiteCookies();
     _ = builder.Services.AddHttpContextAccessor();
     // Add framework builder.Services.
-    _ = builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connString));
+    _ = builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(connString));
 
-    _ = builder.Services.AddDbContext<DataProtectionDbContext>(options => options.UseSqlServer(connString));
+    _ = builder.Services.AddDbContext<DataProtectionDbContext>(options => options.UseNpgsql(connString));
     _ = builder.Services.AddDataProtection()
         .SetApplicationName("identity-server")
         .PersistKeysToDbContext<DataProtectionDbContext>();
@@ -95,13 +96,13 @@ try
     _ = builder.Services.AddIdentityServer()
         .AddAspNetIdentity<ApplicationUser>()
         .AddConfigurationStore(options => options.ConfigureDbContext = builder =>
-                builder.UseSqlServer(connString,
-                    sql => sql.MigrationsAssembly(migrationsAssembly)))
+                builder.UseNpgsql(connString,
+                    sql => _ = sql.MigrationsAssembly(migrationsAssembly)))
         .AddOperationalStore(options =>
         {
             options.ConfigureDbContext = builder =>
-                builder.UseSqlServer(connString,
-                    sql => sql.MigrationsAssembly(migrationsAssembly));
+                builder.UseNpgsql(connString,
+                    sql => _ = sql.MigrationsAssembly(migrationsAssembly));
 
             // this enables automatic token cleanup. this is optional.
             options.EnableTokenCleanup = true;
@@ -110,16 +111,20 @@ try
 
     var providerSettings = new ProviderOptions();
     builder.Configuration.GetSection(ProviderOptions.SettingsKey).Bind(providerSettings);
-    _ = builder.Services.AddAuthentication()
-        .AddGoogle(option =>
+    Microsoft.AspNetCore.Authentication.AuthenticationBuilder authBuilder = builder.Services.AddAuthentication();
+
+    if (!string.IsNullOrWhiteSpace(providerSettings.GoogleClientId))
+    {
+        _ = authBuilder.AddGoogle(option =>
         {
             option.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
             option.ClientId = providerSettings.GoogleClientId;
             option.ClientSecret = providerSettings.GoogleClientSecret;
         });
+    }
+
     _ = builder.Services.AddAuthorization();
-    _ = builder.Services.AddHealthChecks()
-        .AddSqlServer(connString, name: "sqlserver", tags: ["ready"]);
+    _ = builder.Services.AddHealthChecks();
 
     WebApplication app = builder.Build();
     // this will do the initial DB population, but we only need to do it once
