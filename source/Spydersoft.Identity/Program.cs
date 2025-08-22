@@ -13,6 +13,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Npgsql;
+
 using OpenTelemetry.Trace;
 
 using Serilog;
@@ -45,7 +47,7 @@ try
             .AddSource(IdentityServerConstants.Tracing.Services)
             .AddSource(IdentityServerConstants.Tracing.Stores)
             .AddSource(IdentityServerConstants.Tracing.Validation)
-            .AddSqlClientInstrumentation(),
+            .AddNpgsql(),
         additionalMetricsConfiguration: null,
         additionalLogConfiguration: null)
         .AddSpydersoftSerilog(true);
