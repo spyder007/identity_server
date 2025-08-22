@@ -65,7 +65,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Spydersoft.Platform.Hosting" Version="1.2.1" />
+    <PackageReference Include="Spydersoft.Platform.Hosting" Version="2.1.0" />
   </ItemGroup>
   
   <ItemGroup>
