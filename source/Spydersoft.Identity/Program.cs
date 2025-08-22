@@ -48,7 +48,8 @@ try
             .AddSource(IdentityServerConstants.Tracing.Stores)
             .AddSource(IdentityServerConstants.Tracing.Validation)
             .AddNpgsql(),
-        additionalMetricsConfiguration: null,
+        additionalMetricsConfiguration => additionalMetricsConfiguration
+                 .AddNpgsqlInstrumentation(),
         additionalLogConfiguration: null)
         .AddSpydersoftSerilog(true);
 
