@@ -1,42 +1,290 @@
 ﻿@using Spydersoft.Identity.Models.Identity
 @model ApplicationRolesViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-secondary to-accent">
+                        <i class="fas fa-user-shield text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">User Roles</h1>
+                    <p class="dashboard-subtitle">Manage application roles and permissions</p>
+                </div>
             </div>
-            <!-- end row -->
+            <div class="flex space-x-2">
+                <a asp-action="Edit" class="btn btn-primary">
+                    <i class="fas fa-plus mr-2"></i>
+                    Create Role
+                </a>
+            </div>
         </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <div class="table-responsive">
-                    <table class="table" aria-label="User Roles">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Name</th>
-                                <th>Actions&nbsp;<a asp-action="Edit"><span class="fa fa-plus"></span></a></th>
-                            </tr>
-                        </thead>
+    </div>
 
-                        @foreach (var role in Model.Roles)
-                        {
-                            <tr>
-                                <td>@role.Name</td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@role.Id"><span class="fa fa-edit"></span></a>
-                                    <a asp-action="Delete" asp-route-id="@role.Id" title="Delete"><span class="fa fa-trash"></span></a>
-                                </td>
-                            </tr>
-                        }
-                    </table>
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <!-- Roles Management -->
+        <div class="lg:col-span-3">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-secondary/10">
+                                <i class="fas fa-user-shield text-secondary flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Application Roles</h2>
+                            <p class="text-base-content/70">Manage user permissions and access levels</p>
+                        </div>
+                    </div>
+
+                    @if (Model.Roles.Any())
+                    {
+                        <!-- Roles Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @foreach (var role in Model.Roles)
+                            {
+                                <div class="card bg-base-200 border border-base-300 hover:border-primary transition-colors">
+                                    <div class="card-body p-4">
+                                        <div class="flex items-start justify-between mb-3">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="avatar">
+                                                    <div class="w-10 h-10 rounded-full bg-primary/10">
+                                                        <i class="fas fa-shield-alt text-primary text-sm flex items-center justify-center h-full"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold text-lg">@role.Name</h3>
+                                                    <div class="text-xs text-base-content/60">Role ID: @role.Id</div>
+                                                </div>
+                                            </div>
+                                            <div class="dropdown dropdown-end">
+                                                <div tabindex="0" role="button" class="btn btn-ghost btn-sm">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </div>
+                                                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                    <li>
+                                                        <a asp-action="Edit" asp-route-id="@role.Id" class="flex items-center">
+                                                            <i class="fas fa-edit mr-2"></i>
+                                                            Edit Role
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <button onclick="confirmDelete('@role.Id', '@role.Name')" class="flex items-center text-error">
+                                                            <i class="fas fa-trash mr-2"></i>
+                                                            Delete Role
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-2">
+                                            <!-- Remove description check since ApplicationRole doesn't have Description property -->
+                                            <p class="text-sm text-base-content/50 italic">Role: @role.Name</p>
+                                        </div>
+
+                                        <!-- Role Actions -->
+                                        <div class="card-actions justify-end mt-4">
+                                            <a asp-action="Edit" asp-route-id="@role.Id" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-edit mr-1"></i>
+                                                Edit
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-16">
+                            <div class="avatar mb-6">
+                                <div class="w-32 rounded-full bg-base-200">
+                                    <i class="fas fa-user-shield text-6xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-2xl font-semibold mb-4">No Roles Defined</h3>
+                            <p class="text-base-content/70 mb-6 max-w-md mx-auto">
+                                Create roles to organize user permissions and control access to different parts of your application.
+                            </p>
+                            <a asp-action="Edit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-plus mr-2"></i>
+                                Create Your First Role
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Statistics -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Statistics
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="stat">
+                            <div class="stat-title">Total Roles</div>
+                            <div class="stat-value text-secondary">@Model.Roles.Count()</div>
+                            <div class="stat-desc">Configured roles</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Role Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2 text-info"></i>
+                        About Roles
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Control access to application features</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Group users with similar permissions</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Simplify user management</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Implement role-based authorization</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Common Roles -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-warning"></i>
+                        Common Roles
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Administrator</div>
+                            <div class="text-xs text-base-content/60">Full system access and user management</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Manager</div>
+                            <div class="text-xs text-base-content/60">Department or team management</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">User</div>
+                            <div class="text-xs text-base-content/60">Standard application access</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Guest</div>
+                            <div class="text-xs text-base-content/60">Limited read-only access</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-star mr-2 text-accent"></i>
+                        Best Practices
+                    </h3>
+                    <ul class="space-y-2 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use descriptive role names</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Follow principle of least privilege</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Document role purposes</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Regular role audits</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Avoid role proliferation</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="Users" asp-action="Index" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-users mr-2"></i>
+                            Manage Users
+                        </a>
+                        <a asp-action="Edit" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-plus mr-2"></i>
+                            Create New Role
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm Role Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the role: 
+            <br><strong id="deleteRoleName"></strong>
+            <br><br>This will remove the role from all users and cannot be undone.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete Role
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    <script>
+        function confirmDelete(roleId, roleName) {
+            document.getElementById('deleteRoleName').textContent = roleName;
+            document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete")?id=' + roleId;
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
+}

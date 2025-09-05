@@ -1,102 +1,163 @@
 ﻿@model RegisterViewModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Create Account";
 }
-<section class="signin-section">
-    <div class="container-fluid">
-        <!-- ========== title-wrapper start ========== -->
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
-                    </div>
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
-        </div>
-        <!-- ========== title-wrapper end ========== -->
 
-        <div class="row g-0 auth-row">
-            <div class="col-lg-6">
-                <div class="auth-cover-wrapper bg-primary-100">
-                    <div class="auth-cover">
-                        <div class="title text-center">
-                            <h1 class="text-primary mb-10">Get Started</h1>
-                            <p class="text-medium">
-                                Start creating the best possible user experience
-                                <br class="d-sm-block" />
-                                for you customers.
-                            </p>
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+    <div class="card bg-base-100 shadow-2xl max-w-4xl w-full overflow-hidden">
+        <div class="grid lg:grid-cols-2 gap-0">
+            <!-- Left Side - Welcome Panel -->
+            <div class="hidden lg:flex bg-gradient-to-br from-success to-info p-12 items-center justify-center text-white">
+                <div class="text-center">
+                    <div class="avatar mb-8">
+                        <div class="w-24 rounded-full bg-white/20">
+                            <img src="~/images/logo/logo.svg" alt="Spydersoft Logo" class="p-4" />
                         </div>
-                        <div class="cover-image">
-                            <img src="~/images/auth/signin-image.svg" alt="" />
-                        </div>
-                        <div class="shape-image">
-                            <img src="~/images/auth/shape.svg" alt="" />
-                        </div>
+                    </div>
+                    <h1 class="text-4xl font-bold mb-4">Join Spydersoft!</h1>
+                    <p class="text-xl text-white/90 mb-8">
+                        Start creating the best possible user experience for your customers
+                    </p>
+                    <div class="flex justify-center">
+                        <img src="~/images/auth/signin-image.svg" alt="Register" class="max-w-xs opacity-90" />
                     </div>
                 </div>
             </div>
-            <!-- end col -->
-            <div class="col-lg-6">
-                <div class="signup-wrapper">
-                    <div class="form-wrapper">
-                        <h6 class="mb-15">Sign Up Form</h6>
-                        <form method="post">
-                            <div asp-validation-summary="All" class="text-danger"></div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="input-style-1">
-                                        <label>Name</label>
-                                        <input asp-for="Name" class="form-control" placeholder="Name" />
-                                        <span asp-validation-for="Name" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <!-- end col -->
-                                <div class="col-12">
-                                    <div class="input-style-1">
-                                        <label>Email</label>
-                                        <input asp-for="Email" class="form-control" placeholder="Email" />
-                                        <span asp-validation-for="Email" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <!-- end col -->
-                                <div class="col-12">
-                                    <div class="input-style-1">
-                                        <label>Password</label>
-                                        <input asp-for="Password" class="form-control" placeholder="Password" />
-                                        <span asp-validation-for="Password" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="input-style-1">
-                                        <label>Confirm Password</label>
-                                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Repeat password" />
-                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <!-- end col -->
-                                <div class="col-12">
-                                    <div class="button-group d-flex justify-content-center flex-wrap">
-                                        <button class="main-btn primary-btn btn-hover w-100 text-center" type="submit">
-                                            Create Account
-                                        </button>
-                                    </div>
+
+            <!-- Right Side - Registration Form -->
+            <div class="p-8 lg:p-12">
+                <div class="max-w-md mx-auto">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gradient">Create Account</h2>
+                        <p class="text-base-content/70 mt-2">Join the Spydersoft community</p>
+                    </div>
+
+                    <form method="post" class="space-y-6">
+                        <!-- Validation Summary -->
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-error">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <h3 class="font-bold">Registration Error</h3>
+                                    <div asp-validation-summary="All" class="text-sm"></div>
                                 </div>
                             </div>
-                            <!-- end row -->
-                        </form>
+                        }
+
+                        <!-- Name Field -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">Full Name</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <input asp-for="Name" 
+                                   type="text" 
+                                   class="input input-bordered w-full focus:input-primary" 
+                                   placeholder="Enter your full name" />
+                            <label class="label">
+                                <span asp-validation-for="Name" class="label-text-alt text-error"></span>
+                            </label>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">Email Address</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <input asp-for="Email" 
+                                   type="email" 
+                                   class="input input-bordered w-full focus:input-primary" 
+                                   placeholder="Enter your email address" />
+                            <label class="label">
+                                <span asp-validation-for="Email" class="label-text-alt text-error"></span>
+                            </label>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">Password</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <input asp-for="Password" 
+                                   type="password" 
+                                   class="input input-bordered w-full focus:input-primary" 
+                                   placeholder="Create a secure password" />
+                            <label class="label">
+                                <span asp-validation-for="Password" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Must be at least 8 characters</span>
+                            </label>
+                        </div>
+
+                        <!-- Confirm Password Field -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">Confirm Password</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <input asp-for="ConfirmPassword" 
+                                   type="password" 
+                                   class="input input-bordered w-full focus:input-primary" 
+                                   placeholder="Confirm your password" />
+                            <label class="label">
+                                <span asp-validation-for="ConfirmPassword" class="label-text-alt text-error"></span>
+                            </label>
+                        </div>
+
+                        <!-- Terms Agreement -->
+                        <div class="form-control">
+                            <label class="label cursor-pointer justify-start space-x-3">
+                                <input type="checkbox" class="checkbox checkbox-primary checkbox-sm" required />
+                                <span class="label-text text-sm">
+                                    I agree to the 
+                                    <a href="#" class="link link-primary">Terms of Service</a> and 
+                                    <a href="#" class="link link-primary">Privacy Policy</a>
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- Create Account Button -->
+                        <button type="submit" class="btn btn-primary btn-lg w-full">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Create Account
+                        </button>
+                    </form>
+
+                    <!-- Sign In Link -->
+                    <div class="text-center mt-8">
+                        <p class="text-base-content/70">
+                            Already have an account?
+                            <a asp-controller="Account" 
+                               asp-action="Login" 
+                               asp-route-returnurl="@ViewData["ReturnUrl"]" 
+                               class="link link-primary font-medium">
+                                Sign in instead
+                            </a>
+                        </p>
+                    </div>
+
+                    <!-- Features -->
+                    <div class="mt-8 space-y-3">
+                        <div class="flex items-center space-x-3 text-sm text-base-content/70">
+                            <i class="fas fa-check text-success"></i>
+                            <span>Access to all Spydersoft applications</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-sm text-base-content/70">
+                            <i class="fas fa-check text-success"></i>
+                            <span>Single sign-on across services</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-sm text-base-content/70">
+                            <i class="fas fa-check text-success"></i>
+                            <span>Secure and private by design</span>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- end col -->
         </div>
-        <!-- end row -->
     </div>
-</section>
-
+</div>
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")

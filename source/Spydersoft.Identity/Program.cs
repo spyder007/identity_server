@@ -15,8 +15,6 @@ using Microsoft.Extensions.Hosting;
 
 using Npgsql;
 
-using OpenTelemetry.Trace;
-
 using Serilog;
 
 using Spydersoft.Identity.Data;

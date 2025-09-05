@@ -3,82 +3,67 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-
-
-
-
 @if (User.Identity.IsAuthenticated)
 {
-    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="nav navbar-nav ml-auto">
-        <div class="profile-box ml-15">
-            <button
-                class="dropdown-toggle bg-transparent border-0"
-                type="button"
-                id="profile"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-            >
-                <div class="profile-info">
-                    <div class="info">
-                        <h6>@UserManager.GetUserAsync(User).Result.Name</h6>
-                        <div class="image">
-                            <img src="@UserManager.GetUserAsync(User).Result.Email.ToGravatarUrl()" alt="My Gravatar" class="img-avatar" />
-                            <span class="status"></span>
-                        </div>
-                    </div>
-                </div>
-                <i class="lni lni-chevron-down"></i>
-            </button>
-            <ul
-                class="dropdown-menu dropdown-menu-end"
-                aria-labelledby="profile"
-            >
-                <li>
-                    <a asp-area="" asp-controller="Manage" asp-action="Index">
-                        <i class="lni lni-user"></i> View Profile
-                    </a>
-                </li>
-                <li>
-                    <a asp-area="" asp-controller="Grants" asp-action="Index"> <i class="lni lni-inbox"></i> My Apps </a>
-                </li>
-                <li>
-                    <a asp-controller="Account" asp-action="Logout"><i class="lni lni-exit"></i> Logout</a>
-                </li>
-            </ul>
-        </div>
-    </form>
-}
-else
-{
-    <div class="profile-box ml-15">
-        <button
-            class="dropdown-toggle bg-transparent border-0"
-            type="button"
-            id="profile"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-        >
-            <div class="profile-info">
-                <div class="info">
-                    <div class="image">
-                        <img src="@string.Empty.ToGravatarUrl()" alt="My Gravatar" class="img-avatar" />
-                        <span class="status"></span>
-                    </div>
-                </div>
+    <div class="dropdown dropdown-end">
+        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+            <div class="w-10 rounded-full">
+                <img src="@UserManager.GetUserAsync(User).Result.Email.ToGravatarUrl()" alt="Profile Avatar" />
             </div>
-            <i class="lni lni-chevron-down"></i>
-        </button>
-        <ul
-            class="dropdown-menu dropdown-menu-end"
-            aria-labelledby="profile"
-        >
+        </label>
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+            <li class="menu-title">
+                <span class="font-medium">@UserManager.GetUserAsync(User).Result.Name</span>
+            </li>
+            <div class="divider my-1"></div>
             <li>
-                <a asp-area="" asp-controller="Register" asp-action="Index">
-                    <i class="lni lni-user"></i> Register
+                <a asp-area="" asp-controller="Manage" asp-action="Index" class="flex items-center space-x-2">
+                    <i class="fas fa-user text-primary"></i>
+                    <span>View Profile</span>
                 </a>
             </li>
             <li>
-                <a asp-area="" asp-controller="Account" asp-action="Login"> <i class="lni lni-inbox"></i> Login </a>
+                <a asp-area="" asp-controller="Grants" asp-action="Index" class="flex items-center space-x-2">
+                    <i class="fas fa-apps text-primary"></i>
+                    <span>My Apps</span>
+                </a>
+            </li>
+            <div class="divider my-1"></div>
+            <li>
+                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="w-full">
+                    <button type="submit" class="w-full text-left flex items-center space-x-2 p-2 hover:bg-error/10 hover:text-error rounded transition-colors">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+}
+else
+{
+    <div class="dropdown dropdown-end">
+        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+            <div class="w-10 rounded-full">
+                <img src="@string.Empty.ToGravatarUrl()" alt="Guest Avatar" />
+            </div>
+        </label>
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+            <li class="menu-title">
+                <span class="text-base-content/70">Guest User</span>
+            </li>
+            <div class="divider my-1"></div>
+            <li>
+                <a asp-area="" asp-controller="Register" asp-action="Index" class="flex items-center space-x-2">
+                    <i class="fas fa-user-plus text-success"></i>
+                    <span>Register</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="" asp-controller="Account" asp-action="Login" class="flex items-center space-x-2">
+                    <i class="fas fa-sign-in-alt text-primary"></i>
+                    <span>Login</span>
+                </a>
             </li>
         </ul>
     </div>

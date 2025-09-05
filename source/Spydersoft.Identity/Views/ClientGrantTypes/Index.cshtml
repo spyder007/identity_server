@@ -1,55 +1,382 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ClientViewModels
 @model ClientGrantTypesViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-info">
+                        <i class="fas fa-cogs text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">Grant Types</h1>
+                    <p class="dashboard-subtitle">Configure OAuth 2.0 flow types for client authentication</p>
+                </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Save" asp-route-id="@Model.Id">
-
-                    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
-                    <table class="table" aria-label="Client Grant Types">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>@Html.LabelFor(model => model.NewItem.GrantType)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var clientClaim in Model.ItemsList)
-                        {
-                            <tr>
-                                <td>@clientClaim.GrantType</td>
-                                <td><a asp-action="Delete" asp-route-id="@clientClaim.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                            </tr>
-                        }
-                        <tr>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.GrantType" pf-validation-for="NewItem.GrantType" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.GrantType" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                </div>
-                            </td>
-
-                        </tr>
-                    </table>
-                </form>
+            <div class="flex space-x-2">
+                <a asp-controller="Clients" asp-action="Edit" asp-route-id="@Model.NavBar.Id" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Client
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Navigation Bar -->
+    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Grant Types Management -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-primary/10">
+                                <i class="fas fa-cogs text-primary flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Allowed Grant Types</h2>
+                            <p class="text-base-content/70">OAuth flows enabled for this client</p>
+                        </div>
+                    </div>
+
+                    @if (Model.ItemsList.Any())
+                    {
+                        <!-- Existing Grant Types -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            @foreach (var grantType in Model.ItemsList)
+                            {
+                                <div class="card bg-base-200 border border-base-300 hover:border-primary transition-colors">
+                                    <div class="card-body p-4">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="avatar">
+                                                    <div class="w-10 h-10 rounded-full bg-success/10">
+                                                        <i class="@GetGrantTypeIcon(grantType.GrantType) text-success flex items-center justify-center h-full"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-semibold">@grantType.GrantType</h3>
+                                                    <div class="text-xs text-base-content/60">
+                                                        @GetGrantTypeDescription(grantType.GrantType)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button onclick="confirmDelete('@grantType.Id', '@grantType.GrantType')" 
+                                                    class="btn btn-error btn-sm" 
+                                                    title="Remove grant type">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <!-- Grant Type Details -->
+                                        <div class="mt-3 p-3 bg-base-300 rounded">
+                                            <div class="text-xs space-y-1">
+                                                @switch (grantType.GrantType.ToLower())
+                                                {
+                                                    case "authorization_code":
+                                                        <div><strong>Security:</strong> High (with PKCE)</div>
+                                                        <div><strong>Use Case:</strong> Web apps, SPAs</div>
+                                                        <div><strong>Requires:</strong> Redirect URI</div>
+                                                        break;
+                                                    case "client_credentials":
+                                                        <div><strong>Security:</strong> High</div>
+                                                        <div><strong>Use Case:</strong> Service-to-service</div>
+                                                        <div><strong>Requires:</strong> Client secret</div>
+                                                        break;
+                                                    case "password":
+                                                        <div><strong>Security:</strong> Medium</div>
+                                                        <div><strong>Use Case:</strong> Trusted apps only</div>
+                                                        <div><strong>Note:</strong> Deprecated, use with caution</div>
+                                                        break;
+                                                    case "refresh_token":
+                                                        <div><strong>Security:</strong> Medium</div>
+                                                        <div><strong>Use Case:</strong> Token refresh</div>
+                                                        <div><strong>Requires:</strong> offline_access scope</div>
+                                                        break;
+                                                    default:
+                                                        <div><strong>Type:</strong> Custom grant type</div>
+                                                        <div><strong>Note:</strong> Ensure proper validation</div>
+                                                        break;
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-12 mb-6">
+                            <div class="avatar mb-4">
+                                <div class="w-24 rounded-full bg-base-200">
+                                    <i class="fas fa-cogs text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No Grant Types Configured</h3>
+                            <p class="text-base-content/70 mb-4">Add OAuth grant types to enable authentication flows.</p>
+                        </div>
+                    }
+
+                    <!-- Add New Grant Type Form -->
+                    <form asp-action="Save" asp-route-id="@Model.Id" class="space-y-4">
+                        <div class="divider">Add Grant Type</div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.GrantType)</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-code text-base-content/40"></i>
+                                </div>
+                                <input asp-for="NewItem.GrantType" 
+                                       type="text" 
+                                       class="input input-bordered w-full pl-10 focus:input-primary" 
+                                       placeholder="authorization_code" 
+                                       list="grantTypesList" />
+                                <datalist id="grantTypesList">
+                                    <option value="authorization_code">Authorization Code</option>
+                                    <option value="client_credentials">Client Credentials</option>
+                                    <option value="password">Resource Owner Password</option>
+                                    <option value="refresh_token">Refresh Token</option>
+                                    <option value="implicit">Implicit (deprecated)</option>
+                                    <option value="hybrid">Hybrid</option>
+                                </datalist>
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="NewItem.GrantType" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">OAuth 2.0 grant type identifier</span>
+                            </label>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add Grant Type
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Statistics -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Statistics
+                    </h3>
+                    <div class="stat">
+                        <div class="stat-title">Active Grant Types</div>
+                        <div class="stat-value text-primary">@Model.ItemsList.Count()</div>
+                        <div class="stat-desc">OAuth flows enabled</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standard Grant Types -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bookmark mr-2 text-info"></i>
+                        Standard Grant Types
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-shield-alt text-success mr-2"></i>
+                                authorization_code
+                            </div>
+                            <div class="text-xs text-base-content/60">Most secure flow for web apps and SPAs</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-server text-info mr-2"></i>
+                                client_credentials
+                            </div>
+                            <div class="text-xs text-base-content/60">Service-to-service authentication</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-sync text-accent mr-2"></i>
+                                refresh_token
+                            </div>
+                            <div class="text-xs text-base-content/60">Token refresh capability</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1 flex items-center">
+                                <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+                                password
+                            </div>
+                            <div class="text-xs text-base-content/60">Deprecated - trusted apps only</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Guidelines -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-error"></i>
+                        Security Guidelines
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use authorization_code for web applications</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Always enable PKCE for public clients</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use client_credentials for APIs</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-triangle text-warning text-xs mt-1"></i>
+                            <span>Avoid password grant in production</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-ban text-error text-xs mt-1"></i>
+                            <span>Never use implicit grant</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Flow Recommendations -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-warning"></i>
+                        Recommendations
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Web Applications</div>
+                            <div class="text-xs text-base-content/60">authorization_code + refresh_token</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Single Page Apps</div>
+                            <div class="text-xs text-base-content/60">authorization_code + PKCE</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">API Services</div>
+                            <div class="text-xs text-base-content/60">client_credentials only</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Mobile Apps</div>
+                            <div class="text-xs text-base-content/60">authorization_code + PKCE + refresh_token</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="ClientScopes" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Manage Scopes
+                        </a>
+                        <a asp-controller="ClientRedirects" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-external-link-alt mr-2"></i>
+                            Redirect URIs
+                        </a>
+                        <a asp-controller="ClientSecrets" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Client Secrets
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Remove Grant Type
+        </h3>
+        <p class="py-4">
+            Are you sure you want to remove the grant type <strong id="deleteGrantType"></strong>?
+            <br><br>This will disable this OAuth flow for the client and may break existing integrations.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Remove Grant Type
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <script>
+        function confirmDelete(grantTypeId, grantType) {
+            document.getElementById('deleteGrantType').textContent = grantType;
+            document.getElementById('deleteConfirmBtn').href = '@(Url.Action("Delete"))?id=' + grantTypeId + '&parentid=@Model.NavBar.Id';
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
+}
+
+@functions {
+    private string GetGrantTypeIcon(string grantType)
+    {
+        return grantType.ToLower() switch
+        {
+            "authorization_code" => "fas fa-shield-alt",
+            "client_credentials" => "fas fa-server",
+            "password" => "fas fa-key",
+            "refresh_token" => "fas fa-sync",
+            "implicit" => "fas fa-exclamation-triangle",
+            "hybrid" => "fas fa-random",
+            _ => "fas fa-cog"
+        };
+    }
+
+    private string GetGrantTypeDescription(string grantType)
+    {
+        return grantType.ToLower() switch
+        {
+            "authorization_code" => "Standard web application flow",
+            "client_credentials" => "Service-to-service authentication",
+            "password" => "Resource owner password flow",
+            "refresh_token" => "Token refresh capability",
+            "implicit" => "Deprecated browser flow",
+            "hybrid" => "Combined authorization flow",
+            _ => "Custom grant type"
+        };
+    }
+}

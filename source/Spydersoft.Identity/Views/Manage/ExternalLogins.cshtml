@@ -1,58 +1,314 @@
 ﻿@model ExternalLoginsViewModel
 @{
-    ViewData["Title"] = "Manage your external logins";
+    ViewData["Title"] = "External Logins";
     ViewData.AddActivePage(ManageNavPages.ExternalLogins);
 }
 
-@await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
-@if (Model.CurrentLogins?.Count > 0)
-{
-    <h4>Registered Logins</h4>
-    <table class="table" aria-label="Registered Logins">
-        <thead class="thead-dark">
-        <tr>
-            <th>Provider</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var login in Model.CurrentLogins)
-        {
-            <tr>
-                <td>@login.LoginProvider</td>
-                <td>
-                    @if (Model.ShowRemoveButton)
-                    {
-                        <form asp-action="RemoveLogin" method="post">
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center space-x-3">
+            <div class="avatar">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-info to-secondary">
+                    <i class="fas fa-link text-white flex items-center justify-center h-full"></i>
+                </div>
+            </div>
+            <div>
+                <h1 class="dashboard-title">External Logins</h1>
+                <p class="dashboard-subtitle">Manage your connected social and external accounts</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Message -->
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert alert-success mb-8">
+            <i class="fas fa-check-circle"></i>
+            <span>@Model.StatusMessage</span>
+        </div>
+    }
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Connected Accounts -->
+        <div class="lg:col-span-2">
+            @if (Model.CurrentLogins?.Count > 0)
+            {
+                <div class="card bg-base-100 shadow-xl border border-base-300 mb-8">
+                    <div class="card-body">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="avatar">
+                                <div class="w-10 h-10 rounded-full bg-success/10">
+                                    <i class="fas fa-check-circle text-success flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
                             <div>
-                                <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden"/>
-                                <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden"/>
-                                <button type="submit" class="btn btn-primary" title="Remove this @login.LoginProvider login from your account">Remove</button>
+                                <h2 class="card-title text-xl">Connected Accounts</h2>
+                                <p class="text-base-content/70">Accounts linked to your profile</p>
+                            </div>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="table w-full">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span class="flex items-center">
+                                                <i class="fas fa-building mr-2"></i>
+                                                Provider
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="flex items-center">
+                                                <i class="fas fa-calendar mr-2"></i>
+                                                Status
+                                            </span>
+                                        </th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var login in Model.CurrentLogins)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="avatar">
+                                                        <div class="mask mask-squircle w-12 h-12 bg-gradient-to-br from-info to-primary">
+                                                            <i class="fas fa-@(login.LoginProvider.ToLower()) text-white flex items-center justify-center h-full"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="font-bold">@login.LoginProvider</div>
+                                                        <div class="text-sm opacity-50">External Provider</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="badge badge-success gap-2">
+                                                    <i class="fas fa-link text-xs"></i>
+                                                    Connected
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if (Model.ShowRemoveButton)
+                                                {
+                                                    <form asp-action="RemoveLogin" method="post" class="inline">
+                                                        <input asp-for="@login.LoginProvider" name="LoginProvider" type="hidden"/>
+                                                        <input asp-for="@login.ProviderKey" name="ProviderKey" type="hidden"/>
+                                                        <button type="button" 
+                                                                onclick="confirmRemove('@login.LoginProvider')" 
+                                                                class="btn btn-error btn-sm"
+                                                                title="Remove this @login.LoginProvider login from your account">
+                                                            <i class="fas fa-unlink mr-1"></i>
+                                                            Remove
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <div class="badge badge-info badge-sm">Required</div>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        @if (!Model.ShowRemoveButton)
+                        {
+                            <div class="mt-4 p-4 bg-warning/10 rounded-lg">
+                                <div class="flex items-start space-x-3">
+                                    <i class="fas fa-exclamation-triangle text-warning mt-1"></i>
+                                    <div class="text-sm">
+                                        <div class="font-medium mb-1">Cannot Remove</div>
+                                        <p class="text-base-content/80">
+                                            You must have at least one way to sign in, or set a password first.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.OtherLogins?.Count > 0)
+            {
+                <div class="card bg-base-100 shadow-xl border border-base-300">
+                    <div class="card-body">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="avatar">
+                                <div class="w-10 h-10 rounded-full bg-primary/10">
+                                    <i class="fas fa-plus text-primary flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h2 class="card-title text-xl">Add External Account</h2>
+                                <p class="text-base-content/70">Connect additional login providers</p>
+                            </div>
+                        </div>
+
+                        <form asp-action="LinkLogin" method="post" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                @foreach (var provider in Model.OtherLogins)
+                                {
+                                    <button type="submit" 
+                                            name="provider" 
+                                            value="@provider.Name" 
+                                            class="btn btn-outline btn-lg justify-start"
+                                            title="Connect your @provider.DisplayName account">
+                                        <i class="fas fa-@(provider.Name.ToLower()) mr-3 text-xl"></i>
+                                        <div class="text-left">
+                                            <div class="font-semibold">@provider.DisplayName</div>
+                                            <div class="text-xs opacity-70">Connect Account</div>
+                                        </div>
+                                    </button>
+                                }
                             </div>
                         </form>
-                    }
-                    else
-                    {
-                        @: &nbsp;
-                    }
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-@if (Model.OtherLogins?.Count > 0)
-{
-    <h4>Add another service to log in.</h4>
-    <hr />
-    <form asp-action="LinkLogin" method="post" class="form-horizontal">
-        <div id="socialLoginList">
-            <p>
-                @foreach (var provider in Model.OtherLogins)
-                {
-                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                }
-            </p>
+                    </div>
+                </div>
+            }
+
+            @if ((Model.CurrentLogins?.Count ?? 0) == 0 && (Model.OtherLogins?.Count ?? 0) == 0)
+            {
+                <div class="card bg-base-100 shadow-xl border border-base-300">
+                    <div class="card-body text-center py-12">
+                        <div class="avatar mb-4">
+                            <div class="w-24 rounded-full bg-base-200">
+                                <i class="fas fa-link text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold mb-2">No External Providers</h3>
+                        <p class="text-base-content/70 mb-4">External login providers are not currently configured.</p>
+                        <div class="text-xs text-base-content/60">
+                            Contact your administrator to enable external authentication providers.
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
-    </form>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Benefits -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-star mr-2 text-warning"></i>
+                        Benefits
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>No need to remember additional passwords</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Faster sign-in process</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Secure OAuth authentication</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Multiple backup login options</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Security -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-info"></i>
+                        Security Information
+                    </h3>
+                    <div class="space-y-3 text-sm text-base-content/80">
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-lock text-info text-xs mt-1"></i>
+                            <span>External providers don't share your passwords with us</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-key text-info text-xs mt-1"></i>
+                            <span>You can revoke access at any time</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-user-shield text-info text-xs mt-1"></i>
+                            <span>Your data privacy is protected</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-cog mr-2"></i>
+                        Account Settings
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-action="Index" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-user mr-2"></i>
+                            Profile Settings
+                        </a>
+                        <a asp-action="ChangePassword" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Change Password
+                        </a>
+                        <a asp-action="TwoFactorAuthentication" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-mobile-alt mr-2"></i>
+                            Two-Factor Auth
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Remove Confirmation Modal -->
+<dialog id="removeModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Remove External Login
+        </h3>
+        <p class="py-4">
+            Are you sure you want to remove <strong id="removeProviderName"></strong> from your account? 
+            You won't be able to use this provider to sign in unless you add it again.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <button id="confirmRemoveBtn" class="btn btn-error" onclick="submitRemoveForm()">
+                <i class="fas fa-unlink mr-2"></i>
+                Remove Provider
+            </button>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    <script>
+        let currentRemoveForm = null;
+
+        function confirmRemove(providerName) {
+            document.getElementById('removeProviderName').textContent = providerName;
+            currentRemoveForm = event.target.closest('form');
+            document.getElementById('removeModal').showModal();
+        }
+
+        function submitRemoveForm() {
+            if (currentRemoveForm) {
+                currentRemoveForm.submit();
+            }
+        }
+    </script>
 }

@@ -1,24 +1,217 @@
 ﻿@{
-    ViewData["Title"] = "Disable two-factor authentication (2FA)";
+    ViewData["Title"] = "Disable Two-Factor Authentication";
     ViewData.AddActivePage(ManageNavPages.TwoFactorAuthentication);
 }
 
-<h2>@ViewData["Title"]</h2>
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center space-x-3">
+            <div class="avatar">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-warning to-error">
+                    <i class="fas fa-shield-alt text-white flex items-center justify-center h-full"></i>
+                </div>
+            </div>
+            <div>
+                <h1 class="dashboard-title">Disable Two-Factor Authentication</h1>
+                <p class="dashboard-subtitle">Remove the extra security layer from your account</p>
+            </div>
+        </div>
+    </div>
 
-<div class="alert alert-warning" role="alert">
-    <p>
-        <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>This action only disables 2FA.</strong>
-    </p>
-    <p>
-        Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a asp-action="ResetAuthenticatorWarning">reset your
-        authenticator keys.</a>
-    </p>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Disable Form -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-warning/10">
+                                <i class="fas fa-exclamation-triangle text-warning flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Remove 2FA Protection</h2>
+                            <p class="text-base-content/70">This will reduce your account security</p>
+                        </div>
+                    </div>
+
+                    <!-- Warning Alert -->
+                    <div class="alert alert-warning mb-6">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <h3 class="font-bold">Important Security Notice</h3>
+                            <div class="text-sm mt-2">
+                                <p class="mb-2">
+                                    <strong>This action only disables 2FA verification.</strong>
+                                </p>
+                                <p>
+                                    Disabling 2FA does not change the keys used in authenticator apps. 
+                                    If you wish to change the key used in an authenticator app, you should 
+                                    <a asp-action="ResetAuthenticatorWarning" class="link link-warning">reset your authenticator keys</a>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Impact -->
+                    <div class="bg-error/10 p-6 rounded-lg mb-6">
+                        <h3 class="font-semibold mb-4 flex items-center">
+                            <i class="fas fa-shield-slash text-error mr-2"></i>
+                            Security Impact
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-times text-error text-xs mt-1"></i>
+                                <span>Your account will only be protected by your password</span>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-times text-error text-xs mt-1"></i>
+                                <span>Risk of unauthorized access increases significantly</span>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-times text-error text-xs mt-1"></i>
+                                <span>No protection against password-based attacks</span>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-times text-error text-xs mt-1"></i>
+                                <span>Connected applications may be at risk</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirmation Form -->
+                    <form asp-action="Disable2fa" method="post" class="space-y-6">
+                        <div class="form-control">
+                            <label class="label cursor-pointer">
+                                <span class="label-text font-medium">
+                                    I understand the security risks of disabling two-factor authentication
+                                </span>
+                                <input type="checkbox" class="checkbox checkbox-warning" id="confirmDisable" required />
+                            </label>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <a asp-action="TwoFactorAuthentication" class="btn btn-outline">
+                                <i class="fas fa-arrow-left mr-2"></i>
+                                Keep 2FA Enabled
+                            </a>
+                            <button type="submit" class="btn btn-error btn-lg" id="disableButton" disabled>
+                                <i class="fas fa-shield-slash mr-2"></i>
+                                Disable 2FA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Alternatives -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-info"></i>
+                        Consider These Alternatives
+                    </h3>
+                    <div class="space-y-3">
+                        <a asp-action="GenerateRecoveryCodes" class="btn btn-outline btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Generate Recovery Codes
+                        </a>
+                        <a asp-action="ResetAuthenticatorWarning" class="btn btn-outline btn-sm w-full justify-start">
+                            <i class="fas fa-redo mr-2"></i>
+                            Reset Authenticator
+                        </a>
+                        <a asp-action="ChangePassword" class="btn btn-outline btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Update Password
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Recommendations -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-success"></i>
+                        Security Recommendations
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use a strong, unique password with mixed case, numbers, and symbols</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Enable account lockout protection</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Monitor your account for suspicious activity</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Consider re-enabling 2FA in the future</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Re-enable Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-redo mr-2 text-primary"></i>
+                        Re-enabling 2FA
+                    </h3>
+                    <p class="text-sm text-base-content/80 mb-4">
+                        You can always re-enable two-factor authentication later to improve your account security.
+                    </p>
+                    <a asp-action="EnableAuthenticator" class="btn btn-primary btn-sm w-full">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        Set Up 2FA Later
+                    </a>
+                </div>
+            </div>
+
+            <!-- Help -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-question-circle mr-2"></i>
+                        Need Help?
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="Home" asp-action="Contact" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-envelope mr-2"></i>
+                            Contact Support
+                        </a>
+                        <a href="#" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-book mr-2"></i>
+                            Security Guide
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-    <form asp-action="Disable2fa" method="post" class="mb-3">
-        <button class="btn btn-danger" type="submit">Disable 2FA</button>
-    </form>
-</div>
+@section Scripts {
+    <script>
+        // Enable/disable the submit button based on checkbox
+        document.getElementById('confirmDisable').addEventListener('change', function() {
+            const button = document.getElementById('disableButton');
+            button.disabled = !this.checked;
+            
+            if (this.checked) {
+                button.classList.remove('btn-disabled');
+            } else {
+                button.classList.add('btn-disabled');
+            }
+        });
+    </script>
+}

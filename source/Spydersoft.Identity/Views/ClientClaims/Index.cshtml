@@ -1,64 +1,304 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ClientViewModels
 @model ClientClaimsViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary">
+                        <i class="fas fa-tags text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">Client Claims</h1>
+                    <p class="dashboard-subtitle">Manage custom claims for client authentication</p>
+                </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Save" asp-route-id="@Model.Id">
-
-                    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
-                    <table class="table" aria-label="Client Claims">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>@Html.LabelFor(model => model.NewItem.Type)</th>
-                                <th>@Html.LabelFor(model => model.NewItem.Value)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var clientClaim in Model.ItemsList)
-                        {
-                            <tr>
-                                <td>@clientClaim.Type</td>
-                                <td>@clientClaim.Value</td>
-                                <td><a asp-action="Delete" asp-route-id="@clientClaim.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                            </tr>
-                        }
-                        <tr>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Type" pf-validation-for="NewItem.Type" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Type" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Value" pf-validation-for="NewItem.Value" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Value" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                </div>
-                            </td>
-
-                        </tr>
-                    </table>
-
-                </form>
+            <div class="flex space-x-2">
+                <a asp-controller="Clients" asp-action="Edit" asp-route-id="@Model.NavBar.Id" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Client
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Navigation Bar -->
+    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Claims Management -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-primary/10">
+                                <i class="fas fa-tags text-primary flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Client Claims</h2>
+                            <p class="text-base-content/70">Custom claims included with client authentication</p>
+                        </div>
+                    </div>
+
+                    @if (Model.ItemsList.Any())
+                    {
+                        <!-- Existing Claims Table -->
+                        <div class="overflow-x-auto mb-6">
+                            <table class="table w-full">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span class="flex items-center">
+                                                <i class="fas fa-tag mr-2"></i>
+                                                Claim Type
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="flex items-center">
+                                                <i class="fas fa-quote-right mr-2"></i>
+                                                Claim Value
+                                            </span>
+                                        </th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var clientClaim in Model.ItemsList)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="flex items-center space-x-2">
+                                                    <div class="badge badge-outline">@clientClaim.Type</div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <code class="text-sm bg-base-200 px-2 py-1 rounded">@clientClaim.Value</code>
+                                            </td>
+                                            <td>
+                                                <button onclick="confirmDelete('@clientClaim.Id', '@clientClaim.Type')" 
+                                                        class="btn btn-error btn-sm" 
+                                                        title="Delete claim">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-12 mb-6">
+                            <div class="avatar mb-4">
+                                <div class="w-24 rounded-full bg-base-200">
+                                    <i class="fas fa-tags text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No Claims Configured</h3>
+                            <p class="text-base-content/70 mb-4">Add custom claims to include additional client information.</p>
+                        </div>
+                    }
+
+                    <!-- Add New Claim Form -->
+                    <form asp-action="Save" asp-route-id="@Model.Id" class="space-y-4">
+                        <div class="divider">Add New Claim</div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Claim Type -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Type)</span>
+                                    <span class="label-text-alt text-error">*</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-tag text-base-content/40"></i>
+                                    </div>
+                                    <input asp-for="NewItem.Type" 
+                                           type="text" 
+                                           class="input input-bordered w-full pl-10 focus:input-primary" 
+                                           placeholder="client_type" />
+                                </div>
+                                <label class="label">
+                                    <span asp-validation-for="NewItem.Type" class="label-text-alt text-error"></span>
+                                    <span class="label-text-alt text-base-content/60">Claim type identifier</span>
+                                </label>
+                            </div>
+
+                            <!-- Claim Value -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Value)</span>
+                                    <span class="label-text-alt text-error">*</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-quote-right text-base-content/40"></i>
+                                    </div>
+                                    <input asp-for="NewItem.Value" 
+                                           type="text" 
+                                           class="input input-bordered w-full pl-10 focus:input-primary" 
+                                           placeholder="web_application" />
+                                </div>
+                                <label class="label">
+                                    <span asp-validation-for="NewItem.Value" class="label-text-alt text-error"></span>
+                                    <span class="label-text-alt text-base-content/60">Claim value</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add Claim
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Statistics -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Statistics
+                    </h3>
+                    <div class="stat">
+                        <div class="stat-title">Total Claims</div>
+                        <div class="stat-value text-primary">@Model.ItemsList.Count()</div>
+                        <div class="stat-desc">Configured for this client</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2 text-info"></i>
+                        About Client Claims
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Client claims are included in access tokens</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Used for client-specific authorization</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Can identify client capabilities</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Support custom business logic</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Common Claims -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-warning"></i>
+                        Common Claims
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between items-center p-2 bg-base-200 rounded">
+                            <span class="font-mono text-xs">client_type</span>
+                            <span class="text-xs">Application type</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2 bg-base-200 rounded">
+                            <span class="font-mono text-xs">department</span>
+                            <span class="text-xs">Department name</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2 bg-base-200 rounded">
+                            <span class="font-mono text-xs">environment</span>
+                            <span class="text-xs">Deployment env</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2 bg-base-200 rounded">
+                            <span class="font-mono text-xs">version</span>
+                            <span class="text-xs">Client version</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="ClientScopes" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Manage Scopes
+                        </a>
+                        <a asp-controller="ClientSecrets" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Client Secrets
+                        </a>
+                        <a asp-controller="ClientRedirects" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-external-link-alt mr-2"></i>
+                            Redirect URIs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm Claim Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the claim <strong id="deleteClaimType"></strong>? 
+            This action cannot be undone.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete Claim
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <script>
+        function confirmDelete(claimId, claimType) {
+            document.getElementById('deleteClaimType').textContent = claimType;
+            document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete")?id=' + claimId + '&parentid=@Model.NavBar.Id';
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
+}

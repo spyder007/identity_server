@@ -1,16 +1,297 @@
 /*!
- * CoreUI - Open Source Bootstrap Admin Template
- * @version v1.0.10
- * @link http://coreui.io
- * Copyright (c) 2018 creativeLabs Łukasz Holeczek
+ * Identity Server - Modern UI with Tailwind CSS and DaisyUI
+ * @version v2.0.0
+ * @link https://tailwindcss.com
+ * @link https://daisyui.com
+ * Copyright (c) 2024 SpyderSoft Matthew Gerega
  * @license MIT
  */
 
-// Override Boostrap variables
-@import "bootstrap-variables";
+// Import Tailwind CSS
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-// Import Bootstrap source files
-@import "Assets/scss/main.scss";
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&display=swap');
 
-// Custom styles
-@import "custom";
+// Custom base styles
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-base-100 text-base-content;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+  
+  h1 {
+    @apply text-4xl lg:text-5xl;
+  }
+  
+  h2 {
+    @apply text-3xl lg:text-4xl;
+  }
+  
+  h3 {
+    @apply text-2xl lg:text-3xl;
+  }
+  
+  h4 {
+    @apply text-xl lg:text-2xl;
+  }
+  
+  h5 {
+    @apply text-lg lg:text-xl;
+  }
+  
+  h6 {
+    @apply text-base lg:text-lg;
+  }
+}
+
+// Custom component styles
+@layer components {
+  .card-modern {
+    @apply card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-shadow duration-300;
+  }
+  
+  .btn-gradient {
+    @apply btn bg-gradient-to-r from-blue-600 to-purple-600 text-white border-none hover:scale-105 transition-transform duration-200;
+  }
+  
+  .input-modern {
+    @apply input input-bordered w-full focus:border-blue-500 transition-colors duration-200;
+  }
+  
+  .navbar-modern {
+    @apply navbar bg-base-100 shadow-lg border-b border-base-300;
+  }
+  
+  .sidebar-modern {
+    @apply bg-base-200 border-r border-base-300 min-h-screen;
+  }
+  
+  .alert-modern {
+    @apply alert shadow-lg border-l-4;
+  }
+  
+  .badge-modern {
+    @apply badge badge-outline hover:bg-blue-500 hover:text-white transition-colors duration-200;
+  }
+  
+  .table-modern {
+    @apply table table-zebra w-full bg-base-100 shadow-lg rounded-lg overflow-hidden;
+  }
+  
+  .modal-modern {
+    @apply modal-box bg-base-100 shadow-2xl;
+  }
+  
+  .progress-modern {
+    @apply progress bg-base-300;
+  }
+  
+  .loading-modern {
+    @apply loading loading-spinner loading-lg text-blue-600;
+  }
+
+  // Menu navigation styles
+  .menu details > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  
+  .menu details > summary::-webkit-details-marker {
+    display: none;
+  }
+  
+  .menu details > summary::after {
+    content: '›';
+    font-size: 1.2em;
+    margin-left: auto;
+    transition: transform 0.2s ease;
+  }
+  
+  .menu details[open] > summary::after {
+    transform: rotate(90deg);
+  }
+
+  .menu li a.router-link-active,
+  .menu li a[aria-current="page"] {
+    @apply bg-blue-600 text-white;
+  }
+}
+
+// Custom utility styles
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+  }
+  
+  .bg-glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .shadow-glow {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+  }
+  
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+}
+
+// Identity Server specific styles
+.identity-server {
+  &-logo {
+    @apply flex items-center space-x-3;
+    
+    .logo-icon {
+      @apply w-8 h-8 text-blue-600;
+    }
+    
+    .logo-text {
+      @apply text-xl font-bold text-gradient;
+    }
+  }
+  
+  &-hero {
+    @apply hero min-h-screen bg-gradient-to-br from-blue-50 to-purple-50;
+    
+    .hero-content {
+      @apply text-center;
+    }
+  }
+  
+  &-features {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+    
+    .feature-card {
+      @apply card-modern p-6 hover:bg-blue-50 transition-colors duration-300;
+      
+      .feature-icon {
+        @apply w-12 h-12 text-blue-600 mb-4;
+      }
+      
+      .feature-title {
+        @apply text-lg font-semibold mb-2;
+      }
+      
+      .feature-description {
+        @apply text-gray-600;
+      }
+    }
+  }
+  
+  &-form {
+    @apply card-modern p-8 max-w-md mx-auto;
+    
+    .form-title {
+      @apply text-2xl font-bold text-center mb-6 text-gradient;
+    }
+    
+    .form-group {
+      @apply mb-4;
+      
+      label {
+        @apply label label-text font-medium;
+      }
+      
+      input {
+        @apply input-modern;
+        
+        &:focus {
+          @apply ring-2 ring-blue-500/20;
+        }
+      }
+      
+      .error-message {
+        @apply text-red-500 text-sm mt-1;
+      }
+    }
+    
+    .form-actions {
+      @apply flex flex-col space-y-3 mt-6;
+    }
+  }
+  
+  &-dashboard {
+    @apply p-6;
+    
+    .dashboard-header {
+      @apply mb-8;
+      
+      .dashboard-title {
+        @apply text-3xl font-bold text-gradient mb-2;
+      }
+      
+      .dashboard-subtitle {
+        @apply text-gray-600;
+      }
+    }
+    
+    .dashboard-stats {
+      @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8;
+      
+      .stat-card {
+        @apply stat bg-base-100 shadow-lg rounded-lg p-4 border border-base-300;
+        
+        .stat-title {
+          @apply text-gray-600 text-sm;
+        }
+        
+        .stat-value {
+          @apply text-blue-600 text-2xl font-bold;
+        }
+        
+        .stat-desc {
+          @apply text-gray-500 text-xs;
+        }
+      }
+    }
+  }
+}
+
+// Animation classes
+.fade-in {
+  @apply animate-fade-in;
+}
+
+.slide-up {
+  @apply animate-slide-up;
+}
+
+.pulse-slow {
+  @apply animate-pulse-slow;
+}
+
+// Responsive utilities
+@media (max-width: 768px) {
+  .mobile-hidden {
+    @apply hidden;
+  }
+  
+  .mobile-full {
+    @apply w-full;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-hidden {
+    @apply hidden;
+  }
+}

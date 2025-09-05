@@ -1,33 +1,39 @@
-﻿<footer class="footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-6 order-last order-md-first">
-                <div class="copyright text-center text-md-start">
-                    <p class="text-sm">
-                        Designed and Developed by
-                        <a
-                            href="http://www.mattgerega.com"
-                            rel="nofollow"
-                            target="_blank">
-                            Spydersoft
-                        </a>
-                    </p>
-                </div>
-            </div>
-            <!-- end col-->
-            <div class="col-md-6">
-                <div
-                    class="
-                  terms
-                  d-flex
-                  justify-content-center justify-content-md-end
-                "
-                >
-                    <a href="#0" class="text-sm">Term & Conditions</a>
-                    <a href="#0" class="text-sm ml-15">Privacy & Policy</a>
-                </div>
-            </div>
+﻿<footer class="footer footer-center p-6 bg-base-200 text-base-content border-t border-base-300">
+    <div class="grid grid-flow-col gap-4">
+        <a asp-area="" asp-controller="Home" asp-action="About" class="link link-hover">About</a>
+        <a asp-area="" asp-controller="Home" asp-action="Contact" class="link link-hover">Contact</a>
+        <a href="https://github.com/spyder007/identity_server" target="_blank" class="link link-hover">
+            <i class="fab fa-github mr-1"></i>
+            GitHub
+        </a>
+    </div>
+    <div>
+        <div class="grid grid-flow-col gap-4">
+            <a href="https://twitter.com" target="_blank" class="link link-hover text-primary">
+                <i class="fab fa-twitter text-xl"></i>
+            </a>
+            <a href="https://github.com/spyder007" target="_blank" class="link link-hover text-primary">
+                <i class="fab fa-github text-xl"></i>
+            </a>
+            <a href="https://linkedin.com" target="_blank" class="link link-hover text-primary">
+                <i class="fab fa-linkedin text-xl"></i>
+            </a>
         </div>
-        <!-- end row -->
+    </div>
+    <div>
+        <p class="text-sm">
+            Designed and Developed by
+            <a href="http://www.mattgerega.com" rel="nofollow" target="_blank" class="link link-primary">
+                Spydersoft
+            </a>
+            <br />
+            Built with <span class="text-red-500">❤️</span> using
+            <a href="https://tailwindcss.com" target="_blank" class="link link-primary">Tailwind CSS</a> and
+            <a href="https://daisyui.com" target="_blank" class="link link-primary">DaisyUI</a>
+        </p>
+    </div>
+    <div class="grid grid-flow-col gap-4 text-sm">
+        <a href="#" class="link link-hover">Terms & Conditions</a>
+        <a href="#" class="link link-hover">Privacy Policy</a>
     </div>
 </footer>

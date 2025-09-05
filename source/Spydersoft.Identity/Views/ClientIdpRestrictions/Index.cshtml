@@ -1,54 +1,363 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ClientViewModels
 @model ClientIdpRestrictionsViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-warning to-error">
+                        <i class="fas fa-ban text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">Identity Provider Restrictions</h1>
+                    <p class="dashboard-subtitle">Control which identity providers can be used for authentication</p>
+                </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Save" asp-route-id="@Model.Id">
-                    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
-                    <table class="table" aria-label="Client IDP Restrictions">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>@Html.LabelFor(model => model.NewItem.Provider)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var idpRestriction in Model.ItemsList)
-                        {
-                            <tr>
-                                <td>@idpRestriction.Provider</td>
-                                <td><a asp-action="Delete" asp-route-id="@idpRestriction.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                            </tr>
-                        }
-                        <tr>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Provider" pf-validation-for="NewItem.Provider" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Provider" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                </div>
-                            </td>
-
-                        </tr>
-                    </table>
-                </form>
+            <div class="flex space-x-2">
+                <a asp-controller="Clients" asp-action="Edit" asp-route-id="@Model.NavBar.Id" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Client
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Navigation Bar -->
+    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- IDP Restrictions Management -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-warning/10">
+                                <i class="fas fa-ban text-warning flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Provider Restrictions</h2>
+                            <p class="text-base-content/70">Limit authentication to specific identity providers</p>
+                        </div>
+                    </div>
+
+                    @if (Model.ItemsList.Any())
+                    {
+                        <!-- Existing Restrictions -->
+                        <div class="space-y-3 mb-6">
+                            @foreach (var restriction in Model.ItemsList)
+                            {
+                                <div class="card bg-base-200 border border-base-300">
+                                    <div class="card-body p-4">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="avatar">
+                                                    <div class="w-8 h-8 rounded-full bg-error/10">
+                                                        <i class="fas fa-shield-alt text-error text-xs flex items-center justify-center h-full"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="font-medium text-sm">@restriction.Provider</div>
+                                                    <div class="text-xs text-base-content/60">
+                                                        @GetProviderDescription(restriction.Provider)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <div class="badge badge-error badge-sm">
+                                                    <i class="fas fa-ban mr-1"></i>
+                                                    Restricted
+                                                </div>
+                                                <button onclick="confirmDelete('@restriction.Id', '@restriction.Provider')" 
+                                                        class="btn btn-error btn-sm" 
+                                                        title="Remove restriction">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-12 mb-6">
+                            <div class="avatar mb-4">
+                                <div class="w-24 rounded-full bg-base-200">
+                                    <i class="fas fa-ban text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No Provider Restrictions</h3>
+                            <p class="text-base-content/70 mb-4">All configured identity providers are allowed. Add restrictions to limit authentication options.</p>
+                        </div>
+                    }
+
+                    <!-- Add New Restriction Form -->
+                    <form asp-action="Save" asp-route-id="@Model.Id" class="space-y-4">
+                        <div class="divider">Add Provider Restriction</div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Provider)</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-shield-alt text-base-content/40"></i>
+                                </div>
+                                <input asp-for="NewItem.Provider" 
+                                       type="text" 
+                                       class="input input-bordered w-full pl-10 focus:input-primary" 
+                                       placeholder="Google" 
+                                       list="providerList" />
+                                <datalist id="providerList">
+                                    <option value="Google">Google OAuth</option>
+                                    <option value="Microsoft">Microsoft Account</option>
+                                    <option value="Facebook">Facebook Login</option>
+                                    <option value="Twitter">Twitter OAuth</option>
+                                    <option value="LinkedIn">LinkedIn OAuth</option>
+                                    <option value="GitHub">GitHub OAuth</option>
+                                    <option value="Apple">Apple ID</option>
+                                    <option value="Amazon">Amazon Login</option>
+                                    <option value="local">Local Account</option>
+                                </datalist>
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="NewItem.Provider" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Identity provider name or scheme</span>
+                            </label>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <button type="submit" class="btn btn-warning">
+                                <i class="fas fa-ban mr-2"></i>
+                                Add Restriction
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Statistics -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Statistics
+                    </h3>
+                    <div class="stat">
+                        <div class="stat-title">Restricted Providers</div>
+                        <div class="stat-value text-warning">@Model.ItemsList.Count()</div>
+                        <div class="stat-desc">Authentication restrictions</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2 text-info"></i>
+                        About IDP Restrictions
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Control which external providers can be used</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Enhance security by limiting login options</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Prevent unauthorized provider usage</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-triangle text-warning text-xs mt-1"></i>
+                            <span>Empty list means all providers allowed</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Common Providers -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-cloud mr-2 text-secondary"></i>
+                        Common Providers
+                    </h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+                            <div class="flex items-center space-x-2">
+                                <i class="fab fa-google text-red-500"></i>
+                                <span class="font-medium">Google</span>
+                            </div>
+                            <div class="badge badge-info badge-sm">OAuth 2.0</div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+                            <div class="flex items-center space-x-2">
+                                <i class="fab fa-microsoft text-blue-500"></i>
+                                <span class="font-medium">Microsoft</span>
+                            </div>
+                            <div class="badge badge-info badge-sm">OAuth 2.0</div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+                            <div class="flex items-center space-x-2">
+                                <i class="fab fa-facebook text-blue-600"></i>
+                                <span class="font-medium">Facebook</span>
+                            </div>
+                            <div class="badge badge-info badge-sm">OAuth 2.0</div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+                            <div class="flex items-center space-x-2">
+                                <i class="fab fa-github text-gray-800"></i>
+                                <span class="font-medium">GitHub</span>
+                            </div>
+                            <div class="badge badge-info badge-sm">OAuth 2.0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Guidelines -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-error"></i>
+                        Security Guidelines
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use restrictions for high-security applications</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Limit to trusted identity providers only</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Consider user experience impact</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-triangle text-warning text-xs mt-1"></i>
+                            <span>Test restrictions thoroughly</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Configuration Notes -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-cog mr-2 text-accent"></i>
+                        Configuration Notes
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="alert alert-warning p-3">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span>Provider names must match exactly with configured schemes</span>
+                        </div>
+                        <div class="alert alert-info p-3">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Use "local" to restrict local account authentication</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="ClientGrantTypes" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-cogs mr-2"></i>
+                            Grant Types
+                        </a>
+                        <a asp-controller="ClientProperties" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-cog mr-2"></i>
+                            Client Properties
+                        </a>
+                        <a asp-controller="ClientScopes" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Client Scopes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Remove Provider Restriction
+        </h3>
+        <p class="py-4">
+            Are you sure you want to remove the restriction for <strong id="deleteProviderName"></strong>?
+            <br><br>This will allow users to authenticate using this identity provider.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Remove Restriction
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <script>
+        function confirmDelete(restrictionId, providerName) {
+            document.getElementById('deleteProviderName').textContent = providerName;
+            document.getElementById('deleteConfirmBtn').href = '@(Url.Action("Delete"))?id=' + restrictionId + '&parentid=@Model.NavBar.Id';
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
+}
+
+@functions {
+    private string GetProviderDescription(string provider)
+    {
+        return provider.ToLower() switch
+        {
+            "google" => "Google OAuth authentication",
+            "microsoft" => "Microsoft Account authentication",
+            "facebook" => "Facebook Login authentication",
+            "twitter" => "Twitter OAuth authentication",
+            "linkedin" => "LinkedIn OAuth authentication",
+            "github" => "GitHub OAuth authentication",
+            "apple" => "Apple ID authentication",
+            "amazon" => "Amazon Login authentication",
+            "local" => "Local account authentication",
+            _ => "External identity provider"
+        };
+    }
+}

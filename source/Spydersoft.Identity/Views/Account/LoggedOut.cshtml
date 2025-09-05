@@ -3,29 +3,118 @@
 @{ 
     // set this so the layout rendering sees an anonymous user
     ViewData["signed-out"] = true;
+    ViewData["Title"] = "Signed Out";
 }
 
-<div class="page-header logged-out">
-    <h1>
-        Logout
-        <small>You are now logged out</small>
-    </h1>
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+    <div class="card bg-base-100 shadow-2xl max-w-md w-full">
+        <div class="card-body text-center">
+            <!-- Success Icon -->
+            <div class="avatar mb-6">
+                <div class="w-24 rounded-full bg-success/10">
+                    <i class="fas fa-check-circle text-success text-4xl flex items-center justify-center h-full"></i>
+                </div>
+            </div>
 
-    @if (Model.PostLogoutRedirectUri != null)
-    {
-        <div>
-            Click <a class="PostLogoutRedirectUri" href="@Model.PostLogoutRedirectUri">here</a> to return to the
-            <span>@Model.ClientName</span> application.
+            <!-- Title and Message -->
+            <h1 class="text-3xl font-bold text-success mb-4">Successfully Signed Out</h1>
+            <p class="text-lg text-base-content/80 mb-8">
+                You have been safely signed out of your Spydersoft account.
+            </p>
+
+            <!-- Client Redirect Information -->
+            @if (Model.PostLogoutRedirectUri != null)
+            {
+                <div class="bg-info/10 p-6 rounded-lg mb-8">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fas fa-external-link-alt text-info"></i>
+                        <div>
+                            <div class="font-medium">Return to Application</div>
+                            <div class="text-sm text-base-content/70">@Model.ClientName</div>
+                        </div>
+                    </div>
+                    <a href="@Model.PostLogoutRedirectUri" class="btn btn-info btn-sm w-full">
+                        <i class="fas fa-arrow-right mr-2"></i>
+                        Continue to @Model.ClientName
+                    </a>
+                </div>
+            }
+
+            <!-- Security Information -->
+            <div class="bg-success/10 p-6 rounded-lg mb-8">
+                <h3 class="font-semibold mb-4 flex items-center">
+                    <i class="fas fa-shield-check text-success mr-2"></i>
+                    Your Session is Secure
+                </h3>
+                <div class="space-y-2 text-sm text-left">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-check text-success text-xs"></i>
+                        <span>All authentication tokens have been revoked</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-check text-success text-xs"></i>
+                        <span>Session data has been cleared</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-check text-success text-xs"></i>
+                        <span>Connected applications have been notified</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-4">
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg w-full">
+                    <i class="fas fa-sign-in-alt mr-2"></i>
+                    Sign In Again
+                </a>
+                
+                <div class="flex space-x-2">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline flex-1">
+                        <i class="fas fa-home mr-2"></i>
+                        Home
+                    </a>
+                    <a asp-controller="Register" asp-action="Index" class="btn btn-outline flex-1">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Register
+                    </a>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="mt-8 text-sm">
+                <div class="font-medium mb-3">What's Next?</div>
+                <div class="space-y-2 text-left text-base-content/70">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-user text-info text-xs"></i>
+                        <span>Create a new account or sign in with existing credentials</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-shield-alt text-info text-xs"></i>
+                        <span>Enable two-factor authentication for extra security</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-apps text-info text-xs"></i>
+                        <span>Access your connected applications</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Privacy Notice -->
+            <div class="mt-6 text-xs text-base-content/60">
+                Your privacy is important to us. 
+                <a href="#" class="link link-primary">Learn more</a> about how we protect your data.
+            </div>
         </div>
-    }
-
-    @if (Model.SignOutIframeUrl != null)
-    {
-        <iframe width="0" height="0" class="signout" src="@Model.SignOutIframeUrl" title="Sign Out"></iframe>
-    }
+    </div>
 </div>
 
-@section scripts
+@if (Model.SignOutIframeUrl != null)
+{
+    <iframe width="0" height="0" class="hidden" src="@Model.SignOutIframeUrl" title="Sign Out"></iframe>
+}
+
+@section Scripts
 {
     @if (Model.AutomaticRedirectAfterSignOut)
     {

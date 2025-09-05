@@ -1,62 +1,404 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 @model ApiResourcePropertiesViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-info to-primary">
+                        <i class="fas fa-cog text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">API Resource Properties</h1>
+                    <p class="dashboard-subtitle">Configure custom properties and metadata for the API resource</p>
+                </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Save" asp-route-id="@Model.Id">
-                    @await Html.PartialAsync("_apiNavBar", Model.NavBar)
-                    <table class="table" aria-label="API Resource Properties">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>@Html.LabelFor(model => model.NewItem.Key)</th>
-                                <th>@Html.LabelFor(model => model.NewItem.Value)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var apiProperty in Model.ItemsList)
-                        {
-                            <tr>
-                                <td>@apiProperty.Key</td>
-                                <td>@apiProperty.Value</td>
-                                <td><a asp-action="Delete" asp-route-id="@apiProperty.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                            </tr>
-                        }
-                        <tr>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Key" pf-validation-for="NewItem.Key" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Key" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Value" pf-validation-for="NewItem.Value" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Value" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                </div>
-                            </td>
-
-                        </tr>
-                    </table>
-                </form>
+            <div class="flex space-x-2">
+                <a asp-controller="ApiResources" asp-action="Edit" asp-route-id="@Model.NavBar.Id" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to API Resource
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Navigation Bar -->
+    @await Html.PartialAsync("_apiNavBar", Model.NavBar)
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Properties Management -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-info/10">
+                                <i class="fas fa-cog text-info flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Custom Properties</h2>
+                            <p class="text-base-content/70">Key-value pairs for API resource metadata and configuration</p>
+                        </div>
+                    </div>
+
+                    @if (Model.ItemsList.Any())
+                    {
+                        <!-- Existing Properties -->
+                        <div class="space-y-3 mb-6">
+                            @foreach (var property in Model.ItemsList)
+                            {
+                                <div class="card bg-base-200 border border-base-300">
+                                    <div class="card-body p-4">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex-1 space-y-1">
+                                                <div class="flex items-center space-x-2">
+                                                    <div class="avatar">
+                                                        <div class="w-8 h-8 rounded-full bg-info/10">
+                                                            <i class="fas fa-key text-info text-xs flex items-center justify-center h-full"></i>
+                                                        </div>
+                                                    </div>
+                                                    <span class="font-medium text-sm">@property.Key</span>
+                                                    <div class="badge badge-outline badge-sm">@GetPropertyCategory(property.Key)</div>
+                                                </div>
+                                                <div class="ml-10">
+                                                    <div class="text-sm bg-base-300 p-2 rounded font-mono">
+                                                        @property.Value
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex space-x-2 ml-4">
+                                                <button onclick="copyProperty('@property.Key', '@property.Value')" 
+                                                        class="btn btn-ghost btn-sm"
+                                                        title="Copy property">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                                <button onclick="confirmDelete('@property.Id', '@property.Key')" 
+                                                        class="btn btn-error btn-sm" 
+                                                        title="Delete property">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-12 mb-6">
+                            <div class="avatar mb-4">
+                                <div class="w-24 rounded-full bg-base-200">
+                                    <i class="fas fa-cog text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No Properties Configured</h3>
+                            <p class="text-base-content/70 mb-4">Add custom properties to store API resource-specific metadata.</p>
+                        </div>
+                    }
+
+                    <!-- Add New Property Form -->
+                    <form asp-action="Save" asp-route-id="@Model.Id" class="space-y-4">
+                        <div class="divider">Add Property</div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Property Key -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Key)</span>
+                                    <span class="label-text-alt text-error">*</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-key text-base-content/40"></i>
+                                    </div>
+                                    <input asp-for="NewItem.Key" 
+                                           type="text" 
+                                           class="input input-bordered w-full pl-10 focus:input-primary" 
+                                           placeholder="api_version" 
+                                           list="apiPropertyKeys" />
+                                    <datalist id="apiPropertyKeys">
+                                        <option value="api_version">API version identifier</option>
+                                        <option value="environment">Environment identifier</option>
+                                        <option value="rate_limit">Rate limiting configuration</option>
+                                        <option value="documentation_url">API documentation URL</option>
+                                        <option value="support_email">Support contact email</option>
+                                        <option value="category">API category</option>
+                                        <option value="audience">Target audience</option>
+                                        <option value="swagger_url">Swagger documentation URL</option>
+                                        <option value="health_check_url">Health check endpoint</option>
+                                        <option value="deprecated">Deprecation status</option>
+                                    </datalist>
+                                </div>
+                                <label class="label">
+                                    <span asp-validation-for="NewItem.Key" class="label-text-alt text-error"></span>
+                                    <span class="label-text-alt text-base-content/60">Property identifier</span>
+                                </label>
+                            </div>
+
+                            <!-- Property Value -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Value)</span>
+                                    <span class="label-text-alt text-error">*</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-quote-right text-base-content/40"></i>
+                                    </div>
+                                    <input asp-for="NewItem.Value" 
+                                           type="text" 
+                                           class="input input-bordered w-full pl-10 focus:input-primary" 
+                                           placeholder="v2.1" />
+                                </div>
+                                <label class="label">
+                                    <span asp-validation-for="NewItem.Value" class="label-text-alt text-error"></span>
+                                    <span class="label-text-alt text-base-content/60">Property value</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add Property
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Statistics -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Statistics
+                    </h3>
+                    <div class="stat">
+                        <div class="stat-title">Total Properties</div>
+                        <div class="stat-value text-info">@Model.ItemsList.Count()</div>
+                        <div class="stat-desc">Custom attributes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Common API Properties -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-star mr-2 text-warning"></i>
+                        Common API Properties
+                    </h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="bg-base-200 p-2 rounded">
+                            <div class="font-medium">api_version</div>
+                            <div class="text-xs text-base-content/60">v1.0, v2.1, v3.0-beta</div>
+                        </div>
+                        <div class="bg-base-200 p-2 rounded">
+                            <div class="font-medium">environment</div>
+                            <div class="text-xs text-base-content/60">production, staging, development</div>
+                        </div>
+                        <div class="bg-base-200 p-2 rounded">
+                            <div class="font-medium">rate_limit</div>
+                            <div class="text-xs text-base-content/60">1000/hour, 10000/day</div>
+                        </div>
+                        <div class="bg-base-200 p-2 rounded">
+                            <div class="font-medium">documentation_url</div>
+                            <div class="text-xs text-base-content/60">https://docs.api.com</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Property Categories -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-layer-group mr-2 text-secondary"></i>
+                        Property Categories
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-primary badge-sm mr-2">META</span>
+                                Metadata
+                            </div>
+                            <div class="text-xs text-base-content/60">api_version, environment, category</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-secondary badge-sm mr-2">DOC</span>
+                                Documentation
+                            </div>
+                            <div class="text-xs text-base-content/60">documentation_url, swagger_url</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-accent badge-sm mr-2">OPS</span>
+                                Operations
+                            </div>
+                            <div class="text-xs text-base-content/60">health_check_url, rate_limit</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-info badge-sm mr-2">CONTACT</span>
+                                Contact Information
+                            </div>
+                            <div class="text-xs text-base-content/60">support_email, owner, team</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Resource Guidelines -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2 text-info"></i>
+                        Usage Guidelines
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use properties for API-specific configuration</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Store versioning and metadata information</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Document API operational details</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-triangle text-warning text-xs mt-1"></i>
+                            <span>Avoid storing sensitive data in properties</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- API Best Practices -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-accent"></i>
+                        API Best Practices
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Version your APIs consistently</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Provide comprehensive documentation</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Implement proper rate limiting</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Monitor API health and performance</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="ApiResourceScopes" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            API Scopes
+                        </a>
+                        <a asp-controller="ApiResourceSecrets" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            API Secrets
+                        </a>
+                        <a asp-controller="ApiResourceClaims" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-tags mr-2"></i>
+                            API Claims
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Delete API Property
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the property <strong id="deletePropertyKey"></strong>?
+            <br><br>This action cannot be undone.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete Property
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <script>
+        function confirmDelete(propertyId, propertyKey) {
+            document.getElementById('deletePropertyKey').textContent = propertyKey;
+            document.getElementById('deleteConfirmBtn').href = '@(Url.Action("Delete"))?id=' + propertyId + '&parentid=@Model.NavBar.Id';
+            document.getElementById('deleteModal').showModal();
+        }
+
+        function copyProperty(key, value) {
+            const propertyText = key + '=' + value;
+            navigator.clipboard.writeText(propertyText).then(function() {
+                console.log('Property copied: ' + propertyText);
+            });
+        }
+    </script>
+}
+
+@functions {
+    private string GetPropertyCategory(string key)
+    {
+        return key.ToLower() switch
+        {
+            var k when k.Contains("version") => "META",
+            var k when k.Contains("environment") => "META",
+            var k when k.Contains("category") => "META",
+            var k when k.Contains("url") || k.Contains("documentation") || k.Contains("swagger") => "DOC",
+            var k when k.Contains("health") || k.Contains("rate") || k.Contains("limit") => "OPS",
+            var k when k.Contains("email") || k.Contains("contact") || k.Contains("owner") || k.Contains("team") => "CONTACT",
+            _ => "CUSTOM"
+        };
+    }
+}

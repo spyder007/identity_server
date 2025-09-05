@@ -1,95 +1,175 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Spydersoft.Identity.Models.Consent.ConsentViewModel
-<form asp-action="Index" class="consent-form">
-    <div class="card">
-        <div class="card-header">
-            <div>
-                @if (Model.ClientLogoUrl != null)
-                {
-                    <div class="client-logo"><img src="@Model.ClientLogoUrl" alt="Logo"></div>
-                }
-                <h3>
-                    @Model.ClientName
 
-                </h3>
-                <p>is requesting your permission</p>
-            </div>
-        </div>
-
-        <div class="card-body">
-            <div>
-                @await Html.PartialAsync("_ValidationSummary")
-
-
-                <input type="hidden" asp-for="ReturnUrl" />
-
-                <div class="alert alert-info">Uncheck the permissions you do not wish to grant.</div>
-
-                @if (Model.IdentityScopes.Any())
-                {
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><span class="fa fa-user"></span> Personal Information</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="list-group">
-                                @foreach (var scope in Model.IdentityScopes)
-                                {
-                                    @await Html.PartialAsync("_ScopeListItem", scope)
-                                }
+<div class="min-h-screen bg-base-200 flex items-center justify-center p-4">
+    <div class="max-w-2xl w-full">
+        <form asp-action="Index" class="consent-form">
+            <div class="card bg-base-100 shadow-2xl border border-base-300">
+                <!-- Card Header -->
+                <div class="card-body border-b border-base-300">
+                    <div class="text-center space-y-4">
+                        @if (Model.ClientLogoUrl != null)
+                        {
+                            <div class="avatar">
+                                <div class="w-20 h-20 rounded-full bg-base-200 border border-base-300">
+                                    <img src="@Model.ClientLogoUrl" alt="@Model.ClientName Logo" class="w-full h-full object-cover rounded-full" />
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                }
-
-                @if (Model.ApiScopes.Any())
-                {
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><span class="fa fa-tasks"></span> Application Access</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="list-group">
-                                @foreach (var scope in Model.ApiScopes)
-                                {
-                                    @await Html.PartialAsync("_ScopeListItem", scope)
-                                }
+                        }
+                        else
+                        {
+                            <div class="avatar">
+                                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary">
+                                    <i class="fas fa-shield-alt text-white text-2xl flex items-center justify-center h-full"></i>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                }
-
-                <div class="mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="glyphicon glyphicon-tasks"></span>
-                            Description
-                        </div>
-                        <div class="card-body">
-                            <input class="form-control" placeholder="Description or name of device" asp-for="Description" autofocus>
+                        }
+                        
+                        <div>
+                            <h1 class="text-2xl font-bold text-base-content">
+                                <span class="text-primary">@Model.ClientName</span>
+                            </h1>
+                            <p class="text-base-content/70 text-lg">is requesting your permission</p>
+                            <div class="text-sm text-base-content/60 mt-2">
+                                Review the requested permissions below and choose what to allow
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                @if (Model.AllowRememberConsent)
-                {
-                    <div class="form-check">
-                        <input class="form-check-input" asp-for="RememberConsent" />
-                        <label class="form-check-label">Remember My Decision</label>
+                <!-- Card Body -->
+                <div class="card-body space-y-6">
+                    @await Html.PartialAsync("_ValidationSummary")
+                    
+                    <input type="hidden" asp-for="ReturnUrl" />
+
+                    <!-- Info Alert -->
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Uncheck the permissions you do not wish to grant.</span>
                     </div>
-                }
+
+                    <!-- Identity Scopes -->
+                    @if (Model.IdentityScopes.Any())
+                    {
+                        <div class="card bg-base-200 border border-base-300">
+                            <div class="card-body">
+                                <h3 class="card-title text-lg mb-4">
+                                    <i class="fas fa-user text-primary mr-2"></i>
+                                    Personal Information
+                                </h3>
+                                <div class="space-y-3">
+                                    @foreach (var scope in Model.IdentityScopes)
+                                    {
+                                        @await Html.PartialAsync("_ScopeListItem", scope)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- API Scopes -->
+                    @if (Model.ApiScopes.Any())
+                    {
+                        <div class="card bg-base-200 border border-base-300">
+                            <div class="card-body">
+                                <h3 class="card-title text-lg mb-4">
+                                    <i class="fas fa-cogs text-secondary mr-2"></i>
+                                    Application Access
+                                </h3>
+                                <div class="space-y-3">
+                                    @foreach (var scope in Model.ApiScopes)
+                                    {
+                                        @await Html.PartialAsync("_ScopeListItem", scope)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Device Description -->
+                    <div class="card bg-base-200 border border-base-300">
+                        <div class="card-body">
+                            <h3 class="card-title text-lg mb-4">
+                                <i class="fas fa-tag text-accent mr-2"></i>
+                                Device Description
+                            </h3>
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text">Description or name of device</span>
+                                </label>
+                                <input asp-for="Description" 
+                                       type="text" 
+                                       class="input input-bordered w-full focus:input-primary" 
+                                       placeholder="My iPhone, Work Laptop, etc." 
+                                       autofocus />
+                                <label class="label">
+                                    <span class="label-text-alt text-base-content/60">Optional: Help identify this device in your account</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Remember Consent -->
+                    @if (Model.AllowRememberConsent)
+                    {
+                        <div class="card bg-base-200 border border-base-300">
+                            <div class="card-body">
+                                <div class="form-control">
+                                    <label class="label cursor-pointer">
+                                        <span class="label-text font-medium">
+                                            <i class="fas fa-clock text-info mr-2"></i>
+                                            Remember My Decision
+                                        </span>
+                                        <input asp-for="RememberConsent" type="checkbox" class="toggle toggle-primary" />
+                                    </label>
+                                    <div class="text-xs text-base-content/60 mt-2">
+                                        Skip this consent screen for future requests from this application
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Card Footer -->
+                <div class="card-actions justify-between p-6 border-t border-base-300 bg-base-50">
+                    <div class="flex space-x-3">
+                        <button name="button" value="yes" class="btn btn-success btn-lg" autofocus>
+                            <i class="fas fa-check mr-2"></i>
+                            Yes, Allow Access
+                        </button>
+                        <button name="button" value="no" class="btn btn-error btn-lg">
+                            <i class="fas fa-times mr-2"></i>
+                            No, Deny Access
+                        </button>
+                    </div>
+                    
+                    @if (Model.ClientUrl != null)
+                    {
+                        <a href="@Model.ClientUrl" 
+                           target="_blank" 
+                           class="btn btn-ghost btn-sm">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            About <strong>@Model.ClientName</strong>
+                            <i class="fas fa-external-link-alt ml-1 text-xs"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+        </form>
+
+        <!-- Security Information -->
+        <div class="mt-6 text-center text-sm text-base-content/60">
+            <div class="flex items-center justify-center space-x-2 mb-2">
+                <i class="fas fa-shield-alt text-success"></i>
+                <span>Your data is protected by industry-standard security measures</span>
+            </div>
+            <div class="flex items-center justify-center space-x-4 text-xs">
+                <span>🔒 Encrypted Connection</span>
+                <span>🛡️ Secure Authentication</span>
+                <span>👁️ Privacy Protected</span>
             </div>
         </div>
-        <div class="card-footer">
-            <button name="button" value="yes" class="btn btn-success" autofocus>Yes, Allow</button>
-            <button name="button" value="no" class="btn btn-danger">No, Do Not Allow</button>
-            @if (Model.ClientUrl != null)
-            {
-                <a class="pull-right btn btn-secondary" target="_blank" href="@Model.ClientUrl">
-                    <span class="fa fa-info-circle"></span>
-                    <strong>@Model.ClientName</strong>
-                </a>
-            }
-        </div>
     </div>
-</form>
+</div>

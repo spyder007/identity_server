@@ -1,108 +1,418 @@
 @model Spydersoft.Identity.Models.Device.DeviceAuthorizationViewModel
 
-<div class="page-device-confirmation">
-    <div class="lead">
-        @if (Model.ClientLogoUrl != null)
-        {
-            <div class="client-logo"><img src="@Model.ClientLogoUrl" alt="Logo"></div>
-        }
-        <h1>
-            @Model.ClientName
-            <small class="text-muted">is requesting your permission</small>
-        </h1>
-        @if (Model.ConfirmUserCode)
-        {
-            <p>Please confirm that the authorization request quotes the code: <strong>@Model.UserCode</strong>.</p>
-        }
-        <p>Uncheck the permissions you do not wish to grant.</p>
-    </div>
+<div class="identity-server-dashboard">
+    <div class="hero bg-gradient-to-br from-primary to-secondary min-h-[50vh] text-primary-content">
+        <div class="hero-content text-center">
+            <div class="max-w-md">
+                @if (Model.ClientLogoUrl != null)
+                {
+                    <div class="avatar mb-6">
+                        <div class="w-24 rounded-full bg-base-100 p-2">
+                            <img src="@Model.ClientLogoUrl" alt="@Model.ClientName Logo" class="rounded-full" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="avatar mb-6">
+                        <div class="w-24 rounded-full bg-base-100/20">
+                            <i class="fas fa-mobile-alt text-4xl text-primary-content flex items-center justify-center h-full"></i>
+                        </div>
+                    </div>
+                }
 
-    <div class="row">
-        <div class="col-sm-8">
-            <partial name="_ValidationSummary" />
+                <h1 class="text-4xl font-bold mb-2">Device Authorization</h1>
+                <h2 class="text-xl mb-4">
+                    <strong>@Model.ClientName</strong> 
+                    <span class="text-primary-content/80">is requesting permission</span>
+                </h2>
+
+                @if (Model.ConfirmUserCode)
+                {
+                    <div class="alert alert-info mb-6">
+                        <div class="flex items-center">
+                            <i class="fas fa-info-circle mr-3"></i>
+                            <div>
+                                <p class="font-semibold">Please verify your authorization code:</p>
+                                <div class="font-mono text-2xl tracking-wider bg-base-100/20 p-3 rounded mt-2">
+                                    @Model.UserCode
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <p class="text-lg text-primary-content/90">
+                    Review and customize the permissions you wish to grant to this device.
+                </p>
+            </div>
         </div>
     </div>
 
-    <form asp-action="Callback">
-        <input asp-for="UserCode" type="hidden" value="@Model.UserCode" />
-        <div class="row">
-            <div class="col-sm-8">
-                @if (Model.IdentityScopes.Any())
-                {
-                    <div class="mb-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="glyphicon glyphicon-user"></span>
-                                Personal Information
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                @foreach (var scope in Model.IdentityScopes)
-                                {
-                                    @await Html.PartialAsync("_ScopeListItem", scope)
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                }
+    <div class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Authorization Form -->
+            <div class="lg:col-span-2">
+                <form asp-action="Callback" class="space-y-6">
+                    <input asp-for="UserCode" type="hidden" value="@Model.UserCode" />
+                    
+                    <partial name="_ValidationSummary" />
 
-                @if (Model.ApiScopes.Any())
-                {
-                    <div class="mb-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="glyphicon glyphicon-tasks"></span>
-                                Application Access
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                @foreach (var scope in Model.ApiScopes)
-                                {
-                                    @await Html.PartialAsync("_ScopeListItem", scope)
-                                }
-                            </ul>
-                        </div>
-                    </div>
-                }
+                    @if (Model.IdentityScopes.Any())
+                    {
+                        <!-- Personal Information Scopes -->
+                        <div class="card bg-base-100 shadow-xl border border-base-300">
+                            <div class="card-body">
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <div class="avatar">
+                                        <div class="w-10 h-10 rounded-full bg-primary/10">
+                                            <i class="fas fa-user text-primary flex items-center justify-center h-full"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="card-title text-lg">Personal Information</h3>
+                                        <p class="text-base-content/70 text-sm">Identity and profile data access</p>
+                                    </div>
+                                </div>
 
-                <div class="mb-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="glyphicon glyphicon-tasks"></span>
-                            Description
+                                <div class="space-y-3">
+                                    @foreach (var scope in Model.IdentityScopes)
+                                    {
+                                        <div class="card bg-base-200 border border-base-300">
+                                            <div class="card-body p-4">
+                                                <div class="form-control">
+                                                    <label class="label cursor-pointer justify-start space-x-3">
+                                                        <input type="checkbox" 
+                                                               class="checkbox checkbox-primary"
+                                                               name="ScopesConsented" 
+                                                               id="scopes_@scope.Value" 
+                                                               value="@scope.Value" 
+                                                               checked="@scope.Checked" />
+                                                        <div class="flex-1">
+                                                            <div class="flex items-center space-x-2">
+                                                                <span class="label-text font-medium">@scope.DisplayName</span>
+                                                                <div class="badge badge-primary badge-sm">Identity</div>
+                                                            </div>
+                                                            @if (!string.IsNullOrEmpty(scope.Description))
+                                                            {
+                                                                <div class="label-text-alt text-base-content/60 mt-1">
+                                                                    @scope.Description
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                         </div>
+                    }
+
+                    @if (Model.ApiScopes.Any())
+                    {
+                        <!-- API Access Scopes -->
+                        <div class="card bg-base-100 shadow-xl border border-base-300">
+                            <div class="card-body">
+                                <div class="flex items-center space-x-3 mb-4">
+                                    <div class="avatar">
+                                        <div class="w-10 h-10 rounded-full bg-secondary/10">
+                                            <i class="fas fa-cogs text-secondary flex items-center justify-center h-full"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="card-title text-lg">Application Access</h3>
+                                        <p class="text-base-content/70 text-sm">API and resource permissions</p>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    @foreach (var scope in Model.ApiScopes)
+                                    {
+                                        <div class="card bg-base-200 border border-base-300">
+                                            <div class="card-body p-4">
+                                                <div class="form-control">
+                                                    <label class="label cursor-pointer justify-start space-x-3">
+                                                        <input type="checkbox" 
+                                                               class="checkbox checkbox-secondary"
+                                                               name="ScopesConsented" 
+                                                               id="scopes_@scope.Value" 
+                                                               value="@scope.Value" 
+                                                               checked="@scope.Checked" />
+                                                        <div class="flex-1">
+                                                            <div class="flex items-center space-x-2">
+                                                                <span class="label-text font-medium">@scope.DisplayName</span>
+                                                                <div class="badge badge-secondary badge-sm">API</div>
+                                                            </div>
+                                                            @if (!string.IsNullOrEmpty(scope.Description))
+                                                            {
+                                                                <div class="label-text-alt text-base-content/60 mt-1">
+                                                                    @scope.Description
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Device Description -->
+                    <div class="card bg-base-100 shadow-xl border border-base-300">
                         <div class="card-body">
-                            <input class="form-control" placeholder="Description or name of device" asp-for="Description" autofocus>
+                            <div class="flex items-center space-x-3 mb-4">
+                                <div class="avatar">
+                                    <div class="w-10 h-10 rounded-full bg-accent/10">
+                                        <i class="fas fa-mobile-alt text-accent flex items-center justify-center h-full"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <h3 class="card-title text-lg">Device Information</h3>
+                                    <p class="text-base-content/70 text-sm">Provide a name or description for this device</p>
+                                </div>
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">Device Description</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-tag text-base-content/40"></i>
+                                    </div>
+                                    <input asp-for="Description" 
+                                           type="text" 
+                                           class="input input-bordered w-full pl-10 focus:input-primary" 
+                                           placeholder="My Smart TV, John's iPhone, etc." 
+                                           autofocus />
+                                </div>
+                                <label class="label">
+                                    <span class="label-text-alt text-base-content/60">Help identify this device in your authorized devices list</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.AllowRememberConsent)
+                    {
+                        <!-- Remember Consent -->
+                        <div class="card bg-base-100 shadow-xl border border-base-300">
+                            <div class="card-body">
+                                <div class="form-control">
+                                    <label class="label cursor-pointer justify-start space-x-3">
+                                        <input asp-for="RememberConsent" type="checkbox" class="checkbox checkbox-info" />
+                                        <div class="flex-1">
+                                            <div class="flex items-center space-x-2">
+                                                <span class="label-text font-medium">Remember My Decision</span>
+                                                <div class="badge badge-info badge-sm">Optional</div>
+                                            </div>
+                                            <div class="label-text-alt text-base-content/60 mt-1">
+                                                Skip this authorization screen for future requests from this device
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Action Buttons -->
+                    <div class="card bg-base-100 shadow-xl border border-base-300">
+                        <div class="card-body">
+                            <div class="flex flex-col sm:flex-row gap-4 justify-between items-center">
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <button name="button" value="yes" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-check mr-2"></i>
+                                        Yes, Allow Access
+                                    </button>
+                                    <button name="button" value="no" class="btn btn-error btn-lg">
+                                        <i class="fas fa-times mr-2"></i>
+                                        No, Deny Access
+                                    </button>
+                                </div>
+
+                                @if (Model.ClientUrl != null)
+                                {
+                                    <a href="@Model.ClientUrl" class="btn btn-outline btn-sm" target="_blank">
+                                        <i class="fas fa-external-link-alt mr-2"></i>
+                                        Learn More About @Model.ClientName
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Information Sidebar -->
+            <div class="space-y-6">
+                <!-- Device Flow Information -->
+                <div class="card bg-base-100 shadow-xl border border-base-300">
+                    <div class="card-body">
+                        <h3 class="card-title text-lg mb-4">
+                            <i class="fas fa-info-circle mr-2 text-info"></i>
+                            About Device Flow
+                        </h3>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-start space-x-2">
+                                <i class="fas fa-check text-success text-xs mt-1"></i>
+                                <span>Secure authorization for devices without browsers</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fas fa-check text-success text-xs mt-1"></i>
+                                <span>Uses device code verification</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fas fa-check text-success text-xs mt-1"></i>
+                                <span>Follows OAuth 2.0 Device Flow standard</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fas fa-check text-success text-xs mt-1"></i>
+                                <span>You maintain control over permissions</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Security Information -->
+                <div class="card bg-base-100 shadow-xl border border-base-300">
+                    <div class="card-body">
+                        <h3 class="card-title text-lg mb-4">
+                            <i class="fas fa-shield-alt mr-2 text-warning"></i>
+                            Security Notes
+                        </h3>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-start space-x-2">
+                                <i class="fas fa-check text-success text-xs mt-1"></i>
+                                <span>Only grant permissions the device actually needs</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fas fa-check text-success text-xs mt-1"></i>
+                                <span>Verify the authorization code matches</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fas fa-check text-success text-xs mt-1"></i>
+                                <span>You can revoke access anytime</span>
+                            </li>
+                            <li class="flex items-start space-x-2">
+                                <i class="fas fa-exclamation-triangle text-warning text-xs mt-1"></i>
+                                <span>Don't authorize unknown devices</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Client Information -->
+                <div class="card bg-base-100 shadow-xl border border-base-300">
+                    <div class="card-body">
+                        <h3 class="card-title text-lg mb-4">
+                            <i class="fas fa-building mr-2 text-primary"></i>
+                            Application Details
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-base-content/60">Application:</span>
+                                <span class="font-medium">@Model.ClientName</span>
+                            </div>
+                            @if (Model.ClientUrl != null)
+                            {
+                                <div class="flex justify-between">
+                                    <span class="text-base-content/60">Website:</span>
+                                    <a href="@Model.ClientUrl" class="link link-primary text-sm" target="_blank">View</a>
+                                </div>
+                            }
+                            <div class="flex justify-between">
+                                <span class="text-base-content/60">Authorization:</span>
+                                <span class="font-mono text-xs">Device Flow</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                @if (Model.AllowRememberConsent)
-                {
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" asp-for="RememberConsent">
-                            <label class="form-check-label" asp-for="RememberConsent">
-                                <strong>Remember My Decision</strong>
-                            </label>
+                <!-- Device Flow Steps -->
+                <div class="card bg-base-100 shadow-xl border border-base-300">
+                    <div class="card-body">
+                        <h3 class="card-title text-lg mb-4">
+                            <i class="fas fa-route mr-2 text-accent"></i>
+                            Authorization Process
+                        </h3>
+                        <div class="steps steps-vertical">
+                            <div class="step step-primary">
+                                <div class="text-left">
+                                    <div class="font-medium">Device Requests Code</div>
+                                    <div class="text-xs text-base-content/60">Device generates authorization request</div>
+                                </div>
+                            </div>
+                            <div class="step step-primary">
+                                <div class="text-left">
+                                    <div class="font-medium">User Verification</div>
+                                    <div class="text-xs text-base-content/60">You confirm the authorization code</div>
+                                </div>
+                            </div>
+                            <div class="step step-primary">
+                                <div class="text-left">
+                                    <div class="font-medium">Permission Grant</div>
+                                    <div class="text-xs text-base-content/60">You review and approve access</div>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="text-left">
+                                    <div class="font-medium">Device Access</div>
+                                    <div class="text-xs text-base-content/60">Device receives access token</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                }
-            </div>
-        </div>
+                </div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <button name="button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
-                <button name="button" value="no" class="btn btn-secondary">No, Do Not Allow</button>
-            </div>
-            <div class="col-sm-4 col-lg-auto">
-                @if (Model.ClientUrl != null)
-                {
-                    <a class="btn btn-outline-info" href="@Model.ClientUrl">
-                        <span class="glyphicon glyphicon-info-sign"></span>
-                        <strong>@Model.ClientName</strong>
-                    </a>
-                }
+                <!-- Support Actions -->
+                <div class="card bg-base-100 shadow-xl border border-base-300">
+                    <div class="card-body">
+                        <h3 class="card-title text-lg mb-4">
+                            <i class="fas fa-question-circle mr-2"></i>
+                            Need Help?
+                        </h3>
+                        <div class="space-y-2">
+                            <a asp-controller="Home" asp-action="About" class="btn btn-ghost btn-sm w-full justify-start">
+                                <i class="fas fa-info mr-2"></i>
+                                About Identity Server
+                            </a>
+                            <a asp-controller="Home" asp-action="Contact" class="btn btn-ghost btn-sm w-full justify-start">
+                                <i class="fas fa-envelope mr-2"></i>
+                                Contact Support
+                            </a>
+                            <a asp-controller="Grants" asp-action="Index" class="btn btn-ghost btn-sm w-full justify-start">
+                                <i class="fas fa-list mr-2"></i>
+                                Manage Authorized Apps
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </form>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Auto-focus first unchecked scope
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstUnchecked = document.querySelector('input[type="checkbox"]:not(:checked)');
+            if (firstUnchecked) {
+                firstUnchecked.focus();
+            }
+        });
+
+        // Scope selection analytics
+        document.querySelectorAll('input[name="ScopesConsented"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                console.log('Scope ' + this.value + ' ' + (this.checked ? 'granted' : 'denied'));
+            });
+        });
+    </script>
+}

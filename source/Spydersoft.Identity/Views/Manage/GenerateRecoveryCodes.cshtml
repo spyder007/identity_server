@@ -1,24 +1,302 @@
 ﻿@model GenerateRecoveryCodesViewModel
 @{
-    ViewData["Title"] = "Recovery codes";
+    ViewData["Title"] = "Recovery Codes";
     ViewData.AddActivePage(ManageNavPages.TwoFactorAuthentication);
 }
 
-<h4>@ViewData["Title"]</h4>
-<div class="alert alert-warning" role="alert">
-    <p>
-        <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>Put these codes in a safe place.</strong>
-    </p>
-    <p>
-        If you lose your device and don't have the recovery codes you will lose access to your account.
-    </p>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        @for (var row = 0; row < Model.RecoveryCodes.Count(); row += 2)
-        {
-            <code>@Model.RecoveryCodes[row]</code><text>&nbsp;</text><code>@Model.RecoveryCodes[row + 1]</code><br />
-        }
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center space-x-3">
+            <div class="avatar">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-warning to-info">
+                    <i class="fas fa-key text-white flex items-center justify-center h-full"></i>
+                </div>
+            </div>
+            <div>
+                <h1 class="dashboard-title">Two-Factor Recovery Codes</h1>
+                <p class="dashboard-subtitle">Save these codes in a secure location</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Recovery Codes Display -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-warning/10">
+                                <i class="fas fa-shield-alt text-warning flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Your Recovery Codes</h2>
+                            <p class="text-base-content/70">Use these when you can't access your authenticator</p>
+                        </div>
+                    </div>
+
+                    <!-- Critical Warning -->
+                    <div class="alert alert-warning mb-6">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <h3 class="font-bold">Critical: Save These Codes Safely!</h3>
+                            <div class="text-sm mt-2">
+                                <p class="mb-2">
+                                    <strong>Put these codes in a safe place.</strong>
+                                </p>
+                                <p>
+                                    If you lose your device and don't have the recovery codes, you will lose access to your account.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recovery Codes Grid -->
+                    <div class="bg-base-200 p-6 rounded-lg mb-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold">Recovery Codes</h3>
+                            <div class="flex space-x-2">
+                                <button onclick="copyAllCodes()" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-copy mr-1"></i>
+                                    Copy All
+                                </button>
+                                <button onclick="printCodes()" class="btn btn-outline btn-sm">
+                                    <i class="fas fa-print mr-1"></i>
+                                    Print
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="recoveryCodesGrid">
+                            @for (var i = 0; i < Model.RecoveryCodes.Count(); i++)
+                            {
+                                <div class="relative">
+                                    <div class="bg-base-100 p-3 rounded border-2 border-dashed border-base-300 hover:border-primary transition-colors group">
+                                        <div class="flex items-center justify-between">
+                                            <code class="text-lg font-mono select-all">@Model.RecoveryCodes[i]</code>
+                                            <button onclick="copyCode('@Model.RecoveryCodes[i]', this)" 
+                                                    class="btn btn-ghost btn-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    title="Copy code">
+                                                <i class="fas fa-copy"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Usage Instructions -->
+                    <div class="bg-info/10 p-6 rounded-lg mb-6">
+                        <h3 class="font-semibold mb-4 flex items-center">
+                            <i class="fas fa-info-circle text-info mr-2"></i>
+                            How to Use Recovery Codes
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex items-start space-x-3">
+                                <div class="badge badge-info badge-sm mt-1">1</div>
+                                <span>If you lose access to your authenticator app, click "Use recovery code" on the login page</span>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="badge badge-info badge-sm mt-1">2</div>
+                                <span>Enter one of these recovery codes instead of the 6-digit authenticator code</span>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="badge badge-info badge-sm mt-1">3</div>
+                                <span>Each recovery code can only be used once</span>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <div class="badge badge-info badge-sm mt-1">4</div>
+                                <span>Generate new codes when you run low</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="card-actions justify-end">
+                        <a asp-action="TwoFactorAuthentication" class="btn btn-primary btn-lg">
+                            <i class="fas fa-check mr-2"></i>
+                            I've Saved These Codes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Storage Instructions Sidebar -->
+        <div class="space-y-6">
+            <!-- Storage Options -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-save mr-2 text-success"></i>
+                        Safe Storage Options
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-warning text-xs mt-1"></i>
+                            <span><strong>Password Manager:</strong> Store in your secure vault</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-warning text-xs mt-1"></i>
+                            <span><strong>Physical Paper:</strong> Write down and store securely</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-warning text-xs mt-1"></i>
+                            <span><strong>Encrypted File:</strong> Save in encrypted storage</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-warning text-xs mt-1"></i>
+                            <span><strong>Safe Deposit Box:</strong> For maximum security</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Tips -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-error"></i>
+                        Security Warnings
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-times text-error text-xs mt-1"></i>
+                            <span>Don't save in unencrypted files</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-times text-error text-xs mt-1"></i>
+                            <span>Don't email to yourself</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-times text-error text-xs mt-1"></i>
+                            <span>Don't store in browser bookmarks</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-times text-error text-xs mt-1"></i>
+                            <span>Don't share with others</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generate New Codes -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-redo mr-2 text-warning"></i>
+                        Generate New Codes
+                    </h3>
+                    <p class="text-sm text-base-content/80 mb-4">
+                        You can generate new recovery codes at any time. This will invalidate your current codes.
+                    </p>
+                    <form asp-action="GenerateRecoveryCodes" method="post">
+                        <button type="submit" class="btn btn-warning btn-sm w-full">
+                            <i class="fas fa-redo mr-2"></i>
+                            Generate New Codes
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-cog mr-2"></i>
+                        2FA Settings
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-action="EnableAuthenticator" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-mobile-alt mr-2"></i>
+                            Reconfigure Authenticator
+                        </a>
+                        <a asp-action="Disable2fa" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-shield-slash mr-2"></i>
+                            Disable 2FA
+                        </a>
+                        <a asp-action="Index" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-user mr-2"></i>
+                            Back to Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Hidden div for copying all codes -->
+<textarea id="allCodesText" class="hidden">@string.Join(Environment.NewLine, Model.RecoveryCodes)</textarea>
+
+@section Scripts {
+    <script>
+        // Copy individual code
+        function copyCode(code, button) {
+            navigator.clipboard.writeText(code).then(function() {
+                const originalIcon = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check text-success"></i>';
+                setTimeout(() => {
+                    button.innerHTML = originalIcon;
+                }, 2000);
+            });
+        }
+
+        // Copy all codes
+        function copyAllCodes() {
+            const allCodes = document.getElementById('allCodesText');
+            allCodes.select();
+            navigator.clipboard.writeText(allCodes.value).then(function() {
+                // Show success message
+                const button = event.target.closest('button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                button.classList.add('btn-success');
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.classList.remove('btn-success');
+                }, 3000);
+            });
+        }
+
+        // Print codes
+        function printCodes() {
+            const codes = @Html.Raw(Json.Serialize(Model.RecoveryCodes));
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Two-Factor Recovery Codes</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .codes { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+                        .code { padding: 10px; border: 2px dashed #ccc; font-family: monospace; font-size: 16px; }
+                        .warning { background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; margin: 20px 0; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>Two-Factor Recovery Codes</h1>
+                        <p>Spydersoft Identity Server</p>
+                    </div>
+                    <div class="warning">
+                        <strong>IMPORTANT:</strong> Store these codes in a safe place. Each code can only be used once.
+                    </div>
+                    <div class="codes">
+                        ${codes.map(code => `<div class="code">${code}</div>`).join('')}
+                    </div>
+                    <p style="margin-top: 30px; text-align: center; color: #666;">
+                        Generated on ${new Date().toLocaleString()}
+                    </p>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+    </script>
+}

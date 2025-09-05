@@ -4,41 +4,250 @@
     ViewData.AddActivePage(ManageNavPages.Index);
 }
 
-<h4>@ViewData["Title"]</h4>
-@await Html.PartialAsync("_StatusMessage", Model.StatusMessage)
-<div class="row">
-    <div class="col-md-6">
-        <form method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="mb-3">
-                <label asp-for="Username"></label>
-                <input asp-for="Username" class="form-control" disabled />
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center space-x-4">
+            <div class="avatar">
+                <div class="w-16 rounded-full">
+                    <img src="@Model.Email.ToGravatarUrl()" alt="Profile Avatar" />
+                </div>
             </div>
-            <div class="mb-3">
-                <label asp-for="Email"></label>
-                @if (Model.IsEmailConfirmed)
-                {
-                    <div class="input-group">
-                        <input asp-for="Email" class="form-control" />
-                        <span class="input-group-text" aria-hidden="true"><i class="fa fa-lg fa-solid fa-circle-check text-success"></i></span>
+            <div>
+                <h1 class="dashboard-title">My Profile</h1>
+                <p class="dashboard-subtitle">Manage your account information and preferences</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Message -->
+    @if (!string.IsNullOrEmpty(Model.StatusMessage))
+    {
+        <div class="alert alert-success mb-8">
+            <i class="fas fa-check-circle"></i>
+            <span>@Model.StatusMessage</span>
+        </div>
+    }
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Profile Information -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary">
+                                <i class="fas fa-user text-white flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-2xl">Account Information</h2>
+                            <p class="text-base-content/70">Update your personal details</p>
+                        </div>
                     </div>
-                }
-                else
-                {
-                    <div class="input-group">
-                        <input asp-for="Email" class="form-control" />
-                        <button asp-action="SendVerificationEmail" class="btn btn-outline-secondary">Verify email</button>
+
+                    <form method="post" class="space-y-6">
+                        <!-- Validation Summary -->
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-error">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <h3 class="font-bold">Validation Error</h3>
+                                    <div asp-validation-summary="All" class="text-sm"></div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Username Field (Read-only) -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Username)</span>
+                                <span class="label-text-alt">
+                                    <div class="badge badge-info badge-sm">Read Only</div>
+                                </span>
+                            </label>
+                            <input asp-for="Username" 
+                                   class="input input-bordered w-full bg-base-200" 
+                                   disabled />
+                            <label class="label">
+                                <span class="label-text-alt text-base-content/60">Your username cannot be changed</span>
+                            </label>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Email)</span>
+                                @if (Model.IsEmailConfirmed)
+                                {
+                                    <span class="label-text-alt">
+                                        <div class="badge badge-success badge-sm gap-1">
+                                            <i class="fas fa-check text-xs"></i>
+                                            Verified
+                                        </div>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="label-text-alt">
+                                        <div class="badge badge-warning badge-sm gap-1">
+                                            <i class="fas fa-exclamation text-xs"></i>
+                                            Not Verified
+                                        </div>
+                                    </span>
+                                }
+                            </label>
+                            <div class="flex space-x-2">
+                                <input asp-for="Email" 
+                                       type="email" 
+                                       class="input input-bordered flex-1 focus:input-primary" />
+                                @if (!Model.IsEmailConfirmed)
+                                {
+                                    <button type="button" 
+                                            asp-action="SendVerificationEmail" 
+                                            class="btn btn-outline btn-sm">
+                                        <i class="fas fa-envelope mr-1"></i>
+                                        Verify
+                                    </button>
+                                }
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="Email" class="label-text-alt text-error"></span>
+                                @if (!Model.IsEmailConfirmed)
+                                {
+                                    <span class="label-text-alt text-warning">Click "Verify" to confirm this email</span>
+                                }
+                            </label>
+                        </div>
+
+                        <!-- Phone Number Field -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.PhoneNumber)</span>
+                                <span class="label-text-alt text-base-content/60">Optional</span>
+                            </label>
+                            <input asp-for="PhoneNumber" 
+                                   type="tel" 
+                                   class="input input-bordered w-full focus:input-primary" 
+                                   placeholder="Enter your phone number" />
+                            <label class="label">
+                                <span asp-validation-for="PhoneNumber" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Used for account recovery</span>
+                            </label>
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="card-actions justify-end">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-save mr-2"></i>
+                                Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Actions Sidebar -->
+        <div class="space-y-6">
+            <!-- Security Settings -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        Security
+                    </h3>
+                    <div class="space-y-3">
+                        <a asp-action="ChangePassword" class="btn btn-outline btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Change Password
+                        </a>
+                        <a asp-action="TwoFactorAuthentication" class="btn btn-outline btn-sm w-full justify-start">
+                            <i class="fas fa-mobile-alt mr-2"></i>
+                            Two-Factor Auth
+                        </a>
+                        <a asp-action="ExternalLogins" class="btn btn-outline btn-sm w-full justify-start">
+                            <i class="fas fa-link mr-2"></i>
+                            External Logins
+                        </a>
                     </div>
-                }
-                <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
             </div>
-            <div class="mb-3">
-                <label asp-for="PhoneNumber"></label>
-                <input asp-for="PhoneNumber" class="form-control" />
-                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+
+            <!-- Account Status -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Account Status
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm">Email Verified</span>
+                            @if (Model.IsEmailConfirmed)
+                            {
+                                <div class="badge badge-success badge-sm">
+                                    <i class="fas fa-check text-xs mr-1"></i>
+                                    Yes
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="badge badge-warning badge-sm">
+                                    <i class="fas fa-clock text-xs mr-1"></i>
+                                    Pending
+                                </div>
+                            }
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm">Two-Factor Auth</span>
+                            <div class="badge badge-info badge-sm">
+                                <i class="fas fa-mobile-alt text-xs mr-1"></i>
+                                Configure
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm">Phone Number</span>
+                            @if (!string.IsNullOrEmpty(Model.PhoneNumber))
+                            {
+                                <div class="badge badge-success badge-sm">
+                                    <i class="fas fa-check text-xs mr-1"></i>
+                                    Added
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="badge badge-ghost badge-sm">
+                                    <i class="fas fa-plus text-xs mr-1"></i>
+                                    Add
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Save</button>
-        </form>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="Grants" asp-action="Index" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-apps mr-2"></i>
+                            My Applications
+                        </a>
+                        <a asp-controller="Account" asp-action="Logout" class="btn btn-ghost btn-sm w-full justify-start text-error">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Sign Out
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

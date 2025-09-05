@@ -1,36 +1,229 @@
-﻿
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>Contact</h2>
+﻿@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Contact Us</h1>
+        <p class="dashboard-subtitle">Get in touch with the Spydersoft team</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Contact Information -->
+        <div class="space-y-6">
+            <!-- Developer Contact Card -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-4 mb-6">
+                        <div class="avatar">
+                            <div class="w-16 rounded-full bg-gradient-to-br from-primary to-secondary">
+                                <img src="https://www.gravatar.com/avatar/geregam@gmail.com" alt="Matt Gerega" class="rounded-full" />
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-2xl">Matt Gerega</h2>
+                            <p class="text-base-content/70">Lead Developer & Founder</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-envelope text-primary"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">Email</div>
+                                <a href="mailto:geregam@gmail.com" class="link link-primary">geregam@gmail.com</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-info/10 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-globe text-info"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">Website</div>
+                                <a href="https://www.mattgerega.com" target="_blank" class="link link-info">mattgerega.com</a>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-warning/10 rounded-lg flex items-center justify-center">
+                                <i class="fab fa-github text-warning"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">GitHub</div>
+                                <a href="https://github.com/spyder007" target="_blank" class="link link-warning">spyder007</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <!-- end col -->
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="row my-2">
-                <div class="col-sm-6">
-                    <div class="card-style">
-                        <div class="card-meta">
-                            <strong>
-                                <i class="icon-envelope"></i> Spydersoft
-                            </strong>
+
+            <!-- Company Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-secondary to-accent">
+                                <img src="~/images/favicon.svg" alt="Spydersoft Logo" class="p-2" />
+                            </div>
                         </div>
-                        <div class="card-content">
-                            <h3>Matt Gerega</h3>
-                            <address>
-                                <strong>General</strong>: <a href="mailto:geregam@gmail.com">geregam@gmail.com</a>
-                            </address>
-                            <a href="https://www.mattgerega.com">mattgerega.com</a>
+                        <div>
+                            <h2 class="card-title text-xl">Spydersoft</h2>
+                            <p class="text-base-content/70">Software Development & Consulting</p>
                         </div>
                     </div>
+
+                    <div class="prose prose-sm max-w-none">
+                        <p class="text-base-content/80">
+                            Spydersoft specializes in creating robust, scalable web applications and identity management solutions. 
+                            We focus on delivering secure, modern applications that meet enterprise requirements.
+                        </p>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="flex flex-wrap gap-2">
+                        <div class="badge badge-primary gap-2">
+                            <i class="fas fa-code"></i>
+                            .NET Development
+                        </div>
+                        <div class="badge badge-secondary gap-2">
+                            <i class="fas fa-shield-alt"></i>
+                            Identity Security
+                        </div>
+                        <div class="badge badge-accent gap-2">
+                            <i class="fas fa-cloud"></i>
+                            Cloud Solutions
+                        </div>
+                        <div class="badge badge-info gap-2">
+                            <i class="fas fa-mobile-alt"></i>
+                            Modern Web Apps
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body">
+                <h2 class="card-title text-2xl mb-6">
+                    <i class="fas fa-paper-plane mr-2"></i>
+                    Send a Message
+                </h2>
+
+                <form class="space-y-6" action="mailto:geregam@gmail.com" method="post" enctype="text/plain">
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text font-medium">Your Name</span>
+                        </label>
+                        <input type="text" 
+                               name="name" 
+                               class="input input-bordered w-full focus:input-primary" 
+                               placeholder="Enter your full name" 
+                               required />
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text font-medium">Email Address</span>
+                        </label>
+                        <input type="email" 
+                               name="email" 
+                               class="input input-bordered w-full focus:input-primary" 
+                               placeholder="Enter your email address" 
+                               required />
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text font-medium">Subject</span>
+                        </label>
+                        <select name="subject" class="select select-bordered w-full focus:select-primary">
+                            <option disabled selected>Choose a topic</option>
+                            <option value="General Inquiry">General Inquiry</option>
+                            <option value="Technical Support">Technical Support</option>
+                            <option value="Bug Report">Bug Report</option>
+                            <option value="Feature Request">Feature Request</option>
+                            <option value="Business Partnership">Business Partnership</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text font-medium">Message</span>
+                        </label>
+                        <textarea name="message" 
+                                  class="textarea textarea-bordered h-32 resize-none focus:textarea-primary" 
+                                  placeholder="Tell us how we can help you..."
+                                  required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-full">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        Send Message
+                    </button>
+                </form>
+
+                <div class="divider">Or</div>
+
+                <div class="text-center">
+                    <p class="text-base-content/70 mb-4">Prefer to reach out directly?</p>
+                    <a href="mailto:geregam@gmail.com" class="btn btn-outline btn-lg">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Email Directly
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- FAQ Section -->
+    <div class="mt-12">
+        <h2 class="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="collapse collapse-plus bg-base-200">
+                <input type="radio" name="faq-accordion" />
+                <div class="collapse-title text-lg font-medium">
+                    How do I report a security issue?
+                </div>
+                <div class="collapse-content">
+                    <p>Please email security-related issues directly to geregam@gmail.com with "SECURITY" in the subject line. We take security concerns seriously and will respond promptly.</p>
+                </div>
+            </div>
+
+            <div class="collapse collapse-plus bg-base-200">
+                <input type="radio" name="faq-accordion" />
+                <div class="collapse-title text-lg font-medium">
+                    What technologies do you work with?
+                </div>
+                <div class="collapse-content">
+                    <p>We specialize in .NET Core, ASP.NET, Identity Server, modern web frameworks like React and Angular, and cloud platforms including Azure and AWS.</p>
+                </div>
+            </div>
+
+            <div class="collapse collapse-plus bg-base-200">
+                <input type="radio" name="faq-accordion" />
+                <div class="collapse-title text-lg font-medium">
+                    Do you offer consulting services?
+                </div>
+                <div class="collapse-content">
+                    <p>Yes, we provide consulting services for identity management, web application development, and cloud architecture. Contact us to discuss your specific needs.</p>
+                </div>
+            </div>
+
+            <div class="collapse collapse-plus bg-base-200">
+                <input type="radio" name="faq-accordion" />
+                <div class="collapse-title text-lg font-medium">
+                    What's your response time for support?
+                </div>
+                <div class="collapse-content">
+                    <p>We aim to respond to all inquiries within 24-48 hours. Critical security issues receive priority and are typically addressed within 2-4 hours.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

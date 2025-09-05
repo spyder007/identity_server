@@ -1,44 +1,270 @@
 ﻿@using Spydersoft.Identity.Models.Identity
 @model UsersViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
-                    </div>
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <div class="table-responsive">
-                    <table class="table" aria-label="Users">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>User Name</th>
-                                <th>Email</th>
-                                <th>Actions&nbsp;<a asp-action="Edit"><span class="fa fa-plus"></span></a></th>
-                            </tr>
-                        </thead>
 
-                        @foreach (var user in Model.Users)
-                        {
-                            <tr>
-                                <td>@user.UserName</td>
-                                <td>@user.Email</td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@user.Id"><span class="fa fa-edit"></span></a>
-                                    <a asp-action="Delete" asp-route-id="@user.Id" title="Delete"><span class="fa fa-trash"></span></a>
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </div>
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="dashboard-title">@ViewData["Title"]</h1>
+                <p class="dashboard-subtitle">Manage user accounts and permissions</p>
             </div>
+            <a asp-action="Edit" class="btn btn-primary btn-lg">
+                <i class="fas fa-user-plus mr-2"></i>
+                Add New User
+            </a>
         </div>
     </div>
-</section>
+
+    <!-- Users Count Card -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-primary">
+                <i class="fas fa-users text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Users</div>
+            <div class="stat-value text-primary">@Model.Users.Count()</div>
+            <div class="stat-desc">Registered accounts</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-success">
+                <i class="fas fa-user-check text-3xl"></i>
+            </div>
+            <div class="stat-title">Active Users</div>
+            <div class="stat-value text-success">@Model.Users.Count(u => u.EmailConfirmed)</div>
+            <div class="stat-desc">Email confirmed</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-warning">
+                <i class="fas fa-user-clock text-3xl"></i>
+            </div>
+            <div class="stat-title">Pending</div>
+            <div class="stat-value text-warning">@Model.Users.Count(u => !u.EmailConfirmed)</div>
+            <div class="stat-desc">Awaiting confirmation</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-error">
+                <i class="fas fa-user-lock text-3xl"></i>
+            </div>
+            <div class="stat-title">Locked Out</div>
+            <div class="stat-value text-error">@Model.Users.Count(u => u.LockoutEnd.HasValue && u.LockoutEnd > DateTimeOffset.UtcNow)</div>
+            <div class="stat-desc">Currently locked</div>
+        </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="card-title text-2xl">
+                    <i class="fas fa-users mr-2"></i>
+                    User Accounts
+                </h2>
+                <div class="flex space-x-2">
+                    <input type="text" 
+                           placeholder="Search users..." 
+                           class="input input-bordered input-sm w-full max-w-xs"
+                           id="userSearch" />
+                    <button class="btn btn-ghost btn-sm">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            @if (Model.Users.Any())
+            {
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra w-full">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-user mr-2"></i>
+                                        User Name
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-envelope mr-2"></i>
+                                        Email
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-shield-alt mr-2"></i>
+                                        Status
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-calendar mr-2"></i>
+                                        Phone
+                                    </span>
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Users)
+                            {
+                                <tr class="hover">
+                                    <td>
+                                        <div class="flex items-center space-x-3">
+                                            <div class="avatar">
+                                                <div class="mask mask-squircle w-12 h-12">
+                                                    <img src="@user.Email.ToGravatarUrl()" alt="Avatar" />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">@user.UserName</div>
+                                                @if (!string.IsNullOrEmpty(user.Name))
+                                                {
+                                                    <div class="text-sm opacity-50">@user.Name</div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center space-x-2">
+                                            <span>@user.Email</span>
+                                            @if (user.EmailConfirmed)
+                                            {
+                                                <div class="badge badge-success badge-sm">
+                                                    <i class="fas fa-check text-xs"></i>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="badge badge-warning badge-sm">
+                                                    <i class="fas fa-clock text-xs"></i>
+                                                </div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (user.LockoutEnd.HasValue && user.LockoutEnd > DateTimeOffset.UtcNow)
+                                        {
+                                            <div class="badge badge-error gap-2">
+                                                <i class="fas fa-lock"></i>
+                                                Locked
+                                            </div>
+                                        }
+                                        else if (user.EmailConfirmed)
+                                        {
+                                            <div class="badge badge-success gap-2">
+                                                <i class="fas fa-check"></i>
+                                                Active
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="badge badge-warning gap-2">
+                                                <i class="fas fa-clock"></i>
+                                                Pending
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (!string.IsNullOrEmpty(user.PhoneNumber))
+                                        {
+                                            <span class="text-sm">@user.PhoneNumber</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-sm text-base-content/50">Not provided</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="flex space-x-2">
+                                            <a asp-action="Edit" 
+                                               asp-route-id="@user.Id" 
+                                               class="btn btn-ghost btn-sm"
+                                               title="Edit User">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button class="btn btn-ghost btn-sm text-error"
+                                                    onclick="confirmDelete('@user.Id', '@user.UserName')"
+                                                    title="Delete User">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-12">
+                    <div class="avatar mb-4">
+                        <div class="w-24 rounded-full bg-base-200">
+                            <i class="fas fa-users text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">No Users Found</h3>
+                    <p class="text-base-content/70 mb-4">Get started by creating your first user account.</p>
+                    <a asp-action="Edit" class="btn btn-primary">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Create First User
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm User Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the user <strong id="deleteUserName"></strong>? 
+            This action cannot be undone and will permanently remove all user data.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete User
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        document.getElementById('userSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const username = row.cells[0].textContent.toLowerCase();
+                const email = row.cells[1].textContent.toLowerCase();
+                
+                if (username.includes(searchTerm) || email.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Delete confirmation
+        function confirmDelete(userId, userName) {
+            document.getElementById('deleteUserName').textContent = userName;
+            document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete")/' + userId;
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
+}

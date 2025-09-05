@@ -1,65 +1,408 @@
 ﻿@using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels
 @model IdentityResourcesViewModel
 
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
-                    </div>
-                </div>
-                <!-- end col -->
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="dashboard-title">@ViewData["Title"]</h1>
+                <p class="dashboard-subtitle">Manage identity resources for user claims and profile information</p>
             </div>
-            <!-- end row -->
+            <a asp-action="Edit" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus mr-2"></i>
+                Add Identity Resource
+            </a>
         </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <div class="table-responsive">
-                    <table class="table" aria-label="Identity Resources">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th>Name</th>
-                            <th>Display Name</th>
-                            <th>Description</th>
-                            <th>Actions&nbsp;<a asp-action="Edit"><span class="fa fa-plus"></span></a></th>
-                        </tr>
-                        </thead>
+    </div>
 
-                        @foreach (var identityResource in Model.IdentityResources)
-                        {
-                            <tr>
-                                <td>@identityResource.DisplayName</td>
-                                <td>@identityResource.DisplayName</td>
-                                <td>@identityResource.Description</td>
-                                <td>
-                                    <a asp-action="Edit" asp-route-id="@identityResource.Id"><span class="fa fa-edit"></span></a>
-                                    <a asp-action="Delete" asp-route-id="@identityResource.Id" title="Delete"><span class="fa fa-trash"></span></a>
-                                </td>
-                            </tr>
-                        }
-                    </table>
+    <!-- Identity Resource Statistics -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-primary">
+                <i class="fas fa-id-card text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Resources</div>
+            <div class="stat-value text-primary">@Model.IdentityResources.Count()</div>
+            <div class="stat-desc">Identity resources</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-success">
+                <i class="fas fa-check-circle text-3xl"></i>
+            </div>
+            <div class="stat-title">Active</div>
+            <div class="stat-value text-success">@Model.IdentityResources.Count(r => r.Enabled)</div>
+            <div class="stat-desc">Currently enabled</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-warning">
+                <i class="fas fa-star text-3xl"></i>
+            </div>
+            <div class="stat-title">Standard</div>
+            <div class="stat-value text-warning">@Model.AvailableStandardResources.Count()</div>
+            <div class="stat-desc">Available standards</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-info">
+                <i class="fas fa-eye text-3xl"></i>
+            </div>
+            <div class="stat-title">Emphasize</div>
+            <div class="stat-value text-info">@Model.IdentityResources.Count(r => r.Emphasize)</div>
+            <div class="stat-desc">Highlighted in UI</div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Identity Resources Table -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="card-title text-2xl">
+                            <i class="fas fa-id-card mr-2"></i>
+                            Identity Resources
+                        </h2>
+                        <div class="flex space-x-2">
+                            <input type="text" 
+                                   placeholder="Search resources..." 
+                                   class="input input-bordered input-sm w-full max-w-xs"
+                                   id="resourceSearch" />
+                            <div class="dropdown dropdown-end">
+                                <label tabindex="0" class="btn btn-ghost btn-sm">
+                                    <i class="fas fa-filter mr-1"></i>
+                                    Filter
+                                </label>
+                                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                    <li><a onclick="filterResources('all')">All Resources</a></li>
+                                    <li><a onclick="filterResources('enabled')">Enabled Only</a></li>
+                                    <li><a onclick="filterResources('disabled')">Disabled Only</a></li>
+                                    <li><a onclick="filterResources('emphasized')">Emphasized Only</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.IdentityResources.Any())
+                    {
+                        <div class="overflow-x-auto">
+                            <table class="table table-zebra w-full">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <span class="flex items-center">
+                                                <i class="fas fa-tag mr-2"></i>
+                                                Resource Name
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="flex items-center">
+                                                <i class="fas fa-info-circle mr-2"></i>
+                                                Description
+                                            </span>
+                                        </th>
+                                        <th>
+                                            <span class="flex items-center">
+                                                <i class="fas fa-toggle-on mr-2"></i>
+                                                Status
+                                            </span>
+                                        </th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var resource in Model.IdentityResources)
+                                    {
+                                        <tr class="hover" data-resource-enabled="@resource.Enabled.ToString().ToLower()" 
+                                            data-resource-emphasized="@resource.Emphasize.ToString().ToLower()">
+                                            <td>
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="avatar">
+                                                        <div class="mask mask-squircle w-12 h-12 bg-gradient-to-br from-secondary to-accent">
+                                                            <i class="fas fa-id-card text-white flex items-center justify-center h-full"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="font-bold">@resource.Name</div>
+                                                        <div class="text-sm opacity-50">@resource.DisplayName</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="max-w-xs">
+                                                    @if (!string.IsNullOrEmpty(resource.Description))
+                                                    {
+                                                        <p class="text-sm text-base-content/80 truncate">@resource.Description</p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-sm text-base-content/50">No description</span>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex flex-col space-y-1">
+                                                    @if (resource.Enabled)
+                                                    {
+                                                        <div class="badge badge-success badge-sm gap-1">
+                                                            <i class="fas fa-check text-xs"></i>
+                                                            Enabled
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="badge badge-error badge-sm gap-1">
+                                                            <i class="fas fa-times text-xs"></i>
+                                                            Disabled
+                                                        </div>
+                                                    }
+                                                    @if (resource.Emphasize)
+                                                    {
+                                                        <div class="badge badge-warning badge-sm gap-1">
+                                                            <i class="fas fa-star text-xs"></i>
+                                                            Emphasized
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="flex space-x-2">
+                                                    <div class="dropdown dropdown-end">
+                                                        <label tabindex="0" class="btn btn-ghost btn-sm">
+                                                            <i class="fas fa-ellipsis-v"></i>
+                                                        </label>
+                                                        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                            <li>
+                                                                <a asp-action="Edit" asp-route-id="@resource.Id">
+                                                                    <i class="fas fa-edit"></i>
+                                                                    Edit Resource
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a asp-controller="IdentityResourceClaims" asp-action="Index" asp-route-id="@resource.Id">
+                                                                    <i class="fas fa-tags"></i>
+                                                                    Manage Claims
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a asp-controller="IdentityResourceProperties" asp-action="Index" asp-route-id="@resource.Id">
+                                                                    <i class="fas fa-cog"></i>
+                                                                    Properties
+                                                                </a>
+                                                            </li>
+                                                            <div class="divider my-1"></div>
+                                                            <li>
+                                                                <button onclick="confirmDelete('@resource.Id', '@resource.Name')" 
+                                                                        class="text-error">
+                                                                    <i class="fas fa-trash"></i>
+                                                                    Delete Resource
+                                                                </button>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-12">
+                            <div class="avatar mb-4">
+                                <div class="w-24 rounded-full bg-base-200">
+                                    <i class="fas fa-id-card text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No Identity Resources Found</h3>
+                            <p class="text-base-content/70 mb-4">Create identity resources to define user profile information.</p>
+                            <a asp-action="Edit" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Create First Resource
+                            </a>
+                        </div>
+                    }
                 </div>
-                <form asp-action="AddStandard">
-                    <div class="mb-3 row">
-                        <label asp-for="SelectedAvailableResource" class="col-sm-4 col-form-label"></label>
-                        <div class="col-sm-6">
-                            <select asp-for="SelectedAvailableResource" class="form-control">
-                                @foreach (var standardResource in Model.AvailableStandardResources)
-                                {
-                                    <option value="@standardResource.Name">@standardResource.DisplayName</option>
-                                }
-                            </select>
+            </div>
+        </div>
+
+        <!-- Standard Resources Sidebar -->
+        <div class="space-y-6">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-star mr-2 text-warning"></i>
+                        Add Standard Resource
+                    </h3>
+                    
+                    @if (Model.AvailableStandardResources.Any())
+                    {
+                        <form asp-action="AddStandard" class="space-y-4">
+                            <div class="form-control w-full">
+                                <label class="label">
+                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.SelectedAvailableResource)</span>
+                                </label>
+                                <select asp-for="SelectedAvailableResource" class="select select-bordered w-full focus:select-primary">
+                                    <option disabled selected>Choose a standard resource</option>
+                                    @foreach (var standardResource in Model.AvailableStandardResources)
+                                    {
+                                        <option value="@standardResource.Name">@standardResource.DisplayName</option>
+                                    }
+                                </select>
+                                <label class="label">
+                                    <span class="label-text-alt text-base-content/60">OpenID Connect standard resources</span>
+                                </label>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-sm w-full">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add Standard Resource
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <i class="fas fa-check-circle text-success text-2xl mb-2"></i>
+                            <p class="text-sm text-base-content/70">All standard resources are already added.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Information Card -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2 text-info"></i>
+                        About Identity Resources
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-id-card text-info text-xs mt-1"></i>
+                            <span>Define user profile information like name, email, and roles</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-shield-alt text-info text-xs mt-1"></i>
+                            <span>Control which claims are included in identity tokens</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-star text-info text-xs mt-1"></i>
+                            <span>Standard resources follow OpenID Connect specifications</span>
+                        </div>
+                        <div class="flex items-start space-x-2">
+                            <i class="fas fa-eye text-info text-xs mt-1"></i>
+                            <span>Emphasized resources are highlighted in consent screens</span>
                         </div>
                     </div>
-                    <div class="mb-3 row">
-                        <div class="col-sm-10">
-                            <input type="submit" value="Add Standard" class="btn btn-sm btn-primary"/>
-                        </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="Scopes" asp-action="Index" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Manage Scopes
+                        </a>
+                        <a asp-controller="ApiResources" asp-action="Index" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-server mr-2"></i>
+                            API Resources
+                        </a>
+                        <a asp-controller="Clients" asp-action="Index" class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-mobile-alt mr-2"></i>
+                            Client Applications
+                        </a>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
-</section>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm Identity Resource Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the identity resource <strong id="deleteResourceName"></strong>? 
+            This action cannot be undone and will permanently remove the resource and all its configurations.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete Resource
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        document.getElementById('resourceSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const resourceName = row.cells[0].textContent.toLowerCase();
+                const description = row.cells[1].textContent.toLowerCase();
+                
+                if (resourceName.includes(searchTerm) || description.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter functionality
+        function filterResources(filter) {
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                let show = true;
+                
+                switch (filter) {
+                    case 'enabled':
+                        show = row.dataset.resourceEnabled === 'true';
+                        break;
+                    case 'disabled':
+                        show = row.dataset.resourceEnabled === 'false';
+                        break;
+                    case 'emphasized':
+                        show = row.dataset.resourceEmphasized === 'true';
+                        break;
+                    case 'all':
+                    default:
+                        show = true;
+                        break;
+                }
+                
+                row.style.display = show ? '' : 'none';
+            });
+        }
+
+        // Delete confirmation
+        function confirmDelete(resourceId, resourceName) {
+            document.getElementById('deleteResourceName').textContent = resourceName;
+            document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete")/' + resourceId;
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
+}
