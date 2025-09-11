@@ -50,435 +50,439 @@
             </div>
         }
 
-        <!-- Tabbed Configuration -->
+        <!-- Basic Information Section -->
         <div class="card bg-base-100 shadow-xl border border-base-300">
             <div class="card-body">
-                <div class="tabs tabs-lifted">
-                    <input type="radio" name="client-tabs" role="tab" class="tab" aria-label="Basic" checked />
-                    <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
-                        <h2 class="text-2xl font-bold mb-6 flex items-center">
-                            <i class="fas fa-info-circle mr-2 text-primary"></i>
-                            Basic Information
-                        </h2>
-                        
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Client ID -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ClientId)</span>
-                                    <span class="label-text-alt text-error">*</span>
-                                </label>
-                                <input asp-for="ClientId" 
-                                       type="text" 
-                                       class="input input-bordered focus:input-primary" 
-                                       placeholder="unique-client-id" />
-                                <label class="label">
-                                    <span asp-validation-for="ClientId" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">Unique identifier for the client</span>
-                                </label>
-                            </div>
-
-                            <!-- Client Name -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ClientName)</span>
-                                </label>
-                                <input asp-for="ClientName" 
-                                       type="text" 
-                                       class="input input-bordered focus:input-primary" 
-                                       placeholder="My Application" />
-                                <label class="label">
-                                    <span asp-validation-for="ClientName" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">Display name for the client</span>
-                                </label>
-                            </div>
-
-                            <!-- Client URI -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ClientUri)</span>
-                                </label>
-                                <input asp-for="ClientUri" 
-                                       type="url" 
-                                       class="input input-bordered focus:input-primary" 
-                                       placeholder="https://example.com" />
-                                <label class="label">
-                                    <span asp-validation-for="ClientUri" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">Homepage URL of the client</span>
-                                </label>
-                            </div>
-
-                            <!-- Logo URI -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.LogoUri)</span>
-                                </label>
-                                <input asp-for="LogoUri" 
-                                       type="url" 
-                                       class="input input-bordered focus:input-primary" 
-                                       placeholder="https://example.com/logo.png" />
-                                <label class="label">
-                                    <span asp-validation-for="LogoUri" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">URL to client logo</span>
-                                </label>
-                            </div>
-
-                            <!-- Description -->
-                            <div class="form-control lg:col-span-2">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Description)</span>
-                                </label>
-                                <textarea asp-for="Description" 
-                                         class="textarea textarea-bordered focus:textarea-primary" 
-                                         placeholder="Brief description of the client application"
-                                         rows="3"></textarea>
-                                <label class="label">
-                                    <span asp-validation-for="Description" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">Optional description</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Basic Settings -->
-                        <div class="divider">Settings</div>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Enabled -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Enabled)</span>
-                                    <input asp-for="Enabled" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt text-base-content/60">Enable or disable this client</span>
-                                </label>
-                            </div>
-
-                            <!-- Protocol Type -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ProtocolType)</span>
-                                </label>
-                                <input asp-for="ProtocolType" 
-                                       type="text" 
-                                       class="input input-bordered focus:input-primary" 
-                                       readonly />
-                                <label class="label">
-                                    <span class="label-text-alt text-base-content/60">Authentication protocol</span>
-                                </label>
-                            </div>
-                        </div>
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-info-circle mr-2 text-primary"></i>
+                    Basic Information
+                </h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Client ID -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ClientId)</span>
+                            <span class="label-text-alt text-error">*</span>
+                        </label>
+                        <input asp-for="ClientId" 
+                               type="text" 
+                               class="input input-bordered focus:input-primary" 
+                               placeholder="unique-client-id" />
+                        <label class="label">
+                            <span asp-validation-for="ClientId" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">Unique identifier for the client</span>
+                        </label>
                     </div>
 
-                    <input type="radio" name="client-tabs" role="tab" class="tab" aria-label="Authentication" />
-                    <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
-                        <h2 class="text-2xl font-bold mb-6 flex items-center">
-                            <i class="fas fa-shield-alt mr-2 text-primary"></i>
-                            Authentication & Security
-                        </h2>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Require Client Secret -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.RequireClientSecret)</span>
-                                    <input asp-for="RequireClientSecret" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt">Require client secret for authentication</span>
-                                </label>
-                            </div>
-
-                            <!-- Require PKCE -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.RequirePkce)</span>
-                                    <input asp-for="RequirePkce" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt">Require Proof Key for Code Exchange</span>
-                                </label>
-                            </div>
-
-                            <!-- Allow Plain Text PKCE -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AllowPlainTextPkce)</span>
-                                    <input asp-for="AllowPlainTextPkce" type="checkbox" class="toggle toggle-warning" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt text-warning">Allow plain text PKCE (not recommended)</span>
-                                </label>
-                            </div>
-
-                            <!-- Enable Local Login -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.EnableLocalLogin)</span>
-                                    <input asp-for="EnableLocalLogin" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt">Allow local username/password login</span>
-                                </label>
-                            </div>
-                        </div>
+                    <!-- Client Name -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ClientName)</span>
+                        </label>
+                        <input asp-for="ClientName" 
+                               type="text" 
+                               class="input input-bordered focus:input-primary" 
+                               placeholder="My Application" />
+                        <label class="label">
+                            <span asp-validation-for="ClientName" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">Display name for the client</span>
+                        </label>
                     </div>
 
-                    <input type="radio" name="client-tabs" role="tab" class="tab" aria-label="Tokens" />
-                    <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
-                        <h2 class="text-2xl font-bold mb-6 flex items-center">
-                            <i class="fas fa-key mr-2 text-primary"></i>
-                            Token Configuration
-                        </h2>
-
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Access Token Lifetime -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AccessTokenLifetime)</span>
-                                </label>
-                                <div class="input-group">
-                                    <input asp-for="AccessTokenLifetime" 
-                                           type="number" 
-                                           class="input input-bordered focus:input-primary" 
-                                           min="1" />
-                                    <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
-                                </div>
-                                <label class="label">
-                                    <span asp-validation-for="AccessTokenLifetime" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">Access token lifetime</span>
-                                </label>
-                            </div>
-
-                            <!-- Identity Token Lifetime -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.IdentityTokenLifetime)</span>
-                                </label>
-                                <div class="input-group">
-                                    <input asp-for="IdentityTokenLifetime" 
-                                           type="number" 
-                                           class="input input-bordered focus:input-primary" 
-                                           min="1" />
-                                    <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
-                                </div>
-                                <label class="label">
-                                    <span asp-validation-for="IdentityTokenLifetime" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">Identity token lifetime</span>
-                                </label>
-                            </div>
-
-                            <!-- Authorization Code Lifetime -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AuthorizationCodeLifetime)</span>
-                                </label>
-                                <div class="input-group">
-                                    <input asp-for="AuthorizationCodeLifetime" 
-                                           type="number" 
-                                           class="input input-bordered focus:input-primary" 
-                                           min="1" />
-                                    <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
-                                </div>
-                                <label class="label">
-                                    <span asp-validation-for="AuthorizationCodeLifetime" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">Authorization code lifetime</span>
-</div>
-                            <!-- Device Code Lifetime -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.DeviceCodeLifetime)</span>
-                                </label>
-                                <div class="input-group">
-                                    <input asp-for="DeviceCodeLifetime" 
-                                           type="number" 
-                                           class="input input-bordered focus:input-primary" 
-                                           min="1" />
-                                    <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
-                                </div>
-                                <label class="label">
-                                    <span asp-validation-for="DeviceCodeLifetime" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">Device code lifetime</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- Token Settings -->
-                        <div class="divider">Token Settings</div>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Allow Access Tokens Via Browser -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AllowAccessTokensViaBrowser)</span>
-                                    <input asp-for="AllowAccessTokensViaBrowser" type="checkbox" class="toggle toggle-warning" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt text-warning">Allow access tokens in browser (implicit flow)</span>
-                                </label>
-                            </div>
-
-                            <!-- Include JWT ID -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.IncludeJwtId)</span>
-                                    <input asp-for="IncludeJwtId" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt">Include JWT ID claim in tokens</span>
-                                </label>
-                            </div>
-
-                            <!-- Always Send Client Claims -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AlwaysSendClientClaims)</span>
-                                    <input asp-for="AlwaysSendClientClaims" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt">Always include client claims</span>
-                                </label>
-                            </div>
-
-                            <!-- Always Include User Claims in ID Token -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AlwaysIncludeUserClaimsInIdToken)</span>
-                                    <input asp-for="AlwaysIncludeUserClaimsInIdToken" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt">Always include user claims in ID token</span>
-                                </label>
-                            </div>
-                        </div>
+                    <!-- Client URI -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ClientUri)</span>
+                        </label>
+                        <input asp-for="ClientUri" 
+                               type="url" 
+                               class="input input-bordered focus:input-primary" 
+                               placeholder="https://example.com" />
+                        <label class="label">
+                            <span asp-validation-for="ClientUri" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">Homepage URL of the client</span>
+                        </label>
                     </div>
 
-                    <input type="radio" name="client-tabs" role="tab" class="tab" aria-label="Advanced" />
-                    <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
-                        <h2 class="text-2xl font-bold mb-6 flex items-center">
-                            <i class="fas fa-cogs mr-2 text-primary"></i>
-                            Advanced Configuration
-                        </h2>
+                    <!-- Logo URI -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.LogoUri)</span>
+                        </label>
+                        <input asp-for="LogoUri" 
+                               type="url" 
+                               class="input input-bordered focus:input-primary" 
+                               placeholder="https://example.com/logo.png" />
+                        <label class="label">
+                            <span asp-validation-for="LogoUri" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">URL to client logo</span>
+                        </label>
+                    </div>
 
-                        <!-- Consent & Refresh Tokens -->
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <!-- Require Consent -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.RequireConsent)</span>
-                                    <input asp-for="RequireConsent" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt">Require user consent</span>
-                                </label>
-                            </div>
+                    <!-- Description -->
+                    <div class="form-control lg:col-span-2">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Description)</span>
+                        </label>
+                        <textarea asp-for="Description" 
+                                 class="textarea textarea-bordered focus:textarea-primary" 
+                                 placeholder="Brief description of the client application"
+                                 rows="3"></textarea>
+                        <label class="label">
+                            <span asp-validation-for="Description" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">Optional description</span>
+                        </label>
+                    </div>
+                </div>
 
-                            <!-- Allow Remember Consent -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AllowRememberConsent)</span>
-                                    <input asp-for="AllowRememberConsent" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt">Allow users to remember consent</span>
-                                </label>
-                            </div>
+                <!-- Basic Settings -->
+                <div class="divider">Basic Settings</div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Enabled -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Enabled)</span>
+                            <input asp-for="Enabled" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt text-base-content/60">Enable or disable this client</span>
+                        </label>
+                    </div>
 
-                            <!-- Consent Lifetime -->
-                            <div class="form-control">
-                                <label class="label">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ConsentLifetime)</span>
-                                </label>
-                                <div class="input-group">
-                                    <input asp-for="ConsentLifetime" 
-                                           type="number" 
-                                           class="input input-bordered focus:input-primary" />
-                                    <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
-                                </div>
-                                <label class="label">
-                                    <span asp-validation-for="ConsentLifetime" class="label-text-alt text-error"></span>
-                                    <span class="label-text-alt">Consent lifetime (null = no expiration)</span>
-                                </label>
-                            </div>
+                    <!-- Protocol Type -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ProtocolType)</span>
+                        </label>
+                        <input asp-for="ProtocolType" 
+                               type="text" 
+                               class="input input-bordered focus:input-primary" 
+                               readonly />
+                        <label class="label">
+                            <span class="label-text-alt text-base-content/60">Authentication protocol</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                            <!-- Allow Offline Access -->
-                            <div class="form-control">
-                                <label class="label cursor-pointer">
-                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AllowOfflineAccess)</span>
-                                    <input asp-for="AllowOfflineAccess" type="checkbox" class="toggle toggle-primary" />
-                                </label>
-                                <label class="label">
-                                    <span class="label-text-alt">Allow refresh tokens</span>
-                                </label>
-                            </div>
+        <!-- Authentication & Security Section -->
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-shield-alt mr-2 text-primary"></i>
+                    Authentication & Security
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Require Client Secret -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.RequireClientSecret)</span>
+                            <input asp-for="RequireClientSecret" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Require client secret for authentication</span>
+                        </label>
+                    </div>
+
+                    <!-- Require PKCE -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.RequirePkce)</span>
+                            <input asp-for="RequirePkce" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Require Proof Key for Code Exchange</span>
+                        </label>
+                    </div>
+
+                    <!-- Allow Plain Text PKCE -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AllowPlainTextPkce)</span>
+                            <input asp-for="AllowPlainTextPkce" type="checkbox" class="toggle toggle-warning" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt text-warning">Allow plain text PKCE (not recommended)</span>
+                        </label>
+                    </div>
+
+                    <!-- Enable Local Login -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.EnableLocalLogin)</span>
+                            <input asp-for="EnableLocalLogin" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Allow local username/password login</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Token Configuration Section -->
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-key mr-2 text-primary"></i>
+                    Token Configuration
+                </h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Access Token Lifetime -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AccessTokenLifetime)</span>
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="AccessTokenLifetime" 
+                                   type="number" 
+                                   class="input input-bordered focus:input-primary" 
+                                   min="1" />
+                            <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
                         </div>
+                        <label class="label">
+                            <span asp-validation-for="AccessTokenLifetime" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">Access token lifetime</span>
+                        </label>
+                    </div>
 
-                        <!-- Additional Fields (Hidden/Collapsed by default) -->
-                        <div class="collapse collapse-arrow bg-base-200 mt-6">
-                            <input type="checkbox" />
-                            <div class="collapse-title text-lg font-medium">
-                                Additional Settings
-                            </div>
-                            <div class="collapse-content">
-                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
-                                    <!-- All other fields in a more compact format -->
-                                    @{
-                                        var additionalFields = new[]
-                                        {
-                                            (nameof(Model.AbsoluteRefreshTokenLifetime), "Absolute refresh token lifetime", "seconds"),
-                                            (nameof(Model.RefreshTokenExpiration), "Refresh token expiration", ""),
-                                            (nameof(Model.RefreshTokenUsage), "Refresh token usage", ""),
-                                            (nameof(Model.SlidingRefreshTokenLifetime), "Sliding refresh token lifetime", "seconds"),
-                                            (nameof(Model.BackChannelLogoutUri), "Back channel logout URI", ""),
-                                            (nameof(Model.FrontChannelLogoutUri), "Front channel logout URI", ""),
-                                            (nameof(Model.ClientClaimsPrefix), "Client claims prefix", ""),
-                                            (nameof(Model.PairWiseSubjectSalt), "Pairwise subject salt", ""),
-                                            (nameof(Model.UserCodeType), "User code type", ""),
-                                            (nameof(Model.UserSsoLifetime), "User SSO lifetime", "seconds")
-                                        };
+                    <!-- Identity Token Lifetime -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.IdentityTokenLifetime)</span>
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="IdentityTokenLifetime" 
+                                   type="number" 
+                                   class="input input-bordered focus:input-primary" 
+                                   min="1" />
+                            <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
+                        </div>
+                        <label class="label">
+                            <span asp-validation-for="IdentityTokenLifetime" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">Identity token lifetime</span>
+                        </label>
+                    </div>
 
-                                        var checkboxFields = new[]
-                                        {
-                                            (nameof(Model.UpdateAccessTokenClaimsOnRefresh), "Update access token claims on refresh"),
-                                            (nameof(Model.BackChannelLogoutSessionRequired), "Back channel logout session required"),
-                                            (nameof(Model.FrontChannelLogoutSessionRequired), "Front channel logout session required"),
-                                            (nameof(Model.NonEditable), "Non-editable")
-                                        };
-                                    }
+                    <!-- Authorization Code Lifetime -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AuthorizationCodeLifetime)</span>
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="AuthorizationCodeLifetime" 
+                                   type="number" 
+                                   class="input input-bordered focus:input-primary" 
+                                   min="1" />
+                            <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
+                        </div>
+                        <label class="label">
+                            <span asp-validation-for="AuthorizationCodeLifetime" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">Authorization code lifetime</span>
+                        </label>
+                    </div>
 
-                                    @foreach (var (property, displayName, unit) in additionalFields)
+                    <!-- Device Code Lifetime -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.DeviceCodeLifetime)</span>
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="DeviceCodeLifetime" 
+                                   type="number" 
+                                   class="input input-bordered focus:input-primary" 
+                                   min="1" />
+                            <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
+                        </div>
+                        <label class="label">
+                            <span asp-validation-for="DeviceCodeLifetime" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">Device code lifetime</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Token Settings -->
+                <div class="divider">Token Settings</div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Allow Access Tokens Via Browser -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AllowAccessTokensViaBrowser)</span>
+                            <input asp-for="AllowAccessTokensViaBrowser" type="checkbox" class="toggle toggle-warning" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt text-warning">Allow access tokens in browser (implicit flow)</span>
+                        </label>
+                    </div>
+
+                    <!-- Include JWT ID -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.IncludeJwtId)</span>
+                            <input asp-for="IncludeJwtId" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Include JWT ID claim in tokens</span>
+                        </label>
+                    </div>
+
+                    <!-- Always Send Client Claims -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AlwaysSendClientClaims)</span>
+                            <input asp-for="AlwaysSendClientClaims" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Always include client claims</span>
+                        </label>
+                    </div>
+
+                    <!-- Always Include User Claims in ID Token -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AlwaysIncludeUserClaimsInIdToken)</span>
+                            <input asp-for="AlwaysIncludeUserClaimsInIdToken" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Always include user claims in ID token</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Configuration Section -->
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body">
+                <h2 class="text-2xl font-bold mb-6 flex items-center">
+                    <i class="fas fa-cogs mr-2 text-primary"></i>
+                    Advanced Configuration
+                </h2>
+
+                <!-- Consent & Refresh Tokens -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Require Consent -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.RequireConsent)</span>
+                            <input asp-for="RequireConsent" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Require user consent</span>
+                        </label>
+                    </div>
+
+                    <!-- Allow Remember Consent -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AllowRememberConsent)</span>
+                            <input asp-for="AllowRememberConsent" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Allow users to remember consent</span>
+                        </label>
+                    </div>
+
+                    <!-- Consent Lifetime -->
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ConsentLifetime)</span>
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="ConsentLifetime" 
+                                   type="number" 
+                                   class="input input-bordered focus:input-primary" />
+                            <span class="bg-base-200 px-3 flex items-center text-sm">seconds</span>
+                        </div>
+                        <label class="label">
+                            <span asp-validation-for="ConsentLifetime" class="label-text-alt text-error"></span>
+                            <span class="label-text-alt">Consent lifetime (null = no expiration)</span>
+                        </label>
+                    </div>
+
+                    <!-- Allow Offline Access -->
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.AllowOfflineAccess)</span>
+                            <input asp-for="AllowOfflineAccess" type="checkbox" class="toggle toggle-primary" />
+                        </label>
+                        <label class="label">
+                            <span class="label-text-alt">Allow refresh tokens</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Additional Fields (Collapsible Section) -->
+                <div class="collapse collapse-arrow bg-base-200 mt-6">
+                    <input type="checkbox" />
+                    <div class="collapse-title text-lg font-medium">
+                        <i class="fas fa-sliders-h mr-2"></i>
+                        Additional Settings
+                    </div>
+                    <div class="collapse-content">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-4">
+                            <!-- All other fields in a more compact format -->
+                            @{
+                                var additionalFields = new[]
+                                {
+                                    (nameof(Model.AbsoluteRefreshTokenLifetime), "Absolute refresh token lifetime", "seconds"),
+                                    (nameof(Model.RefreshTokenExpiration), "Refresh token expiration", ""),
+                                    (nameof(Model.RefreshTokenUsage), "Refresh token usage", ""),
+                                    (nameof(Model.SlidingRefreshTokenLifetime), "Sliding refresh token lifetime", "seconds"),
+                                    (nameof(Model.BackChannelLogoutUri), "Back channel logout URI", ""),
+                                    (nameof(Model.FrontChannelLogoutUri), "Front channel logout URI", ""),
+                                    (nameof(Model.ClientClaimsPrefix), "Client claims prefix", ""),
+                                    (nameof(Model.PairWiseSubjectSalt), "Pairwise subject salt", ""),
+                                    (nameof(Model.UserCodeType), "User code type", ""),
+                                    (nameof(Model.UserSsoLifetime), "User SSO lifetime", "seconds")
+                                };
+
+                                var checkboxFields = new[]
+                                {
+                                    (nameof(Model.UpdateAccessTokenClaimsOnRefresh), "Update access token claims on refresh"),
+                                    (nameof(Model.BackChannelLogoutSessionRequired), "Back channel logout session required"),
+                                    (nameof(Model.FrontChannelLogoutSessionRequired), "Front channel logout session required"),
+                                    (nameof(Model.NonEditable), "Non-editable")
+                                };
+                            }
+
+                            @foreach (var (property, displayName, unit) in additionalFields)
+                            {
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text">@displayName</span>
+                                    </label>
+                                    @if (!string.IsNullOrEmpty(unit))
                                     {
-                                        <div class="form-control">
-                                            <label class="label">
-                                                <span class="label-text">@displayName</span>
-                                            </label>
-                                            @if (!string.IsNullOrEmpty(unit))
-                                            {
-                                                <div class="input-group">
-                                                    <input name="@property" 
-                                                           type="text" 
-                                                           class="input input-bordered input-sm focus:input-primary" />
-                                                    <span class="bg-base-200 px-2 flex items-center text-xs">@unit</span>
-                                                </div>
-                                            }
-                                            else
-                                            {
-                                                <input name="@property" 
-                                                       type="text" 
-                                                       class="input input-bordered input-sm focus:input-primary" />
-                                            }
+                                        <div class="input-group">
+                                            <input name="@property" 
+                                                   type="text" 
+                                                   class="input input-bordered input-sm focus:input-primary" />
+                                            <span class="bg-base-200 px-2 flex items-center text-xs">@unit</span>
                                         </div>
                                     }
-
-                                    @foreach (var (property, displayName) in checkboxFields)
+                                    else
                                     {
-                                        <div class="form-control">
-                                            <label class="label cursor-pointer">
-                                                <span class="label-text">@displayName</span>
-                                                <input name="@property" type="checkbox" class="toggle toggle-sm" />
-                                            </label>
-                                        </div>
+                                        <input name="@property" 
+                                               type="text" 
+                                               class="input input-bordered input-sm focus:input-primary" />
                                     }
                                 </div>
-                            </div>
+                            }
+
+                            @foreach (var (property, displayName) in checkboxFields)
+                            {
+                                <div class="form-control">
+                                    <label class="label cursor-pointer">
+                                        <span class="label-text">@displayName</span>
+                                        <input name="@property" type="checkbox" class="toggle toggle-sm" />
+                                    </label>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

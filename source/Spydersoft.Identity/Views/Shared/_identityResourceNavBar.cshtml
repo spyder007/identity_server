@@ -1,13 +1,13 @@
 ﻿@using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels
 @model IdentityResourceNavBarViewModel
 
-<nav>
-    <ul class="nav nav-tabs">
-        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="IdentityResources" asp-action="Edit" asp-route-id="@Model.Id">Main</a></li>
+<nav class="mb-6">
+    <div class="tabs tabs-bordered">
+        <a class="tab tab-bordered" asp-area="" asp-controller="IdentityResources" asp-action="Edit" asp-route-id="@Model.Id">Main</a>
         @if (Model.Id > 0)
         {
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="IdentityResourceClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="IdentityResourceProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a></li>
+            <a class="tab tab-bordered" asp-area="" asp-controller="IdentityResourceClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="IdentityResourceProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a>
         }
-    </ul>
+    </div>
 </nav>

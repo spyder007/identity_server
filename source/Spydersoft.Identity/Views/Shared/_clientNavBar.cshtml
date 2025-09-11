@@ -1,20 +1,20 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ClientViewModels
 @model NavBarViewModel
 
-<nav>
-    <ul class="nav nav-tabs">
-        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Clients" asp-action="Edit" asp-route-id="@Model.Id">Main</a></li>
+<nav class="mb-6">
+    <div class="tabs tabs-bordered">
+        <a class="tab tab-bordered" asp-area="" asp-controller="Clients" asp-action="Edit" asp-route-id="@Model.Id">Main</a>
         @if (Model.Id > 0)
         {
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ClientScopes" asp-action="Index" asp-route-id="@Model.Id">Allowed Scopes</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ClientRedirects" asp-action="Index" asp-route-id="@Model.Id">Redirect URIs</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ClientClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ClientCorsOrigins" asp-action="Index" asp-route-id="@Model.Id">Cors Origins</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ClientGrantTypes" asp-action="Index" asp-route-id="@Model.Id">Grant Types</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ClientIdpRestrictions" asp-action="Index" asp-route-id="@Model.Id">IDP Restrictions</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ClientPostLogoutRedirectUris" asp-action="Index" asp-route-id="@Model.Id">Post Logout URIs</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ClientProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a></li>
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ClientSecrets" asp-action="Index" asp-route-id="@Model.Id">Secrets</a></li>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ClientScopes" asp-action="Index" asp-route-id="@Model.Id">Allowed Scopes</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ClientRedirects" asp-action="Index" asp-route-id="@Model.Id">Redirect URIs</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ClientClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ClientCorsOrigins" asp-action="Index" asp-route-id="@Model.Id">Cors Origins</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ClientGrantTypes" asp-action="Index" asp-route-id="@Model.Id">Grant Types</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ClientIdpRestrictions" asp-action="Index" asp-route-id="@Model.Id">IDP Restrictions</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ClientPostLogoutRedirectUris" asp-action="Index" asp-route-id="@Model.Id">Post Logout URIs</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ClientProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ClientSecrets" asp-action="Index" asp-route-id="@Model.Id">Secrets</a>
         }
-    </ul>
+    </div>
 </nav>

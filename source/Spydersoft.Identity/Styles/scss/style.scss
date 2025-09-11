@@ -101,30 +101,79 @@
     @apply loading loading-spinner loading-lg text-blue-600;
   }
 
-  // Menu navigation styles
+  // Menu navigation styles - Fixed to prevent double arrows
   .menu details > summary {
     list-style: none;
     cursor: pointer;
   }
   
+  // Hide the default browser disclosure marker
   .menu details > summary::-webkit-details-marker {
     display: none;
   }
   
-  .menu details > summary::after {
-    content: '›';
-    font-size: 1.2em;
-    margin-left: auto;
-    transition: transform 0.2s ease;
+  // Hide Firefox disclosure marker
+  .menu details > summary::-moz-list-bullet {
+    display: none;
   }
   
-  .menu details[open] > summary::after {
-    transform: rotate(90deg);
-  }
+  // Remove custom arrow since DaisyUI provides its own
+  // Let DaisyUI handle the arrow styling through its menu component
 
   .menu li a.router-link-active,
   .menu li a[aria-current="page"] {
     @apply bg-blue-600 text-white;
+  }
+
+  // Tab navigation styles for admin pages
+  .tabs .tab {
+    @apply transition-colors duration-200;
+    
+    &:hover {
+      @apply bg-blue-50 text-blue-600;
+    }
+    
+    // Active tab styling - this will be applied via JavaScript or server-side logic
+    &.tab-active {
+      @apply bg-blue-600 text-white border-blue-600;
+    }
+  }
+  
+  // Helper class for current page tabs
+  .tab-current {
+    @apply bg-blue-600 text-white border-blue-600;
+  }
+
+  // Enhanced tab styling for form pages
+  .tabs-boxed {
+    @apply gap-2 p-2;
+    
+    .tab {
+      @apply min-w-max px-4 py-2 font-medium text-sm;
+      border-radius: 0.375rem;
+      
+      &:checked,
+      &[aria-selected="true"] {
+        @apply bg-blue-600 text-white shadow-md;
+      }
+      
+      &:not(:checked):hover {
+        @apply bg-blue-50 text-blue-600;
+      }
+    }
+  }
+  
+  // Tab content areas
+  .tab-content-area {
+    @apply transition-opacity duration-300;
+    
+    &.hidden {
+      @apply opacity-0 pointer-events-none;
+    }
+    
+    &:not(.hidden) {
+      @apply opacity-100;
+    }
   }
 }
 

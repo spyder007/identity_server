@@ -1,15 +1,15 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 @model ApiResourceNavBarViewModel
 
-    <nav>
-        <ul class="nav nav-tabs">
-            <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiResources" asp-action="Edit" asp-route-id="@Model.Id">Main</a></li>
-            @if (Model.Id > 0)
-            {
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiResourceScopes" asp-action="Index" asp-route-id="@Model.Id">Scopes</a></li>
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiResourceClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a></li>
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiResourceProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a></li>
-                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="ApiResourceSecrets" asp-action="Index" asp-route-id="@Model.Id">Secrets</a></li>
-            }
-        </ul>
-    </nav>
+<nav class="mb-6">
+    <div class="tabs tabs-bordered">
+        <a class="tab tab-bordered" asp-area="" asp-controller="ApiResources" asp-action="Edit" asp-route-id="@Model.Id">Main</a>
+        @if (Model.Id > 0)
+        {
+            <a class="tab tab-bordered" asp-area="" asp-controller="ApiResourceScopes" asp-action="Index" asp-route-id="@Model.Id">Scopes</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ApiResourceClaims" asp-action="Index" asp-route-id="@Model.Id">Claims</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ApiResourceProperties" asp-action="Index" asp-route-id="@Model.Id">Properties</a>
+            <a class="tab tab-bordered" asp-area="" asp-controller="ApiResourceSecrets" asp-action="Index" asp-route-id="@Model.Id">Secrets</a>
+        }
+    </div>
+</nav>
