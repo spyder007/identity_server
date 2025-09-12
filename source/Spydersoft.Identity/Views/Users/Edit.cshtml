@@ -122,7 +122,7 @@
                                     </div>
                                     <a asp-action="DeleteRole" asp-route-role="@role" asp-route-userid="@Model.User.Id"
                                         class="btn btn-ghost btn-sm text-error hover:bg-error/10" title="Remove role"
-                                        onclick="return confirm('Are you sure you want to remove this role?')">
+                                        data-confirm-action="Are you sure you want to remove this role?">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
@@ -179,7 +179,7 @@
                                         <span class="font-medium text-sm">@claim.Type</span>
                                         <a asp-action="DeleteClaim" asp-route-claimtype="@claim.Type" asp-route-userid="@Model.User.Id"
                                             class="btn btn-ghost btn-xs text-error hover:bg-error/10" title="Remove claim"
-                                            onclick="return confirm('Are you sure you want to remove this claim?')">
+                                            data-confirm-action="Are you sure you want to remove this claim?">
                                             <i class="fas fa-trash"></i>
                                         </a>
                                     </div>

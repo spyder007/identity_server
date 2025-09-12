@@ -7,6 +7,25 @@
     'use strict';
 
     /**
+     * Immediate theme initialization to prevent FOUC
+     * This must run as early as possible
+     */
+    function initializeThemeImmediate() {
+        try {
+            const savedTheme = localStorage.getItem('spydersoft-theme') || 'identity';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        } catch (e) {
+            // Fallback if localStorage is not available
+            document.documentElement.setAttribute('data-theme', 'identity');
+        }
+    }
+
+    // Run theme initialization immediately if document is still loading
+    if (document.readyState === 'loading') {
+        initializeThemeImmediate();
+    }
+
+    /**
      * Enhanced theme switching functionality
      * Moved from inline script in _Layout.cshtml
      */
@@ -116,6 +135,197 @@
             }
         } catch (e) {
             console.error('Failed to initialize theme system:', e);
+        }
+    }
+
+    /**
+     * QR Code generation for authenticator setup
+     * Moved from Views/Manage/EnableAuthenticator.cshtml
+     */
+    function initializeQRCodeGeneration() {
+        const qrCodeElement = document.getElementById('qrCode');
+        const qrCodeData = document.getElementById('qrCodeData');
+        
+        if (qrCodeElement && qrCodeData && typeof QRCode !== 'undefined') {
+            const url = qrCodeData.getAttribute('data-url');
+            if (url) {
+                qrCodeElement.innerHTML = '';
+                new QRCode(qrCodeElement, {
+                    text: url,
+                    width: 200,
+                    height: 200,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff'
+                });
+            }
+        }
+    }
+
+    /**
+     * Copy to clipboard functionality
+     * Moved from Views/Manage/EnableAuthenticator.cshtml
+     */
+    window.copyToClipboard = function(elementId) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        
+        element.select();
+        element.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(element.value).then(function() {
+            // Show temporary success message
+            const btn = element.nextElementSibling;
+            if (btn) {
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check text-success"></i>';
+                setTimeout(() => {
+                    btn.innerHTML = originalIcon;
+                }, 2000);
+            }
+        });
+    };
+
+    /**
+     * Initialize copy buttons with data attributes
+     */
+    function initializeCopyButtons() {
+        const copyButtons = document.querySelectorAll('[data-copy-target]');
+        copyButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-copy-target');
+                window.copyToClipboard(targetId);
+            });
+        });
+    }
+
+    /**
+     * User management functionality
+     * Moved from Views/Users/Index.cshtml
+     */
+    function initializeUserSearch() {
+        const searchInput = document.getElementById('userSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    if (row.cells && row.cells.length >= 2) {
+                        const username = row.cells[0].textContent.toLowerCase();
+                        const email = row.cells[1].textContent.toLowerCase();
+                        
+                        if (username.includes(searchTerm) || email.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    /**
+     * Initialize delete buttons with data attributes
+     */
+    function initializeDeleteButtons() {
+        const deleteButtons = document.querySelectorAll('[data-delete-id]');
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const itemId = this.getAttribute('data-delete-id');
+                const itemName = this.getAttribute('data-delete-name');
+                window.confirmDelete(itemId, itemName);
+            });
+        });
+    }
+
+    /**
+     * Confirmation dialogs for delete operations
+     * Moved from various views
+     */
+    window.confirmDelete = function(itemId, itemName) {
+        const modal = document.getElementById('deleteModal');
+        const nameElement = document.getElementById('deleteUserName') || document.getElementById('deleteRoleName');
+        const confirmBtn = document.getElementById('deleteConfirmBtn');
+        
+        if (modal && nameElement && confirmBtn) {
+            nameElement.textContent = itemName;
+            
+            // Determine the correct URL based on current page
+            let deleteUrl = '';
+            if (window.location.pathname.includes('/Users/')) {
+                deleteUrl = window.SpydersoftRoutes?.userDelete?.replace('{id}', itemId) || '/Users/Delete/' + itemId;
+            } else if (window.location.pathname.includes('/UserRoles/')) {
+                deleteUrl = window.SpydersoftRoutes?.roleDelete?.replace('{id}', itemId) || '/UserRoles/Delete?id=' + itemId;
+            } else if (window.location.pathname.includes('/Scopes/')) {
+                deleteUrl = window.SpydersoftRoutes?.scopeDelete?.replace('{id}', itemId) || '/Scopes/Delete/' + itemId;
+            }
+            
+            confirmBtn.href = deleteUrl;
+            modal.showModal();
+        }
+    };
+
+    /**
+     * Scope filtering functionality
+     * Moved from Views/Scopes/Index.cshtml
+     */
+    window.filterScopes = function(filterType) {
+        const rows = document.querySelectorAll('tbody tr[data-scope]');
+        
+        rows.forEach(row => {
+            const scope = JSON.parse(row.getAttribute('data-scope'));
+            let show = true;
+            
+            switch (filterType) {
+                case 'enabled':
+                    show = scope.enabled === true;
+                    break;
+                case 'disabled':
+                    show = scope.enabled === false;
+                    break;
+                case 'emphasized':
+                    show = scope.emphasize === true;
+                    break;
+                case 'required':
+                    show = scope.required === true;
+                    break;
+                case 'all':
+                default:
+                    show = true;
+                    break;
+            }
+            
+            row.style.display = show ? '' : 'none';
+        });
+    };
+
+    /**
+     * Enhanced confirm with return value
+     * For simple confirmations that need return values
+     */
+    window.confirmAction = function(message) {
+        return confirm(message);
+    };
+
+    /**
+     * Authenticator setup enhancements
+     * Moved from Views/Manage/EnableAuthenticator.cshtml
+     */
+    function initializeAuthenticatorSetup() {
+        // Auto-focus on code input when step 3 is opened
+        const codeInput = document.querySelector('input[name="Code"]');
+        if (codeInput) {
+            const accordionInputs = document.querySelectorAll('input[name="setup-accordion"]');
+            if (accordionInputs.length >= 3) {
+                const step3Radio = accordionInputs[2];
+                step3Radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        setTimeout(() => codeInput.focus(), 100);
+                    }
+                });
+            }
         }
     }
 
@@ -417,6 +627,14 @@
             initializeTooltips();
             initializeKeyboardNavigation();
             initializePerformanceMonitoring();
+            
+            // Page-specific initializations
+            initializeQRCodeGeneration();
+            initializeUserSearch();
+            initializeAuthenticatorSetup();
+            initializeCopyButtons();
+            initializeDeleteButtons();
+            initializeConfirmButtons();
 
             // Listen for theme changes
             document.addEventListener('themeChanged', function(event) {
@@ -447,7 +665,14 @@
         updateThemeElements: updateThemeElements,
         initializeManageNavigation: initializeManageNavigation,
         initializeAccountManagement: initializeAccountManagement,
-        initializeThemeSystem: initializeThemeSystem
+        initializeThemeSystem: initializeThemeSystem,
+        initializeThemeImmediate: initializeThemeImmediate,
+        initializeQRCodeGeneration: initializeQRCodeGeneration,
+        initializeUserSearch: initializeUserSearch,
+        initializeAuthenticatorSetup: initializeAuthenticatorSetup,
+        initializeCopyButtons: initializeCopyButtons,
+        initializeDeleteButtons: initializeDeleteButtons,
+        initializeConfirmButtons: initializeConfirmButtons
     };
 
 })();

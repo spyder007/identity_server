@@ -74,7 +74,7 @@
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <button onclick="confirmDelete('@role.Id', '@role.Name')" class="flex items-center text-error">
+                                                        <button data-delete-id="@role.Id" data-delete-name="@role.Name" class="flex items-center text-error">
                                                             <i class="fas fa-trash mr-2"></i>
                                                             Delete Role
                                                         </button>
@@ -255,36 +255,6 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<dialog id="deleteModal" class="modal">
-    <div class="modal-box">
-        <h3 class="font-bold text-lg">
-            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
-            Confirm Role Deletion
-        </h3>
-        <p class="py-4">
-            Are you sure you want to delete the role: 
-            <br><strong id="deleteRoleName"></strong>
-            <br><br>This will remove the role from all users and cannot be undone.
-        </p>
-        <div class="modal-action">
-            <form method="dialog">
-                <button class="btn">Cancel</button>
-            </form>
-            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
-                <i class="fas fa-trash mr-2"></i>
-                Delete Role
-            </a>
-        </div>
-    </div>
-</dialog>
-
 @section Scripts {
-    <script>
-        function confirmDelete(roleId, roleName) {
-            document.getElementById('deleteRoleName').textContent = roleName;
-            document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete")?id=' + roleId;
-            document.getElementById('deleteModal').showModal();
-        }
-    </script>
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

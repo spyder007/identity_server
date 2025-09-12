@@ -132,7 +132,7 @@
                                             </label>
                                             <div class="flex space-x-2">
                                                 <input type="text" value="@Model.SharedKey" class="input input-bordered flex-1" readonly id="secretKey" />
-                                                <button class="btn btn-outline" onclick="copyToClipboard('secretKey')">
+                                                <button class="btn btn-outline" data-copy-target="secretKey">
                                                     <i class="fas fa-copy"></i>
                                                 </button>
                                             </div>
@@ -287,55 +287,5 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-
     <script type="text/javascript" src="~/lib/davidshimjs-qrcodejs/qrcode.js"></script>
-    
-    <script>
-        // Generate QR Code
-        document.addEventListener('DOMContentLoaded', function() {
-            const qrCodeElement = document.getElementById('qrCode');
-            const qrCodeData = document.getElementById('qrCodeData');
-            
-            if (qrCodeElement && qrCodeData) {
-                const url = qrCodeData.getAttribute('data-url');
-                if (url) {
-                    qrCodeElement.innerHTML = '';
-                    new QRCode(qrCodeElement, {
-                        text: url,
-                        width: 200,
-                        height: 200,
-                        colorDark: '#000000',
-                        colorLight: '#ffffff'
-                    });
-                }
-            }
-        });
-
-        // Copy to clipboard function
-        function copyToClipboard(elementId) {
-            const element = document.getElementById(elementId);
-            element.select();
-            element.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(element.value).then(function() {
-                // Show temporary success message
-                const btn = element.nextElementSibling;
-                const originalIcon = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-check text-success"></i>';
-                setTimeout(() => {
-                    btn.innerHTML = originalIcon;
-                }, 2000);
-            });
-        }
-
-        // Auto-focus on code input when step 3 is opened
-        const codeInput = document.querySelector('input[name="Code"]');
-        if (codeInput) {
-            const step3Radio = document.querySelectorAll('input[name="setup-accordion"]')[2];
-            step3Radio.addEventListener('change', function() {
-                if (this.checked) {
-                    setTimeout(() => codeInput.focus(), 100);
-                }
-            });
-        }
-    </script>
 }

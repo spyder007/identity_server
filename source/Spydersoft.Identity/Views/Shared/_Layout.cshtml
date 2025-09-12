@@ -23,19 +23,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Theme initialization script - must be in head to prevent FOUC -->
-    <script>
-        // Initialize theme immediately to prevent flash of wrong theme
-        (function() {
-            try {
-                const savedTheme = localStorage.getItem('spydersoft-theme') || 'identity';
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            } catch (e) {
-                // Fallback if localStorage is not available
-                document.documentElement.setAttribute('data-theme', 'identity');
-            }
-        })();
-    </script>
+    <!-- Main JavaScript - Load early to prevent FOUC -->
+    <environment names="Development">
+        <script src="~/js/main.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/js/main.js" asp-append-version="true"></script>
+    </environment>
 </head>
 <body class="bg-base-100 text-base-content">
     <!-- Mobile drawer toggle -->
@@ -75,16 +69,14 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Additional Scripts -->
     <environment names="Development">
         <script src="~/lib/moment/moment.min.js"></script>
         <script src="~/js/polyfill.js"></script>
-        <script src="~/js/main.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/moment/moment.min.js"></script>
         <script src="~/js/polyfill.js"></script>
-        <script src="~/js/main.js"></script>
     </environment>
 
     @RenderSection("scripts", required: false)
