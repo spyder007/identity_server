@@ -31,6 +31,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\js\main.js">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Data\Migrations\" />
     <Folder Include="Models\UserAdmin\" />
     <Folder Include="Styles\" />

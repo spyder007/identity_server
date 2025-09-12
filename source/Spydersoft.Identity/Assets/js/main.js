@@ -6,10 +6,117 @@
 (function() {
     'use strict';
 
-    // Ensure theme system is available
-    if (!window.SpydersoftTheme) {
-        console.error('SpydersoftTheme not found. Theme functionality may not work properly.');
-        return;
+    /**
+     * Enhanced theme switching functionality
+     * Moved from inline script in _Layout.cshtml
+     */
+    window.SpydersoftTheme = (function() {
+        'use strict';
+        
+        const STORAGE_KEY = 'spydersoft-theme';
+        const DEFAULT_THEME = 'identity';
+        const DARK_THEME = 'dark';
+        
+        function isStorageAvailable() {
+            try {
+                const test = '__storage_test__';
+                localStorage.setItem(test, test);
+                localStorage.removeItem(test);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+        
+        function getTheme() {
+            if (isStorageAvailable()) {
+                return localStorage.getItem(STORAGE_KEY) || DEFAULT_THEME;
+            }
+            // Fallback to checking the current data-theme attribute
+            return document.documentElement.getAttribute('data-theme') || DEFAULT_THEME;
+        }
+        
+        function setTheme(theme) {
+            try {
+                // Validate theme
+                if (theme !== DEFAULT_THEME && theme !== DARK_THEME) {
+                    theme = DEFAULT_THEME;
+                }
+                
+                document.documentElement.setAttribute('data-theme', theme);
+                
+                if (isStorageAvailable()) {
+                    localStorage.setItem(STORAGE_KEY, theme);
+                }
+                
+                // Dispatch custom event for other components
+                if (typeof CustomEvent !== 'undefined') {
+                    const event = new CustomEvent('themeChanged', { 
+                        detail: { theme: theme } 
+                    });
+                    document.dispatchEvent(event);
+                }
+                
+                return true;
+            } catch (e) {
+                console.warn('Failed to set theme:', e);
+                return false;
+            }
+        }
+        
+        function toggleTheme() {
+            const currentTheme = getTheme();
+            const newTheme = currentTheme === DEFAULT_THEME ? DARK_THEME : DEFAULT_THEME;
+            return setTheme(newTheme);
+        }
+        
+        function initializeTheme() {
+            const savedTheme = getTheme();
+            setTheme(savedTheme);
+        }
+        
+        // Public API
+        return {
+            get: getTheme,
+            set: setTheme,
+            toggle: toggleTheme,
+            init: initializeTheme,
+            isStorageAvailable: isStorageAvailable
+        };
+    })();
+
+    // Global function for backward compatibility
+    window.toggleTheme = function() {
+        return window.SpydersoftTheme.toggle();
+    };
+
+    /**
+     * Initialize theme system
+     * Moved from inline script in _Layout.cshtml
+     */
+    function initializeThemeSystem() {
+        try {
+            window.SpydersoftTheme.init();
+            
+            // Add click listeners to any theme toggle buttons
+            const themeToggleButtons = document.querySelectorAll('[data-toggle-theme], .theme-toggle');
+            themeToggleButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    window.SpydersoftTheme.toggle();
+                });
+            });
+            
+            // Debug info for development
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.log('Spydersoft Theme initialized:', {
+                    currentTheme: window.SpydersoftTheme.get(),
+                    storageAvailable: window.SpydersoftTheme.isStorageAvailable()
+                });
+            }
+        } catch (e) {
+            console.error('Failed to initialize theme system:', e);
+        }
     }
 
     /**
@@ -128,6 +235,110 @@
     }
 
     /**
+     * Initialize manage section navigation
+     */
+    function initializeManageNavigation() {
+        // Enhanced tab navigation for manage section
+        const manageTabs = document.querySelectorAll('.tabs .tab');
+        
+        manageTabs.forEach(function(tab) {
+            // Add hover effects and focus management
+            tab.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('tab-current')) {
+                    this.style.backgroundColor = 'rgb(219 234 254)'; // blue-100
+                }
+            });
+            
+            tab.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('tab-current')) {
+                    this.style.backgroundColor = '';
+                }
+            });
+            
+            // Add keyboard navigation
+            tab.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    this.click();
+                }
+            });
+        });
+
+        // Add visual feedback when navigating between manage pages
+        const manageLinks = document.querySelectorAll('.tabs .tab[href]');
+        manageLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                // Add a subtle loading effect
+                const icon = this.querySelector('i');
+                if (icon) {
+                    icon.classList.add('fa-spin');
+                    setTimeout(() => {
+                        icon.classList.remove('fa-spin');
+                    }, 500);
+                }
+            });
+        });
+    }
+
+    /**
+     * Initialize account management enhancements
+     */
+    function initializeAccountManagement() {
+        // Enhanced form validation feedback
+        const inputs = document.querySelectorAll('.form-control, .input');
+        inputs.forEach(function(input) {
+            // Add real-time validation feedback
+            input.addEventListener('blur', function() {
+                const validationSpan = this.parentNode.querySelector('.text-danger, .text-error');
+                if (validationSpan && validationSpan.textContent.trim()) {
+                    this.classList.add('input-error');
+                } else {
+                    this.classList.remove('input-error');
+                }
+            });
+            
+            input.addEventListener('input', function() {
+                // Remove error state when user starts typing
+                this.classList.remove('input-error');
+            });
+        });
+
+        // Enhanced password visibility toggle
+        const passwordInputs = document.querySelectorAll('input[type="password"]');
+        passwordInputs.forEach(function(input) {
+            // Add password visibility toggle if it doesn't exist
+            if (!input.parentNode.querySelector('.password-toggle')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'relative';
+                input.parentNode.insertBefore(wrapper, input);
+                wrapper.appendChild(input);
+                
+                const toggleButton = document.createElement('button');
+                toggleButton.type = 'button';
+                toggleButton.className = 'password-toggle absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700';
+                toggleButton.innerHTML = '<i class="fas fa-eye"></i>';
+                toggleButton.setAttribute('aria-label', 'Toggle password visibility');
+                
+                toggleButton.addEventListener('click', function() {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    
+                    const icon = this.querySelector('i');
+                    if (type === 'password') {
+                        icon.className = 'fas fa-eye';
+                        this.setAttribute('aria-label', 'Show password');
+                    } else {
+                        icon.className = 'fas fa-eye-slash';
+                        this.setAttribute('aria-label', 'Hide password');
+                    }
+                });
+                
+                wrapper.appendChild(toggleButton);
+            }
+        });
+    }
+
+    /**
      * Initialize tooltip functionality
      */
     function initializeTooltips() {
@@ -194,10 +405,15 @@
      */
     function initialize() {
         try {
+            // Initialize theme system first (moved from inline script)
+            initializeThemeSystem();
+            
             enhanceThemeToggle();
             initializeDrawer();
             initializeDropdowns();
             enhanceForms();
+            initializeManageNavigation();
+            initializeAccountManagement();
             initializeTooltips();
             initializeKeyboardNavigation();
             initializePerformanceMonitoring();
@@ -208,7 +424,9 @@
             });
 
             // Initial theme element update
-            updateThemeElements(window.SpydersoftTheme.get());
+            if (window.SpydersoftTheme) {
+                updateThemeElements(window.SpydersoftTheme.get());
+            }
 
             console.log('Spydersoft Identity - Main JavaScript initialized');
         } catch (error) {
@@ -226,7 +444,10 @@
     // Expose utilities globally for other scripts
     window.SpydersoftUI = {
         enhanceThemeToggle: enhanceThemeToggle,
-        updateThemeElements: updateThemeElements
+        updateThemeElements: updateThemeElements,
+        initializeManageNavigation: initializeManageNavigation,
+        initializeAccountManagement: initializeAccountManagement,
+        initializeThemeSystem: initializeThemeSystem
     };
 
 })();

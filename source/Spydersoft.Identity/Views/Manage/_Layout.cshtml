@@ -2,18 +2,19 @@
     Layout = "/Views/Shared/_Layout.cshtml";
 }
 
-<div class="card">
-    <div class="card-header">
-        <h4>Manage your account</h4>
-    </div>
+<div class="card bg-base-100 shadow-xl border border-base-300">
     <div class="card-body">
+        <h2 class="card-title text-2xl font-bold mb-6 flex items-center">
+            <i class="fas fa-user-cog mr-2 text-primary"></i>
+            Manage your account
+        </h2>
+        
         @await Html.PartialAsync("_ManageNav")
-        <div class="border border-top-0 px-3 py-3">
+        
+        <div class="mt-6 p-6 border-t border-base-300">
             @RenderBody()
         </div>
-
     </div>
-</div>
 </div>
 
 @section Scripts {
