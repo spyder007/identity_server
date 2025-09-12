@@ -330,6 +330,22 @@
     }
 
     /**
+     * Initialize confirmation buttons with data attributes
+     */
+    function initializeConfirmButtons() {
+        const confirmButtons = document.querySelectorAll('[data-confirm-action]');
+        confirmButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                const message = this.getAttribute('data-confirm-action');
+                if (!window.confirmAction(message)) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    }
+
+    /**
      * Enhanced theme toggle with visual feedback
      */
     function enhanceThemeToggle() {
