@@ -22,6 +22,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Theme initialization script - must be in head to prevent FOUC -->
+    <script>
+        // Initialize theme immediately to prevent flash of wrong theme
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('spydersoft-theme') || 'identity';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } catch (e) {
+                // Fallback if localStorage is not available
+                document.documentElement.setAttribute('data-theme', 'identity');
+            }
+        })();
+    </script>
 </head>
 <body class="bg-base-100 text-base-content">
     <!-- Mobile drawer toggle -->
@@ -65,28 +79,130 @@
     <environment names="Development">
         <script src="~/lib/moment/moment.min.js"></script>
         <script src="~/js/polyfill.js"></script>
+        <script src="~/js/main.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="~/lib/moment/moment.min.js"></script>
         <script src="~/js/polyfill.js"></script>
+        <script src="~/js/main.js"></script>
     </environment>
 
-    <!-- Theme Toggle Script -->
+    <!-- Theme Toggle Script - Enhanced for production reliability -->
     <script>
-        // Theme switching functionality
+        // Enhanced theme switching functionality
+        window.SpydersoftTheme = (function() {
+            'use strict';
+            
+            const STORAGE_KEY = 'spydersoft-theme';
+            const DEFAULT_THEME = 'identity';
+            const DARK_THEME = 'dark';
+            
+            function isStorageAvailable() {
+                try {
+                    const test = '__storage_test__';
+                    localStorage.setItem(test, test);
+                    localStorage.removeItem(test);
+                    return true;
+                } catch (e) {
+                    return false;
+                }
+            }
+            
+            function getTheme() {
+                if (isStorageAvailable()) {
+                    return localStorage.getItem(STORAGE_KEY) || DEFAULT_THEME;
+                }
+                // Fallback to checking the current data-theme attribute
+                return document.documentElement.getAttribute('data-theme') || DEFAULT_THEME;
+            }
+            
+            function setTheme(theme) {
+                try {
+                    // Validate theme
+                    if (theme !== DEFAULT_THEME && theme !== DARK_THEME) {
+                        theme = DEFAULT_THEME;
+                    }
+                    
+                    document.documentElement.setAttribute('data-theme', theme);
+                    
+                    if (isStorageAvailable()) {
+                        localStorage.setItem(STORAGE_KEY, theme);
+                    }
+                    
+                    // Dispatch custom event for other components
+                    if (typeof CustomEvent !== 'undefined') {
+                        const event = new CustomEvent('themeChanged', { 
+                            detail: { theme: theme } 
+                        });
+                        document.dispatchEvent(event);
+                    }
+                    
+                    return true;
+                } catch (e) {
+                    console.warn('Failed to set theme:', e);
+                    return false;
+                }
+            }
+            
+            function toggleTheme() {
+                const currentTheme = getTheme();
+                const newTheme = currentTheme === DEFAULT_THEME ? DARK_THEME : DEFAULT_THEME;
+                return setTheme(newTheme);
+            }
+            
+            function initializeTheme() {
+                const savedTheme = getTheme();
+                setTheme(savedTheme);
+            }
+            
+            // Public API
+            return {
+                get: getTheme,
+                set: setTheme,
+                toggle: toggleTheme,
+                init: initializeTheme,
+                isStorageAvailable: isStorageAvailable
+            };
+        })();
+
+        // Global function for backward compatibility
         function toggleTheme() {
-            const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'identity' ? 'dark' : 'identity';
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+            return window.SpydersoftTheme.toggle();
         }
 
-        // Load saved theme
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedTheme = localStorage.getItem('theme') || 'identity';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        });
+        // Initialize theme when DOM is ready
+        (function() {
+            function initTheme() {
+                try {
+                    window.SpydersoftTheme.init();
+                    
+                    // Add click listeners to any theme toggle buttons
+                    const themeToggleButtons = document.querySelectorAll('[data-toggle-theme], .theme-toggle');
+                    themeToggleButtons.forEach(function(button) {
+                        button.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            window.SpydersoftTheme.toggle();
+                        });
+                    });
+                    
+                    // Debug info for development
+                    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                        console.log('Spydersoft Theme initialized:', {
+                            currentTheme: window.SpydersoftTheme.get(),
+                            storageAvailable: window.SpydersoftTheme.isStorageAvailable()
+                        });
+                    }
+                } catch (e) {
+                    console.error('Failed to initialize theme system:', e);
+                }
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initTheme);
+            } else {
+                initTheme();
+            }
+        })();
     </script>
 
     @RenderSection("scripts", required: false)

@@ -34,7 +34,6 @@
     <Folder Include="Data\Migrations\" />
     <Folder Include="Models\UserAdmin\" />
     <Folder Include="Styles\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.0.1" />
