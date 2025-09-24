@@ -1,109 +1,217 @@
 ﻿@using Spydersoft.Identity.Extensions
 
-<nav class="p-4">
-    <ul class="menu bg-base-100 text-base-content">
-        <!-- Home -->
-        <li>
-            <a asp-area="" asp-controller="Home" asp-action="Index" class="flex items-center space-x-3 p-3 hover:bg-primary/10 rounded-lg transition-colors">
-                <i class="fa fa-home text-primary"></i>
-                <span>Home</span>
-            </a>
-        </li>
+@{
+    var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+    var isAdmin = User.IsInRole("admin");
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
 
-        @if (User.IsInRole("admin"))
-        {
-            <!-- IS Admin Section -->
+<div class="p-4 h-full flex flex-col">
+    <!-- Navigation Menu -->
+    <nav class="flex-1">
+        <ul class="menu w-full">
+            <!-- Home -->
             <li>
-                <details class="@(Context.IsISAdminRoute() ? "open" : "")">
-                    <summary class="flex items-center space-x-3 p-3 hover:bg-primary/10 rounded-lg transition-colors">
-                        <svg class="w-5 h-5 text-primary" viewBox="0 0 22 22" fill="currentColor">
-                            <path d="M17.4167 4.58333V6.41667H13.75V4.58333H17.4167ZM8.25 4.58333V10.0833H4.58333V4.58333H8.25ZM17.4167 11.9167V17.4167H13.75V11.9167H17.4167ZM8.25 15.5833V17.4167H4.58333V15.5833H8.25ZM19.25 2.75H11.9167V8.25H19.25V2.75ZM10.0833 2.75H2.75V11.9167H10.0833V2.75ZM19.25 10.0833H11.9167V19.25H19.25V10.0833ZM10.0833 13.75H2.75V19.25H10.0833V13.75Z" />
-                        </svg>
-                        <span>IS Admin</span>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="@(currentController == "Home" ? "active" : "")">
+                    <i class="fa fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+
+            @if (isAuthenticated)
+            {
+                <!-- My Account Section - Only for authenticated users -->
+                <li class="menu-title">
+                    <span>My Account</span>
+                </li>
+                
+                <li>
+                    <a asp-area="" asp-controller="Manage" asp-action="Index" class="@(currentController == "Manage" ? "active" : "")">
+                        <i class="fa fa-user"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a asp-area="" asp-controller="Manage" asp-action="ChangePassword" class="@(currentController == "Manage" ? "active" : "")">
+                        <i class="fa fa-lock"></i>
+                        <span>Password</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a asp-area="" asp-controller="Manage" asp-action="TwoFactorAuthentication" class="@(currentController == "Manage" ? "active" : "")">
+                        <i class="fa fa-shield-alt"></i>
+                        <span>Two-Factor</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a asp-area="" asp-controller="Grants" asp-action="Index" class="@(currentController == "Grants" ? "active" : "")">
+                        <i class="fa fa-apps"></i>
+                        <span>Applications</span>
+                    </a>
+                </li>
+
+                @if (isAdmin)
+                {
+                    <!-- Admin sections -->
+                    <li class="menu-title">
+                        <span>Administration</span>
+                    </li>
+                    
+                    <li>
+                        <details class="@(Context.IsISAdminRoute() ? "open" : "")" open="@(Context.IsISAdminRoute())">
+                            <summary>
+                                <i class="fa fa-server"></i>
+                                <span>Identity Server</span>
+                            </summary>
+                            <ul>
+                                <li>
+                                    <a asp-area="" asp-controller="Clients" asp-action="Index" class="@(currentController == "Clients" ? "active" : "")">
+                                        <i class="fa fa-mobile"></i>
+                                        <span>Clients</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-area="" asp-controller="IdentityResources" asp-action="Index" class="@(currentController == "IdentityResources" ? "active" : "")">
+                                        <i class="fa fa-id-card"></i>
+                                        <span>Identity Resources</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-area="" asp-controller="ApiResources" asp-action="Index" class="@(currentController == "ApiResources" ? "active" : "")">
+                                        <i class="fa fa-server"></i>
+                                        <span>API Resources</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-area="" asp-controller="Scopes" asp-action="Index" class="@(currentController == "Scopes" ? "active" : "")">
+                                        <i class="fa fa-sitemap"></i>
+                                        <span>Scopes</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+
+                    <li>
+                        <details class="@(Context.IsUserAdminRoute() ? "open" : "")" open="@(Context.IsUserAdminRoute())">
+                            <summary>
+                                <i class="fa fa-users"></i>
+                                <span>User Management</span>
+                            </summary>
+                            <ul>
+                                <li>
+                                    <a asp-area="" asp-controller="Users" asp-action="Index" class="@(currentController == "Users" ? "active" : "")">
+                                        <i class="fa fa-users"></i>
+                                        <span>Users</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a asp-area="" asp-controller="UserRoles" asp-action="Index" class="@(currentController == "UserRoles" ? "active" : "")">
+                                        <i class="fa fa-user-tag"></i>
+                                        <span>Roles</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                }
+            }
+            else
+            {
+                <!-- Authentication Section - Only for unauthenticated users -->
+                <li class="menu-title">
+                    <span>Access Your Account</span>
+                </li>
+                
+                <li>
+                    <a asp-area="" asp-controller="Account" asp-action="Login">
+                        <i class="fa fa-sign-in-alt"></i>
+                        <span>Sign In</span>
+                    </a>
+                </li>
+                
+                <li>
+                    <a asp-area="" asp-controller="Register" asp-action="Index">
+                        <i class="fa fa-user-plus"></i>
+                        <span>Create Account</span>
+                    </a>
+                </li>
+                
+                <li class="menu-title">
+                    <span>Need Help?</span>
+                </li>
+                
+                <li>
+                    <a asp-area="" asp-controller="Account" asp-action="ForgotPassword">
+                        <i class="fa fa-key"></i>
+                        <span>Forgot Password</span>
+                    </a>
+                </li>
+            }
+
+            <!-- Information Section - Always visible -->
+            <li class="menu-title">
+                <span>Information</span>
+            </li>
+            
+            <li>
+                <details class="@(Context.IsSpydersoftRoute() ? "open" : "")" open="@(Context.IsSpydersoftRoute())">
+                    <summary>
+                        <img src="~/images/favicon.svg" alt="Spydersoft Icon" class="w-4 h-4" />
+                        <span>About Spydersoft</span>
                     </summary>
-                    <ul class="ml-4 space-y-1">
+                    <ul>
                         <li>
-                            <a asp-area="" asp-controller="Clients" asp-action="Index" class="flex items-center space-x-2 p-2 hover:bg-primary/10 rounded transition-colors">
-                                <i class="fa fa-mobile text-sm"></i>
-                                <span class="text-sm">Clients</span>
+                            <a asp-area="" asp-controller="Home" asp-action="About" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "About" ? "active" : "")">
+                                <i class="fa fa-info-circle"></i>
+                                <span>About</span>
                             </a>
                         </li>
                         <li>
-                            <a asp-area="" asp-controller="IdentityResources" asp-action="Index" class="flex items-center space-x-2 p-2 hover:bg-primary/10 rounded transition-colors">
-                                <i class="fa fa-stream text-sm"></i>
-                                <span class="text-sm">Resources</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-area="" asp-controller="ApiResources" asp-action="Index" class="flex items-center space-x-2 p-2 hover:bg-primary/10 rounded transition-colors">
-                                <i class="fa fa-server text-sm"></i>
-                                <span class="text-sm">APIs</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-area="" asp-controller="Scopes" asp-action="Index" class="flex items-center space-x-2 p-2 hover:bg-primary/10 rounded transition-colors">
-                                <i class="fa fa-server text-sm"></i>
-                                <span class="text-sm">Scopes</span>
+                            <a asp-area="" asp-controller="Home" asp-action="Contact" class="@(ViewContext.RouteData.Values["action"]?.ToString() == "Contact" ? "active" : "")">
+                                <i class="fa fa-address-card"></i>
+                                <span>Contact</span>
                             </a>
                         </li>
                     </ul>
                 </details>
             </li>
+        </ul>
+    </nav>
 
-            <!-- User Admin Section -->
-            <li>
-                <details class="@(Context.IsUserAdminRoute() ? "open" : "")">
-                    <summary class="flex items-center space-x-3 p-3 hover:bg-primary/10 rounded-lg transition-colors">
-                        <i class="fa fa-users text-primary"></i>
-                        <span>User Admin</span>
-                    </summary>
-                    <ul class="ml-4 space-y-1">
-                        <li>
-                            <a asp-area="" asp-controller="Users" asp-action="Index" class="flex items-center space-x-2 p-2 hover:bg-primary/10 rounded transition-colors">
-                                <i class="fa fa-users text-sm"></i>
-                                <span class="text-sm">Users</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a asp-area="" asp-controller="UserRoles" asp-action="Index" class="flex items-center space-x-2 p-2 hover:bg-primary/10 rounded transition-colors">
-                                <i class="fa fa-user-tag text-sm"></i>
-                                <span class="text-sm">Roles</span>
-                            </a>
-                        </li>
-                    </ul>
-                </details>
-            </li>
-        }
-
-        <!-- Divider -->
-        <div class="divider my-2"></div>
-
-        <!-- Spydersoft Section -->
-        <li>
-            <details class="@(Context.IsSpydersoftRoute() ? "open" : "")">
-                <summary class="flex items-center space-x-3 p-3 hover:bg-primary/10 rounded-lg transition-colors">
-                    <div class="avatar">
-                        <div class="w-6 rounded">
-                            <img src="~/images/favicon.svg" alt="Spydersoft Icon" />
-                        </div>
-                    </div>
-                    <span>Spydersoft</span>
-                </summary>
-                <ul class="ml-4 space-y-1">
-                    <li>
-                        <a asp-area="" asp-controller="Home" asp-action="Contact" class="flex items-center space-x-2 p-2 hover:bg-primary/10 rounded transition-colors">
-                            <i class="fa fa-address-card text-sm"></i>
-                            <span class="text-sm">Contact</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a asp-area="" asp-controller="Home" asp-action="About" class="flex items-center space-x-2 p-2 hover:bg-primary/10 rounded transition-colors">
-                            <i class="fa fa-info-circle text-sm"></i>
-                            <span class="text-sm">About</span>
-                        </a>
-                    </li>
-                </ul>
-            </details>
-        </li>
-    </ul>
-</nav>
+    <!-- Footer information - Always visible -->
+    <div class="mt-auto pt-4 border-t border-base-300">
+        <div class="text-center">
+            <div class="text-xs text-base-content/60 mb-2">
+                <i class="fa fa-shield-alt mr-1"></i>
+                Identity Server v2.0
+            </div>
+            
+            @if (isAuthenticated)
+            {
+                <div class="text-xs text-success">
+                    <i class="fa fa-check-circle mr-1"></i>
+                    Authenticated
+                    @if (isAdmin)
+                    {
+                        <span class="text-warning ml-2">• Admin</span>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-xs text-base-content/60">
+                    <i class="fa fa-lock mr-1"></i>
+                    Secure Identity Management
+                </div>
+            }
+            
+            <div class="text-xs text-base-content/40 mt-2">
+                © @DateTime.Now.Year Spydersoft LLC
+            </div>
+        </div>
+    </div>
+</div>

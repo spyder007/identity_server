@@ -49,6 +49,9 @@
                             </div>
                         }
 
+                        <!-- Hidden fields to ensure model binding -->
+                        <input asp-for="ReturnUrl" type="hidden" />
+
                         <!-- Username Field -->
                         <div class="form-control w-full">
                             <label class="label">
@@ -57,7 +60,8 @@
                             <input asp-for="Username" 
                                    type="text" 
                                    class="input input-bordered w-full focus:input-primary" 
-                                   placeholder="Enter your email or username" />
+                                   placeholder="Enter your email or username" 
+                                   autocomplete="username" />
                             <label class="label">
                                 <span asp-validation-for="Username" class="label-text-alt text-error"></span>
                             </label>
@@ -71,7 +75,8 @@
                             <input asp-for="Password" 
                                    type="password" 
                                    class="input input-bordered w-full focus:input-primary" 
-                                   placeholder="Enter your password" />
+                                   placeholder="Enter your password" 
+                                   autocomplete="current-password" />
                             <label class="label">
                                 <span asp-validation-for="Password" class="label-text-alt text-error"></span>
                             </label>
@@ -91,13 +96,15 @@
                         </div>
 
                         <!-- Sign In Button -->
-                        <button type="submit" 
-                                name="button" 
-                                value="login" 
-                                class="btn btn-primary btn-lg w-full">
-                            <i class="fas fa-sign-in-alt mr-2"></i>
-                            Sign In
-                        </button>
+                        <div class="space-y-3">
+                            <button type="submit" 
+                                    name="button" 
+                                    value="login" 
+                                    class="btn btn-primary btn-lg w-full">
+                                <i class="fas fa-sign-in-alt mr-2"></i>
+                                Sign In
+                            </button>
+                        </div>
                     </form>
 
                     <!-- External Providers -->
@@ -107,14 +114,14 @@
                         <div class="grid grid-cols-1 gap-3">
                             @foreach (var provider in Model.VisibleExternalProviders)
                             {
-                                <a class="btn btn-outline btn-sm"
-                                   asp-controller="External"
-                                   asp-action="Challenge"
-                                   asp-route-scheme="@provider.AuthenticationScheme"
-                                   asp-route-returnUrl="@Model.ReturnUrl">
-                                    <i class="@provider.LniCssClass mr-2"></i>
-                                    Continue with @provider.DisplayName
-                                </a>
+                                <form asp-controller="External" asp-action="Challenge" method="post">
+                                    <input type="hidden" name="scheme" value="@provider.AuthenticationScheme" />
+                                    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                                    <button type="submit" class="btn btn-outline btn-sm w-full">
+                                        <i class="@provider.LniCssClass mr-2"></i>
+                                        Continue with @provider.DisplayName
+                                    </button>
+                                </form>
                             }
                         </div>
                     }
@@ -139,4 +146,47 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <!-- Enhanced form submission -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.querySelector('form[method="post"]');
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            
+            if (loginForm && submitButton) {
+                // Add loading state to submit button
+                loginForm.addEventListener('submit', function(e) {
+                    // Ensure the button value is preserved
+                    if (!loginForm.querySelector('input[name="button"]')) {
+                        const hiddenButton = document.createElement('input');
+                        hiddenButton.type = 'hidden';
+                        hiddenButton.name = 'button';
+                        hiddenButton.value = 'login';
+                        loginForm.appendChild(hiddenButton);
+                    }
+                    
+                    // Update button state
+                    submitButton.disabled = true;
+                    const originalText = submitButton.innerHTML;
+                    submitButton.innerHTML = '<span class="loading loading-spinner loading-sm mr-2"></span>Signing In...';
+                    
+                    // Restore button state if form submission fails
+                    setTimeout(() => {
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = originalText;
+                    }, 10000);
+                });
+            }
+            
+            // Debug form submission
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                if (loginForm) {
+                    loginForm.addEventListener('submit', function() {
+                        const formData = new FormData(this);
+                        console.log('Login form submission:', Object.fromEntries(formData));
+                    });
+                }
+            }
+        });
+    </script>
 }

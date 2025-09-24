@@ -112,16 +112,10 @@ namespace Spydersoft.Identity.Controllers
         /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginInputModel model, string button)
+        public async Task<IActionResult> Login(LoginInputModel model)
         {
             // check if we are in the context of an authorization request
             AuthorizationRequest context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
-
-            // the user clicked the "cancel" button
-            if (button != "login")
-            {
-                return await HandleLoginCancel(context, model);
-            }
 
             if (!ModelState.IsValid)
             {
@@ -135,6 +129,10 @@ namespace Spydersoft.Identity.Controllers
             {
                 await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId: context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+                
+                // Return the view with the error
+                LoginViewModel vm = await BuildLoginViewModelAsync(model);
+                return View(vm);
             }
 
             // Password validation succeeded

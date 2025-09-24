@@ -631,11 +631,17 @@
         const drawerToggle = document.getElementById('main-drawer');
         const drawerOverlay = document.querySelector('.drawer-overlay');
         
+        // Only initialize if drawer elements exist
+        if (!drawerToggle) {
+            return;
+        }
+        
+        console.log('Initializing drawer functionality...');
+
+        // Handle overlay clicks to close drawer
         if (drawerOverlay) {
             drawerOverlay.addEventListener('click', function() {
-                if (drawerToggle) {
-                    drawerToggle.checked = false;
-                }
+                drawerToggle.checked = false;
             });
         }
 
@@ -644,13 +650,30 @@
         navLinks.forEach(function(link) {
             link.addEventListener('click', function() {
                 // Only close on mobile
-                if (window.innerWidth < 1024 && drawerToggle) {
+                if (window.innerWidth < 1024) {
                     setTimeout(() => {
                         drawerToggle.checked = false;
-                    }, 100);
+                    }, 150);
                 }
             });
         });
+
+        // Enhanced keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && drawerToggle.checked && window.innerWidth < 1024) {
+                drawerToggle.checked = false;
+                event.preventDefault();
+            }
+        });
+
+        // Close drawer on window resize to large screen
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 1024 && drawerToggle.checked) {
+                drawerToggle.checked = false;
+            }
+        });
+
+        console.log('Drawer initialized successfully');
     }
 
     /**
