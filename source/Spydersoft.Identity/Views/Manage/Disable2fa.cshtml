@@ -199,19 +199,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        // Enable/disable the submit button based on checkbox
-        document.getElementById('confirmDisable').addEventListener('change', function() {
-            const button = document.getElementById('disableButton');
-            button.disabled = !this.checked;
-            
-            if (this.checked) {
-                button.classList.remove('btn-disabled');
-            } else {
-                button.classList.add('btn-disabled');
-            }
-        });
-    </script>
-}

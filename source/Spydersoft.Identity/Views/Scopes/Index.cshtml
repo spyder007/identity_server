@@ -74,11 +74,11 @@
                             Filter
                         </label>
                         <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                            <li><a onclick="filterScopes('all')">All Scopes</a></li>
-                            <li><a onclick="filterScopes('enabled')">Enabled Only</a></li>
-                            <li><a onclick="filterScopes('disabled')">Disabled Only</a></li>
-                            <li><a onclick="filterScopes('emphasized')">Emphasized Only</a></li>
-                            <li><a onclick="filterScopes('required')">Required Only</a></li>
+                            <li><a data-filter-scopes="all">All Scopes</a></li>
+                            <li><a data-filter-scopes="enabled">Enabled Only</a></li>
+                            <li><a data-filter-scopes="disabled">Disabled Only</a></li>
+                            <li><a data-filter-scopes="emphasized">Emphasized Only</a></li>
+                            <li><a data-filter-scopes="required">Required Only</a></li>
                         </ul>
                     </div>
                 </div>
@@ -211,7 +211,7 @@
                                                     </li>
                                                     <div class="divider my-1"></div>
                                                     <li>
-                                                        <button onclick="confirmDelete('@scope.Id', '@scope.Name')" 
+                                                        <button data-delete-id="@scope.Id" data-delete-name="@scope.Name" 
                                                                 class="text-error">
                                                             <i class="fas fa-trash"></i>
                                                             Delete Scope
@@ -291,40 +291,48 @@
         });
 
         // Filter functionality
-        function filterScopes(filter) {
-            const rows = document.querySelectorAll('tbody tr');
-            
-            rows.forEach(row => {
-                let show = true;
+        document.querySelectorAll('[data-filter-scopes]').forEach(element => {
+            element.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter-scopes');
+                const rows = document.querySelectorAll('tbody tr');
                 
-                switch (filter) {
-                    case 'enabled':
-                        show = row.dataset.scopeEnabled === 'true';
-                        break;
-                    case 'disabled':
-                        show = row.dataset.scopeEnabled === 'false';
-                        break;
-                    case 'emphasized':
-                        show = row.dataset.scopeEmphasized === 'true';
-                        break;
-                    case 'required':
-                        show = row.dataset.scopeRequired === 'true';
-                        break;
-                    case 'all':
-                    default:
-                        show = true;
-                        break;
-                }
-                
-                row.style.display = show ? '' : 'none';
+                rows.forEach(row => {
+                    let show = true;
+                    
+                    switch (filter) {
+                        case 'enabled':
+                            show = row.dataset.scopeEnabled === 'true';
+                            break;
+                        case 'disabled':
+                            show = row.dataset.scopeEnabled === 'false';
+                            break;
+                        case 'emphasized':
+                            show = row.dataset.scopeEmphasized === 'true';
+                            break;
+                        case 'required':
+                            show = row.dataset.scopeRequired === 'true';
+                            break;
+                        case 'all':
+                        default:
+                            show = true;
+                            break;
+                    }
+                    
+                    row.style.display = show ? '' : 'none';
+                });
             });
-        }
+        });
 
         // Delete confirmation
-        function confirmDelete(scopeId, scopeName) {
-            document.getElementById('deleteScopeName').textContent = scopeName;
-            document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete", "Scopes")/' + scopeId;
-            document.getElementById('deleteModal').showModal();
-        }
+        document.querySelectorAll('[data-delete-id]').forEach(button => {
+            button.addEventListener('click', function() {
+                const scopeId = this.getAttribute('data-delete-id');
+                const scopeName = this.getAttribute('data-delete-name');
+                
+                document.getElementById('deleteScopeName').textContent = scopeName;
+                document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete", "Scopes")/' + scopeId;
+                document.getElementById('deleteModal').showModal();
+            });
+        });
     </script>
 }

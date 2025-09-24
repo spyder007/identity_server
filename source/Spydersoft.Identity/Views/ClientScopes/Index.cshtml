@@ -28,7 +28,7 @@
     <!-- Navigation Bar -->
     @await Html.PartialAsync("_clientNavBar", Model.NavBar)
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" data-parent-id="@Model.NavBar.Id">
         <!-- Scopes Management -->
         <div class="lg:col-span-2">
             <div class="card bg-base-100 shadow-xl border border-base-300">
@@ -84,7 +84,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button onclick="confirmDelete('@scope.Id', '@scope.Scope')" 
+                                            <button data-delete-id="@scope.Id" data-delete-name="@scope.Scope" 
                                                     class="btn btn-error btn-xs" 
                                                     title="Remove scope">
                                                 <i class="fas fa-times"></i>
@@ -323,10 +323,14 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
     
     <script>
-        function confirmDelete(scopeId, scopeName) {
-            document.getElementById('deleteScopeName').textContent = scopeName;
-            document.getElementById('deleteConfirmBtn').href = '@(Url.Action("Delete"))?id=' + scopeId + '&parentid=@Model.NavBar.Id';
-            document.getElementById('deleteModal').showModal();
-        }
+        document.querySelectorAll('button[data-delete-id]').forEach(button => {
+            button.addEventListener('click', function() {
+                const scopeId = this.getAttribute('data-delete-id');
+                const scopeName = this.getAttribute('data-delete-name');
+                document.getElementById('deleteScopeName').textContent = scopeName;
+                document.getElementById('deleteConfirmBtn').href = '@(Url.Action("Delete"))?id=' + scopeId + '&parentid=@Model.NavBar.Id';
+                document.getElementById('deleteModal').showModal();
+            });
+        });
     </script>
 }

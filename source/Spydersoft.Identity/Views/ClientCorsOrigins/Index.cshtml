@@ -28,7 +28,7 @@
     <!-- Navigation Bar -->
     @await Html.PartialAsync("_clientNavBar", Model.NavBar)
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" data-parent-id="@Model.NavBar.Id">
         <!-- CORS Origins Management -->
         <div class="lg:col-span-2">
             <div class="card bg-base-100 shadow-xl border border-base-300">
@@ -77,12 +77,12 @@
                                                 </div>
                                             </div>
                                             <div class="flex space-x-2">
-                                                <button onclick="copyOrigin('@origin.Origin')" 
+                                                <button data-copy-origin="@origin.Origin" 
                                                         class="btn btn-ghost btn-sm"
                                                         title="Copy origin">
                                                     <i class="fas fa-copy"></i>
                                                 </button>
-                                                <button onclick="confirmDelete('@origin.Id', '@origin.Origin')" 
+                                                <button data-delete-id="@origin.Id" data-delete-name="@origin.Origin" 
                                                         class="btn btn-error btn-sm" 
                                                         title="Delete CORS origin">
                                                     <i class="fas fa-trash"></i>
@@ -330,16 +330,24 @@
     @await Html.PartialAsync("_ValidationScriptsPartial")
     
     <script>
-        function confirmDelete(originId, origin) {
-            document.getElementById('deleteOrigin').textContent = origin;
-            document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete")?id=' + originId + '&parentid=@Model.NavBar.Id';
-            document.getElementById('deleteModal').showModal();
-        }
-
-        function copyOrigin(origin) {
-            navigator.clipboard.writeText(origin).then(function() {
-                console.log('Origin copied: ' + origin);
-            });
-        }
+        document.addEventListener('click', function(event) {
+            const copyButton = event.target.closest('[data-copy-origin]');
+            const deleteButton = event.target.closest('[data-delete-id]');
+            
+            if (copyButton) {
+                const origin = copyButton.getAttribute('data-copy-origin');
+                navigator.clipboard.writeText(origin).then(function() {
+                    console.log('Origin copied: ' + origin);
+                });
+            }
+            
+            if (deleteButton) {
+                const originId = deleteButton.getAttribute('data-delete-id');
+                const originName = deleteButton.getAttribute('data-delete-name');
+                document.getElementById('deleteOrigin').textContent = originName;
+                document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete")?id=' + originId + '&parentid=@Model.NavBar.Id';
+                document.getElementById('deleteModal').showModal();
+            }
+        });
     </script>
 }

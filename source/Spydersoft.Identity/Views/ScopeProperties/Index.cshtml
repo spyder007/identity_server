@@ -28,7 +28,7 @@
     <!-- Navigation Bar -->
     @await Html.PartialAsync("_scopeNavBar", Model.NavBar)
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" data-parent-id="@Model.NavBar.Id">
         <!-- Properties Management -->
         <div class="lg:col-span-2">
             <div class="card bg-base-100 shadow-xl border border-base-300">
@@ -71,12 +71,12 @@
                                                 </div>
                                             </div>
                                             <div class="flex space-x-2 ml-4">
-                                                <button onclick="copyProperty('@property.Key', '@property.Value')" 
+                                                <button data-copy-property="@property.Key" data-copy-value="@property.Value" 
                                                         class="btn btn-ghost btn-sm"
                                                         title="Copy property">
                                                     <i class="fas fa-copy"></i>
                                                 </button>
-                                                <button onclick="confirmDelete('@property.Id', '@property.Key')" 
+                                                <button data-delete-id="@property.Id" data-delete-name="@property.Key" 
                                                         class="btn btn-error btn-sm" 
                                                         title="Delete property">
                                                     <i class="fas fa-trash"></i>
@@ -401,21 +401,6 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
-    
-    <script>
-        function confirmDelete(propertyId, propertyKey) {
-            document.getElementById('deletePropertyKey').textContent = propertyKey;
-            document.getElementById('deleteConfirmBtn').href = '@Html.Raw(Url.Action("Delete"))?id=' + propertyId + '&parentid=@Model.NavBar.Id';
-            document.getElementById('deleteModal').showModal();
-        }
-
-        function copyProperty(key, value) {
-            const propertyText = key + '=' + value;
-            navigator.clipboard.writeText(propertyText).then(function() {
-                console.log('Property copied: ' + propertyText);
-            });
-        }
-    </script>
 }
 
 @functions {

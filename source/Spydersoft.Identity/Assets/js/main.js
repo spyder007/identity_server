@@ -118,7 +118,7 @@
             window.SpydersoftTheme.init();
             
             // Add click listeners to any theme toggle buttons
-            const themeToggleButtons = document.querySelectorAll('[data-toggle-theme], .theme-toggle');
+            const themeToggleButtons = document.querySelectorAll('[data-toggle-theme], .theme-toggle, [onclick*="toggleTheme"]');
             themeToggleButtons.forEach(function(button) {
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -246,7 +246,7 @@
      */
     window.confirmDelete = function(itemId, itemName) {
         const modal = document.getElementById('deleteModal');
-        const nameElement = document.getElementById('deleteUserName') || document.getElementById('deleteRoleName');
+        const nameElement = document.getElementById('deleteUserName') || document.getElementById('deleteRoleName') || document.getElementById('deleteScopeName') || document.getElementById('deleteRedirectUri') || document.getElementById('deleteOrigin') || document.getElementById('deleteSecretDescription') || document.getElementById('deletePropertyKey');
         const confirmBtn = document.getElementById('deleteConfirmBtn');
         
         if (modal && nameElement && confirmBtn) {
@@ -260,6 +260,16 @@
                 deleteUrl = window.SpydersoftRoutes?.roleDelete?.replace('{id}', itemId) || '/UserRoles/Delete?id=' + itemId;
             } else if (window.location.pathname.includes('/Scopes/')) {
                 deleteUrl = window.SpydersoftRoutes?.scopeDelete?.replace('{id}', itemId) || '/Scopes/Delete/' + itemId;
+            } else if (window.location.pathname.includes('/ClientRedirects/')) {
+                deleteUrl = window.location.pathname.replace(/\/[^\/]*$/, '') + '/Delete?id=' + itemId + '&parentid=' + getParentId();
+            } else if (window.location.pathname.includes('/ClientCorsOrigins/')) {
+                deleteUrl = window.location.pathname.replace(/\/[^\/]*$/, '') + '/Delete?id=' + itemId + '&parentid=' + getParentId();
+            } else if (window.location.pathname.includes('/ClientScopes/')) {
+                deleteUrl = window.location.pathname.replace(/\/[^\/]*$/, '') + '/Delete?id=' + itemId + '&parentid=' + getParentId();
+            } else if (window.location.pathname.includes('/ApiResourceSecrets/')) {
+                deleteUrl = window.location.pathname.replace(/\/[^\/]*$/, '') + '/Delete?id=' + itemId + '&parentid=' + getParentId();
+            } else if (window.location.pathname.includes('/ScopeProperties/')) {
+                deleteUrl = window.location.pathname.replace(/\/[^\/]*$/, '') + '/Delete?id=' + itemId + '&parentid=' + getParentId();
             }
             
             confirmBtn.href = deleteUrl;
@@ -268,28 +278,76 @@
     };
 
     /**
+     * Helper function to get parent ID from various sources
+     */
+    function getParentId() {
+        // Try to get from URL path
+        const pathParts = window.location.pathname.split('/');
+        const indexPath = pathParts.indexOf('Index');
+        if (indexPath > 0 && pathParts[indexPath + 1]) {
+            return pathParts[indexPath + 1];
+        }
+        
+        // Try to get from form or other elements
+        const parentIdInput = document.querySelector('input[name="Id"], input[name="NavBar.Id"]');
+        if (parentIdInput) {
+            return parentIdInput.value;
+        }
+        
+        // Try to get from data attributes
+        const parentElement = document.querySelector('[data-parent-id]');
+        if (parentElement) {
+            return parentElement.getAttribute('data-parent-id');
+        }
+        
+        return '';
+    }
+
+    /**
      * Scope filtering functionality
      * Moved from Views/Scopes/Index.cshtml
      */
     window.filterScopes = function(filterType) {
-        const rows = document.querySelectorAll('tbody tr[data-scope]');
+        const rows = document.querySelectorAll('tbody tr[data-scope-enabled], tbody tr[data-scope]');
         
         rows.forEach(row => {
-            const scope = JSON.parse(row.getAttribute('data-scope'));
             let show = true;
+            
+            // Try to get scope data from attributes
+            let scopeData;
+            const scopeDataAttr = row.getAttribute('data-scope');
+            if (scopeDataAttr) {
+                try {
+                    scopeData = JSON.parse(scopeDataAttr);
+                } catch (e) {
+                    // Fallback to individual attributes
+                    scopeData = {
+                        enabled: row.getAttribute('data-scope-enabled') === 'true',
+                        emphasize: row.getAttribute('data-scope-emphasized') === 'true',
+                        required: row.getAttribute('data-scope-required') === 'true'
+                    };
+                }
+            } else {
+                // Use individual attributes
+                scopeData = {
+                    enabled: row.getAttribute('data-scope-enabled') === 'true',
+                    emphasize: row.getAttribute('data-scope-emphasized') === 'true',
+                    required: row.getAttribute('data-scope-required') === 'true'
+                };
+            }
             
             switch (filterType) {
                 case 'enabled':
-                    show = scope.enabled === true;
+                    show = scopeData.enabled === true;
                     break;
                 case 'disabled':
-                    show = scope.enabled === false;
+                    show = scopeData.enabled === false;
                     break;
                 case 'emphasized':
-                    show = scope.emphasize === true;
+                    show = scopeData.emphasize === true;
                     break;
                 case 'required':
-                    show = scope.required === true;
+                    show = scopeData.required === true;
                     break;
                 case 'all':
                 default:
@@ -341,6 +399,192 @@
                     e.preventDefault();
                     return false;
                 }
+            });
+        });
+    }
+
+    /**
+     * Initialize 2FA disable functionality
+     * Moved from Views/Manage/Disable2fa.cshtml
+     */
+    function initializeDisable2FA() {
+        const confirmCheckbox = document.getElementById('confirmDisable');
+        const disableButton = document.getElementById('disableButton');
+        
+        if (confirmCheckbox && disableButton) {
+            confirmCheckbox.addEventListener('change', function() {
+                disableButton.disabled = !this.checked;
+                
+                if (this.checked) {
+                    disableButton.classList.remove('btn-disabled');
+                } else {
+                    disableButton.classList.add('btn-disabled');
+                }
+            });
+        }
+    }
+
+    /**
+     * API Resource Secrets functionality
+     * Moved from Views/ApiResourceSecrets/Index.cshtml
+     */
+    function initializeApiResourceSecrets() {
+        // Copy secret functionality
+        window.copySecret = function(secretValue) {
+            navigator.clipboard.writeText(secretValue).then(function() {
+                console.log('Secret copied to clipboard');
+            });
+        };
+
+        // Toggle secret visibility
+        window.toggleSecretVisibility = function(targetId) {
+            const input = document.getElementById(targetId || 'secretValue');
+            const icon = document.getElementById('secretToggleIcon');
+            
+            if (input) {
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    if (icon) icon.className = 'fas fa-eye-slash';
+                } else {
+                    input.type = 'password';
+                    if (icon) icon.className = 'fas fa-eye';
+                }
+            }
+        };
+
+        // Generate random secret
+        window.generateSecret = function(targetId) {
+            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+            let secret = '';
+            for (let i = 0; i < 32; i++) {
+                secret += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            const input = document.getElementById(targetId || 'secretValue');
+            if (input) {
+                input.value = secret;
+            }
+        };
+
+        // Initialize toggle secret visibility buttons
+        const toggleButtons = document.querySelectorAll('[data-toggle-secret]');
+        toggleButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-toggle-secret');
+                window.toggleSecretVisibility(targetId);
+            });
+        });
+
+        // Initialize generate secret buttons
+        const generateButtons = document.querySelectorAll('[data-generate-secret]');
+        generateButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-generate-secret');
+                window.generateSecret(targetId);
+            });
+        });
+    }
+
+    /**
+     * Scope properties functionality
+     * Moved from Views/ScopeProperties/Index.cshtml
+     */
+    function initializeScopeProperties() {
+        window.copyProperty = function(key, value) {
+            const propertyText = key + '=' + value;
+            navigator.clipboard.writeText(propertyText).then(function() {
+                console.log('Property copied: ' + propertyText);
+            });
+        };
+
+        // Initialize copy property buttons with data attributes
+        const copyPropertyButtons = document.querySelectorAll('[data-copy-property]');
+        copyPropertyButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const key = this.getAttribute('data-copy-property');
+                const value = this.getAttribute('data-copy-value');
+                window.copyProperty(key, value);
+            });
+        });
+    }
+
+    /**
+     * Generic copy functionality for various elements
+     */
+    function initializeGenericCopy() {
+        // Copy functions for different content types
+        window.copyOrigin = function(origin) {
+            navigator.clipboard.writeText(origin).then(function() {
+                console.log('Origin copied: ' + origin);
+            });
+        };
+
+        window.copyToClipboardText = function(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                console.log('Copied: ' + text);
+            });
+        };
+
+        // Initialize copy buttons with various data attributes
+        const copyOriginButtons = document.querySelectorAll('[data-copy-origin]');
+        copyOriginButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const origin = this.getAttribute('data-copy-origin');
+                window.copyOrigin(origin);
+            });
+        });
+
+        const copyTextButtons = document.querySelectorAll('[data-copy-text]');
+        copyTextButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const text = this.getAttribute('data-copy-text');
+                window.copyToClipboardText(text);
+            });
+        });
+    }
+
+    /**
+     * Scope search functionality
+     * Moved from Views/Scopes/Index.cshtml
+     */
+    function initializeScopeSearch() {
+        const searchInput = document.getElementById('scopeSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const rows = document.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    if (row.cells && row.cells.length >= 3) {
+                        const scopeName = row.cells[0].textContent.toLowerCase();
+                        const displayName = row.cells[1].textContent.toLowerCase();
+                        const description = row.cells[2].textContent.toLowerCase();
+                        
+                        if (scopeName.includes(searchTerm) || displayName.includes(searchTerm) || description.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        }
+    }
+
+    /**
+     * Initialize filter buttons for scopes
+     */
+    function initializeScopeFilters() {
+        const filterButtons = document.querySelectorAll('[data-filter-scopes]');
+        filterButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const filterType = this.getAttribute('data-filter-scopes');
+                window.filterScopes(filterType);
             });
         });
     }
@@ -651,6 +895,12 @@
             initializeCopyButtons();
             initializeDeleteButtons();
             initializeConfirmButtons();
+            initializeDisable2FA();
+            initializeApiResourceSecrets();
+            initializeScopeProperties();
+            initializeGenericCopy();
+            initializeScopeSearch();
+            initializeScopeFilters();
 
             // Listen for theme changes
             document.addEventListener('themeChanged', function(event) {
@@ -688,7 +938,13 @@
         initializeAuthenticatorSetup: initializeAuthenticatorSetup,
         initializeCopyButtons: initializeCopyButtons,
         initializeDeleteButtons: initializeDeleteButtons,
-        initializeConfirmButtons: initializeConfirmButtons
+        initializeConfirmButtons: initializeConfirmButtons,
+        initializeDisable2FA: initializeDisable2FA,
+        initializeApiResourceSecrets: initializeApiResourceSecrets,
+        initializeScopeProperties: initializeScopeProperties,
+        initializeGenericCopy: initializeGenericCopy,
+        initializeScopeSearch: initializeScopeSearch,
+        initializeScopeFilters: initializeScopeFilters
     };
 
 })();
