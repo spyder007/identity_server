@@ -1,44 +1,338 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ScopeViewModels;
 @model ScopesViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
-                    </div>
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <div class="table-responsive">
-                    <table class="table" aria-label="Scopes">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Name</th>
-                                <th>Display Name</th>
-                                <th>Actions&nbsp;<a asp-controller="Scopes" asp-action="Edit"><span class="fa fa-plus"></span></a></th>
-                            </tr>
-                        </thead>
 
-                        @foreach (var api in Model.Scopes)
-                        {
-                            <tr>
-                                <td>@api.Name</td>
-                                <td>@api.DisplayName</td>
-                                <td>
-                                    <a asp-controller="Scopes" asp-action="Edit" asp-route-id="@api.Id"><span class="fa fa-edit"></span></a>
-                                    <a asp-controller="Scopes" asp-action="Delete" asp-route-id="@api.Id" title="Delete"><span class="fa fa-trash"></span></a>
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </div>
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="dashboard-title">@ViewData["Title"]</h1>
+                <p class="dashboard-subtitle">Manage OAuth 2.0 and OpenID Connect scopes</p>
             </div>
+            <a asp-controller="Scopes" asp-action="Edit" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus mr-2"></i>
+                Add New Scope
+            </a>
         </div>
     </div>
-</section>
+
+    <!-- Scope Statistics -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-primary">
+                <i class="fas fa-key text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Scopes</div>
+            <div class="stat-value text-primary">@Model.Scopes.Count()</div>
+            <div class="stat-desc">Defined scopes</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-success">
+                <i class="fas fa-check-circle text-3xl"></i>
+            </div>
+            <div class="stat-title">Active</div>
+            <div class="stat-value text-success">@Model.Scopes.Count(s => s.Enabled)</div>
+            <div class="stat-desc">Currently enabled</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-warning">
+                <i class="fas fa-eye text-3xl"></i>
+            </div>
+            <div class="stat-title">Emphasized</div>
+            <div class="stat-value text-warning">@Model.Scopes.Count(s => s.Emphasize)</div>
+            <div class="stat-desc">Highlighted in UI</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-info">
+                <i class="fas fa-shield-alt text-3xl"></i>
+            </div>
+            <div class="stat-title">Required</div>
+            <div class="stat-value text-info">@Model.Scopes.Count(s => s.Required)</div>
+            <div class="stat-desc">Mandatory scopes</div>
+        </div>
+    </div>
+
+    <!-- Scopes Table -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="card-title text-2xl">
+                    <i class="fas fa-key mr-2"></i>
+                    OAuth Scopes
+                </h2>
+                <div class="flex space-x-2">
+                    <input type="text" 
+                           placeholder="Search scopes..." 
+                           class="input input-bordered input-sm w-full max-w-xs"
+                           id="scopeSearch" />
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-sm">
+                            <i class="fas fa-filter mr-1"></i>
+                            Filter
+                        </label>
+                        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a data-filter-scopes="all">All Scopes</a></li>
+                            <li><a data-filter-scopes="enabled">Enabled Only</a></li>
+                            <li><a data-filter-scopes="disabled">Disabled Only</a></li>
+                            <li><a data-filter-scopes="emphasized">Emphasized Only</a></li>
+                            <li><a data-filter-scopes="required">Required Only</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Scopes.Any())
+            {
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra w-full">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-tag mr-2"></i>
+                                        Scope Name
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-info-circle mr-2"></i>
+                                        Display Name
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-align-left mr-2"></i>
+                                        Description
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-toggle-on mr-2"></i>
+                                        Status
+                                    </span>
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var scope in Model.Scopes)
+                            {
+                                <tr class="hover" 
+                                    data-scope-enabled="@scope.Enabled.ToString().ToLower()" 
+                                    data-scope-emphasized="@scope.Emphasize.ToString().ToLower()"
+                                    data-scope-required="@scope.Required.ToString().ToLower()">
+                                    <td>
+                                        <div class="flex items-center space-x-3">
+                                            <div class="avatar">
+                                                <div class="mask mask-squircle w-12 h-12 bg-gradient-to-br from-accent to-primary">
+                                                    <i class="fas fa-key text-white flex items-center justify-center h-full"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">@scope.Name</div>
+                                                <div class="text-sm opacity-50">ID: @scope.Id</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="font-semibold">@(scope.DisplayName ?? scope.Name)</div>
+                                    </td>
+                                    <td>
+                                        <div class="max-w-xs">
+                                            @if (!string.IsNullOrEmpty(scope.Description))
+                                            {
+                                                <p class="text-sm text-base-content/80 truncate">@scope.Description</p>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-sm text-base-content/50">No description</span>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col space-y-1">
+                                            @if (scope.Enabled)
+                                            {
+                                                <div class="badge badge-success badge-sm gap-1">
+                                                    <i class="fas fa-check text-xs"></i>
+                                                    Enabled
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="badge badge-error badge-sm gap-1">
+                                                    <i class="fas fa-times text-xs"></i>
+                                                    Disabled
+                                                </div>
+                                            }
+                                            @if (scope.Required)
+                                            {
+                                                <div class="badge badge-info badge-sm gap-1">
+                                                    <i class="fas fa-shield-alt text-xs"></i>
+                                                    Required
+                                                </div>
+                                            }
+                                            @if (scope.Emphasize)
+                                            {
+                                                <div class="badge badge-warning badge-sm gap-1">
+                                                    <i class="fas fa-star text-xs"></i>
+                                                    Emphasized
+                                                </div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex space-x-2">
+                                            <div class="dropdown dropdown-end">
+                                                <label tabindex="0" class="btn btn-ghost btn-sm">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </label>
+                                                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                    <li>
+                                                        <a asp-controller="Scopes" asp-action="Edit" asp-route-id="@scope.Id">
+                                                            <i class="fas fa-edit"></i>
+                                                            Edit Scope
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-controller="ScopeClaims" asp-action="Index" asp-route-id="@scope.Id">
+                                                            <i class="fas fa-tags"></i>
+                                                            Manage Claims
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-controller="ScopeProperties" asp-action="Index" asp-route-id="@scope.Id">
+                                                            <i class="fas fa-cog"></i>
+                                                            Properties
+                                                        </a>
+                                                    </li>
+                                                    <div class="divider my-1"></div>
+                                                    <li>
+                                                        <button data-delete-id="@scope.Id" data-delete-name="@scope.Name" 
+                                                                class="text-error">
+                                                            <i class="fas fa-trash"></i>
+                                                            Delete Scope
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-12">
+                    <div class="avatar mb-4">
+                        <div class="w-24 rounded-full bg-base-200">
+                            <i class="fas fa-key text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">No Scopes Found</h3>
+                    <p class="text-base-content/70 mb-4">Create your first OAuth scope to define access permissions.</p>
+                    <a asp-controller="Scopes" asp-action="Edit" class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>
+                        Create First Scope
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm Scope Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the scope <strong id="deleteScopeName"></strong>? 
+            This action cannot be undone and may affect applications that use this scope.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete Scope
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        document.getElementById('scopeSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const scopeName = row.cells[0].textContent.toLowerCase();
+                const displayName = row.cells[1].textContent.toLowerCase();
+                const description = row.cells[2].textContent.toLowerCase();
+                
+                if (scopeName.includes(searchTerm) || displayName.includes(searchTerm) || description.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter functionality
+        document.querySelectorAll('[data-filter-scopes]').forEach(element => {
+            element.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter-scopes');
+                const rows = document.querySelectorAll('tbody tr');
+                
+                rows.forEach(row => {
+                    let show = true;
+                    
+                    switch (filter) {
+                        case 'enabled':
+                            show = row.dataset.scopeEnabled === 'true';
+                            break;
+                        case 'disabled':
+                            show = row.dataset.scopeEnabled === 'false';
+                            break;
+                        case 'emphasized':
+                            show = row.dataset.scopeEmphasized === 'true';
+                            break;
+                        case 'required':
+                            show = row.dataset.scopeRequired === 'true';
+                            break;
+                        case 'all':
+                        default:
+                            show = true;
+                            break;
+                    }
+                    
+                    row.style.display = show ? '' : 'none';
+                });
+            });
+        });
+
+        // Delete confirmation
+        document.querySelectorAll('[data-delete-id]').forEach(button => {
+            button.addEventListener('click', function() {
+                const scopeId = this.getAttribute('data-delete-id');
+                const scopeName = this.getAttribute('data-delete-name');
+                
+                document.getElementById('deleteScopeName').textContent = scopeName;
+                document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete", "Scopes")/' + scopeId;
+                document.getElementById('deleteModal').showModal();
+            });
+        });
+    </script>
+}

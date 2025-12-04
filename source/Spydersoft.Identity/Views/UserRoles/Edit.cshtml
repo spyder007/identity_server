@@ -1,95 +1,401 @@
 ﻿@using Spydersoft.Identity.Models.Identity
 @model ApplicationRoleViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-secondary to-accent">
+                        <i class="fas fa-user-shield text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">
+                        @if (string.IsNullOrEmpty(Model.Role.Id))
+                        {
+                            <span>Create Role</span>
+                        }
+                        else
+                        {
+                            <span>Edit Role: @Model.Role.Name</span>
+                        }
+                    </h1>
+                    <p class="dashboard-subtitle">Configure role permissions and claims</p>
+                </div>
             </div>
-            <!-- end row -->
+            <div class="flex space-x-2">
+                <a asp-action="Index" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Roles
+                </a>
+            </div>
         </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Edit">
-                    <div class="card-meta">
-                        <h3>Role Details</h3>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Role Configuration -->
+        <div class="lg:col-span-2 space-y-8">
+            <!-- Basic Role Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-secondary/10">
+                                <i class="fas fa-user-shield text-secondary flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Role Details</h2>
+                            <p class="text-base-content/70">Configure basic role information</p>
+                        </div>
                     </div>
-                    <div class="card-content">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <form asp-action="Edit" class="space-y-6">
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-error">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <h3 class="font-bold">Please correct the following errors:</h3>
+                                    <div asp-validation-summary="ModelOnly" class="text-sm"></div>
+                                </div>
+                            </div>
+                        }
+
                         @Html.HiddenFor(model => model.Role.Id)
                         @Html.HiddenFor(model => model.Role.ConcurrencyStamp)
                         @Html.HiddenFor(model => model.Role.NormalizedName)
-                        <div class="mb-3">
-                            @Html.LabelFor(model => model.Role.Name)
-                            <input type="text" class="form-control" id="txtName" asp-for="Role.Name" pf-validation-for="Role.Name" pf-validationerror-class="is-invalid" />
-                            <span asp-validation-for="Role.Name" class="invalid-feedback"></span>
+
+                        <!-- Role Name -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Role.Name)</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-shield-alt text-base-content/40"></i>
+                                </div>
+                                <input asp-for="Role.Name" 
+                                       type="text" 
+                                       class="input input-bordered w-full pl-10 focus:input-primary" 
+                                       placeholder="Administrator" />
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="Role.Name" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Descriptive role name</span>
+                            </label>
                         </div>
-                    </div>
 
-                    <div>
-                        <input type="submit" value="Save" class="btn btn-sm btn-primary" />
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="row">
-            @if (Model.Claims != null)
-            {<div class="card-style">
-                    <form asp-action="AddClaim" asp-route-roleid="@Model.Role.Id">
-
-                        <div class="card-meta">
-                            <h3>Role Claims</h3>
-                        </div>
-                        <div class="card-content">
-                            <table class="table" aria-label="User Role Claims">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th>@Html.LabelFor(model => model.NewClaim.Type)</th>
-                                        <th>@Html.LabelFor(model => model.NewClaim.Value)</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-
-                                @foreach (var apiClaim in Model.Claims)
-                                {
-                                    <tr>
-                                        <td>@apiClaim.Type</td>
-                                        <td>@apiClaim.Value</td>
-                                        <td><a asp-action="DeleteClaim" asp-route-claimtype="@apiClaim.Type" asp-route-roleid="@Model.Role.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                                    </tr>
-                                }
-                                <tr>
-                                    <td>
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" id="txtClientId" asp-for="NewClaim.Type" pf-validation-for="NewClaim.Type" pf-validationerror-class="is-invalid" />
-                                            <span asp-validation-for="NewClaim.Type" class="invalid-feedback"></span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="mb-3">
-                                            <input type="text" class="form-control" id="txtNewClaim.Value" asp-for="NewClaim.Value" pf-validation-for="NewClaim.Value" pf-validationerror-class="is-invalid" />
-                                            <span asp-validation-for="NewClaim.Value" class="invalid-feedback"></span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="mb-3">
-                                            <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                        </div>
-                                    </td>
-
-                                </tr>
-                            </table>
+                        <div class="card-actions justify-end">
+                            <a asp-action="Index" class="btn btn-outline">Cancel</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save mr-2"></i>
+                                @(string.IsNullOrEmpty(Model.Role.Id) ? "Create Role" : "Save Changes")
+                            </button>
                         </div>
                     </form>
                 </div>
+            </div>
 
+            <!-- Role Claims Management -->
+            @if (!string.IsNullOrEmpty(Model.Role.Id) && Model.Claims != null)
+            {
+                <div class="card bg-base-100 shadow-xl border border-base-300">
+                    <div class="card-body">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <div class="avatar">
+                                <div class="w-10 h-10 rounded-full bg-accent/10">
+                                    <i class="fas fa-tags text-accent flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <h2 class="card-title text-xl">Role Claims</h2>
+                                <p class="text-base-content/70">Permissions and attributes for this role</p>
+                            </div>
+                        </div>
+
+                        @if (Model.Claims.Any())
+                        {
+                            <!-- Existing Claims -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                                @foreach (var claim in Model.Claims)
+                                {
+                                    <div class="card bg-base-200 border border-base-300">
+                                        <div class="card-body p-4">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex items-center space-x-2">
+                                                    <div class="avatar">
+                                                        <div class="w-8 h-8 rounded-full bg-success/10">
+                                                            <i class="fas fa-tag text-success text-xs flex items-center justify-center h-full"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="font-medium text-sm">@claim.Type</div>
+                                                        <div class="text-xs text-base-content/60">@claim.Value</div>
+                                                    </div>
+                                                </div>
+                                                <button onclick="confirmDeleteClaim('@claim.Type', '@Model.Role.Id')" 
+                                                        class="btn btn-error btn-xs" 
+                                                        title="Remove claim">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Empty State -->
+                            <div class="text-center py-8 mb-6">
+                                <div class="avatar mb-4">
+                                    <div class="w-16 rounded-full bg-base-200">
+                                        <i class="fas fa-tags text-2xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                    </div>
+                                </div>
+                                <h3 class="font-semibold mb-2">No Claims Configured</h3>
+                                <p class="text-base-content/70 text-sm">Add claims to define role permissions and attributes.</p>
+                            </div>
+                        }
+
+                        <!-- Add New Claim Form -->
+                        <form asp-action="AddClaim" asp-route-roleid="@Model.Role.Id" class="space-y-4">
+                            <div class="divider">Add Role Claim</div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Claim Type -->
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewClaim.Type)</span>
+                                        <span class="label-text-alt text-error">*</span>
+                                    </label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-tag text-base-content/40"></i>
+                                        </div>
+                                        <input asp-for="NewClaim.Type" 
+                                               type="text" 
+                                               class="input input-bordered w-full pl-10 focus:input-primary" 
+                                               placeholder="permission" 
+                                               list="roleClaimTypes" />
+                                        <datalist id="roleClaimTypes">
+                                            <option value="permission">Permission</option>
+                                            <option value="role">Role</option>
+                                            <option value="department">Department</option>
+                                            <option value="level">Level</option>
+                                            <option value="scope">Scope</option>
+                                        </datalist>
+                                    </div>
+                                    <label class="label">
+                                        <span asp-validation-for="NewClaim.Type" class="label-text-alt text-error"></span>
+                                        <span class="label-text-alt text-base-content/60">Claim type identifier</span>
+                                    </label>
+                                </div>
+
+                                <!-- Claim Value -->
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewClaim.Value)</span>
+                                        <span class="label-text-alt text-error">*</span>
+                                    </label>
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-quote-right text-base-content/40"></i>
+                                        </div>
+                                        <input asp-for="NewClaim.Value" 
+                                               type="text" 
+                                               class="input input-bordered w-full pl-10 focus:input-primary" 
+                                               placeholder="admin" />
+                                    </div>
+                                    <label class="label">
+                                        <span asp-validation-for="NewClaim.Value" class="label-text-alt text-error"></span>
+                                        <span class="label-text-alt text-base-content/60">Claim value</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="card-actions justify-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus mr-2"></i>
+                                    Add Claim
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             }
         </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            @if (!string.IsNullOrEmpty(Model.Role.Id))
+            {
+                <!-- Role Information -->
+                <div class="card bg-base-100 shadow-xl border border-base-300">
+                    <div class="card-body">
+                        <h3 class="card-title text-lg mb-4">
+                            <i class="fas fa-info-circle mr-2 text-info"></i>
+                            Role Information
+                        </h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-base-content/70">Role ID:</span>
+                                <span class="font-mono text-xs">@Model.Role.Id</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-base-content/70">Name:</span>
+                                <span class="font-semibold">@Model.Role.Name</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-base-content/70">Claims:</span>
+                                <span class="badge badge-primary">@(Model.Claims?.Count() ?? 0)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Guidelines -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-warning"></i>
+                        Role Guidelines
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use descriptive, clear role names</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Follow principle of least privilege</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Group related permissions into claims</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Avoid role proliferation</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Common Claims -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-star mr-2 text-accent"></i>
+                        Common Claims
+                    </h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="bg-base-200 p-2 rounded">
+                            <div class="font-medium">permission</div>
+                            <div class="text-xs text-base-content/60">admin, read, write, delete</div>
+                        </div>
+                        <div class="bg-base-200 p-2 rounded">
+                            <div class="font-medium">department</div>
+                            <div class="text-xs text-base-content/60">IT, HR, Finance, Sales</div>
+                        </div>
+                        <div class="bg-base-200 p-2 rounded">
+                            <div class="font-medium">level</div>
+                            <div class="text-xs text-base-content/60">junior, senior, manager</div>
+                        </div>
+                        <div class="bg-base-200 p-2 rounded">
+                            <div class="font-medium">scope</div>
+                            <div class="text-xs text-base-content/60">global, regional, local</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-error"></i>
+                        Security Notes
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-triangle text-warning text-xs mt-1"></i>
+                            <span>Claims are included in user tokens</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Claims enable fine-grained authorization</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Regular audit of role permissions</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="Users" asp-action="Index" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-users mr-2"></i>
+                            Manage Users
+                        </a>
+                        <a asp-action="Index" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-list mr-2"></i>
+                            All Roles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</section>
+</div>
+
+<!-- Delete Claim Confirmation Modal -->
+<dialog id="deleteClaimModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Remove Role Claim
+        </h3>
+        <p class="py-4">
+            Are you sure you want to remove the claim <strong id="deleteClaimTypeName"></strong> from this role?
+            <br><br>This will affect all users assigned to this role.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteClaimConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-times mr-2"></i>
+                Remove Claim
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <script>
+        function confirmDeleteClaim(claimType, roleId) {
+            document.getElementById('deleteClaimTypeName').textContent = claimType;
+            document.getElementById('deleteClaimConfirmBtn').href = '@(Url.Action("DeleteClaim"))?claimtype=' + encodeURIComponent(claimType) + '&roleid=' + roleId;
+            document.getElementById('deleteClaimModal').showModal();
+        }
+    </script>
+}
 

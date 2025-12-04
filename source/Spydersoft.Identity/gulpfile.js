@@ -1,178 +1,80 @@
-﻿const { src, watch, dest, series } = require("gulp");
-const sass = require("gulp-sass")(require('sass'));
-const rename = require("gulp-rename");
-const cleanCSS = require("gulp-clean-css");
+/**
+ * Gulpfile.js - Task Runner Explorer compatible version
+ * This file provides Visual Studio Task Runner Explorer integration
+ * The actual implementation is in gulpfile.ts
+ */
 
-const paths = {
-  dist: "wwwroot/",
-  src: "./",
-  styles: "Styles/",
-  scripts: "Scripts/",
-  node_modules: "node_modules/",
-  libDest: "lib/",
-  assets: "Assets/",
-};
+const { exec } = require('child_process');
+const { task, series } = require('gulp');
 
-const libsToCopy = [
-  {
-    lib: "bootstrap",
-    jobs: [
-      {
-        src: "/dist/**/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
-  },
-  {
-    lib: "popper.js",
-    jobs: [
-      {
-        src: "/dist/**/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
-  },
-  {
-    lib: "jquery",
-    jobs: [
-      {
-        src: "/dist/**/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
-  },
-  {
-    lib: "jquery-validation-unobtrusive",
-    jobs: [
-      {
-        src: "/dist/**/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
-  },
-  {
-    lib: "jquery-validation",
-    jobs: [
-      {
-        src: "/dist/**/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
-  },
-  {
-    lib: "@fortawesome/fontawesome-free",
-    jobs: [
-      {
-        src: "/css/**/*",
-        dest: "{libDest}/font-awesome/css",
-      },
-      {
-        src: "/webfonts/**/*",
-        dest: "{libDest}/font-awesome/webfonts",
-      },
-      {
-        src: "/svgs/**/*",
-        dest: "{libDest}/font-awesome/svgs",
-      },
-      {
-        src: "/sprites/**/*",
-        dest: "{libDest}/font-awesome/sprites",
-      },
-    ],
-  },
-  {
-    lib: "simple-line-icons",
-    jobs: [
-      {
-        src: "/css/**/*",
-        dest: "{libDest}{libName}/css",
-      },
-      {
-        src: "/fonts/**/*",
-        dest: "{libDest}{libName}/fonts",
-      },
-    ],
-  },
-  {
-    lib: "davidshimjs-qrcodejs",
-    jobs: [
-      {
-        src: "/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
-  },
-  {
-    lib: "moment",
-    jobs: [
-      {
-        src: "/min/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
-  },
-];
-
-function convertSass(cb) {
-  /// <summary>
-  /// </summary>
-  return src(paths.styles + "/scss/style.scss")
-    .pipe(sass())
-    .pipe(dest(paths.dist + "css"))
-    .pipe(cleanCSS({ compatibility: "ie8" }))
-    .pipe(rename({ suffix: ".min" }))
-    .pipe(dest(paths.dist + "css"));
-}
-
-function sassWatch() {
-  /// <summary>
-  /// </summary>
-  watch(paths.styles + "scss/**/*.scss", ["sass"]);
-}
-
-function copyAssets() {
-  /// <summary>
-  /// </summary>
-  return src(paths.assets + "**/*").pipe(dest(paths.dist));
-}
-
-function copyLibraries(cb) {
-  /// <summary>
-  /// </summary>
-  /// <param name="cb">The cb.</param>
-  libsToCopy.forEach(function (lib) {
-    /// <summary>
-    /// </summary>
-    /// <param name="lib">The library.</param>
-    console.log("Copying " + lib.lib);
-
-    lib.jobs.forEach(function (job) {
-      /// <summary>
-      /// </summary>
-      /// <param name="job">The job.</param>
-      copyLibrary(src, dest, lib.lib, job.src, job.dest);
+// Helper function to run tasks using ts-node directly with the TypeScript gulpfile
+function runTsGulpTask(taskName) {
+  return function(done) {
+    const command = `npx ts-node -e "require('./gulpfile.ts').${taskName}?.()" 2>/dev/null || npx gulp ${taskName} --require ts-node/register --gulpfile gulpfile.ts`;
+    exec(command, { 
+      cwd: process.cwd(),
+      windowsHide: true 
+    }, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error running ${taskName}: ${error.message}`);
+        return done(error);
+      }
+      if (stdout) console.log(stdout);
+      if (stderr) console.error(stderr);
+      done();
     });
-  });
-  cb();
+  };
 }
 
-function copyLibrary(gulpSrc, gulpDest, libName, src, dest) {
-  /// <summary>
-  /// Copies the library.
-  /// </summary>
-  /// <param name="libName">Name of the library.</param>
-  /// <param name="src">The source.</param>
-  /// <param name="dest">The dest.</param>
-  let fullSource = paths.node_modules + libName + src;
-
-  let fullDest = dest
-    .replace("{libDest}", paths.libDest)
-    .replace("{libName}", libName);
-  fullDest = paths.dist + fullDest;
-
-  console.log("Copying " + fullSource + " to " + fullDest);
-  gulpSrc(fullSource).pipe(gulpDest(fullDest));
+// Helper function to run npm scripts
+function runNpmScript(scriptName) {
+  return function(done) {
+    exec(`npm run ${scriptName}`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error: ${error}`);
+        return done(error);
+      }
+      console.log(stdout);
+      if (stderr) console.error(stderr);
+      done();
+    });
+  };
 }
 
-exports.sassWatch = sassWatch;
-exports.default = series(convertSass, copyAssets, copyLibraries);
+// Simple direct gulp task invocation
+function runDirectGulpTask(taskName) {
+  return function(done) {
+    exec(`npx gulp ${taskName} --require ts-node/register --gulpfile gulpfile.ts`, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error running ${taskName}: ${error.message}`);
+        return done(error);
+      }
+      if (stdout) console.log(stdout);
+      if (stderr) console.error(stderr);
+      done();
+    });
+  };
+}
+
+// Define main workflow tasks
+task('build', runDirectGulpTask('build'));
+task('dev', runDirectGulpTask('dev'));
+task('clean', runDirectGulpTask('cleanTask'));
+task('watch', runDirectGulpTask('watchSass'));
+
+// Individual tasks
+task('sass', runDirectGulpTask('sass'));
+task('tailwind', runDirectGulpTask('tailwind'));
+task('assets', runDirectGulpTask('assets'));
+task('libraries', runDirectGulpTask('libraries'));
+
+// Workflow combinations
+task('develop', series('clean', 'dev'));
+task('production', series('clean', 'build'));
+
+// Default task
+task('default', series('build'));
+
+// Additional helper tasks for compatibility
+task('cleanTask', runDirectGulpTask('cleanTask'));
+task('watchSass', runDirectGulpTask('watchSass'));

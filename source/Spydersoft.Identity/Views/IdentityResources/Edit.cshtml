@@ -1,79 +1,308 @@
 ﻿@using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels
 @model IdentityResourceViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-secondary to-accent">
+                        <i class="fas fa-id-card text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">
+                        @if (Model.Id == 0)
+                        {
+                            <span>Create Identity Resource</span>
+                        }
+                        else
+                        {
+                            <span>Edit Identity Resource: @Model.Name</span>
+                        }
+                    </h1>
+                    <p class="dashboard-subtitle">Configure identity resource for user profile information</p>
+                </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Edit">
-                    @await Html.PartialAsync("_identityResourceNavBar", Model.NavBar)
-
-                    <div class="border border-top-0 px-2 py-1">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
-                        <div class="mb-3">
-                            @Html.LabelFor(model => model.Name)
-                            <input type="text" class="form-control" id="txtName" asp-for="Name" pf-validation-for="Name" pf-validationerror-class="is-invalid" />
-                            <span asp-validation-for="Name" class="invalid-feedback"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            @Html.LabelFor(model => model.DisplayName)
-                            <input type="text" class="form-control" id="txtDisplayName" asp-for="DisplayName" pf-validation-for="DisplayName" pf-validationerror-class="is-invalid" />
-                            <span asp-validation-for="DisplayName" class="invalid-feedback"></span>
-                        </div>
-                        <div class="mb-3">
-                            @Html.LabelFor(model => model.Description)
-                            <input type="text" class="form-control" id="txtDescription" asp-for="Description" pf-validation-for="Description" pf-validationerror-class="is-invalid" />
-                            <span asp-validation-for="Description" class="invalid-feedback"></span>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" asp-for="Emphasize" id="chkEmphasize" />
-                                <label class="form-check-label" asp-for="Emphasize"></label>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" asp-for="Enabled" id="chkEnabled" />
-                                <label class="form-check-label" asp-for="Enabled"></label>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" asp-for="Required" id="chkRequired" />
-                                <label class="form-check-label" asp-for="Required"></label>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" asp-for="ShowInDiscoveryDocument" id="chkShowInDiscoveryDocument" />
-                                <label class="form-check-label" asp-for="ShowInDiscoveryDocument"></label>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" asp-for="NonEditable" id="chkNonEditable" />
-                                <label class="form-check-label" asp-for="NonEditable"></label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <input type="submit" value="Save" class="btn btn-sm btn-primary" />
-                    </div>
-                </form>
+            <div class="flex space-x-2">
+                <a asp-controller="IdentityResources" asp-action="Index" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Identity Resources
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <form asp-action="Edit" class="space-y-8">
+        <!-- Navigation Bar -->
+        @await Html.PartialAsync("_identityResourceNavBar", Model.NavBar)
+
+        <!-- Validation Summary -->
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <h3 class="font-bold">Please correct the following errors:</h3>
+                    <div asp-validation-summary="ModelOnly" class="text-sm"></div>
+                </div>
+            </div>
+        }
+
+        <!-- Main Configuration Card -->
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body">
+                <div class="flex items-center space-x-3 mb-8">
+                    <div class="avatar">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-secondary to-accent">
+                            <i class="fas fa-id-card text-white text-2xl flex items-center justify-center h-full"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-bold text-gradient">Identity Resource Configuration</h2>
+                        <p class="text-base-content/70 text-lg">Define user profile information and claims</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Basic Information -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-semibold flex items-center mb-4">
+                            <i class="fas fa-info-circle mr-2 text-primary"></i>
+                            Basic Information
+                        </h3>
+
+                        <!-- Resource Name -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Name)</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-tag text-base-content/40"></i>
+                                </div>
+                                <input asp-for="Name" 
+                                       type="text" 
+                                       class="input input-bordered w-full pl-10 focus:input-primary" 
+                                       placeholder="profile" />
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="Name" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Unique identifier (e.g., profile, email, openid)</span>
+                            </label>
+                        </div>
+
+                        <!-- Display Name -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.DisplayName)</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-signature text-base-content/40"></i>
+                                </div>
+                                <input asp-for="DisplayName" 
+                                       type="text" 
+                                       class="input input-bordered w-full pl-10 focus:input-primary" 
+                                       placeholder="User Profile" />
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="DisplayName" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Human-readable name for the resource</span>
+                            </label>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Description)</span>
+                            </label>
+                            <textarea asp-for="Description" 
+                                     class="textarea textarea-bordered focus:textarea-primary" 
+                                     placeholder="Detailed description of the identity resource..."
+                                     rows="4"></textarea>
+                            <label class="label">
+                                <span asp-validation-for="Description" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Optional description of the resource</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Configuration & Settings -->
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-semibold flex items-center mb-4">
+                            <i class="fas fa-cogs mr-2 text-secondary"></i>
+                            Resource Settings
+                        </h3>
+
+                        <!-- Core Settings Card -->
+                        <div class="card bg-base-200 border border-base-300">
+                            <div class="card-body p-6">
+                                <h4 class="font-semibold mb-4 flex items-center">
+                                    <i class="fas fa-toggle-on mr-2 text-success"></i>
+                                    Core Settings
+                                </h4>
+                                
+                                <!-- Enabled Toggle -->
+                                <div class="form-control mb-4">
+                                    <label class="label cursor-pointer">
+                                        <div>
+                                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Enabled)</span>
+                                            <div class="text-xs text-base-content/60">Enable or disable this identity resource</div>
+                                        </div>
+                                        <input asp-for="Enabled" type="checkbox" class="toggle toggle-success toggle-lg" />
+                                    </label>
+                                </div>
+
+                                <!-- Required Toggle -->
+                                <div class="form-control mb-4">
+                                    <label class="label cursor-pointer">
+                                        <div>
+                                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Required)</span>
+                                            <div class="text-xs text-base-content/60">This resource is mandatory</div>
+                                        </div>
+                                        <input asp-for="Required" type="checkbox" class="toggle toggle-info" />
+                                    </label>
+                                </div>
+
+                                <!-- Emphasize Toggle -->
+                                <div class="form-control">
+                                    <label class="label cursor-pointer">
+                                        <div>
+                                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Emphasize)</span>
+                                            <div class="text-xs text-base-content/60">Highlight in consent screen</div>
+                                        </div>
+                                        <input asp-for="Emphasize" type="checkbox" class="toggle toggle-warning" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Settings Card -->
+                        <div class="card bg-base-200 border border-base-300">
+                            <div class="card-body p-6">
+                                <h4 class="font-semibold mb-4 flex items-center">
+                                    <i class="fas fa-cog mr-2 text-info"></i>
+                                    Advanced Settings
+                                </h4>
+                                
+                                <!-- Show in Discovery Document -->
+                                <div class="form-control mb-4">
+                                    <label class="label cursor-pointer">
+                                        <div>
+                                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.ShowInDiscoveryDocument)</span>
+                                            <div class="text-xs text-base-content/60">Include in discovery document</div>
+                                        </div>
+                                        <input asp-for="ShowInDiscoveryDocument" type="checkbox" class="toggle toggle-primary" />
+                                    </label>
+                                </div>
+
+                                <!-- Non-Editable Toggle -->
+                                <div class="form-control">
+                                    <label class="label cursor-pointer">
+                                        <div>
+                                            <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NonEditable)</span>
+                                            <div class="text-xs text-base-content/60">Prevent future modifications</div>
+                                        </div>
+                                        <input asp-for="NonEditable" type="checkbox" class="toggle toggle-warning" />
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Guidelines Card -->
+                        <div class="card bg-info/10 border border-info/20">
+                            <div class="card-body p-6">
+                                <h4 class="font-semibold mb-3 flex items-center">
+                                    <i class="fas fa-lightbulb mr-2 text-info"></i>
+                                    Identity Resource Guidelines
+                                </h4>
+                                <ul class="space-y-2 text-sm text-base-content/80">
+                                    <li class="flex items-start space-x-2">
+                                        <i class="fas fa-check text-info text-xs mt-1"></i>
+                                        <span>Standard resources: openid, profile, email, address, phone</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <i class="fas fa-check text-info text-xs mt-1"></i>
+                                        <span>Identity resources define user profile information</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <i class="fas fa-check text-info text-xs mt-1"></i>
+                                        <span>Use claims to specify which user data to include</span>
+                                    </li>
+                                    <li class="flex items-start space-x-2">
+                                        <i class="fas fa-check text-info text-xs mt-1"></i>
+                                        <span>Required resources cannot be deselected by users</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        @if (Model.Id != 0)
+                        {
+                            <!-- Resource Statistics -->
+                            <div class="card bg-base-200 border border-base-300">
+                                <div class="card-body p-6">
+                                    <h4 class="font-semibold mb-4 flex items-center">
+                                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                                        Resource Information
+                                    </h4>
+                                    <div class="space-y-3 text-sm">
+                                        <div class="flex justify-between">
+                                            <span class="text-base-content/70">Resource ID:</span>
+                                            <span class="font-mono">@Model.Id</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-base-content/70">Created:</span>
+                                            <span>@Model.Created.ToString("MMM dd, yyyy")</span>
+                                        </div>
+                                        @if (Model.Updated.HasValue)
+                                        {
+                                            <div class="flex justify-between">
+                                                <span class="text-base-content/70">Last Updated:</span>
+                                                <span>@Model.Updated.Value.ToString("MMM dd, yyyy")</span>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="card bg-base-100 shadow-xl border border-base-300">
+            <div class="card-body">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-base-content/70">
+                        @if (Model.Id != 0)
+                        {
+                            <span>Editing Identity Resource: @Model.Name</span>
+                        }
+                        else
+                        {
+                            <span>Creating new identity resource</span>
+                        }
+                    </div>
+                    <div class="flex space-x-3">
+                        <a asp-controller="IdentityResources" asp-action="Index" class="btn btn-outline">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save mr-2"></i>
+                            @(Model.Id == 0 ? "Create Identity Resource" : "Save Changes")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

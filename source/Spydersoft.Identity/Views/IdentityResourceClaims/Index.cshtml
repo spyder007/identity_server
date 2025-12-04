@@ -1,56 +1,403 @@
 ﻿@using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels
 @model IdentityResourceClaimsViewModel
 
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-info">
+                        <i class="fas fa-id-card text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">Identity Resource Claims</h1>
+                    <p class="dashboard-subtitle">Configure claims returned with this identity resource</p>
+                </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Save" asp-route-id="@Model.Id">
-                    @await Html.PartialAsync("_identityResourceNavBar", Model.NavBar)
-                    <table class="table" aria-label="Identity Resource Claims">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>@Html.LabelFor(model => model.NewItem.Type)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var identityClaim in Model.ItemsList)
-                        {
-                            <tr>
-                                <td>@identityClaim.Type</td>
-                                <td><a asp-action="Delete" asp-route-id="@identityClaim.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                            </tr>
-                        }
-                        <tr>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Type" pf-validation-for="NewItem.Type" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Type" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                </div>
-                            </td>
-
-                        </tr>
-                    </table>
-
-                </form>
+            <div class="flex space-x-2">
+                <a asp-controller="IdentityResources" asp-action="Edit" asp-route-id="@Model.NavBar.Id" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Identity Resource
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Navigation Bar -->
+    @await Html.PartialAsync("_identityResourceNavBar", Model.NavBar)
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Claims Management -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-primary/10">
+                                <i class="fas fa-id-card text-primary flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Identity Claims</h2>
+                            <p class="text-base-content/70">Claims included when this identity resource is requested</p>
+                        </div>
+                    </div>
+
+                    @if (Model.ItemsList.Any())
+                    {
+                        <!-- Existing Claims -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+                            @foreach (var claim in Model.ItemsList)
+                            {
+                                <div class="card bg-base-200 border border-base-300 hover:border-primary transition-colors">
+                                    <div class="card-body p-4">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-2">
+                                                <div class="avatar">
+                                                    <div class="w-8 h-8 rounded-full bg-success/10">
+                                                        <i class="fas fa-tag text-success text-xs flex items-center justify-center h-full"></i>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="font-medium text-sm">@claim.Type</div>
+                                                    <div class="text-xs text-base-content/60">
+                                                        @GetClaimDescription(claim.Type)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex space-x-1">
+                                                <div class="badge badge-outline badge-xs">@GetClaimCategory(claim.Type)</div>
+                                                <button onclick="confirmDelete('@claim.Id', '@claim.Type')" 
+                                                        class="btn btn-error btn-xs" 
+                                                        title="Remove claim">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-12 mb-6">
+                            <div class="avatar mb-4">
+                                <div class="w-24 rounded-full bg-base-200">
+                                    <i class="fas fa-id-card text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No Claims Configured</h3>
+                            <p class="text-base-content/70 mb-4">Add claims to define what user information is included with this identity resource.</p>
+                        </div>
+                    }
+
+                    <!-- Add New Claim Form -->
+                    <form asp-action="Save" asp-route-id="@Model.Id" class="space-y-4">
+                        <div class="divider">Add Identity Claim</div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Type)</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-tag text-base-content/40"></i>
+                                </div>
+                                <input asp-for="NewItem.Type" 
+                                       type="text" 
+                                       class="input input-bordered w-full pl-10 focus:input-primary" 
+                                       placeholder="email" 
+                                       list="identityClaimTypes" />
+                                <datalist id="identityClaimTypes">
+                                    <!-- OpenID Connect Standard Claims -->
+                                    <option value="sub">Subject identifier (required)</option>
+                                    <option value="name">Full name</option>
+                                    <option value="given_name">First name</option>
+                                    <option value="family_name">Last name</option>
+                                    <option value="middle_name">Middle name</option>
+                                    <option value="nickname">Nickname</option>
+                                    <option value="preferred_username">Preferred username</option>
+                                    <option value="profile">Profile page URL</option>
+                                    <option value="picture">Profile picture URL</option>
+                                    <option value="website">Website URL</option>
+                                    <option value="email">Email address</option>
+                                    <option value="email_verified">Email verification status</option>
+                                    <option value="gender">Gender</option>
+                                    <option value="birthdate">Birth date</option>
+                                    <option value="zoneinfo">Time zone</option>
+                                    <option value="locale">Locale</option>
+                                    <option value="phone_number">Phone number</option>
+                                    <option value="phone_number_verified">Phone verification status</option>
+                                    <option value="address">Address</option>
+                                    <option value="updated_at">Profile update timestamp</option>
+                                </datalist>
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="NewItem.Type" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Standard or custom claim type</span>
+                            </label>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add Claim
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Statistics -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Statistics
+                    </h3>
+                    <div class="stat">
+                        <div class="stat-title">Total Claims</div>
+                        <div class="stat-value text-primary">@Model.ItemsList.Count()</div>
+                        <div class="stat-desc">Identity attributes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Standard Claims -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bookmark mr-2 text-info"></i>
+                        OpenID Connect Standard Claims
+                    </h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+                            <div>
+                                <span class="font-medium">sub</span>
+                                <div class="text-xs text-base-content/60">Subject identifier</div>
+                            </div>
+                            <div class="badge badge-error badge-sm">Required</div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+                            <div>
+                                <span class="font-medium">name</span>
+                                <div class="text-xs text-base-content/60">Full name</div>
+                            </div>
+                            <div class="badge badge-info badge-sm">Profile</div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+                            <div>
+                                <span class="font-medium">email</span>
+                                <div class="text-xs text-base-content/60">Email address</div>
+                            </div>
+                            <div class="badge badge-secondary badge-sm">Email</div>
+                        </div>
+                        <div class="flex items-center justify-between p-2 bg-base-200 rounded">
+                            <div>
+                                <span class="font-medium">phone_number</span>
+                                <div class="text-xs text-base-content/60">Phone number</div>
+                            </div>
+                            <div class="badge badge-accent badge-sm">Phone</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Claim Categories -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-layer-group mr-2 text-secondary"></i>
+                        Claim Categories
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-primary badge-sm mr-2">PROFILE</span>
+                                Profile Information
+                            </div>
+                            <div class="text-xs text-base-content/60">name, given_name, family_name, picture, birthdate</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-secondary badge-sm mr-2">CONTACT</span>
+                                Contact Information
+                            </div>
+                            <div class="text-xs text-base-content/60">email, phone_number, address</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-accent badge-sm mr-2">META</span>
+                                Metadata
+                            </div>
+                            <div class="text-xs text-base-content/60">locale, zoneinfo, updated_at</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Identity Resource Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2 text-info"></i>
+                        About Identity Claims
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Define user attributes included in identity tokens</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Follow OpenID Connect standards</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Support user consent decisions</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Based on user's actual data</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Privacy Guidelines -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-warning"></i>
+                        Privacy Guidelines
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Include only necessary claims</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-triangle text-warning text-xs mt-1"></i>
+                            <span>Be mindful of sensitive personal data</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Follow GDPR and privacy regulations</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Document claim purposes clearly</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="IdentityResourceProperties" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-cog mr-2"></i>
+                            Identity Properties
+                        </a>
+                        <a asp-controller="IdentityResources" asp-action="Index" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-list mr-2"></i>
+                            All Identity Resources
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Remove Identity Claim
+        </h3>
+        <p class="py-4">
+            Are you sure you want to remove the claim <strong id="deleteClaimType"></strong> from this identity resource?
+            <br><br>This claim will no longer be included when this identity resource is requested.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-times mr-2"></i>
+                Remove Claim
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <script>
+        function confirmDelete(claimId, claimType) {
+            document.getElementById('deleteClaimType').textContent = claimType;
+            document.getElementById('deleteConfirmBtn').href = '@(Url.Action("Delete"))?id=' + claimId + '&parentid=@Model.NavBar.Id';
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
+}
+
+@functions {
+    private string GetClaimDescription(string claimType)
+    {
+        return claimType.ToLower() switch
+        {
+            "sub" => "Subject identifier (required)",
+            "name" => "Full name",
+            "given_name" => "First name",
+            "family_name" => "Last name",
+            "middle_name" => "Middle name",
+            "nickname" => "Nickname",
+            "preferred_username" => "Preferred username",
+            "profile" => "Profile page URL",
+            "picture" => "Profile picture URL",
+            "website" => "Website URL",
+            "email" => "Email address",
+            "email_verified" => "Email verification status",
+            "gender" => "Gender",
+            "birthdate" => "Birth date",
+            "zoneinfo" => "Time zone",
+            "locale" => "Locale",
+            "phone_number" => "Phone number",
+            "phone_number_verified" => "Phone verification status",
+            "address" => "Address information",
+            "updated_at" => "Profile update timestamp",
+            _ => "Custom identity claim"
+        };
+    }
+
+    private string GetClaimCategory(string claimType)
+    {
+        return claimType.ToLower() switch
+        {
+            "sub" => "CORE",
+            var c when c.Contains("name") || c.Contains("nickname") || c == "picture" || c == "profile" || c == "website" || c == "gender" || c == "birthdate" => "PROFILE",
+            var c when c.Contains("email") || c.Contains("phone") || c == "address" => "CONTACT",
+            var c when c == "locale" || c == "zoneinfo" || c == "updated_at" => "META",
+            _ => "CUSTOM"
+        };
+    }
+}

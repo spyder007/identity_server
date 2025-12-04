@@ -1,44 +1,333 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 @model ApiResourcesViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
-                    </div>
-                </div>
-                <!-- end col -->
-            </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <div class="table-responsive">
-                    <table class="table" aria-label="API Resources">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Name</th>
-                                <th>Display Name</th>
-                                <th>Actions&nbsp;<a asp-controller="ApiResources" asp-action="Edit"><span class="fa fa-plus"></span></a></th>
-                            </tr>
-                        </thead>
 
-                        @foreach (var api in Model.Apis)
-                        {
-                            <tr>
-                                <td>@api.Name</td>
-                                <td>@api.DisplayName</td>
-                                <td>
-                                    <a asp-controller="ApiResources" asp-action="Edit" asp-route-id="@api.Id"><span class="fa fa-edit"></span></a>
-                                    <a asp-controller="ApiResources" asp-action="Delete" asp-route-id="@api.Id" title="Delete"><span class="fa fa-trash"></span></a>
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </div>
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="dashboard-title">@ViewData["Title"]</h1>
+                <p class="dashboard-subtitle">Manage API resources and their configurations</p>
             </div>
+            <a asp-controller="ApiResources" asp-action="Edit" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus mr-2"></i>
+                Add API Resource
+            </a>
         </div>
     </div>
-</section>
+
+    <!-- API Resource Statistics -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-primary">
+                <i class="fas fa-server text-3xl"></i>
+            </div>
+            <div class="stat-title">Total APIs</div>
+            <div class="stat-value text-primary">@Model.Apis.Count()</div>
+            <div class="stat-desc">Registered resources</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-success">
+                <i class="fas fa-check-circle text-3xl"></i>
+            </div>
+            <div class="stat-title">Active</div>
+            <div class="stat-value text-success">@Model.Apis.Count(a => a.Enabled)</div>
+            <div class="stat-desc">Currently enabled</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-warning">
+                <i class="fas fa-pause-circle text-3xl"></i>
+            </div>
+            <div class="stat-title">Disabled</div>
+            <div class="stat-value text-warning">@Model.Apis.Count(a => !a.Enabled)</div>
+            <div class="stat-desc">Not active</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-info">
+                <i class="fas fa-calendar text-3xl"></i>
+            </div>
+            <div class="stat-title">Recently Updated</div>
+            <div class="stat-value text-info">@Model.Apis.Count(a => a.Updated > DateTime.UtcNow.AddDays(-7))</div>
+            <div class="stat-desc">Last 7 days</div>
+        </div>
+    </div>
+
+    <!-- API Resources Table -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="card-title text-2xl">
+                    <i class="fas fa-server mr-2"></i>
+                    API Resources
+                </h2>
+                <div class="flex space-x-2">
+                    <input type="text" 
+                           placeholder="Search API resources..." 
+                           class="input input-bordered input-sm w-full max-w-xs"
+                           id="apiSearch" />
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-sm">
+                            <i class="fas fa-filter mr-1"></i>
+                            Filter
+                        </label>
+                        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a onclick="filterApis('all')">All Resources</a></li>
+                            <li><a onclick="filterApis('enabled')">Enabled Only</a></li>
+                            <li><a onclick="filterApis('disabled')">Disabled Only</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Apis.Any())
+            {
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra w-full">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-tag mr-2"></i>
+                                        Resource Name
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-info-circle mr-2"></i>
+                                        Display Name
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-calendar mr-2"></i>
+                                        Last Updated
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-toggle-on mr-2"></i>
+                                        Status
+                                    </span>
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var api in Model.Apis)
+                            {
+                                <tr class="hover" data-api-enabled="@api.Enabled.ToString().ToLower()">
+                                    <td>
+                                        <div class="flex items-center space-x-3">
+                                            <div class="avatar">
+                                                <div class="mask mask-squircle w-12 h-12 bg-gradient-to-br from-info to-primary">
+                                                    <i class="fas fa-server text-white flex items-center justify-center h-full"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">@api.Name</div>
+                                                <div class="text-sm opacity-50">ID: @api.Id</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <div class="font-semibold">@(api.DisplayName ?? api.Name)</div>
+                                            @if (!string.IsNullOrEmpty(api.Description))
+                                            {
+                                                <div class="text-sm text-base-content/70 max-w-xs truncate">@api.Description</div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="text-sm">
+                                            @if (api.Updated != default(DateTime))
+                                            {
+                                                <span>@api.Updated.ToString("MMM dd, yyyy")</span>
+                                                <div class="text-xs text-base-content/60">@api.Updated.ToString("HH:mm")</div>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-base-content/50">Not updated</span>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex flex-col space-y-1">
+                                            @if (api.Enabled)
+                                            {
+                                                <div class="badge badge-success badge-sm gap-1">
+                                                    <i class="fas fa-check text-xs"></i>
+                                                    Enabled
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="badge badge-error badge-sm gap-1">
+                                                    <i class="fas fa-times text-xs"></i>
+                                                    Disabled
+                                                </div>
+                                            }
+                                            @if (api.NonEditable)
+                                            {
+                                                <div class="badge badge-warning badge-sm gap-1">
+                                                    <i class="fas fa-lock text-xs"></i>
+                                                    Protected
+                                                </div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex space-x-2">
+                                            <div class="dropdown dropdown-end">
+                                                <label tabindex="0" class="btn btn-ghost btn-sm">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </label>
+                                                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                    <li>
+                                                        <a asp-controller="ApiResources" asp-action="Edit" asp-route-id="@api.Id">
+                                                            <i class="fas fa-edit"></i>
+                                                            Edit Resource
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-controller="ApiResourceScopes" asp-action="Index" asp-route-id="@api.Id">
+                                                            <i class="fas fa-key"></i>
+                                                            Manage Scopes
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-controller="ApiResourceClaims" asp-action="Index" asp-route-id="@api.Id">
+                                                            <i class="fas fa-tags"></i>
+                                                            Claims
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-controller="ApiResourceSecrets" asp-action="Index" asp-route-id="@api.Id">
+                                                            <i class="fas fa-shield-alt"></i>
+                                                            Secrets
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-controller="ApiResourceProperties" asp-action="Index" asp-route-id="@api.Id">
+                                                            <i class="fas fa-cog"></i>
+                                                            Properties
+                                                        </a>
+                                                    </li>
+                                                    @if (!api.NonEditable)
+                                                    {
+                                                        <div class="divider my-1"></div>
+                                                        <li>
+                                                            <button onclick="confirmDelete('@api.Id', '@api.Name')" 
+                                                                    class="text-error">
+                                                                <i class="fas fa-trash"></i>
+                                                                Delete Resource
+                                                            </button>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-12">
+                    <div class="avatar mb-4">
+                        <div class="w-24 rounded-full bg-base-200">
+                            <i class="fas fa-server text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">No API Resources Found</h3>
+                    <p class="text-base-content/70 mb-4">Create your first API resource to protect your backend services.</p>
+                    <a asp-controller="ApiResources" asp-action="Edit" class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>
+                        Create First API Resource
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm API Resource Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the API resource <strong id="deleteApiName"></strong>? 
+            This action cannot be undone and will permanently remove the resource and all its configurations.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete Resource
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        document.getElementById('apiSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const resourceName = row.cells[0].textContent.toLowerCase();
+                const displayName = row.cells[1].textContent.toLowerCase();
+                
+                if (resourceName.includes(searchTerm) || displayName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter functionality
+        function filterApis(filter) {
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                let show = true;
+                
+                switch (filter) {
+                    case 'enabled':
+                        show = row.dataset.apiEnabled === 'true';
+                        break;
+                    case 'disabled':
+                        show = row.dataset.apiEnabled === 'false';
+                        break;
+                    case 'all':
+                    default:
+                        show = true;
+                        break;
+                }
+                
+                row.style.display = show ? '' : 'none';
+            });
+        }
+
+        // Delete confirmation
+        function confirmDelete(apiId, apiName) {
+            document.getElementById('deleteApiName').textContent = apiName;
+            document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete", "ApiResources")/' + apiId;
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
+}

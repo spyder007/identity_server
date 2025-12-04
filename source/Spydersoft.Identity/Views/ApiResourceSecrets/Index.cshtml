@@ -1,87 +1,406 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ApiResourceViewModels
 @model ApiResourceSecretsViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-error to-warning">
+                        <i class="fas fa-key text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">API Resource Secrets</h1>
+                    <p class="dashboard-subtitle">Manage authentication secrets for API resource access</p>
+                </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Save" asp-route-id="@Model.Id">
-
-                    @await Html.PartialAsync("_apiNavBar", Model.NavBar)
-
-                    <table class="table" aria-label="API Resource Secrets">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>@Html.LabelFor(model => model.NewItem.Description)</th>
-                                <th>@Html.LabelFor(model => model.NewItem.Type)</th>
-                                <th>@Html.LabelFor(model => model.NewItem.Value)</th>
-                                <th>@Html.LabelFor(model => model.NewItem.Created)</th>
-                                <th>@Html.LabelFor(model => model.NewItem.Expiration)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var apiSecret in Model.ItemsList)
-                        {
-                            <tr>
-                                <td>@apiSecret.Description</td>
-                                <td>@apiSecret.Type</td>
-                                <td>@apiSecret.Value</td>
-                                <td>@apiSecret.Created</td>
-                                <td>@apiSecret.Expiration</td>
-                                <td><a asp-action="Delete" asp-route-id="@apiSecret.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                            </tr>
-                        }
-                        <tr>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Description" pf-validation-for="NewItem.Description" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Description" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtValue" asp-for="NewItem.Type" readonly />
-                                    @Html.HiddenFor(model => model.NewItem.Type)
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtValue" asp-for="NewItem.Value" pf-validation-for="NewItem.Value" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Value" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="datetime" class="form-control" id="txtCreated" asp-for="NewItem.Created" readonly />
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="datetime" class="form-control" id="txtExpiration" asp-for="NewItem.Expiration" pf-validation-for="NewItem.Expiration" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Expiration" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                </div>
-                            </td>
-
-                        </tr>
-                    </table>
-                </form>
+            <div class="flex space-x-2">
+                <a asp-controller="ApiResources" asp-action="Edit" asp-route-id="@Model.NavBar.Id" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to API Resource
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Navigation Bar -->
+    @await Html.PartialAsync("_apiNavBar", Model.NavBar)
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" data-parent-id="@Model.NavBar.Id">
+        <!-- Secrets Management -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-error/10">
+                                <i class="fas fa-key text-error flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">API Secrets</h2>
+                            <p class="text-base-content/70">Authentication credentials for accessing this API resource</p>
+                        </div>
+                    </div>
+
+                    @if (Model.ItemsList.Any())
+                    {
+                        <!-- Existing Secrets -->
+                        <div class="space-y-4 mb-6">
+                            @foreach (var secret in Model.ItemsList)
+                            {
+                                <div class="card bg-base-200 border border-base-300">
+                                    <div class="card-body p-4">
+                                        <div class="flex items-start justify-between">
+                                            <div class="flex-1 space-y-3">
+                                                <div class="flex items-center space-x-3">
+                                                    <div class="avatar">
+                                                        <div class="w-8 h-8 rounded-full bg-success/10">
+                                                            <i class="fas fa-shield-alt text-success text-xs flex items-center justify-center h-full"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <div class="font-semibold">@secret.Description</div>
+                                                        <div class="text-xs text-base-content/60">@secret.Type</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                                                    <div>
+                                                        <span class="text-base-content/60">Secret Value:</span>
+                                                        <div class="font-mono text-xs bg-base-300 p-2 rounded mt-1">
+                                                            @(secret.Value.Length > 20 ? secret.Value.Substring(0, 20) + "..." : secret.Value)
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                        <span class="text-base-content/60">Created:</span>
+                                                        <div class="font-mono text-xs">@secret.Created.ToString("MMM dd, yyyy")</div>
+                                                    </div>
+                                                    <div>
+                                                        @if (secret.Expiration.HasValue)
+                                                        {
+                                                            <span class="text-base-content/60">Expires:</span>
+                                                            <div class="font-mono text-xs @(secret.Expiration.Value < DateTime.UtcNow ? "text-error" : "")">
+                                                                @secret.Expiration.Value.ToString("MMM dd, yyyy")
+                                                                @if (secret.Expiration.Value < DateTime.UtcNow)
+                                                                {
+                                                                    <span class="badge badge-error badge-sm ml-1">EXPIRED</span>
+                                                                }
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="text-base-content/60">Expires:</span>
+                                                            <div class="text-xs text-success">Never</div>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex space-x-2 ml-4">
+                                                <button data-copy-text="@secret.Value" 
+                                                        class="btn btn-ghost btn-sm"
+                                                        title="Copy secret">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                                <button data-delete-id="@secret.Id" data-delete-name="@secret.Description" 
+                                                        class="btn btn-error btn-sm" 
+                                                        title="Delete secret">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-12 mb-6">
+                            <div class="avatar mb-4">
+                                <div class="w-24 rounded-full bg-base-200">
+                                    <i class="fas fa-key text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No API Secrets</h3>
+                            <p class="text-base-content/70 mb-4">Add secrets for secure API resource authentication.</p>
+                        </div>
+                    }
+
+                    <!-- Add New Secret Form -->
+                    <form asp-action="Save" asp-route-id="@Model.Id" class="space-y-6">
+                        <div class="divider">Add New API Secret</div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Description -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Description)</span>
+                                    <span class="label-text-alt text-error">*</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-tag text-base-content/40"></i>
+                                    </div>
+                                    <input asp-for="NewItem.Description" 
+                                           type="text" 
+                                           class="input input-bordered w-full pl-10 focus:input-primary" 
+                                           placeholder="Production API Key" />
+                                </div>
+                                <label class="label">
+                                    <span asp-validation-for="NewItem.Description" class="label-text-alt text-error"></span>
+                                    <span class="label-text-alt text-base-content/60">Descriptive name for the secret</span>
+                                </label>
+                            </div>
+
+                            <!-- Type (Read-only) -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Type)</span>
+                                </label>
+                                <input asp-for="NewItem.Type" 
+                                       type="text" 
+                                       class="input input-bordered w-full bg-base-200" 
+                                       readonly />
+                                @Html.HiddenFor(model => model.NewItem.Type)
+                                <label class="label">
+                                    <span class="label-text-alt text-base-content/60">Secret type (SHA256/SHA512)</span>
+                                </label>
+                            </div>
+
+                            <!-- Secret Value -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Value)</span>
+                                    <span class="label-text-alt text-error">*</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-key text-base-content/40"></i>
+                                    </div>
+                                    <input asp-for="NewItem.Value" 
+                                           type="password" 
+                                           class="input input-bordered w-full pl-10 pr-12 focus:input-primary" 
+                                           placeholder="Enter secret value" 
+                                           id="secretValue" />
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                        <button type="button" data-toggle-secret="secretValue" class="btn btn-ghost btn-sm">
+                                            <i class="fas fa-eye" id="secretToggleIcon"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <label class="label">
+                                    <span asp-validation-for="NewItem.Value" class="label-text-alt text-error"></span>
+                                    <span class="label-text-alt text-base-content/60">Strong secret for API authentication</span>
+                                </label>
+                            </div>
+
+                            <!-- Expiration -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Expiration)</span>
+                                </label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-calendar text-base-content/40"></i>
+                                    </div>
+                                    <input asp-for="NewItem.Expiration" 
+                                           type="datetime-local" 
+                                           class="input input-bordered w-full pl-10 focus:input-primary" />
+                                </div>
+                                <label class="label">
+                                    <span asp-validation-for="NewItem.Expiration" class="label-text-alt text-error"></span>
+                                    <span class="label-text-alt text-base-content/60">Optional expiration date</span>
+                                </label>
+                            </div>
+
+                            <!-- Created (Hidden) -->
+                            <input asp-for="NewItem.Created" type="hidden" />
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <button type="button" data-generate-secret="secretValue" class="btn btn-outline">
+                                <i class="fas fa-random mr-2"></i>
+                                Generate Secret
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add API Secret
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Statistics -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Statistics
+                    </h3>
+                    <div class="space-y-2">
+                        <div class="stat">
+                            <div class="stat-title">Total Secrets</div>
+                            <div class="stat-value text-error">@Model.ItemsList.Count()</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-title">Expired</div>
+                            <div class="stat-value text-warning">@Model.ItemsList.Count(s => s.Expiration.HasValue && s.Expiration.Value < DateTime.UtcNow)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-error"></i>
+                        Security Guidelines
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use strong, randomly generated secrets</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Set expiration dates for secrets</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Rotate secrets regularly</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Store secrets securely</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Remove unused secrets</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- API Secret Usage -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2 text-info"></i>
+                        About API Secrets
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Used for introspection endpoint authentication</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Required for protected API resources</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Validate access tokens securely</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Enable resource server authentication</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Best Practices -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-star mr-2 text-warning"></i>
+                        Best Practices
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Generate cryptographically strong secrets</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use different secrets per environment</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Monitor secret usage and expiration</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Document secret rotation procedures</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="ApiResourceClaims" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-tags mr-2"></i>
+                            API Claims
+                        </a>
+                        <a asp-controller="ApiResourceScopes" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            API Scopes
+                        </a>
+                        <a asp-controller="ApiResourceProperties" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-cog mr-2"></i>
+                            Properties
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm Secret Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the API secret: 
+            <br><strong id="deleteSecretDescription"></strong>
+            <br><br>This action cannot be undone and will break API authentication if this secret is in use.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete Secret
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,45 +1,321 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ClientViewModels
 @model ClientsViewModel
 
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
-                    </div>
-                </div>
-                <!-- end col -->
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="dashboard-title">@ViewData["Title"]</h1>
+                <p class="dashboard-subtitle">Manage OAuth 2.0 and OpenID Connect clients</p>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <div class="table-wrapper table-responsive">
-                    <table class="table" aria-label="Clients">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Client Id</th>
-                                <th>Client Name</th>
-                                <th>Actions&nbsp;<a asp-controller="Clients" asp-action="Edit"><span class="fa fa-plus"></span></a></th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var client in Model.Clients)
-                        {
-                            <tr>
-                                <td>@client.ClientId</td>
-                                <td>@client.ClientName</td>
-                                <td>
-                                    <a asp-controller="Clients" asp-action="Edit" asp-route-id="@client.Id"><span class="fa fa-edit"></span></a>
-                                    <a asp-controller="Clients" asp-action="Delete" asp-route-id="@client.Id" title="Delete"><span class="fa fa-trash"></span></a>
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-            </div>
+            <a asp-controller="Clients" asp-action="Edit" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus mr-2"></i>
+                Add New Client
+            </a>
         </div>
     </div>
-</section>
+
+    <!-- Client Statistics -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-primary">
+                <i class="fas fa-mobile-alt text-3xl"></i>
+            </div>
+            <div class="stat-title">Total Clients</div>
+            <div class="stat-value text-primary">@Model.Clients.Count()</div>
+            <div class="stat-desc">Registered applications</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-success">
+                <i class="fas fa-check-circle text-3xl"></i>
+            </div>
+            <div class="stat-title">Active</div>
+            <div class="stat-value text-success">@Model.Clients.Count(c => c.Enabled)</div>
+            <div class="stat-desc">Currently enabled</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-warning">
+                <i class="fas fa-pause-circle text-3xl"></i>
+            </div>
+            <div class="stat-title">Disabled</div>
+            <div class="stat-value text-warning">@Model.Clients.Count(c => !c.Enabled)</div>
+            <div class="stat-desc">Not active</div>
+        </div>
+        
+        <div class="stat bg-base-100 shadow-lg rounded-lg border border-base-300">
+            <div class="stat-figure text-info">
+                <i class="fas fa-key text-3xl"></i>
+            </div>
+            <div class="stat-title">With Secrets</div>
+            <div class="stat-value text-info">@Model.Clients.Count(c => c.RequireClientSecret)</div>
+            <div class="stat-desc">Confidential clients</div>
+        </div>
+    </div>
+
+    <!-- Clients Table -->
+    <div class="card bg-base-100 shadow-xl border border-base-300">
+        <div class="card-body">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="card-title text-2xl">
+                    <i class="fas fa-mobile-alt mr-2"></i>
+                    Client Applications
+                </h2>
+                <div class="flex space-x-2">
+                    <input type="text" 
+                           placeholder="Search clients..." 
+                           class="input input-bordered input-sm w-full max-w-xs"
+                           id="clientSearch" />
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-sm">
+                            <i class="fas fa-filter mr-1"></i>
+                            Filter
+                        </label>
+                        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a onclick="filterClients('all')">All Clients</a></li>
+                            <li><a onclick="filterClients('enabled')">Enabled Only</a></li>
+                            <li><a onclick="filterClients('disabled')">Disabled Only</a></li>
+                            <li><a onclick="filterClients('confidential')">Confidential</a></li>
+                            <li><a onclick="filterClients('public')">Public</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.Clients.Any())
+            {
+                <div class="overflow-x-auto">
+                    <table class="table table-zebra w-full">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-id-card mr-2"></i>
+                                        Client ID
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-tag mr-2"></i>
+                                        Client Name
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-cog mr-2"></i>
+                                        Type
+                                    </span>
+                                </th>
+                                <th>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-toggle-on mr-2"></i>
+                                        Status
+                                    </span>
+                                </th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var client in Model.Clients)
+                            {
+                                <tr class="hover" data-client-enabled="@client.Enabled.ToString().ToLower()" 
+                                    data-client-confidential="@client.RequireClientSecret.ToString().ToLower()">
+                                    <td>
+                                        <div class="flex items-center space-x-3">
+                                            <div class="avatar">
+                                                <div class="mask mask-squircle w-12 h-12 bg-gradient-to-br from-primary to-secondary">
+                                                    <i class="fas fa-mobile-alt text-white flex items-center justify-center h-full"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="font-bold">@client.ClientId</div>
+                                                <div class="text-sm opacity-50">@client.Id</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <div class="font-semibold">@client.ClientName</div>
+                                            @if (!string.IsNullOrEmpty(client.Description))
+                                            {
+                                                <div class="text-sm text-base-content/70">@client.Description</div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if (client.RequireClientSecret)
+                                        {
+                                            <div class="badge badge-info gap-2">
+                                                <i class="fas fa-lock"></i>
+                                                Confidential
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="badge badge-ghost gap-2">
+                                                <i class="fas fa-unlock"></i>
+                                                Public
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (client.Enabled)
+                                        {
+                                            <div class="badge badge-success gap-2">
+                                                <i class="fas fa-check"></i>
+                                                Enabled
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="badge badge-error gap-2">
+                                                <i class="fas fa-times"></i>
+                                                Disabled
+                                            </div>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="flex space-x-2">
+                                            <div class="dropdown dropdown-end">
+                                                <label tabindex="0" class="btn btn-ghost btn-sm">
+                                                    <i class="fas fa-ellipsis-v"></i>
+                                                </label>
+                                                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                    <li>
+                                                        <a asp-controller="Clients" asp-action="Edit" asp-route-id="@client.Id">
+                                                            <i class="fas fa-edit"></i>
+                                                            Edit Client
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-controller="ClientScopes" asp-action="Index" asp-route-id="@client.Id">
+                                                            <i class="fas fa-key"></i>
+                                                            Manage Scopes
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-controller="ClientSecrets" asp-action="Index" asp-route-id="@client.Id">
+                                                            <i class="fas fa-shield-alt"></i>
+                                                            Client Secrets
+                                                        </a>
+                                                    </li>
+                                                    <div class="divider my-1"></div>
+                                                    <li>
+                                                        <button onclick="confirmDelete('@client.Id', '@client.ClientName')" 
+                                                                class="text-error">
+                                                            <i class="fas fa-trash"></i>
+                                                            Delete Client
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-12">
+                    <div class="avatar mb-4">
+                        <div class="w-24 rounded-full bg-base-200">
+                            <i class="fas fa-mobile-alt text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">No Clients Found</h3>
+                    <p class="text-base-content/70 mb-4">Get started by creating your first OAuth 2.0 client application.</p>
+                    <a asp-controller="Clients" asp-action="Edit" class="btn btn-primary">
+                        <i class="fas fa-plus mr-2"></i>
+                        Create First Client
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm Client Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the client <strong id="deleteClientName"></strong>? 
+            This action cannot be undone and will permanently remove all client configuration and data.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete Client
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    <script>
+        // Search functionality
+        document.getElementById('clientSearch').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const clientId = row.cells[0].textContent.toLowerCase();
+                const clientName = row.cells[1].textContent.toLowerCase();
+                
+                if (clientId.includes(searchTerm) || clientName.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Filter functionality
+        function filterClients(filter) {
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                let show = true;
+                
+                switch (filter) {
+                    case 'enabled':
+                        show = row.dataset.clientEnabled === 'true';
+                        break;
+                    case 'disabled':
+                        show = row.dataset.clientEnabled === 'false';
+                        break;
+                    case 'confidential':
+                        show = row.dataset.clientConfidential === 'true';
+                        break;
+                    case 'public':
+                        show = row.dataset.clientConfidential === 'false';
+                        break;
+                    case 'all':
+                    default:
+                        show = true;
+                        break;
+                }
+                
+                row.style.display = show ? '' : 'none';
+            });
+        }
+
+        // Delete confirmation
+        function confirmDelete(clientId, clientName) {
+            document.getElementById('deleteClientName').textContent = clientName;
+            document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete", "Clients")/' + clientId;
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
+}

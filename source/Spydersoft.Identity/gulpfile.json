@@ -1,0 +1,10 @@
+{
+  "//": "Task Runner Explorer bindings for Visual Studio",
+  "//": "This configures when gulp tasks should run automatically",
+  "-vs-binding": {
+    "BeforeBuild": ["clean"],
+    "AfterBuild": ["build"],
+    "Clean": ["clean"],
+    "ProjectOpened": []
+  }
+}

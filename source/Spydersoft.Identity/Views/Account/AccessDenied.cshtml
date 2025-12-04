@@ -1,10 +1,75 @@
 ﻿@{
-    ViewData["Title"] = "Access denied";
+    ViewData["Title"] = "Access Denied";
 }
 
-<div class="card text-white bg-danger">
-    <div class="card-header"><h3>ViewData["Title"]</h3></div>
-    <div class="card-body">
-        <p>You do not have access to this resource.</p>
+<div class="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex items-center justify-center p-4">
+    <div class="card bg-base-100 shadow-2xl max-w-md w-full">
+        <div class="card-body text-center">
+            <!-- Access Denied Icon -->
+            <div class="avatar mb-6">
+                <div class="w-24 rounded-full bg-error/10">
+                    <i class="fas fa-ban text-error text-4xl flex items-center justify-center h-full"></i>
+                </div>
+            </div>
+
+            <!-- Title and Message -->
+            <h1 class="text-3xl font-bold text-error mb-4">Access Denied</h1>
+            <p class="text-lg text-base-content/80 mb-6">
+                You don't have permission to access this resource.
+            </p>
+
+            <!-- Details -->
+            <div class="bg-error/10 p-4 rounded-lg mb-6">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-shield-alt text-error"></i>
+                    <div class="text-left">
+                        <div class="font-medium text-sm">Protected Resource</div>
+                        <div class="text-xs text-base-content/70">
+                            This page requires special permissions to view
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-4">
+                <button onclick="history.back()" class="btn btn-primary btn-lg w-full">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Go Back
+                </button>
+                
+                <div class="flex space-x-2">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-outline flex-1">
+                        <i class="fas fa-home mr-2"></i>
+                        Home
+                    </a>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-outline flex-1">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign In
+                    </a>
+                </div>
+            </div>
+
+            <!-- Help Information -->
+            <div class="mt-8 p-4 bg-info/10 rounded-lg">
+                <div class="text-sm">
+                    <div class="font-medium mb-2 flex items-center">
+                        <i class="fas fa-question-circle text-info mr-2"></i>
+                        Need Help?
+                    </div>
+                    <ul class="text-left text-xs text-base-content/70 space-y-1">
+                        <li>• Contact your administrator for access</li>
+                        <li>• Verify you're signed in to the correct account</li>
+                        <li>• Check if your account has the required permissions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact Support -->
+            <div class="mt-6 text-xs text-base-content/60">
+                Still having issues? 
+                <a asp-controller="Home" asp-action="Contact" class="link link-primary">Contact Support</a>
+            </div>
+        </div>
     </div>
 </div>

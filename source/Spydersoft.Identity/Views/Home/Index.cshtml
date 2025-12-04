@@ -2,28 +2,121 @@
     ViewData["Title"] = "Home Page";
 }
 
-<section class="section">
-    <div class="container-fluid">
-        <!-- ========== title-wrapper start ========== -->
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="titlemb-30">
-                        <h2>Spydersoft Authentication</h2>
-                    </div>
+<div class="identity-server-hero">
+    <div class="hero-content text-center">
+        <div class="max-w-md">
+            <div class="avatar mb-8">
+                <div class="w-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                    <img src="~/images/logo/logo.svg" alt="Spydersoft Logo" />
                 </div>
-              
-                <!-- end col -->
             </div>
-            <!-- end row -->
-        </div>
-        <!-- ========== title-wrapper end ========== -->
-        <div class="card-style">
-            <div class="card-content">
-                <p>This site provides authentication services for Spydersoft applications.</p>
+            <h1 class="text-5xl font-bold text-gradient mb-4">Spydersoft Identity</h1>
+            <p class="text-xl text-base-content/80 mb-8">
+                Secure authentication services for all Spydersoft applications
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a asp-area="" asp-controller="Manage" asp-action="Index" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user mr-2"></i>
+                        Manage Profile
+                    </a>
+                    <a asp-area="" asp-controller="Grants" asp-action="Index" class="btn btn-outline btn-lg">
+                        <i class="fas fa-apps mr-2"></i>
+                        My Applications
+                    </a>
+                }
+                else
+                {
+                    <a asp-area="" asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        Sign In
+                    </a>
+                    <a asp-area="" asp-controller="Register" asp-action="Index" class="btn btn-outline btn-lg">
+                        <i class="fas fa-user-plus mr-2"></i>
+                        Create Account
+                    </a>
+                }
             </div>
         </div>
     </div>
-    <!-- end container -->
-</section>
+</div>
+
+<!-- Features Section -->
+<div class="identity-server-features mt-16">
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gradient mb-4">Why Choose Our Identity Server?</h2>
+        <p class="text-xl text-base-content/70">Modern authentication built for security and scale</p>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+        </div>
+        <div>
+            <h3 class="feature-title">Enterprise Security</h3>
+            <p class="feature-description">
+                Industry-standard OAuth 2.0 and OpenID Connect protocols ensure your applications are secure.
+            </p>
+        </div>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <div>
+            <h3 class="feature-title">Single Sign-On</h3>
+            <p class="feature-description">
+                One login for all your applications. Seamless user experience across the entire ecosystem.
+            </p>
+        </div>
+    </div>
+    
+    <div class="feature-card">
+        <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+        </div>
+        <div>
+            <h3 class="feature-title">Modern Integration</h3>
+            <p class="feature-description">
+                Easy integration with web, mobile, and API applications using standard protocols.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Section -->
+<div class="bg-base-200 py-16 mt-16">
+    <div class="max-w-6xl mx-auto px-6">
+        <div class="stats stats-vertical lg:stats-horizontal shadow-lg">
+            <div class="stat">
+                <div class="stat-figure text-primary">
+                    <i class="fas fa-users text-3xl"></i>
+                </div>
+                <div class="stat-title">Active Users</div>
+                <div class="stat-value text-primary">1,200+</div>
+                <div class="stat-desc">Authenticated securely</div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-figure text-secondary">
+                    <i class="fas fa-apps text-3xl"></i>
+                </div>
+                <div class="stat-title">Applications</div>
+                <div class="stat-value text-secondary">25+</div>
+                <div class="stat-desc">Integrated systems</div>
+            </div>
+            
+            <div class="stat">
+                <div class="stat-figure text-accent">
+                    <i class="fas fa-clock text-3xl"></i>
+                </div>
+                <div class="stat-title">Uptime</div>
+                <div class="stat-value text-accent">99.9%</div>
+                <div class="stat-desc">Reliable service</div>
+            </div>
+        </div>
+    </div>
+</div>
 

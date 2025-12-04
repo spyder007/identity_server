@@ -1,55 +1,371 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ClientViewModels
 @model ClientRedirectsViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary">
+                        <i class="fas fa-external-link-alt text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">Redirect URIs</h1>
+                    <p class="dashboard-subtitle">Manage OAuth 2.0 redirect endpoints for authentication flows</p>
+                </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Save" asp-route-id="@Model.Id">
-
-                    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
-                    <table class="table striped-table" aria-label="Client Redirects">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>@Html.LabelFor(model => model.NewItem.RedirectUri)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var redirectViewModel in Model.ItemsList)
-                        {
-                            <tr>
-                                <td>@redirectViewModel.RedirectUri</td>
-                                <td><a asp-action="Delete" asp-route-id="@redirectViewModel.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                            </tr>
-                        }
-                        <tr>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.RedirectUri" pf-validation-for="NewItem.RedirectUri" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.RedirectUri" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                </div>
-                            </td>
-
-                        </tr>
-                    </table>
-                </form>
+            <div class="flex space-x-2">
+                <a asp-controller="Clients" asp-action="Edit" asp-route-id="@Model.NavBar.Id" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Client
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Navigation Bar -->
+    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" data-parent-id="@Model.NavBar.Id">
+        <!-- Redirect URIs Management -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-primary/10">
+                                <i class="fas fa-external-link-alt text-primary flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Allowed Redirect URIs</h2>
+                            <p class="text-base-content/70">Valid endpoints for OAuth authorization responses</p>
+                        </div>
+                    </div>
+
+                    @if (Model.ItemsList.Any())
+                    {
+                        <!-- Existing Redirect URIs -->
+                        <div class="space-y-3 mb-6">
+                            @foreach (var redirect in Model.ItemsList)
+                            {
+                                <div class="card bg-base-200 border border-base-300">
+                                    <div class="card-body p-4">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="avatar">
+                                                    <div class="w-8 h-8 rounded-full bg-success/10">
+                                                        <i class="fas fa-check text-success text-xs flex items-center justify-center h-full"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <div class="font-mono text-sm break-all">@redirect.RedirectUri</div>
+                                                    <div class="text-xs text-base-content/60">
+                                                        @{
+                                                            try {
+                                                                var uri = new Uri(redirect.RedirectUri);
+                                                                var scheme = uri.Scheme.ToUpper();
+                                                                if (scheme == "HTTP" || scheme == "HTTPS") {
+                                                                    <span>@scheme - @uri.Host@(uri.Port != 80 && uri.Port != 443 ? ":" + uri.Port : "")</span>
+                                                                } else {
+                                                                    <span>@scheme - Custom scheme</span>
+                                                                }
+                                                            }
+                                                            catch {
+                                                                <span>Custom URI</span>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button data-copy-text="@redirect.RedirectUri" 
+                                                        class="btn btn-ghost btn-sm"
+                                                        title="Copy URI">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                                <button data-delete-id="@redirect.Id" data-delete-name="@redirect.RedirectUri" 
+                                                        class="btn btn-error btn-sm" 
+                                                        title="Delete redirect URI">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-12 mb-6">
+                            <div class="avatar mb-4">
+                                <div class="w-24 rounded-full bg-base-200">
+                                    <i class="fas fa-external-link-alt text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No Redirect URIs Configured</h3>
+                            <p class="text-base-content/70 mb-4">Add redirect URIs where users will be sent after authentication.</p>
+                        </div>
+                    }
+
+                    <!-- Add New Redirect URI Form -->
+                    <form asp-action="Save" asp-route-id="@Model.Id" class="space-y-4">
+                        <div class="divider">Add New Redirect URI</div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.RedirectUri)</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-external-link-alt text-base-content/40"></i>
+                                </div>
+                                <input asp-for="NewItem.RedirectUri" 
+                                       type="url" 
+                                       class="input input-bordered w-full pl-10 focus:input-primary" 
+                                       placeholder="https://example.com/callback" />
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="NewItem.RedirectUri" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Must be exact match - include protocol, port, and path</span>
+                            </label>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add Redirect URI
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Statistics -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Statistics
+                    </h3>
+                    <div class="stat">
+                        <div class="stat-title">Total URIs</div>
+                        <div class="stat-value text-primary">@Model.ItemsList.Count()</div>
+                        <div class="stat-desc">Redirect endpoints</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redirect URI Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2 text-info"></i>
+                        About Redirect URIs
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Used in OAuth authorization code flow</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Must be exact match including query parameters</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Essential for secure OAuth flows</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Prevents authorization code interception</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Security Guidelines -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-warning"></i>
+                        Security Guidelines
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use HTTPS in production</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Avoid wildcards in production</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use specific paths, not just domains</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-triangle text-warning text-xs mt-1"></i>
+                            <span>Never use http://localhost in production</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Common Examples -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-accent"></i>
+                        Common Examples
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Web App</div>
+                            <code class="text-xs">https://app.example.com/callback</code>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">SPA</div>
+                            <code class="text-xs">https://spa.example.com/auth/callback</code>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Mobile App</div>
+                            <code class="text-xs">com.example.app://callback</code>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Development</div>
+                            <code class="text-xs">http://localhost:3000/callback</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OAuth Flow Types -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-route mr-2 text-secondary"></i>
+                        OAuth Flow Types
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-primary badge-sm mr-2">CODE</span>
+                                Authorization Code
+                            </div>
+                            <div class="text-xs text-base-content/60">Most secure, requires redirect URI</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-secondary badge-sm mr-2">IMPLICIT</span>
+                                Implicit Flow
+                            </div>
+                            <div class="text-xs text-base-content/60">Legacy, requires redirect URI</div>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-2 flex items-center">
+                                <span class="badge badge-accent badge-sm mr-2">HYBRID</span>
+                                Hybrid Flow
+                            </div>
+                            <div class="text-xs text-base-content/60">Combination, requires redirect URI</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="ClientPostLogoutRedirectUris" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-sign-out-alt mr-2"></i>
+                            Logout URIs
+                        </a>
+                        <a asp-controller="ClientCorsOrigins" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-globe mr-2"></i>
+                            CORS Origins
+                        </a>
+                        <a asp-controller="ClientScopes" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Manage Scopes
+                        </a>
+                        <a asp-controller="ClientSecrets" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Client Secrets
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm Redirect URI Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the redirect URI: 
+            <br><strong class="font-mono text-sm break-all" id="deleteRedirectUri"></strong>
+            <br><br>This action cannot be undone and may break OAuth flows for this client.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete URI
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Copy to clipboard
+            document.querySelectorAll('[data-copy-text]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var text = this.getAttribute('data-copy-text');
+                    navigator.clipboard.writeText(text).then(function() {
+                        // Show success feedback
+                        console.log('Copied: ' + text);
+                    });
+                });
+            });
+
+            // Confirm delete
+            document.querySelectorAll('[data-delete-id]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var redirectId = this.getAttribute('data-delete-id');
+                    var redirectUri = this.getAttribute('data-delete-name');
+                    document.getElementById('deleteRedirectUri').textContent = redirectUri;
+                    document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete")?id=' + redirectId + '&parentid=@Model.NavBar.Id';
+                    document.getElementById('deleteModal').showModal();
+                });
+            });
+        });
+    </script>
+}

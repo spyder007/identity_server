@@ -4,14 +4,29 @@
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }
 
-<ul class="nav nav-tabs">
-    <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" asp-action="Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" asp-action="ChangePassword">Password</a></li>
+<div class="tabs tabs-bordered mb-6">
+    <a class="tab tab-bordered @(ManageNavPages.IndexNavClass(ViewContext) == "active" ? "tab-current" : "")" asp-action="Index">
+        <i class="fas fa-user mr-2"></i>
+        Profile
+    </a>
+    <a class="tab tab-bordered @(ManageNavPages.ChangePasswordNavClass(ViewContext) == "active" ? "tab-current" : "")" asp-action="ChangePassword">
+        <i class="fas fa-lock mr-2"></i>
+        Password
+    </a>
     @if (hasExternalLogins)
     {
-        <li class="nav-item"><a class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-action="ExternalLogins">External logins</a></li>
+        <a class="tab tab-bordered @(ManageNavPages.ExternalLoginsNavClass(ViewContext) == "active" ? "tab-current" : "")" asp-action="ExternalLogins">
+            <i class="fas fa-sign-in-alt mr-2"></i>
+            External logins
+        </a>
     }
-    <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" asp-action="TwoFactorAuthentication">Two-factor authentication</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.UserClaimsInfoNavClass(ViewContext)" asp-action="UserClaimsInfo">User Claims Info</a></li>
-</ul>
+    <a class="tab tab-bordered @(ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext) == "active" ? "tab-current" : "")" asp-action="TwoFactorAuthentication">
+        <i class="fas fa-shield-alt mr-2"></i>
+        Two-factor authentication
+    </a>
+    <a class="tab tab-bordered @(ManageNavPages.UserClaimsInfoNavClass(ViewContext) == "active" ? "tab-current" : "")" asp-action="UserClaimsInfo">
+        <i class="fas fa-info-circle mr-2"></i>
+        User Claims Info
+    </a>
+</div>
 

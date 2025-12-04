@@ -1,56 +1,353 @@
 ﻿@using Spydersoft.Identity.Models.Admin.ClientViewModels
 @model ClientCorsOriginsViewModel
-<section>
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+
+<div class="identity-server-dashboard">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="avatar">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-info to-accent">
+                        <i class="fas fa-globe text-white flex items-center justify-center h-full"></i>
                     </div>
                 </div>
-                <!-- end col -->
+                <div>
+                    <h1 class="dashboard-title">CORS Origins</h1>
+                    <p class="dashboard-subtitle">Manage Cross-Origin Resource Sharing permissions</p>
+                </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row">
-            <div class="card-style mb-30">
-                <form asp-action="Save" asp-route-id="@Model.Id">
-
-                    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
-                    <table class="table" aria-label="Client Cors Origins">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>@Html.LabelFor(model => model.NewItem.Origin)</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var origin in Model.ItemsList)
-                        {
-                            <tr>
-                                <td>@origin.Origin</td>
-                                <td><a asp-action="Delete" asp-route-id="@origin.Id" asp-route-parentid="@Model.NavBar.Id" title="Delete"><span class="fa fa-trash"></span></a></td>
-                            </tr>
-                        }
-                        <tr>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="text" class="form-control" id="txtClientId" asp-for="NewItem.Origin" pf-validation-for="NewItem.Origin" pf-validationerror-class="is-invalid" />
-                                    <span asp-validation-for="NewItem.Origin" class="invalid-feedback"></span>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="mb-3">
-                                    <input type="submit" value="Add" class="btn btn-sm btn-primary" />
-                                </div>
-                            </td>
-
-                        </tr>
-                    </table>
-
-                </form>
+            <div class="flex space-x-2">
+                <a asp-controller="Clients" asp-action="Edit" asp-route-id="@Model.NavBar.Id" class="btn btn-outline">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Client
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- Navigation Bar -->
+    @await Html.PartialAsync("_clientNavBar", Model.NavBar)
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8" data-parent-id="@Model.NavBar.Id">
+        <!-- CORS Origins Management -->
+        <div class="lg:col-span-2">
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="avatar">
+                            <div class="w-10 h-10 rounded-full bg-info/10">
+                                <i class="fas fa-globe text-info flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h2 class="card-title text-xl">Allowed CORS Origins</h2>
+                            <p class="text-base-content/70">Domains permitted for cross-origin requests</p>
+                        </div>
+                    </div>
+
+                    @if (Model.ItemsList.Any())
+                    {
+                        <!-- Existing CORS Origins -->
+                        <div class="space-y-3 mb-6">
+                            @foreach (var origin in Model.ItemsList)
+                            {
+                                <div class="card bg-base-200 border border-base-300">
+                                    <div class="card-body p-4">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="avatar">
+                                                    <div class="w-8 h-8 rounded-full bg-success/10">
+                                                        <i class="fas fa-check text-success text-xs flex items-center justify-center h-full"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <div class="font-mono text-sm break-all">@origin.Origin</div>
+                                                    <div class="text-xs text-base-content/60">
+                                                        @{
+                                                            try {
+                                                                var uri = new Uri(origin.Origin);
+                                                                var scheme = uri.Scheme.ToUpper();
+                                                                <span>@scheme - @uri.Host@(uri.Port != 80 && uri.Port != 443 ? ":" + uri.Port : "")</span>
+                                                            }
+                                                            catch {
+                                                                <span>Custom origin</span>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="flex space-x-2">
+                                                <button data-copy-origin="@origin.Origin" 
+                                                        class="btn btn-ghost btn-sm"
+                                                        title="Copy origin">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                                <button data-delete-id="@origin.Id" data-delete-name="@origin.Origin" 
+                                                        class="btn btn-error btn-sm" 
+                                                        title="Delete CORS origin">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Empty State -->
+                        <div class="text-center py-12 mb-6">
+                            <div class="avatar mb-4">
+                                <div class="w-24 rounded-full bg-base-200">
+                                    <i class="fas fa-globe text-4xl text-base-content/30 flex items-center justify-center h-full"></i>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">No CORS Origins Configured</h3>
+                            <p class="text-base-content/70 mb-4">Add allowed origins for cross-origin JavaScript requests.</p>
+                        </div>
+                    }
+
+                    <!-- Add New CORS Origin Form -->
+                    <form asp-action="Save" asp-route-id="@Model.Id" class="space-y-4">
+                        <div class="divider">Add New CORS Origin</div>
+                        
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.NewItem.Origin)</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-globe text-base-content/40"></i>
+                                </div>
+                                <input asp-for="NewItem.Origin" 
+                                       type="url" 
+                                       class="input input-bordered w-full pl-10 focus:input-primary" 
+                                       placeholder="https://example.com" />
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="NewItem.Origin" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">Include protocol and port (e.g., https://app.example.com:8080)</span>
+                            </label>
+                        </div>
+
+                        <div class="card-actions justify-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus mr-2"></i>
+                                Add CORS Origin
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Sidebar -->
+        <div class="space-y-6">
+            <!-- Statistics -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-chart-bar mr-2 text-primary"></i>
+                        Statistics
+                    </h3>
+                    <div class="stat">
+                        <div class="stat-title">Total Origins</div>
+                        <div class="stat-value text-primary">@Model.ItemsList.Count()</div>
+                        <div class="stat-desc">Allowed domains</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CORS Information -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-info-circle mr-2 text-info"></i>
+                        About CORS
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Enables JavaScript API calls from web browsers</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Required for Single Page Applications (SPAs)</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Prevents unauthorized cross-origin requests</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Must include exact protocol and port</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Security Guidelines -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-shield-alt mr-2 text-warning"></i>
+                        Security Guidelines
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-exclamation-triangle text-warning text-xs mt-1"></i>
+                            <span>Never use wildcard (*) in production</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Use specific domains and protocols</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Include port numbers when needed</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <i class="fas fa-check text-success text-xs mt-1"></i>
+                            <span>Remove unused origins regularly</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Common Examples -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-accent"></i>
+                        Common Examples
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Production SPA</div>
+                            <code class="text-xs">https://app.example.com</code>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Development</div>
+                            <code class="text-xs">http://localhost:3000</code>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Custom Port</div>
+                            <code class="text-xs">https://app.example.com:8080</code>
+                        </div>
+                        <div class="bg-base-200 p-3 rounded">
+                            <div class="font-medium mb-1">Subdomain</div>
+                            <code class="text-xs">https://admin.example.com</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CORS Policy -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-cog mr-2 text-secondary"></i>
+                        CORS Policy
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-center space-x-2">
+                            <div class="badge badge-success badge-sm">✓</div>
+                            <span>GET, POST, PUT, DELETE</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="badge badge-success badge-sm">✓</div>
+                            <span>Authorization headers</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="badge badge-success badge-sm">✓</div>
+                            <span>Content-Type headers</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <div class="badge badge-info badge-sm">i</div>
+                            <span>Preflight requests supported</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card bg-base-100 shadow-xl border border-base-300">
+                <div class="card-body">
+                    <h3 class="card-title text-lg mb-4">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="space-y-2">
+                        <a asp-controller="ClientRedirects" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-external-link-alt mr-2"></i>
+                            Redirect URIs
+                        </a>
+                        <a asp-controller="ClientSecrets" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-shield-alt mr-2"></i>
+                            Client Secrets
+                        </a>
+                        <a asp-controller="ClientScopes" asp-action="Index" asp-route-id="@Model.NavBar.Id" 
+                           class="btn btn-ghost btn-sm w-full justify-start">
+                            <i class="fas fa-key mr-2"></i>
+                            Manage Scopes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<dialog id="deleteModal" class="modal">
+    <div class="modal-box">
+        <h3 class="font-bold text-lg">
+            <i class="fas fa-exclamation-triangle text-warning mr-2"></i>
+            Confirm CORS Origin Deletion
+        </h3>
+        <p class="py-4">
+            Are you sure you want to delete the CORS origin: 
+            <br><strong class="font-mono text-sm break-all" id="deleteOrigin"></strong>
+            <br><br>This will prevent JavaScript applications from this domain from accessing your Identity Server.
+        </p>
+        <div class="modal-action">
+            <form method="dialog">
+                <button class="btn">Cancel</button>
+            </form>
+            <a id="deleteConfirmBtn" href="#" class="btn btn-error">
+                <i class="fas fa-trash mr-2"></i>
+                Delete Origin
+            </a>
+        </div>
+    </div>
+</dialog>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <script>
+        document.addEventListener('click', function(event) {
+            const copyButton = event.target.closest('[data-copy-origin]');
+            const deleteButton = event.target.closest('[data-delete-id]');
+            
+            if (copyButton) {
+                const origin = copyButton.getAttribute('data-copy-origin');
+                navigator.clipboard.writeText(origin).then(function() {
+                    console.log('Origin copied: ' + origin);
+                });
+            }
+            
+            if (deleteButton) {
+                const originId = deleteButton.getAttribute('data-delete-id');
+                const originName = deleteButton.getAttribute('data-delete-name');
+                document.getElementById('deleteOrigin').textContent = originName;
+                document.getElementById('deleteConfirmBtn').href = '@Url.Action("Delete")?id=' + originId + '&parentid=@Model.NavBar.Id';
+                document.getElementById('deleteModal').showModal();
+            }
+        });
+    </script>
+}

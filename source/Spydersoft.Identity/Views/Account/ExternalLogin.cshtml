@@ -1,29 +1,184 @@
 ﻿@model ExternalLoginViewModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Complete Registration";
 }
 
-<h2>@ViewData["Title"]</h2>
-<h4>Associate your @ViewData["LoginProvider"] account.</h4>
-<hr />
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
+    <div class="card bg-base-100 shadow-2xl max-w-4xl w-full overflow-hidden">
+        <div class="grid lg:grid-cols-2 gap-0">
+            <!-- Left: External Provider Info -->
+            <div class="hidden lg:flex bg-gradient-to-br from-primary to-secondary p-8 lg:p-12 flex-col justify-center text-white">
+                <div class="text-center">
+                    <div class="avatar mb-6">
+                        <div class="w-24 rounded-full bg-white/10">
+                            <i class="fas fa-link text-white text-4xl flex items-center justify-center h-full"></i>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-bold mb-4">Account Connection</h2>
+                    <p class="text-lg mb-8 opacity-90">
+                        Successfully authenticated with @ViewData["LoginProvider"]
+                    </p>
+                </div>
 
-<p class="text-info">
-    You've successfully authenticated with <strong>@ViewData["LoginProvider"]</strong>.
-    Please enter an email address for this site below and click the Register button to finish
-    logging in.
-</p>
+                <!-- Provider Info -->
+                <div class="bg-white/10 p-6 rounded-lg">
+                    <h3 class="font-semibold mb-4 flex items-center">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        Authentication Complete
+                    </h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-shield-alt text-xs"></i>
+                            <span>Secure OAuth authentication</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-user-check text-xs"></i>
+                            <span>Identity verified by @ViewData["LoginProvider"]</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <i class="fas fa-key text-xs"></i>
+                            <span>No password required</span>
+                        </div>
+                    </div>
+                </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="ExternalLoginConfirmation" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="mb-3">
-                <label asp-for="Email"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <!-- Security Note -->
+                <div class="mt-8 text-xs opacity-75">
+                    <p>Your external account will be linked to your Spydersoft identity for secure access.</p>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
+
+            <!-- Right: Registration Form -->
+            <div class="p-8 lg:p-12">
+                <div class="max-w-md mx-auto">
+                    <!-- Mobile Header -->
+                    <div class="lg:hidden text-center mb-8">
+                        <div class="avatar mb-4">
+                            <div class="w-16 rounded-full bg-primary/10">
+                                <i class="fas fa-link text-primary text-2xl flex items-center justify-center h-full"></i>
+                            </div>
+                        </div>
+                        <h1 class="text-2xl font-bold text-primary mb-2">Complete Registration</h1>
+                        <p class="text-base-content/70">Connect your @ViewData["LoginProvider"] account</p>
+                    </div>
+
+                    <!-- Desktop Header -->
+                    <div class="hidden lg:block mb-8">
+                        <h1 class="text-3xl font-bold text-gradient mb-2">Complete Registration</h1>
+                        <p class="text-base-content/70">Associate your @ViewData["LoginProvider"] account</p>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div class="alert alert-success mb-6">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h3 class="font-bold">Authentication Successful!</h3>
+                            <div class="text-sm">
+                                You've successfully authenticated with <strong>@ViewData["LoginProvider"]</strong>.
+                                Please enter an email address to complete your registration.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Registration Form -->
+                    <form asp-action="ExternalLoginConfirmation" 
+                          asp-route-returnurl="@ViewData["ReturnUrl"]" 
+                          method="post" 
+                          class="space-y-6">
+                        
+                        <!-- Validation Summary -->
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-error">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <h3 class="font-bold">Please correct the following:</h3>
+                                    <div asp-validation-summary="All" class="text-sm"></div>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Provider Display -->
+                        <div class="bg-base-200 p-4 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="avatar">
+                                    <div class="w-10 h-10 rounded-full bg-success/10">
+                                        <i class="fas fa-check text-success flex items-center justify-center h-full"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="font-medium">Connected Provider</div>
+                                    <div class="text-sm text-base-content/70">@ViewData["LoginProvider"]</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">@Html.DisplayNameFor(m => m.Email)</span>
+                                <span class="label-text-alt text-error">*</span>
+                            </label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-envelope text-base-content/40"></i>
+                                </div>
+                                <input asp-for="Email" 
+                                       type="email" 
+                                       class="input input-bordered w-full pl-10 focus:input-primary" 
+                                       placeholder="Enter your email address" />
+                            </div>
+                            <label class="label">
+                                <span asp-validation-for="Email" class="label-text-alt text-error"></span>
+                                <span class="label-text-alt text-base-content/60">This will be your login email</span>
+                            </label>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary btn-lg w-full">
+                            <i class="fas fa-user-plus mr-2"></i>
+                            Complete Registration
+                        </button>
+
+                        <!-- Return URL Info -->
+                        @if (!string.IsNullOrEmpty(ViewData["ReturnUrl"]?.ToString()))
+                        {
+                            <div class="text-xs text-base-content/60 text-center">
+                                After registration, you'll be redirected to continue where you left off.
+                            </div>
+                        }
+                    </form>
+
+                    <!-- Alternative Actions -->
+                    <div class="divider">or</div>
+                    
+                    <div class="text-center">
+                        <p class="text-base-content/70 mb-4">Already have an account?</p>
+                        <a asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" 
+                           class="btn btn-outline btn-sm">
+                            <i class="fas fa-sign-in-alt mr-2"></i>
+                            Sign In Instead
+                        </a>
+                    </div>
+
+                    <!-- Security Information -->
+                    <div class="mt-8 p-4 bg-info/10 rounded-lg">
+                        <div class="text-xs">
+                            <div class="font-medium mb-2 flex items-center">
+                                <i class="fas fa-shield-alt text-info mr-2"></i>
+                                Security & Privacy
+                            </div>
+                            <ul class="space-y-1 text-base-content/70">
+                                <li>• Your external account is securely linked</li>
+                                <li>• We don't store your external credentials</li>
+                                <li>• You can unlink accounts anytime</li>
+                                <li>• Your data is protected by our privacy policy</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

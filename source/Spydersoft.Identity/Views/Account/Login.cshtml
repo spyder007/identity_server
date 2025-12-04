@@ -4,122 +4,189 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Sign In";
 }
 
-<section class="signin-section">
-    <div class="container-fluid">
-        <div class="title-wrapper pt-30">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <div class="title mb-30">
-                        <h2>@ViewData["Title"]</h2>
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
+    <div class="card bg-base-100 shadow-2xl max-w-4xl w-full overflow-hidden">
+        <div class="grid lg:grid-cols-2 gap-0">
+            <!-- Left Side - Welcome Panel -->
+            <div class="hidden lg:flex bg-gradient-to-br from-primary to-secondary p-12 items-center justify-center text-white">
+                <div class="text-center">
+                    <div class="avatar mb-8">
+                        <div class="w-24 rounded-full bg-white/20">
+                            <img src="~/images/logo/logo.svg" alt="Spydersoft Logo" class="p-4" />
+                        </div>
+                    </div>
+                    <h1 class="text-4xl font-bold mb-4">Welcome Back!</h1>
+                    <p class="text-xl text-white/90 mb-8">
+                        Sign in to your account to continue accessing your applications
+                    </p>
+                    <div class="flex justify-center">
+                        <img src="~/images/auth/signin-image.svg" alt="Sign In" class="max-w-xs opacity-90" />
                     </div>
                 </div>
             </div>
-            <!-- end row -->
-        </div>
-        <div class="row g-0 auth-row">
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="auth-cover-wrapper bg-primary-100">
-                    <div class="auth-cover">
-                        <div class="title text-center">
-                            <h1 class="text-primary mb-10">Welcome Back</h1>
-                            <p class="text-medium">
-                                Sign in to your Existing account to continue
-                            </p>
-                        </div>
-                        <div class="cover-image">
-                            <img src="/images/auth/signin-image.svg" alt="Sign In" />
-                        </div>
-                        <div class="shape-image">
-                            <img src="/images/auth/shape.svg" alt="" />
-                        </div>
+
+            <!-- Right Side - Login Form -->
+            <div class="p-8 lg:p-12">
+                <div class="max-w-md mx-auto">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gradient">Sign In</h2>
+                        <p class="text-base-content/70 mt-2">Access your Spydersoft account</p>
                     </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="signin-wrapper">
-                    <div class="form-wrapper">
-                        <form asp-route-returnurl="@Model.ReturnUrl" method="post">
-                            <div asp-validation-summary="All" class="text-danger"></div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div class="input-style-1">
-                                        <label>Email</label>
-                                        <input asp-for="Username" class="form-control" placeholder="User Name" />
-                                        <span asp-validation-for="Username" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <!-- end col -->
-                                <div class="col-12">
-                                    <div class="input-style-1">
-                                        <label>Password</label>
-                                        <input asp-for="Password" class="form-control" placeholder="Password" />
-                                        <span asp-validation-for="Password" class="text-danger"></span>
-                                    </div>
-                                </div>
-                                <!-- end col -->
-                                <div class="col-xxl-6 col-lg-12 col-md-6">
-                                    <div class="form-check checkbox-style mb-30">
-                                        <label asp-for="RememberLogin">
-                                            <input asp-for="RememberLogin" class="form-check-input" />
-                                            @Html.DisplayNameFor(m => m.RememberLogin)
-                                        </label>
-                                    </div>
-                                </div>
-                                <!-- end col -->
-                                <div class="col-xxl-6 col-lg-12 col-md-6">
-                                    <div class="
-                            text-start text-md-end text-lg-start text-xxl-end
-                            mb-30
-                          ">
-                                        <a asp-action="ForgotPassword">Forgot Password?</a>
-                                    </div>
-                                </div>
-                                <!-- end col -->
-                                <div class="col-12">
-                                    <div class="button-group d-flex justify-content-center flex-wrap">
-                                        <button type="submit" class="main-btn primary-btn btn-hover w-100 text-center" name="button" value="login">
-                                            Sign In
-                                        </button>
-                                    </div>
+
+                    <form asp-route-returnurl="@Model.ReturnUrl" method="post" class="space-y-6">
+                        <!-- Validation Summary -->
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-error">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <h3 class="font-bold">Authentication Error</h3>
+                                    <div asp-validation-summary="All" class="text-sm"></div>
                                 </div>
                             </div>
-                        </form>
-                        <div class="singin-option pt-40">
-                            <p class="text-sm text-medium text-center text-gray">
-                                Easy Sign In With
-                            </p>
-                            <div class="button-group pt-40 pb-40 d-flex justify-content-center flex-wrap">
-                                @if (Model.VisibleExternalProviders.Any())
-                                {
-                                    @foreach (var provider in Model.VisibleExternalProviders)
-                                    {
-                                        <div class="p-1">
-                                            <a class="d-inline-block main-btn @provider.ButtonCssClass"
-                                               asp-controller="External"
-                                               asp-action="Challenge"
-                                               asp-route-scheme="@provider.AuthenticationScheme"
-                                               asp-route-returnUrl="@Model.ReturnUrl">
-                                                <i class="@provider.LniCssClass mr-10 align-middle"></i>
-                                                <span>@provider.DisplayName</span>
-                                            </a>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                            <p class="text-sm text-medium text-dark text-center">
-                                Don’t have any account yet?
-                                <a asp-controller="Register" asp-action="Index" asp-route-returnurl="@Model.ReturnUrl">Create an account</a>
-                            </p>
+                        }
+
+                        <!-- Hidden fields to ensure model binding -->
+                        <input asp-for="ReturnUrl" type="hidden" />
+
+                        <!-- Username Field -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">Email / Username</span>
+                            </label>
+                            <input asp-for="Username" 
+                                   type="text" 
+                                   class="input input-bordered w-full focus:input-primary" 
+                                   placeholder="Enter your email or username" 
+                                   autocomplete="username" />
+                            <label class="label">
+                                <span asp-validation-for="Username" class="label-text-alt text-error"></span>
+                            </label>
                         </div>
+
+                        <!-- Password Field -->
+                        <div class="form-control w-full">
+                            <label class="label">
+                                <span class="label-text font-medium">Password</span>
+                            </label>
+                            <input asp-for="Password" 
+                                   type="password" 
+                                   class="input input-bordered w-full focus:input-primary" 
+                                   placeholder="Enter your password" 
+                                   autocomplete="current-password" />
+                            <label class="label">
+                                <span asp-validation-for="Password" class="label-text-alt text-error"></span>
+                            </label>
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="flex items-center justify-between">
+                            <div class="form-control">
+                                <label class="label cursor-pointer justify-start space-x-3">
+                                    <input asp-for="RememberLogin" type="checkbox" class="checkbox checkbox-primary checkbox-sm" />
+                                    <span class="label-text">@Html.DisplayNameFor(m => m.RememberLogin)</span>
+                                </label>
+                            </div>
+                            <a asp-action="ForgotPassword" class="link link-primary text-sm">
+                                Forgot Password?
+                            </a>
+                        </div>
+
+                        <!-- Sign In Button -->
+                        <div class="space-y-3">
+                            <button type="submit" 
+                                    name="button" 
+                                    value="login" 
+                                    class="btn btn-primary btn-lg w-full">
+                                <i class="fas fa-sign-in-alt mr-2"></i>
+                                Sign In
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- External Providers -->
+                    @if (Model.VisibleExternalProviders.Any())
+                    {
+                        <div class="divider my-8">Or continue with</div>
+                        <div class="grid grid-cols-1 gap-3">
+                            @foreach (var provider in Model.VisibleExternalProviders)
+                            {
+                                <form asp-controller="External" asp-action="Challenge" method="post">
+                                    <input type="hidden" name="scheme" value="@provider.AuthenticationScheme" />
+                                    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+                                    <button type="submit" class="btn btn-outline btn-sm w-full">
+                                        <i class="@provider.LniCssClass mr-2"></i>
+                                        Continue with @provider.DisplayName
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    }
+
+                    <!-- Register Link -->
+                    <div class="text-center mt-8">
+                        <p class="text-base-content/70">
+                            Don't have an account?
+                            <a asp-controller="Register" 
+                               asp-action="Index" 
+                               asp-route-returnurl="@Model.ReturnUrl" 
+                               class="link link-primary font-medium">
+                                Create an account
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
+
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    
+    <!-- Enhanced form submission -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.querySelector('form[method="post"]');
+            const submitButton = loginForm.querySelector('button[type="submit"]');
+            
+            if (loginForm && submitButton) {
+                // Add loading state to submit button
+                loginForm.addEventListener('submit', function(e) {
+                    // Ensure the button value is preserved
+                    if (!loginForm.querySelector('input[name="button"]')) {
+                        const hiddenButton = document.createElement('input');
+                        hiddenButton.type = 'hidden';
+                        hiddenButton.name = 'button';
+                        hiddenButton.value = 'login';
+                        loginForm.appendChild(hiddenButton);
+                    }
+                    
+                    // Update button state
+                    submitButton.disabled = true;
+                    const originalText = submitButton.innerHTML;
+                    submitButton.innerHTML = '<span class="loading loading-spinner loading-sm mr-2"></span>Signing In...';
+                    
+                    // Restore button state if form submission fails
+                    setTimeout(() => {
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = originalText;
+                    }, 10000);
+                });
+            }
+            
+            // Debug form submission
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                if (loginForm) {
+                    loginForm.addEventListener('submit', function() {
+                        const formData = new FormData(this);
+                        console.log('Login form submission:', Object.fromEntries(formData));
+                    });
+                }
+            }
+        });
+    </script>
 }

@@ -1,65 +1,82 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="identity">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Spydersoft</title>
-    <link rel="shortcut icon" href="images/favicon.svg">
+    <title>@ViewData["Title"] - Spydersoft Identity</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="~/images/favicon.svg">
 
-
-    <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
-    <!-- Main styles for this application -->
+    <!-- Tailwind CSS + DaisyUI -->
     <environment include="Development">
-        <link rel="stylesheet" href="~/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/lineicons.css" />
-        <link rel="stylesheet" href="~/css/materialdesignicons.min.css" />
-        <link rel="stylesheet" href="~/css/style.css">
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
         <link href="~/lib/font-awesome/css/all.css" rel="stylesheet">
     </environment>
-
     <environment exclude="Development">
-        <link rel="stylesheet" href="~/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/lineicons.css" />
-        <link rel="stylesheet" href="~/css/materialdesignicons.min.css" />
-        <link rel="stylesheet" href="~/css/style.css">
-        <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet">
         <link rel="stylesheet" href="~/css/style.min.css" asp-append-version="true" />
+        <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet">
     </environment>
-</head>
-<body>
-    <aside class="sidebar-nav-wrapper">
-        <div class="navbar-logo">
-            <a href="/">
-                <img src="~/images/logo/logo.svg" alt="logo" width="200" height="45"  />
-            </a>
-        </div>
-        @await Html.PartialAsync("_SidebarNav")
-    </aside>
-    <div class="overlay"></div>
 
-    <!-- Main content -->
-    <main class="main-wrapper">
-        @await Html.PartialAsync("_AppHeader")
+    <!-- Google Fonts for better typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-        @RenderBody()
-
-        <!-- /.conainer-fluid -->
-        @await Html.PartialAsync("_Footer")
-    </main>
-
-
-
+    <!-- Main JavaScript - Load early to prevent FOUC -->
     <environment names="Development">
-        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="~/lib/moment/moment.min.js"></script>
-        <script src="~/js/polyfill.js"></script>
-        <script src="~/js/main.js"></script>
+        <script src="~/js/main.js" asp-append-version="true"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/main.js" asp-append-version="true"></script>
+    </environment>
+</head>
+<body class="bg-base-100 text-base-content">
+    <!-- All users see the drawer layout with sidebar -->
+    <div class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" />
+        
+        <!-- Main content area -->
+        <div class="drawer-content flex flex-col">
+            <!-- App Header -->
+            @await Html.PartialAsync("_AppHeader")
+
+            <!-- Main content -->
+            <main class="flex-1 p-6 bg-base-200/50 min-h-screen">
+                <div class="max-w-7xl mx-auto">
+                    @RenderBody()
+                </div>
+            </main>
+
+            <!-- Footer -->
+            @await Html.PartialAsync("_Footer")
+        </div>
+
+        <!-- Sidebar -->
+        <div class="drawer-side">
+            <label for="main-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+            <aside class="bg-base-100 min-h-full w-80 border-r border-base-300 shadow-sm">
+                <!-- Logo -->
+                <div class="p-6 border-b border-base-300">
+                    <a href="/" class="flex items-center space-x-3">
+                        <img src="~/images/logo/logo.svg" alt="Spydersoft Logo" class="w-auto h-12" />
+                    </a>
+                </div>
+                
+                <!-- Navigation Content -->
+                @await Html.PartialAsync("_SidebarNav")
+            </aside>
+        </div>
+    </div>
+
+    <!-- Additional Scripts -->
+    <environment names="Development">
         <script src="~/lib/moment/moment.min.js"></script>
         <script src="~/js/polyfill.js"></script>
-        <script src="~/js/main.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/moment/moment.min.js"></script>
+        <script src="~/js/polyfill.js"></script>
     </environment>
 
     @RenderSection("scripts", required: false)
