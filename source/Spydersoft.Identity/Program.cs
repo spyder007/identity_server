@@ -60,6 +60,19 @@ try
     _ = builder.Services.Configure<SendgridOptions>(builder.Configuration.GetSection(SendgridOptions.Name));
     _ = builder.Services.Configure<ConsentOptions>(builder.Configuration.GetSection(ConsentOptions.SettingsKey));
 
+    // Configure forwarded headers for proxy scenarios
+    _ = builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | 
+                                   ForwardedHeaders.XForwardedProto | 
+                                   ForwardedHeaders.XForwardedHost;
+        // Clear known networks and proxies to accept any proxy
+        options.KnownNetworks.Clear();
+        options.KnownProxies.Clear();
+        // Trust all proxies - adjust this based on your security requirements
+        options.ForwardLimit = null;
+    });
+
     _ = builder.Services.ConfigureNonBreakingSameSiteCookies();
     _ = builder.Services.AddHttpContextAccessor();
     // Add framework builder.Services.
@@ -92,23 +105,39 @@ try
         options.EnableEndpointRouting = false;
     });
 
+    // Get configured public origin from configuration
+    var publicOrigin = builder.Configuration.GetValue<string>("IdentityServer:PublicOrigin");
+    var issuerUri = builder.Configuration.GetValue<string>("IdentityServer:IssuerUri");
+
     // this adds the Configuration Store (clients, resources) and then
     // the Operation Store (codes, tokens, consents)
-    _ = builder.Services.AddIdentityServer()
-        .AddAspNetIdentity<ApplicationUser>()
-        .AddConfigurationStore(options => options.ConfigureDbContext = builder =>
-                builder.UseNpgsql(connString,
-                    sql => _ = sql.MigrationsAssembly(migrationsAssembly)))
-        .AddOperationalStore(options =>
+    var identityServerBuilder = builder.Services.AddIdentityServer(options =>
+    {
+        // Configure Identity Server to use the correct public-facing URL when behind a proxy
+        // This ensures all generated URLs use HTTPS instead of HTTP
+        if (!string.IsNullOrEmpty(publicOrigin))
         {
-            options.ConfigureDbContext = builder =>
-                builder.UseNpgsql(connString,
-                    sql => _ = sql.MigrationsAssembly(migrationsAssembly));
+            options.IssuerUri = issuerUri ?? publicOrigin;
+            Log.Information("IdentityServer IssuerUri configured: {IssuerUri}", options.IssuerUri);
+        }
+        
+        // Additional logging for debugging
+        Log.Information("IdentityServer configuration - IssuerUri: {IssuerUri}", options.IssuerUri ?? "not set");
+    })
+    .AddAspNetIdentity<ApplicationUser>()
+    .AddConfigurationStore(options => options.ConfigureDbContext = builder =>
+            builder.UseNpgsql(connString,
+                sql => _ = sql.MigrationsAssembly(migrationsAssembly)))
+    .AddOperationalStore(options =>
+    {
+        options.ConfigureDbContext = builder =>
+            builder.UseNpgsql(connString,
+                sql => _ = sql.MigrationsAssembly(migrationsAssembly));
 
-            // this enables automatic token cleanup. this is optional.
-            options.EnableTokenCleanup = true;
-            options.TokenCleanupInterval = 30;
-        });
+        // this enables automatic token cleanup. this is optional.
+        options.EnableTokenCleanup = true;
+        options.TokenCleanupInterval = 30;
+    });
 
     var providerSettings = new ProviderOptions();
     builder.Configuration.GetSection(ProviderOptions.SettingsKey).Bind(providerSettings);
@@ -128,6 +157,34 @@ try
     _ = builder.Services.AddHealthChecks();
 
     WebApplication app = builder.Build();
+    
+    // Configure forwarded headers BEFORE any authentication/authorization middleware
+    // This is critical for proper HTTPS scheme detection when behind a TLS termination proxy
+    var forwardedHeadersOptions = new ForwardedHeadersOptions
+    {
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor | 
+                          ForwardedHeaders.XForwardedProto | 
+                          ForwardedHeaders.XForwardedHost,
+        // Required for proper scheme detection
+        RequireHeaderSymmetry = false,
+        ForwardLimit = null
+    };
+    forwardedHeadersOptions.KnownNetworks.Clear();
+    forwardedHeadersOptions.KnownProxies.Clear();
+    
+    _ = app.UseForwardedHeaders(forwardedHeadersOptions);
+    
+    // Log the scheme being used for debugging (can be removed in production)
+    app.Use(async (context, next) =>
+    {
+        Log.Debug("Request - Scheme: {Scheme}, Host: {Host}, Path: {Path}, Proto Header: {Proto}", 
+            context.Request.Scheme, 
+            context.Request.Host, 
+            context.Request.Path,
+            context.Request.Headers["X-Forwarded-Proto"].ToString());
+        await next();
+    });
+    
     // this will do the initial DB population, but we only need to do it once
     // this is just in here as a easy, yet hacky, way to get our DB created/populated
     var dbInitialize = new DatabaseInitializer(app);
@@ -137,21 +194,12 @@ try
 
     _ = app.UseSpydersoftHealthChecks(healthCheckOptions)
             .UseCookiePolicy()
-            .UseStaticFiles();
-    var forwardedHeadersOptions = new ForwardedHeadersOptions
-    {
-        ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-    };
-    forwardedHeadersOptions.KnownNetworks.Clear();
-    forwardedHeadersOptions.KnownProxies.Clear();
-
-    _ = app.UseForwardedHeaders(forwardedHeadersOptions)
-        //.UseOpenTelemetryPrometheusScrapingEndpoint()
-        .UseAuthentication()
-        .UseRouting()
-        .UseIdentityServer()
-        .UseAuthorization()
-        .UseEndpoints(endpoints => _ = endpoints.MapControllers());
+            .UseStaticFiles()
+            .UseAuthentication()
+            .UseRouting()
+            .UseIdentityServer()
+            .UseAuthorization()
+            .UseEndpoints(endpoints => _ = endpoints.MapControllers());
 
     _ = app.UseMvc(routes => _ = routes.MapRoute(
             name: "default",
