@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper;
@@ -83,7 +84,23 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
             ClientViewModel clientModel;
             if (!id.HasValue)
             {
-                clientModel = new ClientViewModel();
+                clientModel = new ClientViewModel
+                {
+                    // Set default values for required fields
+                    ProtocolType = "oidc",
+                    AccessTokenLifetime = 3600,
+                    IdentityTokenLifetime = 300,
+                    AuthorizationCodeLifetime = 300,
+                    AbsoluteRefreshTokenLifetime = 2592000,
+                    SlidingRefreshTokenLifetime = 1296000,
+                    RefreshTokenExpiration = 1,
+                    RefreshTokenUsage = 1,
+                    DeviceCodeLifetime = 300,
+                    AccessTokenType = 0,
+                    Enabled = true,
+                    RequireClientSecret = true,
+                    Created = DateTime.UtcNow
+                };
                 ViewData["Title"] = "New Client";
             }
             else
@@ -118,7 +135,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
 
                 if (!id.HasValue || id.Value == 0)
                 {
-                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.Client();
+                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.Client
+                    {
+                        Created = DateTime.UtcNow
+                    };
                     _ = ConfigDbContext.Add(dbEntity);
                     isNew = true;
                 }
@@ -131,6 +151,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
                 if (dbEntity != null)
                 {
                     _ = Mapper.Map(client, dbEntity);
+                    if (!isNew)
+                    {
+                        dbEntity.Updated = DateTime.UtcNow;
+                    }
                 }
 
                 if (!isNew)
@@ -143,11 +167,19 @@ namespace Spydersoft.Identity.Controllers.Admin.Client
                 return isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index));
             }
 
+            // If we got here, validation failed
             if (id.HasValue)
             {
                 client.Id = id.Value;
             }
 
+            // Ensure NavBar is initialized for the view
+            if (client.NavBar == null)
+            {
+                client.NavBar = new NavBarViewModel(client);
+            }
+
+            ViewData["Title"] = client.Id == 0 ? "New Client" : $"Edit {client.ClientName}";
             return View(client);
         }
 

@@ -34,7 +34,15 @@
         </div>
     </div>
 
-    <form asp-action="Edit" class="space-y-8">
+    <form asp-action="Edit" asp-route-id="@Model.Id" class="space-y-8">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Created" />
+        <input type="hidden" asp-for="AccessTokenType" />
+        <input type="hidden" asp-for="AbsoluteRefreshTokenLifetime" />
+        <input type="hidden" asp-for="RefreshTokenExpiration" />
+        <input type="hidden" asp-for="RefreshTokenUsage" />
+        <input type="hidden" asp-for="SlidingRefreshTokenLifetime" />
+
         <!-- Navigation Bar -->
         @await Html.PartialAsync("_clientNavBar", Model.NavBar)
 
@@ -456,20 +464,77 @@
                                     <label class="label">
                                         <span class="label-text">@displayName</span>
                                     </label>
-                                    @if (!string.IsNullOrEmpty(unit))
+                                    @switch (property)
                                     {
-                                        <div class="input-group">
-                                            <input name="@property" 
+                                        case nameof(Model.AbsoluteRefreshTokenLifetime):
+                                            <div class="input-group">
+                                                <input asp-for="AbsoluteRefreshTokenLifetime" 
+                                                       type="number" 
+                                                       class="input input-bordered input-sm focus:input-primary" />
+                                                <span class="bg-base-200 px-2 flex items-center text-xs">@unit</span>
+                                            </div>
+                                            <span asp-validation-for="AbsoluteRefreshTokenLifetime" class="label-text-alt text-error"></span>
+                                            break;
+                                        case nameof(Model.RefreshTokenExpiration):
+                                            <input asp-for="RefreshTokenExpiration" 
+                                                   type="number" 
+                                                   class="input input-bordered input-sm focus:input-primary" />
+                                            <span asp-validation-for="RefreshTokenExpiration" class="label-text-alt text-error"></span>
+                                            break;
+                                        case nameof(Model.RefreshTokenUsage):
+                                            <input asp-for="RefreshTokenUsage" 
+                                                   type="number" 
+                                                   class="input input-bordered input-sm focus:input-primary" />
+                                            <span asp-validation-for="RefreshTokenUsage" class="label-text-alt text-error"></span>
+                                            break;
+                                        case nameof(Model.SlidingRefreshTokenLifetime):
+                                            <div class="input-group">
+                                                <input asp-for="SlidingRefreshTokenLifetime" 
+                                                       type="number" 
+                                                       class="input input-bordered input-sm focus:input-primary" />
+                                                <span class="bg-base-200 px-2 flex items-center text-xs">@unit</span>
+                                            </div>
+                                            <span asp-validation-for="SlidingRefreshTokenLifetime" class="label-text-alt text-error"></span>
+                                            break;
+                                        case nameof(Model.BackChannelLogoutUri):
+                                            <input asp-for="BackChannelLogoutUri" 
                                                    type="text" 
                                                    class="input input-bordered input-sm focus:input-primary" />
-                                            <span class="bg-base-200 px-2 flex items-center text-xs">@unit</span>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <input name="@property" 
-                                               type="text" 
-                                               class="input input-bordered input-sm focus:input-primary" />
+                                            <span asp-validation-for="BackChannelLogoutUri" class="label-text-alt text-error"></span>
+                                            break;
+                                        case nameof(Model.FrontChannelLogoutUri):
+                                            <input asp-for="FrontChannelLogoutUri" 
+                                                   type="text" 
+                                                   class="input input-bordered input-sm focus:input-primary" />
+                                            <span asp-validation-for="FrontChannelLogoutUri" class="label-text-alt text-error"></span>
+                                            break;
+                                        case nameof(Model.ClientClaimsPrefix):
+                                            <input asp-for="ClientClaimsPrefix" 
+                                                   type="text" 
+                                                   class="input input-bordered input-sm focus:input-primary" />
+                                            <span asp-validation-for="ClientClaimsPrefix" class="label-text-alt text-error"></span>
+                                            break;
+                                        case nameof(Model.PairWiseSubjectSalt):
+                                            <input asp-for="PairWiseSubjectSalt" 
+                                                   type="text" 
+                                                   class="input input-bordered input-sm focus:input-primary" />
+                                            <span asp-validation-for="PairWiseSubjectSalt" class="label-text-alt text-error"></span>
+                                            break;
+                                        case nameof(Model.UserCodeType):
+                                            <input asp-for="UserCodeType" 
+                                                   type="text" 
+                                                   class="input input-bordered input-sm focus:input-primary" />
+                                            <span asp-validation-for="UserCodeType" class="label-text-alt text-error"></span>
+                                            break;
+                                        case nameof(Model.UserSsoLifetime):
+                                            <div class="input-group">
+                                                <input asp-for="UserSsoLifetime" 
+                                                       type="number" 
+                                                       class="input input-bordered input-sm focus:input-primary" />
+                                                <span class="bg-base-200 px-2 flex items-center text-xs">@unit</span>
+                                            </div>
+                                            <span asp-validation-for="UserSsoLifetime" class="label-text-alt text-error"></span>
+                                            break;
                                     }
                                 </div>
                             }
@@ -479,7 +544,21 @@
                                 <div class="form-control">
                                     <label class="label cursor-pointer">
                                         <span class="label-text">@displayName</span>
-                                        <input name="@property" type="checkbox" class="toggle toggle-sm" />
+                                        @switch (property)
+                                        {
+                                            case nameof(Model.UpdateAccessTokenClaimsOnRefresh):
+                                                <input asp-for="UpdateAccessTokenClaimsOnRefresh" type="checkbox" class="toggle toggle-sm" />
+                                                break;
+                                            case nameof(Model.BackChannelLogoutSessionRequired):
+                                                <input asp-for="BackChannelLogoutSessionRequired" type="checkbox" class="toggle toggle-sm" />
+                                                break;
+                                            case nameof(Model.FrontChannelLogoutSessionRequired):
+                                                <input asp-for="FrontChannelLogoutSessionRequired" type="checkbox" class="toggle toggle-sm" />
+                                                break;
+                                            case nameof(Model.NonEditable):
+                                                <input asp-for="NonEditable" type="checkbox" class="toggle toggle-sm" />
+                                                break;
+                                        }
                                     </label>
                                 </div>
                             }

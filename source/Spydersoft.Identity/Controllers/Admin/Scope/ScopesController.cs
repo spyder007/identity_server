@@ -143,11 +143,19 @@ namespace Spydersoft.Identity.Controllers.Admin.Scope
                 return isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index));
             }
 
+            // If we got here, validation failed
             if (id.HasValue)
             {
                 client.Id = id.Value;
             }
 
+            // Ensure NavBar is initialized for the view
+            if (client.NavBar == null)
+            {
+                client.NavBar = new ScopeNavBarViewModel(client);
+            }
+
+            ViewData["Title"] = client.Id == 0 ? "New Scope" : $"Edit {client.Name}";
             return View(client);
         }
 
