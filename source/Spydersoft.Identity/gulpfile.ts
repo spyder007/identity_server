@@ -1,34 +1,26 @@
 import { src, watch, dest, series } from "gulp";
-// Use require for better compatibility with current dependencies
-const gulpSass = require('gulp-sass');
-const gulpRename = require('gulp-rename');
-const gulpCleanCSS = require('gulp-clean-css');
-const dartSass = require('sass');
-const gulpPostcss = require('gulp-postcss');
-import { deleteAsync } from 'del';
+import through2 from "through2";
+import Vinyl from "vinyl";
+import { promises as fsp } from "node:fs";
+import { join } from "node:path";
 
-// Configure sass to use the Dart Sass compiler
-const sassCompiler = gulpSass(dartSass);
+// These packages are CommonJS; require() is available in ts-node CJS mode
+/* eslint-disable @typescript-eslint/no-require-imports */
+const gulpRename = require("gulp-rename");
+const gulpPostcss = require("gulp-postcss");
+const lightningcss = require("lightningcss");
+/* eslint-enable @typescript-eslint/no-require-imports */
 
-/**
- * Interface for library copy job configuration
- */
 interface LibraryJob {
   src: string;
   dest: string;
 }
 
-/**
- * Interface for library configuration
- */
 interface LibraryConfig {
   lib: string;
   jobs: LibraryJob[];
 }
 
-/**
- * Build paths configuration
- */
 const paths = {
   dist: "wwwroot/",
   src: "./",
@@ -39,148 +31,111 @@ const paths = {
   assets: "Assets/",
 } as const;
 
-/**
- * Configuration for libraries to copy from node_modules
- * Clean configuration with only required dependencies for Tailwind + DaisyUI
- */
 const libsToCopy: LibraryConfig[] = [
   {
     lib: "jquery",
-    jobs: [
-      {
-        src: "/dist/**/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
+    jobs: [{ src: "/dist/**/*", dest: "{libDest}{libName}" }],
   },
   {
     lib: "jquery-validation-unobtrusive",
-    jobs: [
-      {
-        src: "/dist/**/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
+    jobs: [{ src: "/dist/**/*", dest: "{libDest}{libName}" }],
   },
   {
     lib: "jquery-validation",
-    jobs: [
-      {
-        src: "/dist/**/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
+    jobs: [{ src: "/dist/**/*", dest: "{libDest}{libName}" }],
   },
   {
     lib: "@fortawesome/fontawesome-free",
     jobs: [
-      {
-        src: "/css/**/*",
-        dest: "{libDest}/font-awesome/css",
-      },
-      {
-        src: "/webfonts/**/*",
-        dest: "{libDest}/font-awesome/webfonts",
-      },
+      { src: "/css/**/*", dest: "{libDest}/font-awesome/css" },
+      { src: "/webfonts/**/*", dest: "{libDest}/font-awesome/webfonts" },
     ],
   },
   {
     lib: "davidshimjs-qrcodejs",
-    jobs: [
-      {
-        src: "/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
+    jobs: [{ src: "/*", dest: "{libDest}{libName}" }],
   },
   {
     lib: "moment",
-    jobs: [
-      {
-        src: "/min/*",
-        dest: "{libDest}{libName}",
-      },
-    ],
+    jobs: [{ src: "/min/*", dest: "{libDest}{libName}" }],
   },
 ];
 
-/**
- * Converts SCSS files to CSS with Tailwind processing and creates minified versions
- * Returns a stream to properly handle async completion
- */
-function convertSass(): NodeJS.ReadWriteStream {
-  return src(paths.styles + "scss/style.scss")
-    .pipe(sassCompiler({
-      includePaths: [
-        './Styles/scss',
-        './node_modules'
-      ],
-      silenceDeprecations: ['legacy-js-api']
-    }).on('error', sassCompiler.logError))
-    .pipe(gulpPostcss([
-      require('tailwindcss'),
-      require('autoprefixer')
-    ]))
+/** Minify CSS using lightningcss (supports modern CSS: OKLCH, nesting, layers) */
+function minifyWithLightningcss() {
+  return through2.obj(function (file: Vinyl, _enc: string, cb: (err?: Error | null, data?: Vinyl) => void) {
+    if (file.isNull() || !file.contents) {
+      return cb(null, file);
+    }
+
+    try {
+      // Vinyl contents is Buffer or Stream; only Buffer is safe to pass directly
+      const input: Buffer = file.isBuffer()
+        ? file.contents
+        : Buffer.concat([]);
+
+      const result = lightningcss.transform({
+        filename: file.basename || "style.css",
+        code: input,
+        minify: true,
+        sourceMap: false,
+      });
+
+      file.contents = Buffer.from(result.code);
+      cb(null, file);
+    } catch (err) {
+      cb(err instanceof Error ? err : new Error(String(err)));
+    }
+  });
+}
+
+function processCSS(): NodeJS.ReadWriteStream {
+  return src(paths.styles + "style.css")
+    .pipe(
+      gulpPostcss([
+        require("@tailwindcss/postcss"),
+        require("autoprefixer")(),
+      ])
+    )
     .pipe(dest(paths.dist + "css"))
-    .pipe(gulpCleanCSS({ 
-      compatibility: "*",
-      level: 2 
-    }))
+    .pipe(minifyWithLightningcss())
     .pipe(gulpRename({ suffix: ".min" }))
     .pipe(dest(paths.dist + "css"));
 }
 
-/**
- * Processes Tailwind CSS directly for faster development builds
- */
-function processTailwind(): NodeJS.ReadWriteStream {
-  return src(paths.styles + "scss/style.scss")
-    .pipe(sassCompiler({
-      includePaths: [
-        './Styles/scss',
-        './node_modules'
-      ],
-      silenceDeprecations: ['legacy-js-api']
-    }).on('error', sassCompiler.logError))
-    .pipe(gulpPostcss([
-      require('tailwindcss'),
-      require('autoprefixer')
-    ]))
+function processCSSFast(): NodeJS.ReadWriteStream {
+  return src(paths.styles + "style.css")
+    .pipe(
+      gulpPostcss([
+        require("@tailwindcss/postcss"),
+        require("autoprefixer")(),
+      ])
+    )
     .pipe(dest(paths.dist + "css"));
 }
 
-/**
- * Watches SCSS files for changes and recompiles with Tailwind
- */
-function sassWatch(): void {
-  watch([
-    paths.styles + "scss/**/*.scss",
-    "./Views/**/*.cshtml",
-    "./Components/**/*.razor",
-    "./Pages/**/*.cshtml",
-    "./tailwind.config.js"
-  ], series(processTailwind));
+function cssWatch(): void {
+  watch(
+    [
+      paths.styles + "**/*.css",
+      "./Views/**/*.cshtml",
+      "./Components/**/*.razor",
+      "./Pages/**/*.cshtml",
+      "./Scripts/**/*.js",
+    ],
+    series(processCSSFast)
+  );
 }
 
-/**
- * Copies assets from Assets directory to wwwroot
- * Returns a stream to properly handle async completion
- */
 function copyAssets(): NodeJS.ReadWriteStream {
-  return src(paths.assets + "**/*")
-    .pipe(dest(paths.dist));
+  return src(paths.assets + "**/*").pipe(dest(paths.dist));
 }
 
-/**
- * Copies all configured libraries from node_modules to wwwroot/lib
- * Uses async/await pattern for proper completion handling
- */
 async function copyLibraries(): Promise<void> {
   const copyPromises: Promise<void>[] = [];
 
   libsToCopy.forEach((lib: LibraryConfig) => {
     console.log(`Copying ${lib.lib}`);
-
     lib.jobs.forEach((job: LibraryJob) => {
       copyPromises.push(copyLibrary(lib.lib, job.src, job.dest));
     });
@@ -189,88 +144,46 @@ async function copyLibraries(): Promise<void> {
   await Promise.all(copyPromises);
 }
 
-/**
- * Copies a specific library from node_modules to destination
- * Returns a Promise to properly handle async completion
- * @param libName - Name of the library
- * @param srcPath - Source path within the library
- * @param destPath - Destination path (with placeholders)
- */
-function copyLibrary(libName: string, srcPath: string, destPath: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    const fullSource: string = paths.node_modules + libName + srcPath;
+async function copyLibrary(
+  libName: string,
+  srcPath: string,
+  destPath: string
+): Promise<void> {
+  // Strip glob suffix to get the source directory:
+  // "/dist/**/*" → "/dist", "/min/*" → "/min", "/*" → ""
+  const dirPart = srcPath.replace(/\/\*.*$/, "");
+  const fullSource = join(paths.node_modules, libName + dirPart);
 
-    let fullDest: string = destPath
-      .replace("{libDest}", paths.libDest)
-      .replace("{libName}", libName);
-    fullDest = paths.dist + fullDest;
+  let fullDest = destPath
+    .replace("{libDest}", paths.libDest)
+    .replace("{libName}", libName);
+  fullDest = join(paths.dist, fullDest);
 
-    console.log(`Copying ${fullSource} to ${fullDest}`);
-    
-    src(fullSource)
-      .pipe(dest(fullDest))
-      .on('end', () => resolve())
-      .on('error', (error) => reject(error));
-  });
+  console.log(`Copying ${fullSource} to ${fullDest}`);
+  await fsp.mkdir(fullDest, { recursive: true });
+  await fsp.cp(fullSource, fullDest, { recursive: true });
 }
 
-/**
- * Clean task to remove generated files
- */
 async function clean(): Promise<void> {
+  // del v8 is ESM-only; dynamic import() works from CJS context
+  const { deleteAsync } = await import("del");
   try {
-    await deleteAsync([
-      paths.dist + 'css/**',
-      paths.dist + 'lib/**'
-    ]);
-    console.log('Cleaned output directories');
+    await deleteAsync([paths.dist + "css/**", paths.dist + "lib/**"]);
+    console.log("Cleaned output directories");
   } catch (error) {
-    console.error('Error cleaning directories:', error);
+    console.error("Error cleaning directories:", error);
     throw error;
   }
 }
 
-/**
- * Task to build all SCSS files with Tailwind processing
- */
-export const sass = convertSass;
-
-/**
- * Task for fast Tailwind development builds
- */
-export const tailwind = processTailwind;
-
-/**
- * Task to watch SCSS files for changes
- */
-export const watchSass = sassWatch;
-
-/**
- * Task to copy assets
- */
+export const css = processCSS;
+export const tailwind = processCSSFast;
+export const watchSass = cssWatch;
 export const assets = copyAssets;
-
-/**
- * Task to copy libraries
- */
 export const libraries = copyLibraries;
-
-/**
- * Task to clean output directories
- */
 export const cleanTask = clean;
 
-/**
- * Development task with watching and fast Tailwind builds
- */
-export const dev = series(processTailwind, copyAssets, copyLibraries, watchSass);
+export const dev = series(processCSSFast, copyAssets, copyLibraries, cssWatch);
+export const build = series(processCSS, copyAssets, copyLibraries);
 
-/**
- * Production build task with full optimization
- */
-export const build = series(convertSass, copyAssets, copyLibraries);
-
-/**
- * Default export
- */
 export default build;
