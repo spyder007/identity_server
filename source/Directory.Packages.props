@@ -23,7 +23,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.15.1" />
     <PackageVersion Include="SendGrid" Version="9.29.3" />
     <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.23.0.137933" />
-    <PackageVersion Include="Spydersoft.Platform.Hosting" Version="2.2.2" />
+    <PackageVersion Include="Spydersoft.Platform.Hosting" Version="2.3.0" />
 
     <!-- Test Project Packages -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
