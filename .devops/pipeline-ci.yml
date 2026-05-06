@@ -7,8 +7,8 @@ resources:
       name: spydersoft-consulting/azure-devops-templates
     - repository: helmfileconfig
       type: github
-      endpoint: spyder007
-      name: spyder007/id-helm-config
+      endpoint: spydersoft-gh
+      name: spydersoft-consulting/platform-helm-config
 
 trigger:
   tags:

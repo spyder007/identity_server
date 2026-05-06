@@ -894,6 +894,22 @@
     }
 
     /**
+     * Fix jQuery Validation's getLength for single <select> elements.
+     * By default it counts selected options (always 1 for single-select),
+     * causing [StringLength(MinimumLength=2)] to always fail on dropdowns.
+     */
+    function fixSelectValidation() {
+        if (typeof window.jQuery === 'undefined' || !window.jQuery.validator) { return; }
+        var origGetLength = window.jQuery.validator.prototype.getLength;
+        window.jQuery.validator.prototype.getLength = function(value, element) {
+            if (element.nodeName.toLowerCase() === 'select' && !element.multiple) {
+                return value.length;
+            }
+            return origGetLength.call(this, value, element);
+        };
+    }
+
+    /**
      * Main initialization function
      */
     function initialize() {
@@ -924,6 +940,7 @@
             initializeGenericCopy();
             initializeScopeSearch();
             initializeScopeFilters();
+            fixSelectValidation();
 
             // Listen for theme changes
             document.addEventListener('themeChanged', function(event) {

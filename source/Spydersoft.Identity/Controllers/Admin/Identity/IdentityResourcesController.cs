@@ -176,9 +176,11 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
 
                 if (!id.HasValue || id.Value == 0)
                 {
-                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.IdentityResource();
+                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.IdentityResource
+                    {
+                        Created = DateTime.UtcNow
+                    };
                     _ = ConfigDbContext.Add(dbEntity);
-                    identityResource.Created = DateTime.UtcNow;
                     isNew = true;
                 }
                 else
@@ -187,11 +189,13 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
                     dbEntity = ConfigDbContext.IdentityResources.FirstOrDefault(ir => ir.Id == id.Value);
                 }
 
-                identityResource.Updated = DateTime.UtcNow;
-
                 if (dbEntity != null)
                 {
                     _ = Mapper.Map(identityResource, dbEntity);
+                    if (!isNew)
+                    {
+                        dbEntity.Updated = DateTime.UtcNow;
+                    }
                 }
 
                 if (!isNew)
@@ -204,11 +208,19 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
                 return isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index));
             }
 
+            // If we got here, validation failed
             if (id.HasValue)
             {
                 identityResource.Id = id.Value;
             }
 
+            // Ensure NavBar is initialized for the view
+            if (identityResource.NavBar == null)
+            {
+                identityResource.NavBar = new IdentityResourceNavBarViewModel(identityResource);
+            }
+
+            ViewData["Title"] = identityResource.Id == 0 ? "New Identity Resource" : $"Edit {identityResource.Name}";
             return View(identityResource);
         }
         #endregion Controller Actions

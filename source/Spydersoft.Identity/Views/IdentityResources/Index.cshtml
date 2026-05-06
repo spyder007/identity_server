@@ -75,7 +75,7 @@
                                     <i class="fas fa-filter mr-1"></i>
                                     Filter
                                 </label>
-                                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box z-[1] w-52 text-base-content">
                                     <li><a onclick="filterResources('all')">All Resources</a></li>
                                     <li><a onclick="filterResources('enabled')">Enabled Only</a></li>
                                     <li><a onclick="filterResources('disabled')">Disabled Only</a></li>
@@ -173,7 +173,7 @@
                                                         <label tabindex="0" class="btn btn-ghost btn-sm">
                                                             <i class="fas fa-ellipsis-v"></i>
                                                         </label>
-                                                        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                                                        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box z-[1] w-52 text-base-content">
                                                             <li>
                                                                 <a asp-action="Edit" asp-route-id="@resource.Id">
                                                                     <i class="fas fa-edit"></i>

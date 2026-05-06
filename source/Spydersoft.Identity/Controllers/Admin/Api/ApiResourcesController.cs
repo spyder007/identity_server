@@ -88,8 +88,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
 
                 if (!id.HasValue || id.Value == 0)
                 {
-                    apiViewModel.Created = DateTime.UtcNow;
-                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.ApiResource();
+                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.ApiResource
+                    {
+                        Created = DateTime.UtcNow
+                    };
                     _ = ConfigDbContext.Add(dbEntity);
                     isNew = true;
                 }
@@ -99,11 +101,13 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
                     dbEntity = ConfigDbContext.ApiResources.FirstOrDefault(c => c.Id == id.Value);
                 }
 
-                apiViewModel.Updated = DateTime.UtcNow;
-
                 if (dbEntity != null)
                 {
                     _ = Mapper.Map(apiViewModel, dbEntity);
+                    if (!isNew)
+                    {
+                        dbEntity.Updated = DateTime.UtcNow;
+                    }
                 }
 
                 if (!isNew)
@@ -116,11 +120,19 @@ namespace Spydersoft.Identity.Controllers.Admin.Api
                 return isNew ? RedirectToAction(nameof(Edit), new { id = dbEntity.Id }) : RedirectToAction(nameof(Index));
             }
 
+            // If we got here, validation failed
             if (id.HasValue)
             {
                 apiViewModel.Id = id.Value;
             }
 
+            // Ensure NavBar is initialized for the view
+            if (apiViewModel.NavBar == null)
+            {
+                apiViewModel.NavBar = new ApiResourceNavBarViewModel(apiViewModel);
+            }
+
+            ViewData["Title"] = apiViewModel.Id == 0 ? "New API" : $"Edit {apiViewModel.Name}";
             return View(apiViewModel);
         }
 

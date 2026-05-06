@@ -78,6 +78,9 @@ namespace Spydersoft.Identity.Data
                 .ForMember(d => d.PostLogoutRedirectUris, opt => opt.Ignore())
                 .ForMember(d => d.Properties, opt => opt.Ignore())
                 .ForMember(d => d.RedirectUris, opt => opt.Ignore())
+                .ForMember(d => d.Created, opt => opt.Ignore())
+                .ForMember(d => d.Updated, opt => opt.Ignore())
+                .ForMember(d => d.LastAccessed, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(d => d.Id, opt => opt.Ignore());
 

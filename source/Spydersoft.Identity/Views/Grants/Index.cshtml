@@ -1,6 +1,6 @@
 ﻿@model Spydersoft.Identity.Models.Grants.GrantsViewModel
 
-<div class="min-h-screen bg-base-200 p-4">
+<div class="bg-base-200 py-4">
     <div class="max-w-6xl mx-auto">
         <!-- Page Header -->
         <div class="mb-8">
@@ -49,11 +49,11 @@
                     <div class="card bg-base-100 shadow-xl border border-base-300 hover:shadow-2xl transition-shadow">
                         <!-- Card Header -->
                         <div class="card-body border-b border-base-300 pb-4">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                <div class="flex items-center space-x-3 min-w-0">
                                     @if (grant.ClientLogoUrl != null)
                                     {
-                                        <div class="avatar">
+                                        <div class="avatar shrink-0">
                                             <div class="w-12 h-12 rounded-full bg-base-200 border border-base-300">
                                                 <img src="@grant.ClientLogoUrl" alt="@grant.ClientName Logo" class="w-full h-full object-cover rounded-full" />
                                             </div>
@@ -61,23 +61,23 @@
                                     }
                                     else
                                     {
-                                        <div class="avatar">
+                                        <div class="avatar shrink-0">
                                             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-accent to-secondary">
                                                 <i class="fas fa-cube text-white flex items-center justify-center h-full"></i>
                                             </div>
                                         </div>
                                     }
-                                    <div>
+                                    <div class="min-w-0">
                                         <h3 class="card-title text-lg">@grant.ClientName</h3>
                                         <div class="text-sm text-base-content/60">Connected Application</div>
                                     </div>
                                 </div>
-                                
-                                <form asp-action="Revoke" class="flex">
+
+                                <form asp-action="Revoke" class="shrink-0">
                                     <input type="hidden" name="clientId" value="@grant.ClientId">
-                                    <button type="button" 
+                                    <button type="button"
                                             onclick="confirmRevoke('@grant.ClientId', '@grant.ClientName')"
-                                            class="btn btn-error btn-sm">
+                                            class="btn btn-error btn-sm w-full sm:w-auto">
                                         <i class="fas fa-times mr-2"></i>
                                         Revoke Access
                                     </button>
@@ -133,10 +133,10 @@
                                             <i class="fas fa-user text-primary"></i>
                                             <span class="font-medium">Identity Permissions</span>
                                         </div>
-                                        <div class="grid grid-cols-2 gap-2">
+                                        <div class="flex flex-wrap gap-2">
                                             @foreach (var name in grant.IdentityGrantNames)
                                             {
-                                                <div class="badge badge-primary badge-sm">
+                                                <div class="badge badge-primary badge-sm whitespace-nowrap">
                                                     <i class="fas fa-check mr-1"></i>
                                                     @name
                                                 </div>
@@ -153,10 +153,10 @@
                                             <i class="fas fa-cogs text-secondary"></i>
                                             <span class="font-medium">API Permissions</span>
                                         </div>
-                                        <div class="grid grid-cols-2 gap-2">
+                                        <div class="flex flex-wrap gap-2">
                                             @foreach (var name in grant.ApiGrantNames)
                                             {
-                                                <div class="badge badge-secondary badge-sm">
+                                                <div class="badge badge-secondary badge-sm whitespace-nowrap">
                                                     <i class="fas fa-key mr-1"></i>
                                                     @name
                                                 </div>

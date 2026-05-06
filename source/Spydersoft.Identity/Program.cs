@@ -24,6 +24,7 @@ using Spydersoft.Identity.Options;
 using Spydersoft.Identity.Services;
 using Spydersoft.Platform.Hosting.Options;
 using Spydersoft.Platform.Hosting.StartupExtensions;
+using Spydersoft.Platform.Hosting.Telemetry;
 
 IConfigurationRoot baseConfig = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -39,16 +40,18 @@ try
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
     builder.AddSpydersoftTelemetry(typeof(Program).Assembly,
-        additionalTraceConfiguration: (telemetry) => telemetry
-            .AddSource(IdentityServerConstants.Tracing.Basic)
-            .AddSource(IdentityServerConstants.Tracing.Cache)
-            .AddSource(IdentityServerConstants.Tracing.Services)
-            .AddSource(IdentityServerConstants.Tracing.Stores)
-            .AddSource(IdentityServerConstants.Tracing.Validation)
-            .AddNpgsql(),
-        additionalMetricsConfiguration => additionalMetricsConfiguration
-                 .AddNpgsqlInstrumentation(),
-        additionalLogConfiguration: null)
+        new ConfigurationFunctions
+        {
+            TraceConfiguration = telemetry => telemetry
+                .AddSource(IdentityServerConstants.Tracing.Basic)
+                .AddSource(IdentityServerConstants.Tracing.Cache)
+                .AddSource(IdentityServerConstants.Tracing.Services)
+                .AddSource(IdentityServerConstants.Tracing.Stores)
+                .AddSource(IdentityServerConstants.Tracing.Validation)
+                .AddNpgsql(),
+            MetricsConfiguration = metrics => metrics
+                .AddNpgsqlInstrumentation()
+        })
         .AddSpydersoftSerilog(true);
 
     AppHealthCheckOptions healthCheckOptions = builder.AddSpydersoftHealthChecks();
@@ -67,7 +70,7 @@ try
                                    ForwardedHeaders.XForwardedProto | 
                                    ForwardedHeaders.XForwardedHost;
         // Clear known networks and proxies to accept any proxy
-        options.KnownNetworks.Clear();
+        options.KnownIPNetworks.Clear();
         options.KnownProxies.Clear();
         // Trust all proxies - adjust this based on your security requirements
         options.ForwardLimit = null;
@@ -169,7 +172,7 @@ try
         RequireHeaderSymmetry = false,
         ForwardLimit = null
     };
-    forwardedHeadersOptions.KnownNetworks.Clear();
+    forwardedHeadersOptions.KnownIPNetworks.Clear();
     forwardedHeadersOptions.KnownProxies.Clear();
     
     _ = app.UseForwardedHeaders(forwardedHeadersOptions);
