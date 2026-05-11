@@ -26,13 +26,19 @@ namespace Spydersoft.Identity.Models.Admin.ClientViewModels
         {
             ClientScopeViewModel child = base.GetChild(parent, configDbContext);
             child.Scopes = [.. configDbContext.ApiScopes.Select(scope => scope.Name)];
+            child.Scopes.AddRange(configDbContext.IdentityResources.Where(ir => ir.Enabled).Select(ir => ir.Name));
 
+            // Standard OIDC scopes are kept as a fallback in case the IdentityResources
+            // table hasn't been seeded yet (fresh install). Distinct below de-duplicates
+            // when they're also present in the database.
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Address);
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Email);
             child.Scopes.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
             child.Scopes.Add(IdentityServerConstants.StandardScopes.OpenId);
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Phone);
             child.Scopes.Add(IdentityServerConstants.StandardScopes.Profile);
+
+            child.Scopes = [.. child.Scopes.Distinct()];
 
             Duende.IdentityServer.EntityFramework.Entities.Client client = configDbContext.Clients.Include(c => c.AllowedScopes).FirstOrDefault(c => c.Id == parent.Id);
             if (client != null)
