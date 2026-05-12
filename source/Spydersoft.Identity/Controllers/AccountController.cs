@@ -95,10 +95,11 @@ namespace Spydersoft.Identity.Controllers
             // build a model so we know what to show on the login page
             LoginViewModel vm = await BuildLoginViewModelAsync(returnUrl);
 
-            if (vm.IsExternalLoginOnly)
+            // When the client forbids local login and an authenticated session can't satisfy it,
+            // show an interstitial so the user understands their current session is being switched.
+            if (vm.IsExternalLoginOnly && User?.Identity?.IsAuthenticated == true)
             {
-                // we only have one option for logging in and it's an external provider
-                return RedirectToAction("Challenge", "External", new { scheme = vm.ExternalLoginScheme, returnUrl });
+                return View("ExternalLoginRequired", vm);
             }
 
             return View(vm);

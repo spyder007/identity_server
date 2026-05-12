@@ -36,6 +36,19 @@
                         <p class="text-base-content/70 mt-2">Access your Spydersoft account</p>
                     </div>
 
+                    @if (!Model.EnableLocalLogin)
+                    {
+                        <div class="alert alert-info mb-6">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <h3 class="font-bold">External sign-in required</h3>
+                                <div class="text-sm">This application doesn't accept username/password sign-in. Please continue with one of the providers below.</div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model.EnableLocalLogin)
+                    {
                     <form asp-route-returnurl="@Model.ReturnUrl" method="post" class="space-y-6">
                         <!-- Validation Summary -->
                         @if (!ViewData.ModelState.IsValid)
@@ -106,6 +119,7 @@
                             </button>
                         </div>
                     </form>
+                    }
 
                     <!-- External Providers -->
                     @if (Model.VisibleExternalProviders.Any())

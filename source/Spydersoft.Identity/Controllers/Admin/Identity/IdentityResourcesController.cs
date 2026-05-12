@@ -255,7 +255,14 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
                 new IdentityResources.Address(),
                 new IdentityResources.Email(),
                 new IdentityResources.OpenId(),
-                new IdentityResources.Phone()
+                new IdentityResources.Phone(),
+                // Not part of Duende's standard set, but practically every deployment
+                // needs a role-emitting identity resource. Surface it as a preset so
+                // operators don't have to hand-craft it (and mis-type the user claim).
+                new IdentityResource(
+                    name: "roles",
+                    displayName: "User Roles",
+                    userClaims: [Duende.IdentityModel.JwtClaimTypes.Role]),
             ];
         }
     }

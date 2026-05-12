@@ -151,19 +151,8 @@ namespace Spydersoft.Identity.Data
         private void SeedAspNetIdentityDatabase(IServiceScope serviceScope)
         {
             RoleManager<ApplicationRole> roleMgr = serviceScope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-            ApplicationRole adminRole = roleMgr.FindByNameAsync("admin").Result;
-            if (adminRole == null)
-            {
-                IdentityResult result = roleMgr.CreateAsync(new ApplicationRole()
-                {
-                    Name = "admin"
-                }).Result;
-
-                if (!result.Succeeded)
-                {
-                    _log.LogError("Unable to create admin role : {error}", result.ToString());
-                }
-            }
+            SeedRoleIfMissing(roleMgr, "admin");
+            SeedRoleIfMissing(roleMgr, "developer");
 
 
             UserManager<ApplicationUser> userMgr = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -212,6 +201,21 @@ namespace Spydersoft.Identity.Data
 
         }
 
+        private void SeedRoleIfMissing(RoleManager<ApplicationRole> roleMgr, string roleName)
+        {
+            ApplicationRole existing = roleMgr.FindByNameAsync(roleName).Result;
+            if (existing != null)
+            {
+                return;
+            }
+
+            IdentityResult result = roleMgr.CreateAsync(new ApplicationRole { Name = roleName }).Result;
+            if (!result.Succeeded)
+            {
+                _log.LogError("Unable to create {role} role : {error}", roleName, result.ToString());
+            }
+        }
+
         #endregion Seeding Functions
 
         #region Identity Server Configuration Object Creators
@@ -226,6 +230,16 @@ namespace Spydersoft.Identity.Data
             [
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
+                new IdentityResources.Email(),
+                new IdentityResources.Phone(),
+                new IdentityResources.Address(),
+                // Duende doesn't ship a built-in Role identity resource; define one so
+                // clients can request `scope=roles` and get a `role` claim in the token
+                // out of the box. Required by the platform auth-proxy use case.
+                new IdentityResource(
+                    name: "roles",
+                    displayName: "User Roles",
+                    userClaims: [JwtClaimTypes.Role]),
             ];
         }
 

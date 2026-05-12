@@ -65,7 +65,8 @@ namespace Spydersoft.Identity.Controllers
         /// <param name="returnUrl">The return URL.</param>
         /// <returns>Microsoft.AspNetCore.Mvc.IActionResult.</returns>
         /// <exception cref="ArgumentException">invalid return URL, nameof(returnUrl)</exception>
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Challenge(string scheme, string returnUrl)
         {
             if (string.IsNullOrEmpty(returnUrl))
@@ -80,7 +81,7 @@ namespace Spydersoft.Identity.Controllers
                 throw new ArgumentException("invalid return URL", nameof(returnUrl));
             }
 
-            // start challenge and roundtrip the return URL and scheme 
+            // start challenge and roundtrip the return URL and scheme
             var props = new AuthenticationProperties
             {
                 RedirectUri = Url.Action(nameof(Callback)),

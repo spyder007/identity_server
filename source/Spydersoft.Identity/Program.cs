@@ -95,17 +95,28 @@ try
     var automapperLicense = builder.Configuration.GetValue<string>("AutoMapper:License");
 
     _ = builder.Services.AddAutoMapper(cfg => cfg.LicenseKey = automapperLicense, typeof(Program));
-    _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.User.RequireUniqueEmail = true)
+    _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+            // Use JWT short-form claim types so the ClaimsPrincipal that ASP.NET Identity
+            // builds matches what IdentityServer scopes/IdentityResources ask for. Without
+            // this, role claims land as ClaimTypes.Role (the long URI form) and are filtered
+            // out by Duende's profile service when a scope requests "role". Same story for
+            // name/sub. Internal code in this repo already reads via JwtClaimTypes or the
+            // Duende User.GetSubjectId() extension, so this is a zero-ripple change here.
+            options.ClaimsIdentity.RoleClaimType = Duende.IdentityModel.JwtClaimTypes.Role;
+            options.ClaimsIdentity.UserNameClaimType = Duende.IdentityModel.JwtClaimTypes.Name;
+            options.ClaimsIdentity.UserIdClaimType = Duende.IdentityModel.JwtClaimTypes.Subject;
+        })
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
     // Add application builder.Services.
     _ = builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-    _ = builder.Services.AddMvc(options =>
+    _ = builder.Services.AddControllersWithViews(options =>
     {
         options.SuppressAsyncSuffixInActionNames = false;
-        options.EnableEndpointRouting = false;
     });
 
     // Get configured public origin from configuration
@@ -198,16 +209,14 @@ try
     _ = app.UseSpydersoftHealthChecks(healthCheckOptions)
             .UseCookiePolicy()
             .UseStaticFiles()
-            .UseAuthentication()
             .UseRouting()
+            .UseAuthentication()
             .UseIdentityServer()
-            .UseAuthorization()
-            .UseEndpoints(endpoints => _ = endpoints.MapControllers());
+            .UseAuthorization();
 
-    _ = app.UseMvc(routes => _ = routes.MapRoute(
+    _ = app.MapControllerRoute(
             name: "default",
-            template: "{controller}/{action}/{id?}",
-            defaults: new { controller = "Home", action = "Index" }));
+            pattern: "{controller=Home}/{action=Index}/{id?}");
 
     await app.RunAsync();
 }
