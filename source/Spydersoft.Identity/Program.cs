@@ -95,7 +95,19 @@ try
     var automapperLicense = builder.Configuration.GetValue<string>("AutoMapper:License");
 
     _ = builder.Services.AddAutoMapper(cfg => cfg.LicenseKey = automapperLicense, typeof(Program));
-    _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.User.RequireUniqueEmail = true)
+    _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+        {
+            options.User.RequireUniqueEmail = true;
+            // Use JWT short-form claim types so the ClaimsPrincipal that ASP.NET Identity
+            // builds matches what IdentityServer scopes/IdentityResources ask for. Without
+            // this, role claims land as ClaimTypes.Role (the long URI form) and are filtered
+            // out by Duende's profile service when a scope requests "role". Same story for
+            // name/sub. Internal code in this repo already reads via JwtClaimTypes or the
+            // Duende User.GetSubjectId() extension, so this is a zero-ripple change here.
+            options.ClaimsIdentity.RoleClaimType = Duende.IdentityModel.JwtClaimTypes.Role;
+            options.ClaimsIdentity.UserNameClaimType = Duende.IdentityModel.JwtClaimTypes.Name;
+            options.ClaimsIdentity.UserIdClaimType = Duende.IdentityModel.JwtClaimTypes.Subject;
+        })
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
