@@ -135,6 +135,8 @@
                                     <option value="phone_number_verified">Phone verification status</option>
                                     <option value="address">Address</option>
                                     <option value="updated_at">Profile update timestamp</option>
+                                    <!-- Authorization claim emitted by ASP.NET Identity roles -->
+                                    <option value="role">User role</option>
                                 </datalist>
                             </div>
                             <label class="label">
@@ -385,6 +387,7 @@
             "phone_number_verified" => "Phone verification status",
             "address" => "Address information",
             "updated_at" => "Profile update timestamp",
+            "role" => "User role",
             _ => "Custom identity claim"
         };
     }
@@ -397,6 +400,7 @@
             var c when c.Contains("name") || c.Contains("nickname") || c == "picture" || c == "profile" || c == "website" || c == "gender" || c == "birthdate" => "PROFILE",
             var c when c.Contains("email") || c.Contains("phone") || c == "address" => "CONTACT",
             var c when c == "locale" || c == "zoneinfo" || c == "updated_at" => "META",
+            "role" => "AUTH",
             _ => "CUSTOM"
         };
     }
