@@ -114,10 +114,9 @@ try
     // Add application builder.Services.
     _ = builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-    _ = builder.Services.AddMvc(options =>
+    _ = builder.Services.AddControllersWithViews(options =>
     {
         options.SuppressAsyncSuffixInActionNames = false;
-        options.EnableEndpointRouting = false;
     });
 
     // Get configured public origin from configuration
@@ -210,16 +209,14 @@ try
     _ = app.UseSpydersoftHealthChecks(healthCheckOptions)
             .UseCookiePolicy()
             .UseStaticFiles()
-            .UseAuthentication()
             .UseRouting()
+            .UseAuthentication()
             .UseIdentityServer()
-            .UseAuthorization()
-            .UseEndpoints(endpoints => _ = endpoints.MapControllers());
+            .UseAuthorization();
 
-    _ = app.UseMvc(routes => _ = routes.MapRoute(
+    _ = app.MapControllerRoute(
             name: "default",
-            template: "{controller}/{action}/{id?}",
-            defaults: new { controller = "Home", action = "Index" }));
+            pattern: "{controller=Home}/{action=Index}/{id?}");
 
     await app.RunAsync();
 }
