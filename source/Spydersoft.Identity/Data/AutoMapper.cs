@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 
 using AutoMapper;
 
@@ -115,6 +116,10 @@ namespace Spydersoft.Identity.Data
             _ = CreateMap<ClientSecretViewModel, ClientSecret>()
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.MapFrom(src => src.ParentId))
+                .ForMember(d => d.Expiration, opt => opt.MapFrom(src =>
+                    src.Expiration.HasValue
+                        ? DateTime.SpecifyKind(src.Expiration.Value, DateTimeKind.Utc)
+                        : (DateTime?)null))
                 .ReverseMap();
 
             _ = CreateMap<ClientScopeViewModel, ClientScope>()
@@ -138,6 +143,9 @@ namespace Spydersoft.Identity.Data
                 .ForMember(d => d.Properties, opt => opt.Ignore())
                 .ForMember(d => d.Scopes, opt => opt.Ignore())
                 .ForMember(d => d.Secrets, opt => opt.Ignore())
+                .ForMember(d => d.Created, opt => opt.Ignore())
+                .ForMember(d => d.Updated, opt => opt.Ignore())
+                .ForMember(d => d.LastAccessed, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(d => d.Id, opt => opt.Ignore());
 
@@ -159,6 +167,10 @@ namespace Spydersoft.Identity.Data
             _ = CreateMap<ApiResourceSecretViewModel, ApiResourceSecret>()
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.MapFrom(src => src.ParentId))
+                .ForMember(d => d.Expiration, opt => opt.MapFrom(src =>
+                    src.Expiration.HasValue
+                        ? DateTime.SpecifyKind(src.Expiration.Value, DateTimeKind.Utc)
+                        : (DateTime?)null))
                 .ReverseMap();
 
         }
@@ -193,6 +205,8 @@ namespace Spydersoft.Identity.Data
             _ = CreateMap<IdentityResourceViewModel, IdentityResource>()
                 .ForMember(d => d.Properties, opt => opt.Ignore())
                 .ForMember(d => d.UserClaims, opt => opt.Ignore())
+                .ForMember(d => d.Created, opt => opt.Ignore())
+                .ForMember(d => d.Updated, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(d => d.NavBar, opt => opt.Ignore());
 
