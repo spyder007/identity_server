@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using AutoMapper;
@@ -118,7 +119,10 @@ namespace Spydersoft.Identity.Controllers.Admin.Scope
 
                 if (!id.HasValue || id.Value == 0)
                 {
-                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.ApiScope();
+                    dbEntity = new Duende.IdentityServer.EntityFramework.Entities.ApiScope
+                    {
+                        Created = DateTime.UtcNow
+                    };
                     _ = ConfigDbContext.Add(dbEntity);
                     isNew = true;
                 }
