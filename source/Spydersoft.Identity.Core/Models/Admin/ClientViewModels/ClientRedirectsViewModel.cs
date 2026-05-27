@@ -23,7 +23,6 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// </summary>
         /// <value>The redirect URI.</value>
         [Required]
-        [Url]
         [Display(Name = "Redirect Uri")]
         public string RedirectUri { get; set; }
     }

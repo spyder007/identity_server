@@ -91,17 +91,17 @@ try
         .AddJwtBearer(options =>
         {
             options.Authority = authorityUrl;
-            options.Audience = "identity.admin.api";
+            options.Audience = "identity.api";
             options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
         });
 
     _ = builder.Services.AddAuthorizationBuilder()
         .AddPolicy(AdminApiPolicies.Read, policy =>
             policy.RequireAuthenticatedUser()
-                  .RequireClaim("scope", "identity:admin:read", "identity:admin:write"))
+                  .RequireClaim("scope", "identity:read", "identity:write"))
         .AddPolicy(AdminApiPolicies.Write, policy =>
             policy.RequireAuthenticatedUser()
-                  .RequireClaim("scope", "identity:admin:write"));
+                  .RequireClaim("scope", "identity:write"));
 
     // --- API Versioning ---
     _ = builder.Services.AddApiVersioning(options =>
@@ -160,8 +160,8 @@ finally
 public static class AdminApiPolicies
 {
     /// <summary>Policy for read-only operations (GET). Accepts read or write scope.</summary>
-    public const string Read = "identity:admin:read";
+    public const string Read = "identity:read";
 
     /// <summary>Policy for mutating operations (POST, PUT, DELETE). Requires write scope.</summary>
-    public const string Write = "identity:admin:write";
+    public const string Write = "identity:write";
 }

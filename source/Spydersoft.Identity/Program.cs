@@ -96,7 +96,10 @@ try
 
     var automapperLicense = builder.Configuration.GetValue<string>("AutoMapper:License");
 
-    _ = builder.Services.AddAutoMapper(cfg => cfg.LicenseKey = automapperLicense, typeof(Program));
+    _ = builder.Services.AddAutoMapper(
+        cfg => cfg.LicenseKey = automapperLicense,
+        typeof(Program),
+        typeof(Spydersoft.Identity.Core.Data.AutoMapper));
     _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
         {
             options.User.RequireUniqueEmail = true;

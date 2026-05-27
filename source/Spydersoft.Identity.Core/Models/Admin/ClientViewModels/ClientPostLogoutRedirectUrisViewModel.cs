@@ -23,7 +23,6 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// </summary>
         /// <value>The post logout redirect URI.</value>
         [Required]
-        [Url]
         [Display(Name = "Post Logout Redirect URI")]
         public string PostLogoutRedirectUri { get; set; }
     }

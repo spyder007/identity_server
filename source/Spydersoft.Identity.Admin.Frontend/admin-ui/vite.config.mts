@@ -61,23 +61,23 @@ export default defineConfig({
   server: {
     proxy: {
       "^/api": {
-        target: "https://localhost:9083/",
+        target: "https://localhost:7041/",
         secure: false,
       },
       "^/.auth": {
-        target: "https://localhost:9083/",
+        target: "https://localhost:7041/",
         secure: false,
       },
       "^/livez": {
-        target: "https://localhost:9083/",
+        target: "https://localhost:7041/",
         secure: false,
       },
       "^/readyz": {
-        target: "https://localhost:9083/",
+        target: "https://localhost:7041/",
         secure: false,
       },
     },
-    port: parseInt(process.env.PORT ?? "5210"),
+    port: parseInt(process.env.PORT ?? "7050"),
     cors: {
       origin: "*",
     },

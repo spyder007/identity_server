@@ -8,7 +8,7 @@
 	<UserSecretsId>b2c3d4e5-f6a7-8901-bcde-f12345678901</UserSecretsId>
 	<SpaRoot>admin-ui</SpaRoot>
 	<SpaProxyLaunchCommand>yarn dev</SpaProxyLaunchCommand>
-	<SpaProxyServerUrl>https://localhost:5210</SpaProxyServerUrl>
+	<SpaProxyServerUrl>https://localhost:7050</SpaProxyServerUrl>
 	<BuildCommand>yarn build</BuildCommand>
   </PropertyGroup>
 

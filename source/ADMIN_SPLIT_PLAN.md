@@ -21,7 +21,7 @@ Split the monolithic `Spydersoft.Identity` project into three separately-hosted 
 ## Architecture Decisions
 
 - **Auth:** Admin.Api secured via Bearer token (OAuth2) against `Spydersoft.Identity`
-- **Scopes:** `identity:admin:read` (GET) and `identity:admin:write` (POST/PUT/DELETE)
+- **Scopes:** `identity:read` (GET) and `identity:write` (POST/PUT/DELETE), under API resource `identity.api`
 - **API versioning:** URL segment — `/api/v1/...`
 - **OpenAPI:** `Microsoft.AspNetCore.OpenApi` + Scalar UI (dev only), spec for Kiota client gen
 - **Frontend:** React SPA hosted in an ASP.NET Core BFF project (`Admin.Frontend`); BFF proxies to Admin.Api — may have its own API endpoints as needed
@@ -111,12 +111,12 @@ Models/
 |---|---|
 | `Spydersoft.Identity.Admin.Frontend.csproj` | ASP.NET Core host, SpaRoot=admin-ui, port 9082/9083 |
 | `Program.cs` | AddOidcProxy + UseOidcProxy, static files, MapFallbackToFile index.html |
-| `appsettings.json` | OidcProxySettings: OIDC authority/clientId/scopes + YARP /api/** → adminApi @ localhost:34150 |
+| `appsettings.json` | OidcProxySettings: OIDC authority/clientId/scopes + YARP /api/** → adminApi @ localhost:7030 |
 | `appsettings.Development.json` | Debug-level Serilog overrides |
 | `Properties/launchSettings.json` | http:9082 / https:9083 |
 | `admin-ui/admin-ui.esproj` | JavaScript SDK project (yarn dev / yarn build) |
 | `admin-ui/package.json` | React 19, Vite 8, PrimeReact, Tailwind, @hey-api, React Router 7, vitest |
-| `admin-ui/vite.config.mts` | Proxy ^/api + ^/.auth → https://localhost:9083, dev port 5210, dotnet dev-certs |
+| `admin-ui/vite.config.mts` | Proxy ^/api + ^/.auth → https://localhost:7041, dev port 7050, dotnet dev-certs |
 | `admin-ui/tsconfig.json` + `tsconfig.node.json` | TypeScript strict config |
 | `admin-ui/index.html` | Entry HTML with /config.js runtime config script |
 | `admin-ui/src/styles.css` | Tailwind v4 + PrimeReact theme + blue brand palette |
@@ -130,14 +130,18 @@ Models/
 | `admin-ui/src/pages/Users.tsx` | Stub |
 | `admin-ui/public/config.js` | Runtime config: `window.APP_CONFIG = { apiBasePath: "/api" }` |
 
-### Ports
+### Ports (7000-7050 reserved range)
 
 | Service | Port |
 |---|---|
-| Admin.Api | http://localhost:34150 |
-| Admin.Frontend BFF (http) | http://localhost:9082 |
-| Admin.Frontend BFF (https) | https://localhost:9083 |
-| Vite dev server | https://localhost:5210 |
+| Aspire dashboard (http/https) | http://localhost:7000 / https://localhost:7001 |
+| Aspire OTLP / Resource service | 7002 / 7003 |
+| Postgres | localhost:7010 |
+| Identity main app | http://localhost:7020 |
+| Admin.Api | http://localhost:7030 |
+| Admin.Frontend BFF (http) | http://localhost:7040 |
+| Admin.Frontend BFF (https) | https://localhost:7041 |
+| Vite dev server | https://localhost:7050 |
 
 ---
 
@@ -157,9 +161,9 @@ Once `Admin.Frontend` is at full parity:
 
 1. **Register `identity.admin.frontend` client** in `Spydersoft.Identity` with:
    - `grant_type`: `authorization_code` + PKCE
-   - `redirect_uri`: `https://localhost:9083/oidc/login/callback`
-   - `post_logout_redirect_uri`: `https://localhost:9083/oidc/logout`
-   - Allowed scopes: `openid profile email identity:admin:read identity:admin:write`
+   - `redirect_uri`: `https://localhost:7041/oidc/login/callback`
+   - `post_logout_redirect_uri`: `https://localhost:7041/oidc/logout`
+   - Allowed scopes: `openid profile email identity:read identity:write`
 
 2. **Set user secrets for Admin.Frontend** (`UserSecretsId: b2c3d4e5-f6a7-8901-bcde-f12345678901`):
    - `OidcProxySettings:Oidc:ClientId` = `identity.admin.frontend`
@@ -167,7 +171,7 @@ Once `Admin.Frontend` is at full parity:
 
 3. **Set user secrets for Admin.Api:**
    - `ConnectionStrings:IdentityConnection` — same Postgres connection string as main app
-   - `IdentityServer:Authority` — `http://localhost:34147` (main app local port)
+   - `IdentityServer:Authority` — `http://localhost:7020` (main app local port)
    - `AutoMapper:License` — same license key
 
 4. **Install JS deps:** `cd Spydersoft.Identity.Admin.Frontend/admin-ui && yarn`

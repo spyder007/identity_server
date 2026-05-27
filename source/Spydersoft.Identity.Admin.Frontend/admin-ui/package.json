@@ -12,7 +12,7 @@
     "test-ui": "vitest --ui --coverage",
     "test": "vitest --reporter=verbose",
     "test-ci": "vitest run --reporter junit --coverage",
-    "api:spec": "curl -s -o openapi.json http://localhost:34150/openapi/v1.json",
+    "api:spec": "curl -s -o openapi.json http://localhost:7030/openapi/v1.json",
     "api:generate": "openapi-ts",
     "api:update": "yarn api:spec && yarn api:generate"
   },

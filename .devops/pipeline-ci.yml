@@ -30,9 +30,9 @@ extends:
   template: pipelines/build-api/v1.yml@templates
   parameters:
     gitVersionSpec: '6.0.x'
-    buildProject: source/Spydersoft.Identity.sln
+    buildProject: source/Spydersoft.Identity.slnx
     publishProject: src/Spydersoft.Identity.csproj
-    netCoreVersion: '9.0.x'
+    netCoreVersion: '10.0.x'
     artifactName: identityServer
     artifactZipName: Spydersoft.Identity
     dockerImageName: spyder007/identity_server

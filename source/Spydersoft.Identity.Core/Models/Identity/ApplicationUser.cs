@@ -15,6 +15,6 @@ namespace Spydersoft.Identity.Core.Models.Identity
         /// </summary>
         /// <value>The name.</value>
         [PersonalData]
-        public string Name { get; set; }
+        public string? Name { get; set; }
     }
 }
