@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,10 +13,11 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
 using Spydersoft.Identity.Attributes;
+using Spydersoft.Identity.Core.Extensions;
 using Spydersoft.Identity.Extensions;
 using Spydersoft.Identity.Models.AccountViewModels;
-using Spydersoft.Identity.Models.Identity;
-using Spydersoft.Identity.Services;
+using Spydersoft.Identity.Core.Models.Identity;
+using Spydersoft.Identity.Core.Services;
 
 namespace Spydersoft.Identity.Controllers
 {

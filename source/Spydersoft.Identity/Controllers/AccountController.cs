@@ -1,4 +1,4 @@
-﻿// Copyright (c) Duende Software. All rights reserved.
+// Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
 
@@ -22,10 +22,11 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
 using Spydersoft.Identity.Attributes;
+using Spydersoft.Identity.Core.Extensions;
 using Spydersoft.Identity.Extensions;
 using Spydersoft.Identity.Models.AccountViewModels;
-using Spydersoft.Identity.Models.Identity;
-using Spydersoft.Identity.Services;
+using Spydersoft.Identity.Core.Models.Identity;
+using Spydersoft.Identity.Core.Services;
 
 namespace Spydersoft.Identity.Controllers
 {

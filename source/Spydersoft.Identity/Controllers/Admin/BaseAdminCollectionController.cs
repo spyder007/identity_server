@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using Spydersoft.Identity.Constants;
-using Spydersoft.Identity.Models.Admin;
+using Spydersoft.Identity.Core.Models.Admin;
 
 namespace Spydersoft.Identity.Controllers.Admin
 {

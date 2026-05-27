@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +9,7 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Mvc;
 
 using Spydersoft.Identity.Constants;
-using Spydersoft.Identity.Models.Admin.ScopeViewModels;
+using Spydersoft.Identity.Core.Models.Admin.ScopeViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Scope
 {

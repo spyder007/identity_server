@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 
 using AutoMapper;
@@ -8,7 +8,7 @@ using Duende.IdentityServer.EntityFramework.Entities;
 
 using Microsoft.EntityFrameworkCore;
 
-using Spydersoft.Identity.Models.Admin.ScopeViewModels;
+using Spydersoft.Identity.Core.Models.Admin.ScopeViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Scope
 {

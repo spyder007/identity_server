@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,7 +8,7 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Spydersoft.Identity.Models.Admin.ApiResourceViewModels;
+using Spydersoft.Identity.Core.Models.Admin.ApiResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Api
 {

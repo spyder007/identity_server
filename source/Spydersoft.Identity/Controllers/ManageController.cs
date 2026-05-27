@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -12,11 +12,12 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
 using Spydersoft.Identity.Constants;
-using Spydersoft.Identity.Exceptions;
+using Spydersoft.Identity.Core.Exceptions;
+using Spydersoft.Identity.Core.Extensions;
 using Spydersoft.Identity.Extensions;
-using Spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Core.Models.Identity;
 using Spydersoft.Identity.Models.ManageViewModels;
-using Spydersoft.Identity.Services;
+using Spydersoft.Identity.Core.Services;
 
 namespace Spydersoft.Identity.Controllers
 {

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Reflection;
+using System;
+using System.Linq;
 
 using Duende.IdentityServer;
 
@@ -18,9 +18,11 @@ using Npgsql;
 using Serilog;
 
 using Spydersoft.Identity.Data;
+using Spydersoft.Identity.Core.Extensions;
 using Spydersoft.Identity.Extensions;
-using Spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Core.Models.Identity;
 using Spydersoft.Identity.Options;
+using Spydersoft.Identity.Core.Services;
 using Spydersoft.Identity.Services;
 using Spydersoft.Platform.Hosting.Options;
 using Spydersoft.Platform.Hosting.StartupExtensions;
@@ -58,7 +60,7 @@ try
 
     var connString = builder.Configuration.GetConnectionString("IdentityConnection");
     var cacheConnection = builder.Configuration.GetConnectionString("RedisCache");
-    var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+    var migrationsAssembly = typeof(Spydersoft.Identity.Data.ApplicationDbContext).Assembly.GetName().Name;
 
     _ = builder.Services.Configure<SendgridOptions>(builder.Configuration.GetSection(SendgridOptions.Name));
     _ = builder.Services.Configure<ConsentOptions>(builder.Configuration.GetSection(ConsentOptions.SettingsKey));
@@ -203,6 +205,16 @@ try
     // this is just in here as a easy, yet hacky, way to get our DB created/populated
     var dbInitialize = new DatabaseInitializer(app);
     dbInitialize.InitializeDatabase();
+
+    // Migrate the DataProtection DB (identity-server only context — not shared with the API)
+    using (var scope = app.Services.CreateScope())
+    {
+        var dpContext = scope.ServiceProvider.GetRequiredService<DataProtectionDbContext>();
+        if ((await dpContext.Database.GetPendingMigrationsAsync()).Any())
+        {
+            await dpContext.Database.MigrateAsync();
+        }
+    }
 
     _ = builder.Environment.IsDevelopment() ? app.UseDeveloperExceptionPage() : app.UseExceptionHandler("/Home/Error");
 

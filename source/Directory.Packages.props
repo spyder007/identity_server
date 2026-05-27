@@ -5,7 +5,13 @@
 
   <ItemGroup>
     <!-- Main Project Packages -->
+    <PackageVersion Include="Asp.Versioning.Http" Version="10.0.0" />
+    <PackageVersion Include="OidcProxy.Net.OpenIdConnect" Version="5.4.1" />
+    <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.0.0" />
     <PackageVersion Include="AutoMapper" Version="16.1.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.7" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.6.0" />
     <PackageVersion Include="Azure.Identity" Version="1.21.0" />
     <PackageVersion Include="Duende.IdentityServer" Version="7.4.7" />
     <PackageVersion Include="Duende.IdentityServer.AspNetIdentity" Version="7.4.7" />

@@ -1,8 +1,8 @@
-﻿using AutoMapper;
+using AutoMapper;
 
 using Microsoft.AspNetCore.Identity;
 
-using Spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Core.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers.UserAdmin
 {

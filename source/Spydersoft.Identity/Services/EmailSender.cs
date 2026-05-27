@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
+using Spydersoft.Identity.Core.Services;
 using Spydersoft.Identity.Options;
 
 namespace Spydersoft.Identity.Services

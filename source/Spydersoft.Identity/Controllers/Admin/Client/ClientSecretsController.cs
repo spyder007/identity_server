@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,7 +10,7 @@ using Duende.IdentityServer.Models;
 
 using Microsoft.EntityFrameworkCore;
 
-using Spydersoft.Identity.Models.Admin.ClientViewModels;
+using Spydersoft.Identity.Core.Models.Admin.ClientViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Client
 {

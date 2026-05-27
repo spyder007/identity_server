@@ -74,5 +74,10 @@
     <DotNetCliToolReference Include="BundlerMinifier.Core" Version="2.4.337" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Spydersoft.Identity.Core\Spydersoft.Identity.Core.csproj" />
+    <ProjectReference Include="..\Spydersoft.Identity.Data\Spydersoft.Identity.Data.csproj" />
+  </ItemGroup>
 
 </Project>

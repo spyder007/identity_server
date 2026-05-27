@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +12,7 @@ using Duende.IdentityServer.Models;
 using Microsoft.AspNetCore.Mvc;
 
 using Spydersoft.Identity.Constants;
-using Spydersoft.Identity.Models.Admin.IdentityResourceViewModels;
+using Spydersoft.Identity.Core.Models.Admin.IdentityResourceViewModels;
 
 namespace Spydersoft.Identity.Controllers.Admin.Identity
 {
@@ -50,7 +50,7 @@ namespace Spydersoft.Identity.Controllers.Admin.Identity
         /// Gets all standards as view models.
         /// </summary>
         /// <param name="currentList">The current list.</param>
-        /// <returns>System.Collections.Generic.List&lt;Spydersoft.Identity.Models.Admin.IdentityResourceViewModels.IdentityResourceViewModel&gt;.</returns>
+        /// <returns>System.Collections.Generic.List&lt;Spydersoft.Identity.Core.Models.Admin.IdentityResourceViewModels.IdentityResourceViewModel&gt;.</returns>
         private List<IdentityResourceViewModel> GetAllStandardsAsViewModels(IQueryable<IdentityResourceViewModel> currentList)
         {
             var list = new List<IdentityResourceViewModel>();

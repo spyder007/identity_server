@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using Spydersoft.Identity.Constants;
-using Spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Core.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers.UserAdmin
 {

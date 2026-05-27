@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -17,9 +17,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using Spydersoft.Identity.Attributes;
-using Spydersoft.Identity.Exceptions;
+using Spydersoft.Identity.Core.Exceptions;
+using Spydersoft.Identity.Core.Extensions;
 using Spydersoft.Identity.Extensions;
-using Spydersoft.Identity.Models.Identity;
+using Spydersoft.Identity.Core.Models.Identity;
 
 namespace Spydersoft.Identity.Controllers
 {
@@ -167,7 +168,7 @@ namespace Spydersoft.Identity.Controllers
         /// Find user from external provider as an asynchronous operation.
         /// </summary>
         /// <param name="result">The result.</param>
-        /// <returns>A Task&lt;(Spydersoft.Identity.Models.Identity.ApplicationUser user, string provider, string providerUserId, System.Collections.Generic.IEnumerable&lt;System.Security.Claims.Claim&gt; claims)&gt; representing the asynchronous operation.</returns>
+        /// <returns>A Task&lt;(Spydersoft.Identity.Core.Models.Identity.ApplicationUser user, string provider, string providerUserId, System.Collections.Generic.IEnumerable&lt;System.Security.Claims.Claim&gt; claims)&gt; representing the asynchronous operation.</returns>
         private async Task<(ApplicationUser user, string provider, string providerUserId, IEnumerable<Claim> claims)>
             FindUserFromExternalProviderAsync(AuthenticateResult result)
         {
@@ -249,7 +250,7 @@ namespace Spydersoft.Identity.Controllers
         /// <param name="provider">The provider.</param>
         /// <param name="providerUserId">The provider user identifier.</param>
         /// <param name="claims">The claims.</param>
-        /// <returns>A Task&lt;Spydersoft.Identity.Models.Identity.ApplicationUser&gt; representing the asynchronous operation.</returns>
+        /// <returns>A Task&lt;Spydersoft.Identity.Core.Models.Identity.ApplicationUser&gt; representing the asynchronous operation.</returns>
         /// <exception cref="IdentityResultException">createResult</exception>
         /// <exception cref="IdentityResultException">identityResult</exception>
         private async Task<ApplicationUser> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)

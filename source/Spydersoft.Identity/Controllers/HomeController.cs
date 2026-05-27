@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 
 using Duende.IdentityServer.Models;
@@ -7,7 +7,7 @@ using Duende.IdentityServer.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
-using Spydersoft.Identity.Models;
+using Spydersoft.Identity.Core.Models;
 using Spydersoft.Identity.Models.Home;
 
 namespace Spydersoft.Identity.Controllers

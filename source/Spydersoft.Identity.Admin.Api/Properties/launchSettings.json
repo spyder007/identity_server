@@ -1,0 +1,21 @@
+{
+  "profiles": {
+    "Spydersoft.Identity.Admin.Api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "scalar/v1",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:34150"
+    }
+  },
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:34151/",
+      "sslPort": 44302
+    }
+  }
+}

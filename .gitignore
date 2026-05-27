@@ -45,3 +45,13 @@ identityserver4_log.txt
 *.rsa
 **/charts/*.tgz
 **/TestResults/**
+
+# Vite build output
+**/dist/
+
+# Yarn 4 (Berry)
+**/.yarn/cache/
+**/.yarn/unplugged/
+**/.yarn/install-state.gz
+**/.yarn/build-state.yml
+**/.pnp.*
