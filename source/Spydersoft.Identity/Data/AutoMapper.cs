@@ -210,6 +210,11 @@ namespace Spydersoft.Identity.Data
                 .ReverseMap()
                 .ForMember(d => d.NavBar, opt => opt.Ignore());
 
+            // Map from Duende.IdentityServer.Models.IdentityResource (domain model) to ViewModel
+            _ = CreateMap<Duende.IdentityServer.Models.IdentityResource, IdentityResourceViewModel>()
+                .ForMember(d => d.NavBar, opt => opt.Ignore())
+                .ReverseMap();
+
             _ = CreateMap<IdentityResources.Address, IdentityResourceViewModel>()
                 .ForMember(d => d.NavBar, opt => opt.Ignore())
                 .ReverseMap();

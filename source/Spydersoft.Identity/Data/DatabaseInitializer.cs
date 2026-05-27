@@ -120,27 +120,27 @@ namespace Spydersoft.Identity.Data
                 _ = context.SaveChanges();
             }
 
-            if (!context.IdentityResources.Any())
+            // Ensure all standard identity resources exist
+            foreach (IdentityResource resource in GetIdentityResources())
             {
-                _log.LogInformation("No Resources Found. Creating sample Resources");
-                foreach (IdentityResource resource in GetIdentityResources())
+                if (!context.IdentityResources.Any(ir => ir.Name == resource.Name))
                 {
+                    _log.LogInformation("Identity Resource {ResourceName} not found. Creating it.", resource.Name);
                     _ = context.IdentityResources.Add(resource.ToEntity());
                 }
-
-                _ = context.SaveChanges();
             }
+            _ = context.SaveChanges();
 
-            if (!context.ApiResources.Any())
+            // Ensure all standard API resources exist
+            foreach (ApiResource resource in GetApiResources())
             {
-                _log.LogInformation("No API Resources Found. Creating sample API Resources");
-                foreach (ApiResource resource in GetApiResources())
+                if (!context.ApiResources.Any(ar => ar.Name == resource.Name))
                 {
+                    _log.LogInformation("API Resource {ResourceName} not found. Creating it.", resource.Name);
                     _ = context.ApiResources.Add(resource.ToEntity());
                 }
-
-                _ = context.SaveChanges();
             }
+            _ = context.SaveChanges();
         }
 
         /// <summary>
