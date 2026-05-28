@@ -12,6 +12,12 @@ internal static class Clients
     private const string Secret_QzotTq = "QzotTqTf4cOhHd5ssas1diDM+TuNUWAfpBxi+GLfCAY=";
     private const string Secret_WZzpb9 = "WZzpb954PpwysWAv7HE8t+8Et1VnRBQ5L6nFlC+RPOE=";
 
+    // Cleartext secret for the `identity.admin.tests` client_credentials client.
+    // Committed deliberately — local-only test fixture; the client is seeded
+    // in dev for the Playwright suite to fetch admin-scope tokens against the
+    // real /connect/token endpoint. Do not reuse outside the tests project.
+    public const string AdminTestsClientSecret = "local-tests-only-do-not-deploy";
+
     private static Secret Hashed(string hash) => new(hash) { Type = IdentityServerConstants.SecretTypes.SharedSecret };
 
     /// <param name="adminFrontendClientSecret">
@@ -93,6 +99,17 @@ internal static class Clients
                 "identity:admin:read", "identity:admin:write",
             },
             AllowOfflineAccess = true,
+        },
+        // Client_credentials client used by the Playwright admin-api-integration
+        // suite to fetch a token with the admin scopes. Secret is committed in
+        // source — see AdminTestsClientSecret above.
+        new Client
+        {
+            ClientId = "identity.admin.tests",
+            ClientName = "Identity Admin Tests",
+            AllowedGrantTypes = { GrantType.ClientCredentials },
+            ClientSecrets = { Hashed(AdminTestsClientSecret.Sha256()) },
+            AllowedScopes = { "identity:admin:read", "identity:admin:write" },
         },
     };
 }

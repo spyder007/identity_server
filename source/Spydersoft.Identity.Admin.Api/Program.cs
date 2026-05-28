@@ -100,7 +100,12 @@ try
         {
             options.Authority = authorityUrl;
             options.Audience = "identity.admin.api";
-            options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
+            // Only require HTTPS for JWKS/discovery if the configured authority
+            // is itself HTTPS. Under Aspire we wire identity via its http
+            // endpoint in every profile, so a blanket IsDevelopment() check
+            // would force HTTPS in Testing and break the bearer pipeline.
+            options.RequireHttpsMetadata = authorityUrl?.StartsWith(
+                "https://", StringComparison.OrdinalIgnoreCase) ?? false;
         });
 
     _ = builder.Services.AddAuthorizationBuilder()

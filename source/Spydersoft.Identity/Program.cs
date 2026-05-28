@@ -139,15 +139,19 @@ try
     // the Operation Store (codes, tokens, consents)
     var identityServerBuilder = builder.Services.AddIdentityServer(options =>
     {
-        // Configure Identity Server to use the correct public-facing URL when behind a proxy
-        // This ensures all generated URLs use HTTPS instead of HTTP
-        if (!string.IsNullOrEmpty(publicOrigin))
+        // Configure Identity Server's announced issuer. Either IssuerUri or
+        // PublicOrigin pins it; without one, the issuer is derived from the
+        // incoming request URL which is fragile when the same host is reached
+        // via multiple names (e.g. localhost vs 127.0.0.1 in the test harness).
+        if (!string.IsNullOrEmpty(issuerUri))
         {
-            options.IssuerUri = issuerUri ?? publicOrigin;
-            Log.Information("IdentityServer IssuerUri configured: {IssuerUri}", options.IssuerUri);
+            options.IssuerUri = issuerUri;
         }
-        
-        // Additional logging for debugging
+        else if (!string.IsNullOrEmpty(publicOrigin))
+        {
+            options.IssuerUri = publicOrigin;
+        }
+
         Log.Information("IdentityServer configuration - IssuerUri: {IssuerUri}", options.IssuerUri ?? "not set");
     })
     .AddAspNetIdentity<ApplicationUser>()

@@ -15,10 +15,16 @@ var adminFrontendClientSecret = builder.AddParameter(
     "secret",
     secret: true);
 
-// PostgreSQL with persistent named volume. Port pinned for stable host-side
-// tooling (pgAdmin/psql/DBeaver) connections across AppHost restarts.
-var postgres = builder.AddPostgres("postgres", port: 7010)
-    .WithDataVolume("identity-pg-data");
+// PostgreSQL with persistent named volume for normal dev runs (so reseeding
+// is skipped on restart and pgAdmin/psql/DBeaver connections stay stable).
+// Under the Testing launch profile we deliberately drop the volume so each
+// test run starts from a clean DB and the seeder repopulates everything;
+// integration tests must be hermetic across runs.
+var postgres = builder.AddPostgres("postgres", port: 7010);
+if (builder.Environment.EnvironmentName != "Testing")
+{
+    postgres.WithDataVolume("identity-pg-data");
+}
 
 // Resource name "identitydb" to avoid collision with the "identity" project
 // below; databaseName="identity" keeps the actual Postgres DB name unchanged.
@@ -42,6 +48,11 @@ var identity = builder.AddProject<Projects.Spydersoft_Identity>("identity")
     .WithReference(identityDb)
     .WithEnvironment("ConnectionStrings__IdentityConnection", identityDb)
     .WithEnvironment("AutoMapper__License", automapperLicense)
+    // Pin the announced issuer so it matches the URL admin-api uses as its
+    // authority. Without this the token's `iss` is derived from the request
+    // hostname (localhost vs 127.0.0.1) and the bearer pipeline rejects
+    // tokens whose iss does not exactly match the discovery doc's issuer.
+    .WithEnvironment("IdentityServer__IssuerUri", "http://localhost:7020")
     .WithEnvironment("Telemetry__Log__Type", "otlp")
     .WithEnvironment("Telemetry__Metrics__Type", "otlp")
     .WithEnvironment("Telemetry__Trace__Type", "otlp")
