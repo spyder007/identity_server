@@ -5,6 +5,7 @@ using Duende.IdentityServer.EntityFramework.Entities;
 using Spydersoft.Identity.Admin.Api.Models.ApiResources;
 using Spydersoft.Identity.Admin.Api.Models.Clients;
 using Spydersoft.Identity.Admin.Api.Models.IdentityResources;
+using Spydersoft.Identity.Admin.Api.Models.Roles;
 using Spydersoft.Identity.Admin.Api.Models.Scopes;
 using Spydersoft.Identity.Admin.Api.Models.Users;
 using Spydersoft.Identity.Core.Models.Identity;
@@ -29,6 +30,7 @@ namespace Spydersoft.Identity.Admin.Api.Data
             CreateIdentityResourceMappings();
             CreateScopeMappings();
             CreateUserMappings();
+            CreateRoleMappings();
         }
 
         private void CreateClientMappings()
@@ -249,6 +251,12 @@ namespace Spydersoft.Identity.Admin.Api.Data
                 .ForMember(d => d.EmailConfirmed, opt => opt.Ignore())
                 .ForMember(d => d.PhoneNumberConfirmed, opt => opt.Ignore())
                 .ForMember(d => d.AccessFailedCount, opt => opt.Ignore());
+        }
+
+        private void CreateRoleMappings()
+        {
+            _ = CreateMap<ApplicationRole, RoleSummaryDto>();
+            _ = CreateMap<ApplicationRole, RoleDto>();
         }
     }
 }

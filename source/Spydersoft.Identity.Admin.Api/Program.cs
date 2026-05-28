@@ -62,6 +62,9 @@ try
     _ = builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connString));
 
+    // ConfigurationDbContext resolves ConfigurationStoreOptions from DI during OnModelCreating;
+    // register it explicitly since plain AddDbContext does not.
+    _ = builder.Services.AddSingleton(new Duende.IdentityServer.EntityFramework.Options.ConfigurationStoreOptions());
     _ = builder.Services.AddDbContext<Duende.IdentityServer.EntityFramework.DbContexts.ConfigurationDbContext>(options =>
         options.UseNpgsql(connString,
             sql => sql.MigrationsAssembly(migrationsAssembly)));
@@ -87,21 +90,26 @@ try
     // --- Authentication / Authorization ---
     var authorityUrl = builder.Configuration.GetValue<string>("IdentityServer:Authority");
 
-    _ = builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    _ = builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
         .AddJwtBearer(options =>
         {
             options.Authority = authorityUrl;
-            options.Audience = "identity.api";
+            options.Audience = "identity.admin.api";
             options.RequireHttpsMetadata = !builder.Environment.IsDevelopment();
         });
 
     _ = builder.Services.AddAuthorizationBuilder()
         .AddPolicy(AdminApiPolicies.Read, policy =>
             policy.RequireAuthenticatedUser()
-                  .RequireClaim("scope", "identity:read", "identity:write"))
+                  .RequireClaim("scope", "identity:admin:read", "identity:admin:write"))
         .AddPolicy(AdminApiPolicies.Write, policy =>
             policy.RequireAuthenticatedUser()
-                  .RequireClaim("scope", "identity:write"));
+                  .RequireClaim("scope", "identity:admin:write"));
 
     // --- API Versioning ---
     _ = builder.Services.AddApiVersioning(options =>
@@ -160,8 +168,8 @@ finally
 public static class AdminApiPolicies
 {
     /// <summary>Policy for read-only operations (GET). Accepts read or write scope.</summary>
-    public const string Read = "identity:read";
+    public const string Read = "identity:admin:read";
 
     /// <summary>Policy for mutating operations (POST, PUT, DELETE). Requires write scope.</summary>
-    public const string Write = "identity:write";
+    public const string Write = "identity:admin:write";
 }

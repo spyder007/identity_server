@@ -122,6 +122,13 @@ try
     _ = builder.Services.AddControllersWithViews(options =>
     {
         options.SuppressAsyncSuffixInActionNames = false;
+        // ViewModels live in Spydersoft.Identity.Core which has Nullable=enable.
+        // Without this, every non-nullable reference type property is treated as
+        // implicitly [Required] — including parent-of-form properties (NavBar,
+        // ItemsList, NewItem.Scopes) that the form never posts, causing legit
+        // submissions to fail ModelState validation. Only explicit [Required]
+        // attributes should drive validation here.
+        options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
     });
 
     // Get configured public origin from configuration

@@ -68,6 +68,10 @@ export default defineConfig({
         target: "https://localhost:7041/",
         secure: false,
       },
+      "^/.diag": {
+        target: "https://localhost:7041/",
+        secure: false,
+      },
       "^/livez": {
         target: "https://localhost:7041/",
         secure: false,

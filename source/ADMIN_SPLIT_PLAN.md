@@ -1,7 +1,8 @@
 # Admin Split Plan — `feature/admin-split`
 
-> **Saved:** 2025-08-20  
-> **Branch:** `feature/admin-split`  
+> **Originally saved:** 2025-08-20
+> **Last updated:** 2026-05-28
+> **Branch:** `feature/admin-split`
 > **Purpose:** Reference doc for resuming work across sessions.
 
 ---
@@ -21,23 +22,28 @@ Split the monolithic `Spydersoft.Identity` project into three separately-hosted 
 ## Architecture Decisions
 
 - **Auth:** Admin.Api secured via Bearer token (OAuth2) against `Spydersoft.Identity`
-- **Scopes:** `identity:read` (GET) and `identity:write` (POST/PUT/DELETE), under API resource `identity.api`
+- **Scopes:** `identity:admin:read` (GET) and `identity:admin:write` (POST/PUT/DELETE), under API resource `identity.admin.api`
 - **API versioning:** URL segment — `/api/v1/...`
-- **OpenAPI:** `Microsoft.AspNetCore.OpenApi` + Scalar UI (dev only), spec for Kiota client gen
-- **Frontend:** React SPA hosted in an ASP.NET Core BFF project (`Admin.Frontend`); BFF proxies to Admin.Api — may have its own API endpoints as needed
-- **Kiota:** Generate typed Admin.Api client from OpenAPI spec for use in Admin.Frontend
+- **OpenAPI:** `Microsoft.AspNetCore.OpenApi` + Scalar UI (dev only), spec for client gen
+- **Frontend:** React SPA hosted in an ASP.NET Core BFF project (`Admin.Frontend`); BFF proxies to Admin.Api via YARP
+- **API client gen:** `@hey-api/openapi-ts` + `@hey-api/client-axios` (matches `pitstop-ui` pattern; **not** Kiota — the original plan listed Kiota but we standardized on hey-api)
+- **Orchestration:** .NET Aspire AppHost wires the whole stack (Postgres + seeder + identity + admin-api + admin-frontend BFF + Vite dev server) with pinned ports and parameter-driven secrets
 - **Phased approach:** Old MVC admin controllers/views in `Spydersoft.Identity` stay **untouched** until Admin.Frontend reaches full parity
 
 ---
 
-## Existing Projects (unchanged)
+## Existing Projects
 
 | Project | Role |
 |---|---|
-| `Spydersoft.Identity` | Monolith — auth + old MVC admin (untouched in Phase 1/2) |
+| `Spydersoft.Identity` | Monolith — auth + old MVC admin (untouched until Phase 3) |
 | `Spydersoft.Identity.Core` | Shared models, ViewModels, exceptions, service interfaces |
 | `Spydersoft.Identity.Data` | EF DbContexts (`ApplicationDbContext`, Duende config/persisted grant), migrations |
 | `Spydersoft.Identity.Tests` | NUnit test project |
+| `Spydersoft.Identity.AppHost` | **NEW** — Aspire orchestration (Postgres, seeder, all three apps, Vite) |
+| `Spydersoft.Identity.DataSeeder` | **NEW** — one-shot console: applies EF migrations + seeds clients/resources/identity |
+| `Spydersoft.Identity.Admin.Api` | **NEW** — REST API (Phase 1) |
+| `Spydersoft.Identity.Admin.Frontend` | **NEW** — BFF + React SPA (Phase 2) |
 
 ---
 
@@ -47,7 +53,7 @@ Split the monolithic `Spydersoft.Identity` project into three separately-hosted 
 
 - **Project:** `Spydersoft.Identity.Admin.Api.csproj` — `net10.0`, CPM, references `Core` + `Data`
 - **Packages added to `Directory.Packages.props`:** `Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, `Microsoft.AspNetCore.Authentication.JwtBearer`, `Microsoft.AspNetCore.OpenApi`, `Scalar.AspNetCore`
-- **`Program.cs`:** EF (`ConfigurationDbContext` + `ApplicationDbContext`), ASP.NET Core Identity (UserManager/RoleManager), AutoMapper, JwtBearer auth, read/write scope policies, API versioning, OpenAPI + Scalar
+- **`Program.cs`:** EF (`ConfigurationDbContext` + `ApplicationDbContext`), ASP.NET Core Identity (UserManager/RoleManager), AutoMapper, JwtBearer auth (audience `identity.admin.api`), read/write scope policies, API versioning, OpenAPI + Scalar, Spydersoft.Platform.Hosting (telemetry/Serilog/health checks)
 - **`Data/ApiAutoMapperProfile.cs`:** Entity → DTO mappings (separate from Core ViewModels, non-breaking)
 - **`AdminApiPolicies`** static class in `Program.cs` with `Read` and `Write` constants
 
@@ -64,6 +70,7 @@ All routes: `/api/v1/[controller]`
 | `IdentityResourceControllers.cs` | `/identityresources` CRUD + `/identityresources/{id}/claims`, `properties` |
 | `ScopeControllers.cs` | `/scopes` CRUD + `/scopes/{id}/claims`, `properties` |
 | `UsersController.cs` | `/users` CRUD + `/users/{id}/roles` (GET/POST/DELETE) + `/users/{id}/claims` (GET) |
+| `RolesController.cs` | `/roles` CRUD + `/roles/{id}/claims` (GET/POST) + `/roles/{id}/claims/{claimType}` (DELETE) |
 
 ### DTOs (`Models/`)
 
@@ -71,26 +78,28 @@ All routes: `/api/v1/[controller]`
 Models/
   BaseApiDto.cs
   Clients/
-	ClientDtos.cs              (ClientSummaryDto, ClientDto, SaveClientDto)
-	ClientSubResourceDtos.cs   (Claim, CorsOrigin, GrantType, IdpRestriction, PostLogoutUri, Property, RedirectUri, Scope, Secret — each with Dto + SaveDto)
+    ClientDtos.cs              (ClientSummaryDto, ClientDto, SaveClientDto)
+    ClientSubResourceDtos.cs   (Claim, CorsOrigin, GrantType, IdpRestriction, PostLogoutUri, Property, RedirectUri, Scope, Secret — each with Dto + SaveDto)
   ApiResources/
-	ApiResourceDtos.cs         (ApiResourceSummaryDto, ApiResourceDto, SaveApiResourceDto)
-	ApiResourceSubResourceDtos.cs
+    ApiResourceDtos.cs         (ApiResourceSummaryDto, ApiResourceDto, SaveApiResourceDto)
+    ApiResourceSubResourceDtos.cs
   IdentityResources/
-	IdentityResourceDtos.cs
-	IdentityResourceSubResourceDtos.cs
+    IdentityResourceDtos.cs
+    IdentityResourceSubResourceDtos.cs
   Scopes/
-	ScopeDtos.cs
-	ScopeSubResourceDtos.cs
+    ScopeDtos.cs
+    ScopeSubResourceDtos.cs
   Users/
-	UserDtos.cs                (UserSummaryDto, UserDto, SaveUserDto, CreateUserDto, UserRoleDto, AssignUserRoleDto, UserClaimDto)
+    UserDtos.cs                (UserSummaryDto, UserDto, SaveUserDto, CreateUserDto, UserRoleDto, AssignUserRoleDto, UserClaimDto)
+  Roles/
+    RoleDtos.cs                (RoleSummaryDto, RoleDto, SaveRoleDto, RoleClaimDto, SaveRoleClaimDto)
 ```
 
 ### Config
 
 - `appsettings.json` — keys: `ConnectionStrings:IdentityConnection`, `IdentityServer:Authority`, `AutoMapper:License`, `Telemetry`, `HealthChecks`
 - `appsettings.Development.json` — debug-level Serilog
-- `Properties/launchSettings.json` — port `34150`, launchUrl `scalar/v1`
+- Under Aspire, the AppHost overrides `IdentityServer:Authority`, `ConnectionStrings:IdentityConnection`, `AutoMapper:License`, and the HTTP endpoint (port **7030**, unproxied). The original plan's port 34150 / Scalar launchUrl no longer applies when run via AppHost.
 
 ---
 
@@ -98,36 +107,33 @@ Models/
 
 ### Architecture decisions made
 
-- **BFF:** OidcProxy.Net.OpenIdConnect 5.4.1 (YARP-based) — exact mirror of `Spydersoft.PitStop.Frontend` pattern
+- **BFF:** OidcProxy.Net.OpenIdConnect (YARP-based) — exact mirror of `Spydersoft.PitStop.Frontend` pattern
 - **SPA:** React 19 + Vite 8 + TypeScript in `admin-ui/` subfolder; linked as `.esproj`
-- **UI components:** PrimeReact + Tailwind v4 (same as pitstop-ui)
-- **API client gen:** `@hey-api/openapi-ts` + `@hey-api/client-axios` (same as pitstop-ui, not Kiota)
+- **UI components:** PrimeReact + Tailwind v4
+- **API client gen:** `@hey-api/openapi-ts` + `@hey-api/client-axios`
 - **Routing:** React Router v7 (`react-router-dom`)
+- **State:** Redux Toolkit available (added in deps; not yet wired)
 - **Token strategy:** OidcProxy.Net handles cookie↔Bearer exchange entirely server-side
 
 ### What was built
 
 | File | Purpose |
 |---|---|
-| `Spydersoft.Identity.Admin.Frontend.csproj` | ASP.NET Core host, SpaRoot=admin-ui, port 9082/9083 |
-| `Program.cs` | AddOidcProxy + UseOidcProxy, static files, MapFallbackToFile index.html |
-| `appsettings.json` | OidcProxySettings: OIDC authority/clientId/scopes + YARP /api/** → adminApi @ localhost:7030 |
+| `Spydersoft.Identity.Admin.Frontend.csproj` | ASP.NET Core host, SpaRoot=admin-ui, port 7040/7041 |
+| `Program.cs` | AddOidcProxy + UseOidcProxy, static files, MapFallbackToFile index.html, Spydersoft.Platform.Hosting (telemetry/Serilog/health checks) |
+| `appsettings.json` | OidcProxySettings: OIDC authority/clientId/scopes (`openid profile email identity:admin:read identity:admin:write`) + YARP `/api/**` → adminApi @ localhost:7030 |
 | `appsettings.Development.json` | Debug-level Serilog overrides |
-| `Properties/launchSettings.json` | http:9082 / https:9083 |
+| `Properties/launchSettings.json` | http:7040 / https:7041 |
 | `admin-ui/admin-ui.esproj` | JavaScript SDK project (yarn dev / yarn build) |
-| `admin-ui/package.json` | React 19, Vite 8, PrimeReact, Tailwind, @hey-api, React Router 7, vitest |
-| `admin-ui/vite.config.mts` | Proxy ^/api + ^/.auth → https://localhost:7041, dev port 7050, dotnet dev-certs |
+| `admin-ui/package.json` | React 19, Vite 8, PrimeReact, Tailwind v4, @hey-api, React Router 7, Redux Toolkit, vitest, FontAwesome 7 |
+| `admin-ui/vite.config.mts` | Proxy `^/api`, `^/.auth`, `^/livez`, `^/readyz` → `https://localhost:7041`; dev port 7050; dotnet dev-certs HTTPS |
 | `admin-ui/tsconfig.json` + `tsconfig.node.json` | TypeScript strict config |
-| `admin-ui/index.html` | Entry HTML with /config.js runtime config script |
-| `admin-ui/src/styles.css` | Tailwind v4 + PrimeReact theme + blue brand palette |
+| `admin-ui/index.html` | Entry HTML with `/config.js` runtime config script |
+| `admin-ui/src/styles.css` | Tailwind v4 + PrimeReact theme + blue brand palette (note: this SPA uses its own palette, **not** the DaisyUI v5 identity theme used by the main app) |
 | `admin-ui/src/main.tsx` | React root with BrowserRouter + PrimeReactProvider |
 | `admin-ui/src/App.tsx` | Sidebar nav layout + React Router routes to 5 admin sections |
-| `admin-ui/openapi-ts.config.ts` | @hey-api config: input openapi.json → src/api/generated |
-| `admin-ui/src/pages/Clients.tsx` | Stub |
-| `admin-ui/src/pages/ApiResources.tsx` | Stub |
-| `admin-ui/src/pages/IdentityResources.tsx` | Stub |
-| `admin-ui/src/pages/Scopes.tsx` | Stub |
-| `admin-ui/src/pages/Users.tsx` | Stub |
+| `admin-ui/openapi-ts.config.ts` | @hey-api config: input `./openapi.json` → `src/api/generated` |
+| `admin-ui/src/pages/{Clients,ApiResources,IdentityResources,Scopes,Users}.tsx` | Stubs |
 | `admin-ui/public/config.js` | Runtime config: `window.APP_CONFIG = { apiBasePath: "/api" }` |
 
 ### Ports (7000-7050 reserved range)
@@ -145,6 +151,40 @@ Models/
 
 ---
 
+## Aspire AppHost + DataSeeder ✅ COMPLETE
+
+The original "Next Immediate Actions" list assumed manual `dotnet user-secrets` setup. That has been replaced by the AppHost-driven approach:
+
+### `Spydersoft.Identity.AppHost`
+
+`Program.cs` wires the full stack with pinned ports and parameter-driven secrets:
+
+- **Postgres** (`postgres`, port 7010) with named data volume `identity-pg-data`
+- **`identitydb`** database (DB name `identity`) on the postgres resource
+- **`admin-frontend-clientsecret`** Aspire parameter (default `"secret"`, override via `dotnet user-secrets set Parameters:admin-frontend-clientsecret <value>` on the AppHost). Single source of truth for the OIDC client secret of `identity.admin.frontend`.
+- **`seeder`** — runs to completion before the other apps start. Receives the DB connection + the cleartext admin-frontend secret.
+- **`identity`** — main app, port 7020, waits for seeder completion.
+- **`admin-api`** — port 7030, waits for `identity`, receives `IdentityServer:Authority` from `identity`'s HTTP endpoint.
+- **`admin-frontend`** — BFF, ports 7040/7041, receives OIDC authority + cleartext client secret + YARP destination address (admin-api endpoint) from the AppHost.
+- **`admin-ui`** — Vite dev server via `AddViteApp` with `WithYarn`, https port 7050.
+
+Optional user-secret on AppHost: `AutoMapper:License` (empty string falls through to free-tier behavior).
+
+### `Spydersoft.Identity.DataSeeder`
+
+One-shot console app. On startup:
+
+1. Applies EF migrations: `ApplicationDbContext` + `ConfigurationDbContext` + `PersistedGrantDbContext`
+2. Idempotently seeds (skips records that already exist by name/ID):
+   - Identity resources (OpenId, Profile, Email, Address, Phone, roles)
+   - API scopes (`identity:admin:read`, `identity:admin:write`)
+   - API resources (`identity.admin.api` with the two scopes; `ShowInDiscoveryDocument = false`)
+   - Clients — including `identity.admin.frontend` (AuthorizationCode + PKCE, redirect `https://localhost:7041/oidc/login/callback`, post-logout `https://localhost:7041/oidc/logout`, scopes `openid profile email identity:admin:read identity:admin:write`, offline access)
+   - Default identity user/role
+3. The cleartext `admin-frontend-clientsecret` from the AppHost is SHA-256-hashed before being stored on the client record, matching what the BFF will present at the token endpoint.
+
+---
+
 ## Phase 3 — Strip old MVC Admin from `Spydersoft.Identity` 🔲 TODO
 
 Once `Admin.Frontend` is at full parity:
@@ -152,32 +192,118 @@ Once `Admin.Frontend` is at full parity:
 - Remove `Controllers/Admin/*` (Clients, ApiResources, IdentityResources, Scopes)
 - Remove `Controllers/UserAdmin/*` (Users, UserRoles)
 - Remove corresponding Views
-- Remove `ConfigurationDbContext` registration from `Spydersoft.Identity` `Program.cs`
+- Remove `ConfigurationDbContext` registration from `Spydersoft.Identity` `Program.cs` (only `ApplicationDbContext` needs to remain — the persisted grant store still does)
 - Clean up unused using statements and NuGet packages
+- Remove the navigation link to the old admin UI from the main app's sidebar/home
+
+---
+
+## OpenAPI Client ✅ COMPLETE (2026-05-27)
+
+`yarn api:update` against Admin.Api on port 7030 produced:
+
+- `admin-ui/openapi.json` (~212 KB)
+- `admin-ui/src/api/generated/` — `client.gen.ts`, `core/`, `client/`, `sdk.gen.ts` (~1,856 lines), `types.gen.ts` (~3,336 lines), `index.ts` (~634 lines)
+
+**Decision:** Both `openapi.json` and `src/api/generated/` are committed (not gitignored). Trade-off: noisier diffs on regen, but PRs show API surface changes explicitly and CI doesn't need Admin.Api running to build the SPA.
+
+Regenerate with: `cd Spydersoft.Identity.Admin.Frontend/admin-ui && yarn api:update` (requires the stack running via AppHost so Admin.Api is reachable at `http://localhost:7030`).
+
+---
+
+## SPA shared infrastructure ✅ (2026-05-28)
+
+- `src/api/client.ts` — axios instance with `withCredentials: true`, response interceptor that emits typed `ApiError` events and auto-redirects 401s to `/.auth/login?returnUrl=…`. Injected into the generated `@hey-api/client-axios` via `client.setConfig({ axios })` so all SDK calls share the interceptor.
+- `src/components/PageHeader.tsx` — title + subtitle + icon + actions slot (eyebrow text, optional icon chip, actions on the right, bottom divider).
+- `src/components/EmptyState.tsx` — icon + title + description + optional action, used for stub pages and "no items" states.
+- `src/components/GlobalToast.tsx` — subscribes to `onApiError` and surfaces non-auth errors via PrimeReact `Toast`. Mounted once at the App root.
+- `src/components/SubResourceList.tsx` — reusable list-with-add-row component for client/resource/scope sub-resources. Generic over the row type and create-draft type.
+- `src/utils/format.ts` — `formatDate`, `toNumberOrUndefined`, `asId`.
+- `main.tsx` calls `configureApi()` before React mounts.
+
+## Styling architecture ✅ (2026-05-28)
+
+The SPA follows the Pitstop pattern: **stock PrimeReact theme + Tailwind utilities, with minimal custom CSS**. Earlier attempts at heavy per-component CSS overrides led to whack-a-mole regressions (border-width, padding, cascade ordering) — now reverted.
+
+- **Theme:** `primereact/resources/themes/lara-light-indigo/theme.css` (indigo brand). Imported via `@import` *inside* `styles.css`, **after** `@import "tailwindcss"`.
+- **Cascade layer ordering (critical gotcha):** PrimeReact v10 lara themes wrap every rule in `@layer primereact { ... }`. CSS cascade-layer priority is fixed by **first appearance** in the bundle. If the theme is JS-imported in `main.tsx` before `styles.css`, `primereact` ends up declared first → lowest priority → Tailwind preflight (`@layer base`) overrides PrimeReact button/input/dropdown styling despite higher specificity (layers trump specificity). The fix is to `@import "tailwindcss"` **before** the theme `@import` inside `styles.css`. Compiled order should be: `properties → theme → base → components → utilities → primereact`. Pitstop has the same setup.
+- **Tailwind utility wins over PrimeReact:** when a utility class needs to beat a layered PrimeReact rule (e.g. `pl-8` on a search input where PrimeReact's `.p-inputtext { padding: 0.75rem }` is in the higher-priority `primereact` layer), use the `!` suffix: `pl-8!` → emits `padding-left: 2rem !important`. `!important` reverses layer priority.
+- **`@tailwindcss/forms`:** loaded with `strategy: class` (`@plugin "@tailwindcss/forms" { strategy: class; }`). Default `base` strategy styles raw `<input type="checkbox">` globally, causing PrimeReact's `InputSwitch` to render with both a blue checkbox AND a slider (visible dupe). Class strategy makes the plugin opt-in.
+- **No PrimeIcons:** removed `primeicons.css` import and any `pi pi-*` usages (ConfirmDialog icons dropped). FontAwesome 7 covers all icon needs via `@fortawesome/react-fontawesome`.
+- **`primereact.min.css`:** deprecated no-op in v10, not imported.
+- **Custom CSS in `styles.css`:** only `@theme` tokens (brand/surface/content/border colors, font stacks) + body baseline + 4-property `.p-card` polish. Mirror of Pitstop's shape.
+- **Brand tokens via `@theme`:** `--color-brand`, `--color-surface`, `--color-content-muted`, etc. — consumed by our custom React components as Tailwind utilities (`bg-brand`, `text-content-muted`, `border-border`). PrimeReact components use lara's own tokens (`--primary-color` etc.) and are not retargeted.
+- **App shell:** redesigned `App.tsx` with sidebar (logo lockup + grouped nav sections + user chip with sign-out at bottom) and max-width content column with vertical scroll. `ClientEdit` has a sticky save bar (`fixed left-60 bottom-0`) aligned to the content column.
+
+## Pages
+
+| Page | Status | Notes |
+|---|---|---|
+| Clients | ✅ 2026-05-28 | List (DataTable + search), Edit (Settings tab + 9 sub-resource tabs: Scopes, Grant types, Redirect URIs, Post-logout URIs, CORS origins, Claims, Secrets, Properties, IdP restrictions). New-client form hides sub-resource tabs until the client exists. Visuals reworked 2026-05-28 (see Styling architecture). |
+| ApiResources | ✅ 2026-05-28 | List (DataTable + search), Edit (Settings tab + 4 sub-resource tabs: Scopes, User claims, Secrets, Properties). Same shape as Clients. |
+| IdentityResources | ✅ 2026-05-28 | List + Edit (Settings tab with Basic info + Consent behaviour sections) + 2 sub-resource tabs: User claims, Properties. |
+| Scopes | ✅ 2026-05-28 | List + Edit (Settings tab with Basic info + Consent behaviour sections) + 2 sub-resource tabs: User claims, Properties. |
+| Users | ✅ 2026-05-28 | List (DataTable + search), Edit (Settings tab w/ Account + Security sections; password field only on `isNew`) + Roles + Claims tabs. Roles tab uses a PrimeReact `Dropdown` populated from `GET /api/v1/roles`. Claims tab is read-only. GUID ids (string), not int. |
+| Roles | ✅ 2026-05-28 | List + Edit (Settings tab with Name only) + Claims tab. Role claims keyed by claim *type* (not numeric id); custom panel mirrors the user RolesPanel shape since `SubResourceList`'s `Number(row.id)` delete signature does not fit. |
+
+---
+
+## Users / Roles — implementation notes
+
+Users does **not** fit the resource-page template (`<Area>List` + `<Area>Edit` + `<Area>SubResources`) cleanly. Read this section before starting.
+
+### Differences from resource pages
+
+- **GUID ids, not int.** `UserSummaryDto.id` and `UserDto.id` are `string` (ASP.NET Core Identity GUIDs). All `path: { id }` params in the User SDK calls take strings — do **not** wrap with `Number()` the way the resource pages do.
+- **Two create/edit DTOs.** `CreateUserDto` (POST `/users`) requires `password` + `userName` + `email`; `SaveUserDto` (PUT `/users/{id}`) has the same shape **minus password**. The Edit page needs to render a password field only on the "new" path, similar to how `ClientEdit` hides sub-resource tabs when `isNew`.
+- **Read-only claims sub-resource.** `getApiV1UsersByIdClaims` exists, but no POST/PUT/DELETE. Render `UserClaimDto[]` as a plain table — no add row, no delete column. `SubResourceList` won't fit; build a small read-only table instead, or pass an `emptyCreateForm` that renders nothing.
+- **Roles use role NAME as the path segment, not an id.** `deleteApiV1UsersByIdRolesByRoleName` takes `{ path: { id, roleName } }`. POST takes `{ body: AssignUserRoleDto }` which is `{ roleName: string }`. We went with option (b) and added a full `RolesController` (CRUD + claims). The User RolesPanel uses `getApiV1Roles()` to populate a `Dropdown` filtered to roles the user does not already have.
+- **Role claims keyed by type, not id.** `deleteApiV1RolesByIdClaimsByClaimType` takes `{ path: { id, claimType } }` — the `RoleClaimDto` has only `{ type, value }`, no numeric id. `SubResourceList` cannot be used (it calls `remove(Number(row.id))`). The `roles/RoleSubResources.tsx` `ClaimsPanel` is a hand-rolled DataTable + add form instead.
+
+### Relevant generated symbols
+
+SDK functions ([src/api/generated/sdk.gen.ts](Spydersoft.Identity.Admin.Frontend/admin-ui/src/api/generated/sdk.gen.ts)):
+
+- `getApiV1Users`, `postApiV1Users`, `getApiV1UsersById`, `putApiV1UsersById`, `deleteApiV1UsersById`
+- `getApiV1UsersByIdRoles`, `postApiV1UsersByIdRoles`, `deleteApiV1UsersByIdRolesByRoleName`
+- `getApiV1UsersByIdClaims`
+
+DTOs ([src/api/generated/types.gen.ts](Spydersoft.Identity.Admin.Frontend/admin-ui/src/api/generated/types.gen.ts)):
+
+- `UserSummaryDto` — `{ id, userName, email, emailConfirmed, name, twoFactorEnabled, lockoutEnabled }`
+- `UserDto` — summary + `phoneNumber`, `phoneNumberConfirmed`, `accessFailedCount`
+- `CreateUserDto` — `{ password, userName, email, name?, phoneNumber?, twoFactorEnabled?, lockoutEnabled? }`
+- `SaveUserDto` — `CreateUserDto` minus `password`
+- `UserRoleDto` — `{ roleName }` (returned by GET roles)
+- `AssignUserRoleDto` — `{ roleName }` (POST body)
+- `UserClaimDto` — `{ type, value }` (read-only)
+
+### File layout
+
+```text
+src/pages/users/
+  UsersList.tsx          — DataTable + search; columns: userName, email, name, status badges (email confirmed, 2FA, lockout)
+  UserEdit.tsx           — TabView: Settings (Account + Security; password field on isNew only) + Roles + Claims tabs
+  UserSubResources.tsx   — RolesPanel (Dropdown sourced from /api/v1/roles, add/remove by name), ClaimsPanel (read-only list)
+src/pages/Users.tsx      — Routes wrapper
+
+src/pages/roles/
+  RolesList.tsx          — DataTable + search; columns: name
+  RoleEdit.tsx           — TabView: Settings (name only) + Claims tab
+  RoleSubResources.tsx   — ClaimsPanel (hand-rolled — delete keyed by claim type)
+src/pages/Roles.tsx      — Routes wrapper
+```
+
+`App.tsx` has Users + Roles routes and both nav items under the People group.
 
 ---
 
 ## Next Immediate Actions
 
-1. **Register `identity.admin.frontend` client** in `Spydersoft.Identity` with:
-   - `grant_type`: `authorization_code` + PKCE
-   - `redirect_uri`: `https://localhost:7041/oidc/login/callback`
-   - `post_logout_redirect_uri`: `https://localhost:7041/oidc/logout`
-   - Allowed scopes: `openid profile email identity:read identity:write`
+1. **Restart the AppHost** so the new `RolesController` is live, then run `yarn api:update` from `Spydersoft.Identity.Admin.Frontend/admin-ui` to regenerate the SDK with the `/api/v1/roles` endpoints. Then `yarn tsc --noEmit` to confirm the new pages typecheck.
 
-2. **Set user secrets for Admin.Frontend** (`UserSecretsId: b2c3d4e5-f6a7-8901-bcde-f12345678901`):
-   - `OidcProxySettings:Oidc:ClientId` = `identity.admin.frontend`
-   - `OidcProxySettings:Oidc:ClientSecret` = `<generated>`
+2. **Verify all six pages end-to-end in the browser.** Start the stack via AppHost, browse to `https://localhost:7050`, log in through the OidcProxy → identity flow, and exercise list / create / edit / delete + each sub-resource tab for Clients, ApiResources, IdentityResources, Scopes, Users, and Roles. No live verification has been done yet — these pages have passed `yarn tsc --noEmit` but have not been clicked through.
 
-3. **Set user secrets for Admin.Api:**
-   - `ConnectionStrings:IdentityConnection` — same Postgres connection string as main app
-   - `IdentityServer:Authority` — `http://localhost:7020` (main app local port)
-   - `AutoMapper:License` — same license key
+3. **Cross-app visual consistency (optional, deferred).** The admin SPA uses PrimeReact `lara-light-indigo` (indigo brand) with brand tokens defined in `@theme`. The main app uses Tailwind v4 + DaisyUI v5 with an OKLCH "identity" theme (`Spydersoft.Identity/Styles/style.css`). Different libraries, different visual languages — full unification would require either bringing DaisyUI into the admin SPA (and dropping PrimeReact) or vice versa, neither of which is needed for functional parity. Brand color hex codes can be aligned cosmetically if desired.
 
-4. **Install JS deps:** `cd Spydersoft.Identity.Admin.Frontend/admin-ui && yarn`
-
-5. **Snapshot OpenAPI spec** (with Admin.Api running at port 34150): `yarn api:spec && yarn api:generate`
-
-6. **Implement pages:** Clients → ApiResources → IdentityResources → Scopes → Users
-
-7. **Once parity → Phase 3:** strip old MVC admin from `Spydersoft.Identity`
+4. **Phase 3 cleanup** — strip the old MVC admin (Clients, ApiResources, IdentityResources, Scopes, Users, UserRoles controllers + views) from `Spydersoft.Identity` now that all pages have parity in the SPA.

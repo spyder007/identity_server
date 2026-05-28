@@ -69,7 +69,7 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] SaveClientDto dto)
         {
-            var entity = dbContext.Clients.FirstOrDefault(c => c.Id == id);
+            var entity = await dbContext.Clients.FirstOrDefaultAsync(c => c.Id == id);
             if (entity is null)
                 return NotFound();
 
@@ -89,7 +89,7 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            var entity = dbContext.Clients.FirstOrDefault(c => c.Id == id);
+            var entity = await dbContext.Clients.FirstOrDefaultAsync(c => c.Id == id);
             if (entity is null)
                 return NotFound();
 

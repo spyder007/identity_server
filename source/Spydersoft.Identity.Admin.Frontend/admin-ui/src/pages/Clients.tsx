@@ -1,8 +1,13 @@
+import { Route, Routes } from "react-router-dom";
+import ClientsList from "./clients/ClientsList";
+import ClientEdit from "./clients/ClientEdit";
+
 export default function Clients() {
   return (
-    <div>
-      <h1 className="mb-4 text-xl font-semibold">Clients</h1>
-      <p className="text-[var(--color-content-muted)]">Client management coming soon.</p>
-    </div>
+    <Routes>
+      <Route index element={<ClientsList />} />
+      <Route path="new" element={<ClientEdit />} />
+      <Route path=":id/*" element={<ClientEdit />} />
+    </Routes>
   );
 }

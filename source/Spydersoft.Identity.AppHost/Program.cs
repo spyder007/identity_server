@@ -33,11 +33,18 @@ var seeder = builder.AddProject<Projects.Spydersoft_Identity_DataSeeder>("seeder
     .WithEnvironment("ConnectionStrings__IdentityConnection", identityDb)
     .WithEnvironment("AdminFrontend__ClientSecret", adminFrontendClientSecret);
 
-// Main IdentityServer + MVC admin (existing site).
+// Main IdentityServer + MVC admin (existing site). The Telemetry__*__Type
+// overrides flip the dev config (which routes telemetry to console) back to
+// OTLP so that under Aspire the identity app emits to the dashboard. The
+// OTLP endpoint comes from the standard OTEL_EXPORTER_OTLP_ENDPOINT env var
+// that Aspire injects automatically; matches admin-api/admin-frontend.
 var identity = builder.AddProject<Projects.Spydersoft_Identity>("identity")
     .WithReference(identityDb)
     .WithEnvironment("ConnectionStrings__IdentityConnection", identityDb)
     .WithEnvironment("AutoMapper__License", automapperLicense)
+    .WithEnvironment("Telemetry__Log__Type", "otlp")
+    .WithEnvironment("Telemetry__Metrics__Type", "otlp")
+    .WithEnvironment("Telemetry__Trace__Type", "otlp")
     .WaitForCompletion(seeder)
     .WithEndpoint("http", e => { e.Port = 7020; e.TargetPort = 7020; e.IsProxied = false; });
 

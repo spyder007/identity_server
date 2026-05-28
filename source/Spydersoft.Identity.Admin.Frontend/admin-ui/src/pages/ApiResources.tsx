@@ -1,8 +1,13 @@
+import { Route, Routes } from "react-router-dom";
+import ApiResourcesList from "./api-resources/ApiResourcesList";
+import ApiResourceEdit from "./api-resources/ApiResourceEdit";
+
 export default function ApiResources() {
   return (
-    <div>
-      <h1 className="mb-4 text-xl font-semibold">API Resources</h1>
-      <p className="text-[var(--color-content-muted)]">API resource management coming soon.</p>
-    </div>
+    <Routes>
+      <Route index element={<ApiResourcesList />} />
+      <Route path="new" element={<ApiResourceEdit />} />
+      <Route path=":id/*" element={<ApiResourceEdit />} />
+    </Routes>
   );
 }

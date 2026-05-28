@@ -18,15 +18,15 @@ internal static class Resources
 
     public static IEnumerable<ApiScope> ApiScopes => new[]
     {
-        new ApiScope("identity:read", "Identity API") { Description = "Read access to Identity API" },
-        new ApiScope("identity:write", "Identity API") { Description = "Write access to Identity API" }
+        new ApiScope("identity:admin:read", "Identity Admin API") { Description = "Read access to Identity Admin API" },
+        new ApiScope("identity:admin:write", "Identity Admin API") { Description = "Write access to Identity Admin API" }
     };
 
     public static IEnumerable<ApiResource> ApiResources => new[]
     {
-        new ApiResource("identity.api", "Identity API")
+        new ApiResource("identity.admin.api", "Identity Admin API")
         {
-            Scopes = { "identity:read", "identity:write" },
+            Scopes = { "identity:admin:read", "identity:admin:write" },
             ShowInDiscoveryDocument = false,
         }
     };
