@@ -1,3 +1,4 @@
+// Rebuild trigger: force a fresh Admin.Api image (clean publish includes Data.dll).
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpOverrides;
