@@ -1,4 +1,7 @@
-## Build Pipeline - Build, publish container image, and update helmfile config
+## Build Pipeline - Build, publish three container images, and update helmfile config
+##   1. Spydersoft.Identity                (spyder007/identity_server)
+##   2. Spydersoft.Identity.Admin.Api      (spyder007/identity_admin_api)
+##   3. Spydersoft.Identity.Admin.Frontend (spyder007/identity_admin_frontend)
 resources:
   repositories:
     - repository: templates
@@ -27,36 +30,87 @@ pr:
 
 
 extends:
-  template: pipelines/build-api/v1.yml@templates
+  template: pipelines/build-multi-container/v1.yml@templates
   parameters:
     gitVersionSpec: '6.0.x'
+    # Build the whole solution so the single SonarCloud scope sees every C# project.
     buildProject: source/Spydersoft.Identity.slnx
-    publishProject: src/Spydersoft.Identity.csproj
     netCoreVersion: '10.0.x'
-    artifactName: identityServer
-    artifactZipName: Spydersoft.Identity
-    dockerImageName: spyder007/identity_server
-    dockerFilePath: Dockerfile.simple
-    containerRegistryName: github-spydersoft-docker
-    imageTagVariableName: identity_server
-    helmfileRepoName: helmfileconfig
     externalFeedCredentials: SpydersoftGithub
-    #if it's a PR or build from main, don't update helmfile config or build/publish docker image
-    ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
-      updateHelmConfig: false
-      buildAndPublishDockerImage: false
-      executeSonar: true
-    ${{ else }}:
-      updateHelmConfig: true
-      buildAndPublishDockerImage: true
-      executeSonar: false
+    containerRegistryName: github-spydersoft-docker
+    helmfileRepoName: helmfileconfig
+
+    # .NET projects published as deployable artifacts (one per container image).
+    #   artifactName is consumed by the matching dockerImages entry below.
+    publishProjects:
+      - name: identity
+        project: source/Spydersoft.Identity/Spydersoft.Identity.csproj
+        artifactName: identityServer
+      - name: adminApi
+        project: source/Spydersoft.Identity.Admin.Api/Spydersoft.Identity.Admin.Api.csproj
+        artifactName: identityAdminApi
+      - name: adminFrontend
+        project: source/Spydersoft.Identity.Admin.Frontend/Spydersoft.Identity.Admin.Frontend.csproj
+        artifactName: identityAdminFrontend
+
+    # One container image per published artifact. artifactZipName matches the
+    # published .csproj name (DotNetCoreCLI zips the publish output as <csproj>.zip).
+    dockerImages:
+      - dockerImageName: spyder007/identity_server
+        artifactName: identityServer
+        artifactZipName: Spydersoft.Identity
+        dockerFilePath: Dockerfile.simple
+        imageTagVariableName: identity_server
+      - dockerImageName: spyder007/identity_admin_api
+        artifactName: identityAdminApi
+        artifactZipName: Spydersoft.Identity.Admin.Api
+        dockerFilePath: Dockerfile.admin-api
+        imageTagVariableName: identity_admin_api
+      - dockerImageName: spyder007/identity_admin_frontend
+        artifactName: identityAdminFrontend
+        artifactZipName: Spydersoft.Identity.Admin.Frontend
+        dockerFilePath: Dockerfile.admin-frontend
+        imageTagVariableName: identity_admin_frontend
+
+    # A single commit bumps all three image tags atomically in id-helm-config.
+    helmTagsCollection: 'identity_server=$(build.buildnumber),identity_admin_api=$(build.buildnumber),identity_admin_frontend=$(build.buildnumber)'
+
+    # .NET unit tests + single SonarCloud scope over the solution.
+    executeTests: true
+    testProjects: '**/*.Tests/*.csproj'
     sonarEndpointName: sonarcloud-spydersoft
     sonarProjectKey: spyder007_identity_server
     sonarProjectName: identity_server
-    executeTests: true
-    testProjects: '**/*.Tests/*.csproj'
     useSonarCloud: true
     sonarCloudOrganization: spydersoft-mjg
+
+    # admin-ui React SPA: yarn install/test/build (produces dist consumed by the
+    # Admin.Frontend publish) plus its own SonarCloud scope for the JS/TS code.
+    uiEnabled: true
+    uiSourceDirectory: source/Spydersoft.Identity.Admin.Frontend/admin-ui
+    uiNodeVersion: '22.x'
+    uiUseYarn2: true
+    uiUnitTestFile: source/Spydersoft.Identity.Admin.Frontend/admin-ui/output/test/junit.xml
+    uiCodeCoverageFile: source/Spydersoft.Identity.Admin.Frontend/admin-ui/output/coverage/cobertura-coverage.xml
+    uiUseSonarCloud: true
+    uiSonarEndpointName: sonarcloud-spydersoft
+    uiSonarCloudOrganization: spydersoft-mjg
+    uiSonarConfigFile: source/Spydersoft.Identity.Admin.Frontend/admin-ui/sonar-project.properties
+
+    # If it's a PR or a build from main, run Sonar but don't push images or bump helm config.
+    # On feature branches / tags, build & publish the images and update helm config (skip Sonar).
+    ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
+      updateHelmConfig: false
+      buildAndPublishDockerImages: false
+      executeSonar: true
+      uiExecuteSonar: true
+    ${{ else }}:
+      updateHelmConfig: true
+      buildAndPublishDockerImages: true
+      executeSonar: false
+      uiExecuteSonar: false
+
+    # Build the main app's wwwroot assets (Tailwind v4 / DaisyUI v5 via gulp) before publish.
     prebuildSteps:
       - task: Npm@1
         displayName: NPM Install
@@ -66,7 +120,7 @@ extends:
       - task: CmdLine@2
         displayName: 'Gulp Install'
         inputs:
-          script: 'npm install gulp' 
+          script: 'npm install gulp'
           workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
       - task: CmdLine@2
         displayName: 'Gulp Build'
