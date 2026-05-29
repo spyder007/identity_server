@@ -20,10 +20,26 @@ var adminFrontendClientSecret = builder.AddParameter(
 // Under the Testing launch profile we deliberately drop the volume so each
 // test run starts from a clean DB and the seeder repopulates everything;
 // integration tests must be hermetic across runs.
-var postgres = builder.AddPostgres("postgres", port: 7010);
+//
+// The password MUST be a stable, explicitly-pinned parameter: with the
+// persistent volume below, the password is baked into the data directory on
+// first init and never re-read. If the password drifts between runs the
+// connection string no longer matches the volume and every connection fails.
+// The generated default is persisted to user-secrets (Parameters:postgres-password)
+// so it stays constant; override via
+// `dotnet user-secrets set Parameters:postgres-password <value>`.
+
+IResourceBuilder<PostgresServerResource> postgres;
+
 if (builder.Environment.EnvironmentName != "Testing")
 {
+    var postgresPassword = builder.AddParameter("postgres-password", secret: true);
+    postgres = builder.AddPostgres("postgres", password: postgresPassword, port: 7010);
     postgres.WithDataVolume("identity-pg-data");
+}
+else
+{
+    postgres = builder.AddPostgres("postgres", port: 7010);
 }
 
 // Resource name "identitydb" to avoid collision with the "identity" project
