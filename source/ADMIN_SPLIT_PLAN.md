@@ -298,12 +298,55 @@ src/pages/Roles.tsx      — Routes wrapper
 
 ---
 
+## Test suites ✅ (2026-05-28 / 2026-05-29)
+
+Two Playwright suites at `identity_server/tests/`. Both are CI-runnable — they bring the whole stack up via Playwright's `webServer` config, no Visual Studio dependency.
+
+### `admin-api-integration/` — REST API tests (22 specs, ~35s)
+
+- **Stack:** Playwright's `webServer` runs `dotnet run --project Spydersoft.Identity.AppHost --launch-profile Testing`. globalSetup waits for `/.well-known/openid-configuration`, then fetches a token via `client_credentials` from the seeded `identity.admin.tests` client. A fixture replaces the default `request` fixture with one that carries the bearer token.
+- **Specs:** `clients`, `apiresources`, `identityresources`, `scopes`, `users`, `roles` — each covers list / get / create / update / delete + a sub-resource sample.
+- **Files:** `package.json`, `tsconfig.json`, `playwright.config.ts`, `globalSetup.ts`, `fixtures.ts`, `tests/types.ts`, `tests/*.spec.ts`.
+
+### `admin-ui-e2e/` — Browser tests (9 specs, ~37s)
+
+- **Stack:** Two-entry `webServer` — (1) the AppHost in Testing profile (everything HTTP, no Vite, no HTTPS endpoint on the BFF); (2) `yarn dev` with `VITE_DEV_HTTP=1` for the Vite dev server. A `setup` project drives the real OIDC login flow once and saves `storageState`; the `chromium` project depends on `setup` and reuses the cookies for every spec.
+- **Specs:**
+  - `navigation.spec.ts` — sidebar + heading + seeded-data assertions across all six section pages.
+  - `roles-crud.spec.ts` — full create → list → delete UI walkthrough with the PrimeReact `ConfirmDialog`.
+- **Files:** `package.json`, `tsconfig.json`, `playwright.config.ts`, `tests/auth.setup.ts`, `tests/navigation.spec.ts`, `tests/roles-crud.spec.ts`.
+
+### Testing-mode config notes
+
+The Testing launch profile (`ASPNETCORE_ENVIRONMENT=Testing`) deliberately diverges from dev in a few places. These divergences are intentional and live in `Spydersoft.Identity.AppHost/Program.cs`:
+
+- **Ephemeral Postgres** — `WithDataVolume` is skipped, so each test run starts from a clean DB and the seeder repopulates everything. Integration tests are hermetic across runs.
+- **No Vite from Aspire** — `AddViteApp` is skipped because Aspire's `WithYarn` does not reliably spawn yarn from a non-interactive bash-launched dotnet host. The `admin-ui-e2e` suite runs `yarn dev` itself.
+- **BFF HTTP only** — the admin-frontend HTTPS endpoint (7041) is dropped; only HTTP (7040) is bound. Kestrel's dev-cert pickup is flaky from a bash-spawned dotnet, even with the cert trusted in the Windows store. The seeded `identity.admin.frontend` client therefore registers four redirect URIs (HTTPS+HTTP × BFF-direct + Vite-host) so the same client works in both dev and testing.
+- **`OidcProxySettings:AlwaysRedirectToHttps=false`** — OidcProxy.Net's `RedirectUriFactory` force-upgrades any `redirect_uri` to HTTPS by default. We explicitly disable that under Testing so the OIDC callback stays HTTP.
+
+The test-only client `identity.admin.tests` (committed cleartext secret in `Spydersoft.Identity.DataSeeder/Seeding/Clients.cs`) is the `client_credentials` grant used by the API integration suite. It's seeded into every environment — present but unused outside the test project.
+
+### Running locally
+
+```text
+# API integration tests (22, ~35s) — boots full stack via Playwright webServer
+cd identity_server/tests/admin-api-integration && npx playwright test
+
+# UI E2E tests (9, ~37s) — boots stack + yarn dev via Playwright webServer
+cd identity_server/tests/admin-ui-e2e && npx playwright test
+```
+
+`reuseExistingServer: true` (when not in CI) means a stack already running via VS will be reused instead of double-launched.
+
+---
+
 ## Next Immediate Actions
 
-1. **Restart the AppHost** so the new `RolesController` is live, then run `yarn api:update` from `Spydersoft.Identity.Admin.Frontend/admin-ui` to regenerate the SDK with the `/api/v1/roles` endpoints. Then `yarn tsc --noEmit` to confirm the new pages typecheck.
+1. **Cross-app visual consistency (optional, deferred).** The admin SPA uses PrimeReact `lara-light-indigo` (indigo brand) with brand tokens defined in `@theme`. The main app uses Tailwind v4 + DaisyUI v5 with an OKLCH "identity" theme (`Spydersoft.Identity/Styles/style.css`). Different libraries, different visual languages — full unification would require either bringing DaisyUI into the admin SPA (and dropping PrimeReact) or vice versa, neither of which is needed for functional parity. Brand color hex codes can be aligned cosmetically if desired.
 
-2. **Verify all six pages end-to-end in the browser.** Start the stack via AppHost, browse to `https://localhost:7050`, log in through the OidcProxy → identity flow, and exercise list / create / edit / delete + each sub-resource tab for Clients, ApiResources, IdentityResources, Scopes, Users, and Roles. No live verification has been done yet — these pages have passed `yarn tsc --noEmit` but have not been clicked through.
+2. **Phase 3 cleanup** — strip the old MVC admin (Clients, ApiResources, IdentityResources, Scopes, Users, UserRoles controllers + views) from `Spydersoft.Identity` now that all pages have parity in the SPA and the e2e suite proves the flow end-to-end.
 
-3. **Cross-app visual consistency (optional, deferred).** The admin SPA uses PrimeReact `lara-light-indigo` (indigo brand) with brand tokens defined in `@theme`. The main app uses Tailwind v4 + DaisyUI v5 with an OKLCH "identity" theme (`Spydersoft.Identity/Styles/style.css`). Different libraries, different visual languages — full unification would require either bringing DaisyUI into the admin SPA (and dropping PrimeReact) or vice versa, neither of which is needed for functional parity. Brand color hex codes can be aligned cosmetically if desired.
+3. **Expand the e2e coverage** as needed — currently we have one CRUD walkthrough (Roles); the same pattern can extend to Users password-on-create, Clients sub-resource tabs, etc.
 
-4. **Phase 3 cleanup** — strip the old MVC admin (Clients, ApiResources, IdentityResources, Scopes, Users, UserRoles controllers + views) from `Spydersoft.Identity` now that all pages have parity in the SPA.
+4. **Wire both test suites into CI** — they expect the Aspire/Podman/DotNet 10 toolchain to be available on the runner; no other external state required.

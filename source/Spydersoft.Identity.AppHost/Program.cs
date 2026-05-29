@@ -70,7 +70,11 @@ var adminApi = builder.AddProject<Projects.Spydersoft_Identity_Admin_Api>("admin
 
 // Admin BFF (OidcProxy.Net + YARP). Receives the same cleartext secret as the
 // seeder so the token-endpoint authentication matches the DB-stored hash.
-builder.AddProject<Projects.Spydersoft_Identity_Admin_Frontend>("admin-frontend")
+// Under Testing we expose http only — Kestrel's dev-cert pickup is flaky from
+// a bash-spawned dotnet host, and CI doesn't need HTTPS on localhost. The
+// seeded identity.admin.frontend client carries BOTH redirect URIs so the
+// same client works in dev (https://localhost:7041) and Testing (http://localhost:7040).
+var adminFrontend = builder.AddProject<Projects.Spydersoft_Identity_Admin_Frontend>("admin-frontend")
     .WithEnvironment("OidcProxySettings__Oidc__Authority", identity.GetEndpoint("http"))
     .WithEnvironment("OidcProxySettings__Oidc__ClientId", "identity.admin.frontend")
     .WithEnvironment("OidcProxySettings__Oidc__ClientSecret", adminFrontendClientSecret)
@@ -79,12 +83,29 @@ builder.AddProject<Projects.Spydersoft_Identity_Admin_Frontend>("admin-frontend"
         adminApi.GetEndpoint("http"))
     .WaitFor(identity)
     .WaitFor(adminApi)
-    .WithEndpoint("http", e => { e.Port = 7040; e.TargetPort = 7040; e.IsProxied = false; })
-    .WithEndpoint("https", e => { e.Port = 7041; e.TargetPort = 7041; e.IsProxied = false; });
+    .WithEndpoint("http", e => { e.Port = 7040; e.TargetPort = 7040; e.IsProxied = false; });
+if (builder.Environment.EnvironmentName != "Testing")
+{
+    adminFrontend.WithEndpoint("https", e => { e.Port = 7041; e.TargetPort = 7041; e.IsProxied = false; });
+}
+else
+{
+    // OidcProxy.Net's RedirectUriFactory force-upgrades the redirect_uri to
+    // HTTPS by default (AlwaysRedirectToHttps defaults to true). The Testing
+    // profile runs everything over HTTP, so we explicitly disable that.
+    adminFrontend.WithEnvironment("OidcProxySettings__AlwaysRedirectToHttps", "false");
+}
 
 // Vite dev server for the React SPA. Yarn is configured via .yarnrc.yml in admin-ui.
-builder.AddViteApp("admin-ui", "../Spydersoft.Identity.Admin.Frontend/admin-ui")
-    .WithYarn()
-    .WithEndpoint("http", e => { e.Port = 7050; e.IsProxied = false; e.UriScheme = "https"; });
+// Skipped under ASPNETCORE_ENVIRONMENT=Testing because Aspire's WithYarn does
+// not reliably spawn yarn under a non-interactive bash-launched dotnet host
+// (works in VS, never starts from a bash subshell). The Playwright e2e suite
+// runs `yarn dev` itself as a second webServer entry.
+if (builder.Environment.EnvironmentName != "Testing")
+{
+    builder.AddViteApp("admin-ui", "../Spydersoft.Identity.Admin.Frontend/admin-ui")
+        .WithYarn()
+        .WithEndpoint("http", e => { e.Port = 7050; e.IsProxied = false; e.UriScheme = "https"; });
+}
 
 await builder.Build().RunAsync();

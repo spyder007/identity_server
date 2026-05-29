@@ -7,11 +7,17 @@ import child_process from "node:child_process";
 const isTest = process.env.NODE_ENV === "test" || process.env.VITEST === "true";
 const isBuild =
   process.env.NODE_ENV === "production" || process.argv.includes("build");
+// VITE_DEV_HTTP=1 → run the dev server over plain HTTP and proxy API/auth
+// calls to the BFF on http://localhost:7040 instead of https://localhost:7041.
+// Used by the Playwright e2e suite (CI) where Kestrel's HTTPS dev-cert pickup
+// is unreliable from a bash-spawned dotnet host.
+const devHttp = process.env.VITE_DEV_HTTP === "1";
+const bffTarget = devHttp ? "http://localhost:7040/" : "https://localhost:7041/";
 
 let keyFilePath = "";
 let certFilePath = "";
 
-if (!isTest && !isBuild) {
+if (!isTest && !isBuild && !devHttp) {
   const baseFolder =
     process.env.APPDATA !== undefined && process.env.APPDATA !== ""
       ? `${process.env.APPDATA}/ASP.NET/https`
@@ -61,23 +67,23 @@ export default defineConfig({
   server: {
     proxy: {
       "^/api": {
-        target: "https://localhost:7041/",
+        target: bffTarget,
         secure: false,
       },
       "^/.auth": {
-        target: "https://localhost:7041/",
+        target: bffTarget,
         secure: false,
       },
       "^/.diag": {
-        target: "https://localhost:7041/",
+        target: bffTarget,
         secure: false,
       },
       "^/livez": {
-        target: "https://localhost:7041/",
+        target: bffTarget,
         secure: false,
       },
       "^/readyz": {
-        target: "https://localhost:7041/",
+        target: bffTarget,
         secure: false,
       },
     },
@@ -87,6 +93,7 @@ export default defineConfig({
     },
     ...(!isTest &&
       !isBuild &&
+      !devHttp &&
       keyFilePath &&
       certFilePath && {
         https: {

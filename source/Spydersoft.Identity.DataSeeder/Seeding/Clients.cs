@@ -91,8 +91,25 @@ internal static class Clients
             RequireConsent = false,
             AlwaysIncludeUserClaimsInIdToken = true,
             ClientSecrets = { Hashed(adminFrontendClientSecret.Sha256()) },
-            RedirectUris = { "https://localhost:7041/oidc/login/callback" },
-            PostLogoutRedirectUris = { "https://localhost:7041/oidc/logout" },
+            // The redirect URI is computed by OidcProxy from the request's
+            // Host header. In dev (Vite https on 7050) and Testing (Vite http
+            // on 7050), the browser hits Vite first and Vite forwards Host
+            // verbatim, so the BFF sees Host: localhost:7050 and builds
+            // redirect_uri = {scheme}://localhost:7050/oidc/login/callback.
+            // The 7041/7040 pair covers direct BFF access (Aspire dashboard,
+            // diag pings). All four URIs reference the same client.
+            RedirectUris = {
+                "https://localhost:7041/.auth/login/callback",
+                "https://localhost:7050/.auth/login/callback",
+                "http://localhost:7040/.auth/login/callback",
+                "http://localhost:7050/.auth/login/callback",
+            },
+            PostLogoutRedirectUris = {
+                "https://localhost:7041/.auth/end-session/callback",
+                "https://localhost:7050/.auth/end-session/callback",
+                "http://localhost:7040/.auth/end-session/callback",
+                "http://localhost:7050/.auth/end-session/callback",
+            },
             AllowedScopes =
             {
                 "openid", "profile", "email",
