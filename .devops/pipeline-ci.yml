@@ -56,17 +56,20 @@ extends:
     # One container image per published artifact. artifactZipName matches the
     # published .csproj name (DotNetCoreCLI zips the publish output as <csproj>.zip).
     dockerImages:
-      - dockerImageName: spyder007/identity_server
+      - name: identity
+        dockerImageName: spyder007/identity_server
         artifactName: identityServer
         artifactZipName: Spydersoft.Identity
         dockerFilePath: Dockerfile.simple
         imageTagVariableName: identity_server
-      - dockerImageName: spyder007/identity_admin_api
+      - name: admin_api
+        dockerImageName: spyder007/identity_admin_api
         artifactName: identityAdminApi
         artifactZipName: Spydersoft.Identity.Admin.Api
         dockerFilePath: Dockerfile.admin-api
         imageTagVariableName: identity_admin_api
-      - dockerImageName: spyder007/identity_admin_frontend
+      - name: admin_frontend
+        dockerImageName: spyder007/identity_admin_frontend
         artifactName: identityAdminFrontend
         artifactZipName: Spydersoft.Identity.Admin.Frontend
         dockerFilePath: Dockerfile.admin-frontend
