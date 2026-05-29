@@ -55,3 +55,6 @@ identityserver4_log.txt
 **/.yarn/install-state.gz
 **/.yarn/build-state.yml
 **/.pnp.*
+
+# Yarn output
+**/output/**/*
