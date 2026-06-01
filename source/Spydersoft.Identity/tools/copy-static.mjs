@@ -16,12 +16,11 @@ const nodeModules = join(root, "node_modules");
 const libs = [
   ["@fortawesome/fontawesome-free/css", "lib/font-awesome/css"],
   ["@fortawesome/fontawesome-free/webfonts", "lib/font-awesome/webfonts"],
-  ["aspnet-client-validation/dist", "lib/aspnet-client-validation"],
   ["davidshimjs-qrcodejs", "lib/davidshimjs-qrcodejs"],
   ["moment/min", "lib/moment"],
 ];
 
-async function run() {
+try {
   // 1. Static assets
   await cp(join(root, "Assets"), wwwroot, { recursive: true });
   console.log("Copied Assets -> wwwroot");
@@ -34,9 +33,7 @@ async function run() {
     await cp(from, to, { recursive: true });
     console.log(`Copied ${src} -> wwwroot/${dest}`);
   }
-}
-
-run().catch((err) => {
+} catch (err) {
   console.error(err);
   process.exit(1);
-});
+}
