@@ -1,0 +1,21 @@
+@page
+@model Spydersoft.Identity.Pages.Redirect.IndexModel
+@{
+    ViewData["Title"] = "Redirecting";
+    Layout = "_AuthLayout";
+}
+
+<div class="card">
+    <div class="card-body text-center">
+        <span class="spinner mx-auto mb-4 h-8 w-8 text-brand"></span>
+        <h1 class="text-lg font-semibold text-content">Redirecting&hellip;</h1>
+        <p class="mt-2 text-sm text-content-muted">
+            You are being returned to the application. If you are not redirected automatically,
+            <a id="redirectUrl" data-url="@Model.RedirectUri" href="@Model.RedirectUri" class="link">click here</a>.
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/redirect.js" asp-append-version="true"></script>
+}

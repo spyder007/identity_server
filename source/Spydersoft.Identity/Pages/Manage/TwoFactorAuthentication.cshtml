@@ -1,0 +1,58 @@
+@page
+@model Spydersoft.Identity.Pages.Manage.TwoFactorAuthenticationModel
+@{
+    ViewData["Title"] = "Two-Factor Authentication";
+}
+
+<partial name="_ManageNav" />
+
+<div class="mt-6">
+    <div class="card max-w-2xl">
+        <div class="card-body">
+            <div class="flex items-center justify-between">
+                <h2 class="card-title">Two-factor authentication</h2>
+                @if (Model.View.Is2faEnabled)
+                {
+                    <span class="badge badge-success"><i class="fas fa-check text-xs"></i> Enabled</span>
+                }
+                else
+                {
+                    <span class="badge badge-neutral">Disabled</span>
+                }
+            </div>
+
+            @if (Model.View.Is2faEnabled && Model.View.RecoveryCodesLeft == 0)
+            {
+                <div class="alert alert-warning mt-4">
+                    <i class="fas fa-triangle-exclamation mt-0.5"></i>
+                    <span>You have no recovery codes left. Generate a new set before you can use recovery codes again.</span>
+                </div>
+            }
+            else if (Model.View.Is2faEnabled && Model.View.RecoveryCodesLeft <= 3)
+            {
+                <div class="alert alert-warning mt-4">
+                    <i class="fas fa-triangle-exclamation mt-0.5"></i>
+                    <span>You have @Model.View.RecoveryCodesLeft recovery code(s) left.</span>
+                </div>
+            }
+
+            <div class="mt-4 flex flex-wrap gap-2">
+                @if (!Model.View.HasAuthenticator)
+                {
+                    <a asp-page="/Manage/EnableAuthenticator" class="btn btn-primary"><i class="fas fa-mobile-screen"></i> Add authenticator app</a>
+                }
+                else
+                {
+                    <a asp-page="/Manage/EnableAuthenticator" class="btn btn-outline"><i class="fas fa-mobile-screen"></i> Set up authenticator app</a>
+                    <a asp-page="/Manage/ResetAuthenticator" class="btn btn-outline"><i class="fas fa-rotate"></i> Reset authenticator</a>
+                }
+
+                @if (Model.View.Is2faEnabled)
+                {
+                    <a asp-page="/Manage/GenerateRecoveryCodes" class="btn btn-outline"><i class="fas fa-key"></i> Recovery codes</a>
+                    <a asp-page="/Manage/Disable2fa" class="btn btn-ghost text-danger"><i class="fas fa-ban"></i> Disable 2FA</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>

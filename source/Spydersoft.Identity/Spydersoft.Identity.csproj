@@ -39,7 +39,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
-    <Folder Include="Models\UserAdmin\" />
     <Folder Include="Styles\" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,117 @@
+@page
+@model Spydersoft.Identity.Pages.Account.LoginModel
+@{
+    ViewData["Title"] = "Sign In";
+    Layout = "_AuthLayout";
+}
+
+<div class="card">
+    <div class="card-body">
+        @if (Model.ShowExternalLoginRequired)
+        {
+            <div class="text-center">
+                <span class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-brand-soft text-brand">
+                    <i class="fas fa-arrow-right-arrow-left text-xl"></i>
+                </span>
+                <h1 class="text-xl font-semibold text-content">Switch account</h1>
+                <p class="mt-2 text-sm text-content-muted">
+                    This application requires you to sign in with an external provider.
+                </p>
+            </div>
+            <div class="mt-6">
+                @foreach (var provider in Model.View.ExternalProviders)
+                {
+                    <form asp-page="/External/Challenge" method="post">
+                        <input type="hidden" name="scheme" value="@provider.AuthenticationScheme" />
+                        <input type="hidden" name="returnUrl" value="@Model.View.ReturnUrl" />
+                        <button type="submit" class="btn btn-outline btn-block">
+                            <i class="@provider.LniCssClass"></i>
+                            Continue with @provider.DisplayName
+                        </button>
+                    </form>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="mb-6 text-center">
+                <h1 class="text-xl font-semibold text-content">Sign In</h1>
+                <p class="mt-1 text-sm text-content-muted">Access your Spydersoft account</p>
+            </div>
+
+            @if (!Model.View.EnableLocalLogin && !Model.View.VisibleExternalProviders.Any())
+            {
+                <div class="alert alert-warning">
+                    <i class="fas fa-circle-info mt-0.5"></i>
+                    <span>Invalid login request. There are no login schemes configured for this client.</span>
+                </div>
+            }
+
+            @if (Model.View.EnableLocalLogin)
+            {
+                <form method="post">
+                    <partial name="_ValidationSummary" />
+                    <input type="hidden" asp-for="Input.ReturnUrl" />
+
+                    <div class="form-field">
+                        <label class="form-label" asp-for="Input.Username">Email / Username</label>
+                        <input class="input" asp-for="Input.Username" autocomplete="username" placeholder="Enter your email or username" />
+                        <span class="form-error" asp-validation-for="Input.Username"></span>
+                    </div>
+
+                    <div class="form-field">
+                        <label class="form-label" asp-for="Input.Password">Password</label>
+                        <input class="input" asp-for="Input.Password" type="password" autocomplete="current-password" placeholder="Enter your password" />
+                        <span class="form-error" asp-validation-for="Input.Password"></span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        @if (Model.View.AllowRememberLogin)
+                        {
+                            <label class="flex items-center gap-2 text-sm text-content-muted">
+                                <input class="checkbox" asp-for="Input.RememberLogin" />
+                                <span>Remember me</span>
+                            </label>
+                        }
+                        <a asp-page="/Account/ForgotPassword" class="link text-sm">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block btn-lg mt-6">
+                        <i class="fas fa-right-to-bracket"></i> Sign In
+                    </button>
+                </form>
+            }
+
+            @if (Model.View.VisibleExternalProviders.Any())
+            {
+                <div class="my-6 flex items-center gap-3 text-xs text-content-subtle">
+                    <span class="h-px flex-1 bg-border"></span>
+                    <span>Or continue with</span>
+                    <span class="h-px flex-1 bg-border"></span>
+                </div>
+                <div class="flex flex-col gap-2">
+                    @foreach (var provider in Model.View.VisibleExternalProviders)
+                    {
+                        <form asp-page="/External/Challenge" method="post">
+                            <input type="hidden" name="scheme" value="@provider.AuthenticationScheme" />
+                            <input type="hidden" name="returnUrl" value="@Model.View.ReturnUrl" />
+                            <button type="submit" class="btn btn-outline btn-block">
+                                <i class="@provider.LniCssClass"></i>
+                                Continue with @provider.DisplayName
+                            </button>
+                        </form>
+                    }
+                </div>
+            }
+
+            <p class="mt-6 text-center text-sm text-content-muted">
+                Don't have an account?
+                <a asp-page="/Register/Index" asp-route-returnurl="@Model.View.ReturnUrl" class="link font-medium">Create one</a>
+            </p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,79 @@
+@{
+    var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+    var isAdmin = User.IsInRole("admin");
+    var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? string.Empty;
+
+    string Active(string page) => currentPage.Equals(page, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
+    string ActivePrefix(string prefix) => currentPage.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
+}
+
+<nav class="flex flex-1 flex-col overflow-y-auto px-3 py-3">
+    <a asp-page="/Index" class="nav-link @Active("/Index")">
+        <i class="fas fa-home w-4"></i>
+        <span>Home</span>
+    </a>
+
+    @if (isAuthenticated)
+    {
+        <div class="nav-section">My Account</div>
+        <a asp-page="/Manage/Index" class="nav-link @Active("/Manage/Index")">
+            <i class="fas fa-user w-4"></i>
+            <span>Profile</span>
+        </a>
+        <a asp-page="/Manage/ChangePassword" class="nav-link @Active("/Manage/ChangePassword")">
+            <i class="fas fa-lock w-4"></i>
+            <span>Password</span>
+        </a>
+        <a asp-page="/Manage/TwoFactorAuthentication" class="nav-link @Active("/Manage/TwoFactorAuthentication")">
+            <i class="fas fa-shield-halved w-4"></i>
+            <span>Two-Factor</span>
+        </a>
+        <a asp-page="/Grants/Index" class="nav-link @Active("/Grants/Index")">
+            <i class="fas fa-table-cells-large w-4"></i>
+            <span>Applications</span>
+        </a>
+    }
+    else
+    {
+        <div class="nav-section">Access Your Account</div>
+        <a asp-page="/Account/Login" class="nav-link @Active("/Account/Login")">
+            <i class="fas fa-right-to-bracket w-4"></i>
+            <span>Sign In</span>
+        </a>
+        <a asp-page="/Register/Index" class="nav-link @Active("/Register/Index")">
+            <i class="fas fa-user-plus w-4"></i>
+            <span>Create Account</span>
+        </a>
+        <a asp-page="/Account/ForgotPassword" class="nav-link @Active("/Account/ForgotPassword")">
+            <i class="fas fa-key w-4"></i>
+            <span>Forgot Password</span>
+        </a>
+    }
+
+    <div class="nav-section">Information</div>
+    <a asp-page="/About" class="nav-link @Active("/About")">
+        <i class="fas fa-circle-info w-4"></i>
+        <span>About</span>
+    </a>
+    <a asp-page="/Contact" class="nav-link @Active("/Contact")">
+        <i class="fas fa-address-card w-4"></i>
+        <span>Contact</span>
+    </a>
+
+    <div class="mt-auto border-t border-border pt-3 text-center">
+        <div class="text-xs text-content-subtle">
+            <i class="fas fa-shield-halved mr-1"></i> Spydersoft Identity
+        </div>
+        @if (isAuthenticated)
+        {
+            <div class="mt-1 text-xs text-success">
+                <i class="fas fa-circle-check mr-1"></i> Authenticated
+                @if (isAdmin)
+                {
+                    <span class="ml-1 text-warning">&bull; Admin</span>
+                }
+            </div>
+        }
+        <div class="mt-1 text-xs text-content-subtle">&copy; @DateTime.Now.Year Spydersoft LLC</div>
+    </div>
+</nav>

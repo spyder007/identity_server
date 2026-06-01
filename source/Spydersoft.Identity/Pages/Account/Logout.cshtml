@@ -1,0 +1,67 @@
+@page
+@model Spydersoft.Identity.Pages.Account.LogoutModel
+@{
+    ViewData["Title"] = Model.SignedOut ? "Signed Out" : "Sign Out";
+    Layout = "_AuthLayout";
+}
+
+@if (Model.SignedOut)
+{
+    <div class="card">
+        <div class="card-body text-center">
+            <span class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-success/10 text-success">
+                <i class="fas fa-circle-check text-2xl"></i>
+            </span>
+            <h1 class="text-xl font-semibold text-content">You're signed out</h1>
+            <p class="mt-2 text-sm text-content-muted">
+                You have been safely signed out of your Spydersoft account.
+            </p>
+
+            @if (Model.LoggedOutView.PostLogoutRedirectUri != null)
+            {
+                <div class="card-actions mt-6 justify-center">
+                    <a class="btn btn-primary PostLogoutRedirectUri" href="@Model.LoggedOutView.PostLogoutRedirectUri">
+                        <i class="fas fa-arrow-right"></i> Continue to @Model.LoggedOutView.ClientName
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="card-actions mt-6 justify-center">
+                    <a asp-page="/Account/Login" class="btn btn-primary"><i class="fas fa-right-to-bracket"></i> Sign in again</a>
+                    <a asp-page="/Index" class="btn btn-outline"><i class="fas fa-house"></i> Home</a>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (Model.LoggedOutView.SignOutIframeUrl != null)
+    {
+        <iframe width="0" height="0" class="hidden" src="@Model.LoggedOutView.SignOutIframeUrl" title="Sign Out"></iframe>
+    }
+
+    @if (Model.LoggedOutView.AutomaticRedirectAfterSignOut)
+    {
+        @section Scripts {
+            <script src="~/js/signout-redirect.js" asp-append-version="true"></script>
+        }
+    }
+}
+else
+{
+    <div class="card">
+        <div class="card-body text-center">
+            <span class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-soft text-brand">
+                <i class="fas fa-right-from-bracket text-2xl"></i>
+            </span>
+            <h1 class="text-xl font-semibold text-content">Sign out</h1>
+            <p class="mt-2 text-sm text-content-muted">Would you like to sign out of Spydersoft Identity?</p>
+
+            <form method="post" class="card-actions mt-6 justify-center">
+                <input type="hidden" asp-for="LogoutId" />
+                <button type="submit" class="btn btn-primary">Yes, sign out</button>
+                <a asp-page="/Index" class="btn btn-outline">Cancel</a>
+            </form>
+        </div>
+    </div>
+}

@@ -17,6 +17,7 @@ using Npgsql;
 
 using Serilog;
 
+using Spydersoft.Identity.Attributes;
 using Spydersoft.Identity.Data;
 using Spydersoft.Identity.Core.Extensions;
 using Spydersoft.Identity.Extensions;
@@ -119,15 +120,24 @@ try
     // Add application builder.Services.
     _ = builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-    _ = builder.Services.AddControllersWithViews(options =>
+    // Razor Pages host the interactive identity UI (login, consent, device, grants,
+    // account management).
+    _ = builder.Services.AddRazorPages(options =>
     {
-        options.SuppressAsyncSuffixInActionNames = false;
+        // Apply the SecurityHeaders (CSP, X-Frame-Options, etc.) to all page responses.
+        options.Conventions.ConfigureFilter(new SecurityHeadersAttribute());
+        // Pages are anonymous by default; lock down the authenticated areas.
+        options.Conventions.AuthorizeFolder("/Manage");
+        options.Conventions.AuthorizeFolder("/Consent");
+        options.Conventions.AuthorizeFolder("/Device");
+        options.Conventions.AuthorizeFolder("/Grants");
+    })
+    .AddMvcOptions(options =>
+    {
         // ViewModels live in Spydersoft.Identity.Core which has Nullable=enable.
         // Without this, every non-nullable reference type property is treated as
-        // implicitly [Required] — including parent-of-form properties (NavBar,
-        // ItemsList, NewItem.Scopes) that the form never posts, causing legit
-        // submissions to fail ModelState validation. Only explicit [Required]
-        // attributes should drive validation here.
+        // implicitly [Required], causing legit submissions to fail ModelState
+        // validation. Only explicit [Required] attributes should drive validation.
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
     });
 
@@ -151,6 +161,15 @@ try
         {
             options.IssuerUri = publicOrigin;
         }
+
+        // Pin the interactive UI URLs to the Razor Pages routes. These match Duende's
+        // defaults but are set explicitly so the page-folder structure and the
+        // IdentityServer redirect contract can't drift apart.
+        options.UserInteraction.LoginUrl = "/Account/Login";
+        options.UserInteraction.LogoutUrl = "/Account/Logout";
+        options.UserInteraction.ConsentUrl = "/Consent";
+        options.UserInteraction.ErrorUrl = "/Home/Error";
+        options.UserInteraction.DeviceVerificationUrl = "/Device";
 
         Log.Information("IdentityServer configuration - IssuerUri: {IssuerUri}", options.IssuerUri ?? "not set");
     })
@@ -240,9 +259,7 @@ try
             .UseIdentityServer()
             .UseAuthorization();
 
-    _ = app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+    _ = app.MapRazorPages();
 
     await app.RunAsync();
 }

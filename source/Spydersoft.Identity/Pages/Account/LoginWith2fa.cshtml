@@ -1,0 +1,44 @@
+@page
+@model Spydersoft.Identity.Pages.Account.LoginWith2faModel
+@{
+    ViewData["Title"] = "Two-Factor Authentication";
+    Layout = "_AuthLayout";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="mb-6 text-center">
+            <span class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-brand-soft text-brand">
+                <i class="fas fa-shield-halved text-xl"></i>
+            </span>
+            <h1 class="text-xl font-semibold text-content">Two-factor authentication</h1>
+            <p class="mt-1 text-sm text-content-muted">Enter the code from your authenticator app.</p>
+        </div>
+
+        <form method="post">
+            <partial name="_ValidationSummary" />
+            <input type="hidden" asp-for="Input.RememberMe" />
+            <input type="hidden" asp-for="Input.ReturnUrl" />
+
+            <div class="form-field">
+                <label class="form-label" asp-for="Input.TwoFactorCode">Authenticator code</label>
+                <input class="input text-center tracking-widest" asp-for="Input.TwoFactorCode"
+                       autocomplete="one-time-code" inputmode="numeric" placeholder="000000" autofocus />
+                <span class="form-error" asp-validation-for="Input.TwoFactorCode"></span>
+            </div>
+
+            <label class="mb-4 flex items-center gap-2 text-sm text-content-muted">
+                <input class="checkbox" asp-for="Input.RememberMachine" />
+                <span>Remember this machine</span>
+            </label>
+
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                <i class="fas fa-right-to-bracket"></i> Verify
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

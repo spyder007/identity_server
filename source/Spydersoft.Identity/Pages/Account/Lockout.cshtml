@@ -1,0 +1,20 @@
+@page
+@{
+    ViewData["Title"] = "Locked Out";
+    Layout = "_AuthLayout";
+}
+
+<div class="card">
+    <div class="card-body text-center">
+        <span class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-warning/10 text-warning">
+            <i class="fas fa-lock text-2xl"></i>
+        </span>
+        <h1 class="text-xl font-semibold text-content">Account locked</h1>
+        <p class="mt-2 text-sm text-content-muted">
+            This account has been locked out due to multiple failed attempts. Please try again later.
+        </p>
+        <div class="card-actions mt-6 justify-center">
+            <a asp-page="/Index" class="btn btn-outline"><i class="fas fa-house"></i> Return home</a>
+        </div>
+    </div>
+</div>

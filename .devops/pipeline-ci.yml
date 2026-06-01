@@ -113,7 +113,7 @@ extends:
       executeSonar: false
       uiExecuteSonar: false
 
-    # Build the main app's wwwroot assets (Tailwind v4 / DaisyUI v5 via gulp) before publish.
+    # Build the main app's wwwroot assets (Tailwind v4 CLI + static copy) before publish.
     prebuildSteps:
       - task: Npm@1
         displayName: NPM Install
@@ -121,12 +121,7 @@ extends:
           workingDir: $(Build.SourcesDirectory)/source/Spydersoft.Identity
           command: install
       - task: CmdLine@2
-        displayName: 'Gulp Install'
+        displayName: 'Build CSS + copy static assets'
         inputs:
-          script: 'npm install gulp'
-          workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
-      - task: CmdLine@2
-        displayName: 'Gulp Build'
-        inputs:
-          script: 'gulp'
+          script: 'npm run build'
           workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity

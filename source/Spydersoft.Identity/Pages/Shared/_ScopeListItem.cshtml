@@ -1,0 +1,32 @@
+@model Spydersoft.Identity.Models.Consent.ScopeViewModel
+
+<label class="flex items-start gap-3 rounded-lg border border-border p-3 transition-colors hover:bg-surface-muted">
+    <input class="checkbox mt-0.5"
+           type="checkbox"
+           name="ScopesConsented"
+           id="scopes_@Model.Value"
+           value="@Model.Value"
+           checked="@Model.Checked"
+           disabled="@Model.Required" />
+    <span class="min-w-0 flex-1">
+        <span class="flex items-center gap-2 text-sm font-medium text-content">
+            @Model.DisplayName
+            @if (Model.Emphasize)
+            {
+                <i class="fas fa-triangle-exclamation text-xs text-warning" title="This scope is sensitive"></i>
+            }
+            @if (Model.Required)
+            {
+                <span class="text-xs font-normal text-content-subtle">(required)</span>
+            }
+        </span>
+        @if (Model.Description != null)
+        {
+            <span class="mt-0.5 block text-xs text-content-muted">@Model.Description</span>
+        }
+    </span>
+    @if (Model.Required)
+    {
+        <input type="hidden" name="ScopesConsented" value="@Model.Value" />
+    }
+</label>

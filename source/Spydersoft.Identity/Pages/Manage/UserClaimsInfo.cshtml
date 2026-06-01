@@ -1,0 +1,35 @@
+@page
+@{
+    ViewData["Title"] = "Claims";
+}
+
+<partial name="_ManageNav" />
+
+<div class="mt-6">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Your claims</h2>
+            <p class="mt-1 text-sm text-content-muted">The claims associated with your current session.</p>
+
+            <div class="mt-4 overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="border-b border-border text-xs uppercase tracking-wider text-content-subtle">
+                            <th class="px-3 py-2 font-semibold">Type</th>
+                            <th class="px-3 py-2 font-semibold">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var claim in User.Claims)
+                        {
+                            <tr class="border-b border-border/60">
+                                <td class="px-3 py-2 font-mono text-xs text-content-muted">@claim.Type</td>
+                                <td class="px-3 py-2 break-all text-content">@claim.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

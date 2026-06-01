@@ -1,0 +1,77 @@
+@page
+@using Spydersoft.Identity.Models.Home
+@model AboutModel
+@{
+    ViewData["Title"] = "About";
+}
+
+<div class="mb-6">
+    <h1 class="text-2xl font-semibold text-content">About Identity Server</h1>
+    <p class="mt-1 text-sm text-content-muted">Technology stack and libraries powering this application.</p>
+</div>
+
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title flex items-center gap-2">
+                <i class="fab fa-npm text-brand"></i> Frontend Libraries
+            </h2>
+            <div class="mt-3 flex flex-col gap-1">
+                @if (Model.Data?.UiLibraries?.Any() == true)
+                {
+                    @foreach (var library in Model.Data.UiLibraries)
+                    {
+                        <a href="@library.Url" target="_blank" rel="noopener"
+                           class="flex items-center justify-between rounded-md px-3 py-2 text-sm text-content-muted transition-colors hover:bg-surface-muted hover:text-content">
+                            <span class="font-medium text-content">@library.Name</span>
+                            <i class="fas fa-arrow-up-right-from-square text-xs text-content-subtle"></i>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-info"><i class="fas fa-circle-info mt-0.5"></i><span>No UI libraries data available.</span></div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title flex items-center gap-2">
+                <i class="fab fa-microsoft text-brand"></i> .NET Libraries
+            </h2>
+            <div class="mt-3 flex flex-col gap-1">
+                @if (Model.Data?.NetLibraries?.Any() == true)
+                {
+                    @foreach (var library in Model.Data.NetLibraries)
+                    {
+                        <a href="@library.Url" target="_blank" rel="noopener"
+                           class="flex items-center justify-between rounded-md px-3 py-2 text-sm text-content-muted transition-colors hover:bg-surface-muted hover:text-content">
+                            <span class="font-medium text-content">@library.Name</span>
+                            <i class="fas fa-arrow-up-right-from-square text-xs text-content-subtle"></i>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-info"><i class="fas fa-circle-info mt-0.5"></i><span>No .NET libraries data available.</span></div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h2 class="card-title">Architecture Overview</h2>
+        <div class="mt-3 flex flex-wrap gap-2">
+            <span class="badge badge-brand">ASP.NET Core</span>
+            <span class="badge badge-neutral">Razor Pages</span>
+            <span class="badge badge-neutral">Tailwind CSS</span>
+            <span class="badge badge-neutral">Duende IdentityServer</span>
+            <span class="badge badge-neutral">PostgreSQL</span>
+            <span class="badge badge-neutral">Entity Framework Core</span>
+        </div>
+    </div>
+</div>

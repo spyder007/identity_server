@@ -1,0 +1,35 @@
+@page
+@model Spydersoft.Identity.Pages.Manage.Disable2faModel
+@{
+    ViewData["Title"] = "Disable Two-Factor";
+}
+
+<partial name="_ManageNav" />
+
+<div class="mt-6">
+    <div class="card max-w-xl">
+        <div class="card-body">
+            <h2 class="card-title">Disable two-factor authentication</h2>
+            <div class="alert alert-warning mt-4">
+                <i class="fas fa-triangle-exclamation mt-0.5"></i>
+                <span>
+                    This will not disable 2FA permanently &mdash; it just turns it off. Re-enabling requires
+                    setting up your authenticator again.
+                </span>
+            </div>
+
+            <form method="post" class="mt-4">
+                <label class="mb-4 flex items-center gap-2 text-sm text-content-muted">
+                    <input id="confirmDisable" type="checkbox" class="checkbox" />
+                    <span>I understand and want to disable two-factor authentication.</span>
+                </label>
+                <div class="card-actions justify-end">
+                    <a asp-page="/Manage/TwoFactorAuthentication" class="btn btn-outline">Cancel</a>
+                    <button id="disableButton" type="submit" class="btn btn-danger" disabled>
+                        <i class="fas fa-ban"></i> Disable 2FA
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -185,16 +185,22 @@ One-shot console app. On startup:
 
 ---
 
-## Phase 3 — Strip old MVC Admin from `Spydersoft.Identity` 🔲 TODO
+## Phase 3 — Strip old MVC Admin from `Spydersoft.Identity` ✅ COMPLETE (2026-06-01)
 
-Once `Admin.Frontend` is at full parity:
+`Admin.Frontend` reached full parity (deployment verified), so the old MVC admin was removed from `Spydersoft.Identity`:
 
-- Remove `Controllers/Admin/*` (Clients, ApiResources, IdentityResources, Scopes)
-- Remove `Controllers/UserAdmin/*` (Users, UserRoles)
-- Remove corresponding Views
-- Remove `ConfigurationDbContext` registration from `Spydersoft.Identity` `Program.cs` (only `ApplicationDbContext` needs to remain — the persisted grant store still does)
-- Clean up unused using statements and NuGet packages
-- Remove the navigation link to the old admin UI from the main app's sidebar/home
+- ✅ Removed `Controllers/Admin/*` (Clients + sub-resources, ApiResources, IdentityResources, Scopes) — including `BaseAdminController` and `BaseAdminCollectionController`.
+- ✅ Removed `Controllers/UserAdmin/*` (Users, UserRoles, `BaseUserAdminController`).
+- ✅ Removed the 22 corresponding View folders and the 4 admin nav-bar partials (`_apiNavBar`, `_clientNavBar`, `_identityResourceNavBar`, `_scopeNavBar`). `_ScopeListItem.cshtml` was **kept** — it is shared with `Consent/Index.cshtml`.
+- ✅ Removed the "Administration" section (Identity Server + User Management groups) from `Views/Shared/_SidebarNav.cshtml`. The `isAdmin` admin badge in the footer was left in place. No admin link/home card existed elsewhere.
+- ✅ Removed the now-unused `IsISAdminRoute` / `IsUserAdminRoute` helpers from `Extensions/NavHelperExtensions.cs` (`IsSpydersoftRoute` stays — still used by the About section).
+- ✅ Removed the stale `<Folder Include="Models\UserAdmin\" />` from the csproj.
+
+**`ConfigurationDbContext` registration was NOT removed (the original plan bullet was incorrect).** There is no standalone `AddDbContext<ConfigurationDbContext>` in `Program.cs`; the configuration store is provided by IdentityServer's `.AddConfigurationStore(...)`, which IdentityServer itself requires at runtime to look up clients/resources on every authorize/token request. Removing it would break the auth server. Both `.AddConfigurationStore()` (clients/resources) and `.AddOperationalStore()` (persisted grants) remain. `ApplicationDbContext` (ASP.NET Identity) and `DataProtectionDbContext` also remain.
+
+**NuGet packages:** none were removed — every package in `Spydersoft.Identity.csproj` is still used by the remaining auth/identity code paths (Duende.IdentityServer.EntityFramework is still needed for the configuration/operational stores).
+
+Verified: `dotnet build Spydersoft.Identity.slnx` → 0 errors (pre-existing style/analyzer warnings only). The `Spydersoft.Identity.Tests` project has no references to the removed admin code.
 
 ---
 

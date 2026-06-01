@@ -6,6 +6,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Spydersoft.Identity.Attributes
 {
@@ -25,7 +26,7 @@ namespace Spydersoft.Identity.Attributes
         public override void OnResultExecuting(ResultExecutingContext context)
         {
             IActionResult result = context.Result;
-            if (result is ViewResult)
+            if (result is ViewResult or PageResult)
             {
                 // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options
                 if (!context.HttpContext.Response.Headers.ContainsKey("X-Content-Type-Options"))
