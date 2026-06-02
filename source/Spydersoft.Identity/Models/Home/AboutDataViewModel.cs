@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Spydersoft.Identity.Models.Home
 {
@@ -13,14 +13,14 @@ namespace Spydersoft.Identity.Models.Home
         /// Gets or sets the UI libraries.
         /// </summary>
         /// <value>The UI libraries.</value>
-        [JsonProperty("uilibraries")]
+        [JsonPropertyName("uilibraries")]
         public List<Library> UiLibraries { get; set; }
 
         /// <summary>
         /// Gets or sets the net libraries.
         /// </summary>
         /// <value>The net libraries.</value>
-        [JsonProperty("netlibraries")]
+        [JsonPropertyName("netlibraries")]
         public List<Library> NetLibraries { get; set; }
 
         /// <summary>
@@ -31,7 +31,8 @@ namespace Spydersoft.Identity.Models.Home
         public static AboutDataViewModel LoadFromFile(string filePath)
         {
             var json = System.IO.File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<AboutDataViewModel>(json);
+            return JsonSerializer.Deserialize<AboutDataViewModel>(json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
     }
 

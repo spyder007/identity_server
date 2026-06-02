@@ -63,7 +63,7 @@ try
     var cacheConnection = builder.Configuration.GetConnectionString("RedisCache");
     var migrationsAssembly = typeof(Spydersoft.Identity.Data.ApplicationDbContext).Assembly.GetName().Name;
 
-    _ = builder.Services.Configure<SendgridOptions>(builder.Configuration.GetSection(SendgridOptions.Name));
+    _ = builder.Services.Configure<ResendOptions>(builder.Configuration.GetSection(ResendOptions.Name));
     _ = builder.Services.Configure<ConsentOptions>(builder.Configuration.GetSection(ConsentOptions.SettingsKey));
 
     // Configure forwarded headers for proxy scenarios
@@ -118,7 +118,7 @@ try
         .AddDefaultTokenProviders();
 
     // Add application builder.Services.
-    _ = builder.Services.AddTransient<IEmailSender, EmailSender>();
+    _ = builder.Services.AddHttpClient<IEmailSender, EmailSender>();
 
     // Razor Pages host the interactive identity UI (login, consent, device, grants,
     // account management).
