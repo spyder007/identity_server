@@ -17,15 +17,17 @@ setup('authenticate via OIDC and persist storage state', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: /sign in/i }).click();
 
-  // Land on the main identity app's login form. asp-for="Username" and
-  // asp-for="Password" produce input[name="Username"] / input[name="Password"];
-  // the submit is button[type=submit][name=button][value=login].
+  // Land on the main identity app's login form. Since the Razor Pages
+  // migration the form binds a PageModel `Input`, so asp-for="Input.Username" /
+  // asp-for="Input.Password" render input[name="Input.Username"] /
+  // input[name="Input.Password"]. The local-login submit is now a plain
+  // button[type=submit] with the text "Sign In" (no name/value attrs).
   await page.waitForURL(/\/Account\/Login/i);
-  await page.locator('input[name="Username"]').fill(username);
-  await page.locator('input[name="Password"]').fill(password);
+  await page.locator('input[name="Input.Username"]').fill(username);
+  await page.locator('input[name="Input.Password"]').fill(password);
   await Promise.all([
     page.waitForURL(/localhost:7050\/?(\?|#|$)/),
-    page.locator('button[type="submit"][name="button"][value="login"]').click(),
+    page.getByRole('button', { name: /sign in/i }).click(),
   ]);
 
   // The SPA's authenticated shell renders the sidebar with a "Clients" link
