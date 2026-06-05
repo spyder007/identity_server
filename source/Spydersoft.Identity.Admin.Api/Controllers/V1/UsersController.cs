@@ -21,11 +21,16 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
     public class UsersController(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper)
         : BaseAdminApiController(mapper)
     {
+        /// <summary>Gets a summary list of all users.</summary>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the collection of user summaries.</returns>
         [HttpGet]
         [ProducesResponseType<UserSummaryDto[]>(StatusCodes.Status200OK)]
         public IActionResult GetAll()
             => Ok(Mapper.ProjectTo<UserSummaryDto>(userManager.Users));
 
+        /// <summary>Gets a single user by their identifier.</summary>
+        /// <param name="id">The GUID string identifier of the user.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the user, or <see cref="StatusCodes.Status404NotFound"/> if the user does not exist.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType<UserDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -35,6 +40,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return user is null ? NotFound() : Ok(Mapper.Map<UserDto>(user));
         }
 
+        /// <summary>Creates a new user.</summary>
+        /// <param name="dto">The user details, including the initial password, to create.</param>
+        /// <returns>A <see cref="StatusCodes.Status201Created"/> response containing the created user, or <see cref="StatusCodes.Status400BadRequest"/> if validation fails.</returns>
         [HttpPost]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<UserDto>(StatusCodes.Status201Created)]
@@ -50,6 +58,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return CreatedAtAction(nameof(GetById), new { id = user.Id }, Mapper.Map<UserDto>(user));
         }
 
+        /// <summary>Updates an existing user.</summary>
+        /// <param name="id">The GUID string identifier of the user to update.</param>
+        /// <param name="dto">The updated user details.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, <see cref="StatusCodes.Status400BadRequest"/> if validation fails, or <see cref="StatusCodes.Status404NotFound"/> if the user does not exist.</returns>
         [HttpPut("{id}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -69,6 +81,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return NoContent();
         }
 
+        /// <summary>Deletes a user.</summary>
+        /// <param name="id">The GUID string identifier of the user to delete.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, or <see cref="StatusCodes.Status404NotFound"/> if the user does not exist.</returns>
         [HttpDelete("{id}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -88,6 +103,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
 
         // ---- Roles sub-resource ----
 
+        /// <summary>Gets the roles assigned to a user.</summary>
+        /// <param name="id">The GUID string identifier of the user.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the user's roles, or <see cref="StatusCodes.Status404NotFound"/> if the user does not exist.</returns>
         [HttpGet("{id}/roles")]
         [ProducesResponseType<UserRoleDto[]>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -99,6 +117,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return Ok(roles.Select(r => new UserRoleDto { RoleName = r }));
         }
 
+        /// <summary>Assigns a role to a user by role name.</summary>
+        /// <param name="id">The GUID string identifier of the user.</param>
+        /// <param name="dto">The name of the role to assign.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, <see cref="StatusCodes.Status400BadRequest"/> if the role does not exist or validation fails, or <see cref="StatusCodes.Status404NotFound"/> if the user does not exist.</returns>
         [HttpPost("{id}/roles")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -120,6 +142,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return NoContent();
         }
 
+        /// <summary>Removes a role from a user by role name.</summary>
+        /// <param name="id">The GUID string identifier of the user.</param>
+        /// <param name="roleName">The name of the role to remove.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, or <see cref="StatusCodes.Status404NotFound"/> if the user does not exist.</returns>
         [HttpDelete("{id}/roles/{roleName}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -139,6 +165,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
 
         // ---- Claims sub-resource ----
 
+        /// <summary>Gets the claims assigned to a user.</summary>
+        /// <param name="id">The GUID string identifier of the user.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the user's claims, or <see cref="StatusCodes.Status404NotFound"/> if the user does not exist.</returns>
         [HttpGet("{id}/claims")]
         [ProducesResponseType<UserClaimDto[]>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

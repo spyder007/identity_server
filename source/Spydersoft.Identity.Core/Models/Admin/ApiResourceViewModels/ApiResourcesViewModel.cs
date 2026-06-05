@@ -11,6 +11,6 @@ namespace Spydersoft.Identity.Core.Models.Admin.ApiResourceViewModels
         /// Gets or sets the apis.
         /// </summary>
         /// <value>The apis.</value>
-        public IQueryable<ApiResourceViewModel> Apis { get; set; }
+        public IQueryable<ApiResourceViewModel> Apis { get; set; } = null!;
     }
 }

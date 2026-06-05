@@ -8,6 +8,7 @@ namespace Spydersoft.Identity.Pages
         /// <summary>Renders the home page.</summary>
         public void OnGet()
         {
+            // No initialization required; the page renders with its default state.
         }
     }
 }

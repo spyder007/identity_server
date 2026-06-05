@@ -136,7 +136,7 @@ namespace Spydersoft.Identity.Pages.Device
                     grantedConsent = new ConsentResponse
                     {
                         RememberConsent = model.RememberConsent,
-                        ScopesValuesConsented = scopes.ToArray(),
+                        ScopesValuesConsented = [.. scopes],
                         Description = model.Description
                     };
 
@@ -186,8 +186,7 @@ namespace Spydersoft.Identity.Pages.Device
                 AllowRememberConsent = request.Client.AllowRememberConsent
             };
 
-            vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources
-                .Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            vm.IdentityScopes = [.. request.ValidatedResources.Resources.IdentityResources.Select(x => CreateScopeViewModel(x, vm.ScopesConsented.Contains(x.Name) || model == null))];
 
             var apiScopes = new List<ScopeViewModel>();
             foreach (ParsedScopeValue parsedScope in request.ValidatedResources.ParsedScopes)

@@ -11,6 +11,6 @@ namespace Spydersoft.Identity.Core.Models
         /// Gets or sets the error.
         /// </summary>
         /// <value>The error.</value>
-        public ErrorMessage Error { get; set; }
+        public ErrorMessage Error { get; set; } = new();
     }
 }

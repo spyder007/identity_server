@@ -11,6 +11,6 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// Gets or sets the clients.
         /// </summary>
         /// <value>The clients.</value>
-        public IQueryable<ClientViewModel> Clients { get; set; }
+        public IQueryable<ClientViewModel> Clients { get; set; } = null!;
     }
 }

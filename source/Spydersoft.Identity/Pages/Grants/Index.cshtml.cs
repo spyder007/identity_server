@@ -60,8 +60,8 @@ namespace Spydersoft.Identity.Pages.Grants
                         Description = grant.Description,
                         Created = grant.CreationTime,
                         Expires = grant.Expiration,
-                        IdentityGrantNames = resourcesByScope.IdentityResources.Select(x => x.DisplayName ?? x.Name).ToArray(),
-                        ApiGrantNames = resourcesByScope.ApiScopes.Select(x => x.DisplayName ?? x.Name).ToArray()
+                        IdentityGrantNames = [.. resourcesByScope.IdentityResources.Select(x => x.DisplayName ?? x.Name)],
+                        ApiGrantNames = [.. resourcesByScope.ApiScopes.Select(x => x.DisplayName ?? x.Name)]
                     });
                 }
             }

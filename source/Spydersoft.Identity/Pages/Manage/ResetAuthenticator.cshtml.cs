@@ -18,6 +18,7 @@ namespace Spydersoft.Identity.Pages.Manage
         /// <summary>Shows the reset-authenticator warning.</summary>
         public void OnGet()
         {
+            // No initialization required; the page renders with its default state.
         }
 
         /// <summary>Resets the authenticator key and disables 2FA.</summary>

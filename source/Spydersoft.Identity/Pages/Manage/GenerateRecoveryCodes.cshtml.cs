@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Identity;
@@ -32,7 +31,7 @@ namespace Spydersoft.Identity.Pages.Manage
             }
 
             var recoveryCodes = await userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
-            View = new GenerateRecoveryCodesViewModel { RecoveryCodes = recoveryCodes.ToArray() };
+            View = new GenerateRecoveryCodesViewModel { RecoveryCodes = [.. recoveryCodes] };
 
             logger.LogInformation("User with ID {UserId} has generated new 2FA recovery codes.", user.Id);
             return Page();

@@ -46,7 +46,7 @@ namespace Spydersoft.Identity.Core.Models.Admin
         /// Gets or sets the nav bar.
         /// </summary>
         /// <value>The nav bar.</value>
-        public BaseAdminNavBar<TParentItemViewModel> NavBar { get; set; }
+        public BaseAdminNavBar<TParentItemViewModel> NavBar { get; set; } = null!;
         /// <summary>
         /// Gets or sets the items list.
         /// </summary>

@@ -41,7 +41,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.IdentityResourceViewModels
         [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 2)]
         [Display(Name = "Description")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the display name.
@@ -50,7 +50,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.IdentityResourceViewModels
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 2)]
         [Display(Name = "Display Name")]
-        public string DisplayName { get; set; }
+        public string DisplayName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="IdentityResourceViewModel"/> is emphasize.
@@ -74,7 +74,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.IdentityResourceViewModels
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 2)]
         [Display(Name = "Name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="IdentityResourceViewModel"/> is required.

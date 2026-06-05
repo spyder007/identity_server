@@ -15,9 +15,10 @@
         "tags": [
           "ApiResources"
         ],
+        "summary": "Gets a summary of all API resources.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "A int StatusCodes.Status200OK response containing the collection of API resource summaries.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -51,7 +52,9 @@
         "tags": [
           "ApiResources"
         ],
+        "summary": "Creates a new API resource.",
         "requestBody": {
+          "description": "The API resource details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -120,10 +123,12 @@
         "tags": [
           "ApiResources"
         ],
+        "summary": "Gets the API resource with the specified identifier.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -179,10 +184,12 @@
         "tags": [
           "ApiResources"
         ],
+        "summary": "Updates the specified API resource.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource to update.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -192,6 +199,7 @@
           }
         ],
         "requestBody": {
+          "description": "The updated API resource details.",
           "content": {
             "application/json": {
               "schema": {
@@ -241,10 +249,12 @@
         "tags": [
           "ApiResources"
         ],
+        "summary": "Deletes the specified API resource.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -285,10 +295,12 @@
         "tags": [
           "ApiResourceClaims"
         ],
+        "summary": "Gets all user claims for the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -353,10 +365,12 @@
         "tags": [
           "ApiResourceClaims"
         ],
+        "summary": "Adds a new user claim to the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -366,6 +380,7 @@
           }
         ],
         "requestBody": {
+          "description": "The claim details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -434,10 +449,12 @@
         "tags": [
           "ApiResourceClaims"
         ],
+        "summary": "Gets the user claim with the specified identifier for the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -448,6 +465,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource claim.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -503,10 +521,12 @@
         "tags": [
           "ApiResourceClaims"
         ],
+        "summary": "Deletes the specified user claim from the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -517,6 +537,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource claim to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -557,10 +578,12 @@
         "tags": [
           "ApiResourceProperties"
         ],
+        "summary": "Gets all custom properties for the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -625,10 +648,12 @@
         "tags": [
           "ApiResourceProperties"
         ],
+        "summary": "Adds a new custom property to the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -638,6 +663,7 @@
           }
         ],
         "requestBody": {
+          "description": "The property details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -706,10 +732,12 @@
         "tags": [
           "ApiResourceProperties"
         ],
+        "summary": "Gets the custom property with the specified identifier for the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -720,6 +748,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource property.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -775,10 +804,12 @@
         "tags": [
           "ApiResourceProperties"
         ],
+        "summary": "Deletes the specified custom property from the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -789,6 +820,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource property to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -829,10 +861,12 @@
         "tags": [
           "ApiResourceScopes"
         ],
+        "summary": "Gets all scopes for the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -897,10 +931,12 @@
         "tags": [
           "ApiResourceScopes"
         ],
+        "summary": "Adds a new scope to the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -910,6 +946,7 @@
           }
         ],
         "requestBody": {
+          "description": "The scope details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -978,10 +1015,12 @@
         "tags": [
           "ApiResourceScopes"
         ],
+        "summary": "Gets the scope with the specified identifier for the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -992,6 +1031,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1047,10 +1087,12 @@
         "tags": [
           "ApiResourceScopes"
         ],
+        "summary": "Deletes the specified scope from the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1061,6 +1103,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource scope to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1101,10 +1144,12 @@
         "tags": [
           "ApiResourceSecrets"
         ],
+        "summary": "Gets all secrets for the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1169,10 +1214,12 @@
         "tags": [
           "ApiResourceSecrets"
         ],
+        "summary": "Adds a new secret to the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1182,6 +1229,7 @@
           }
         ],
         "requestBody": {
+          "description": "The secret details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -1250,10 +1298,12 @@
         "tags": [
           "ApiResourceSecrets"
         ],
+        "summary": "Gets the secret with the specified identifier for the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1264,6 +1314,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource secret.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1319,10 +1370,12 @@
         "tags": [
           "ApiResourceSecrets"
         ],
+        "summary": "Deletes the specified secret from the specified API resource.",
         "parameters": [
           {
             "name": "apiResourceId",
             "in": "path",
+            "description": "The identifier of the parent API resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1333,6 +1386,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the API resource secret to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1668,10 +1722,12 @@
         "tags": [
           "ClientClaims"
         ],
+        "summary": "Gets all claims for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1736,10 +1792,12 @@
         "tags": [
           "ClientClaims"
         ],
+        "summary": "Creates a new claim for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1749,6 +1807,7 @@
           }
         ],
         "requestBody": {
+          "description": "The claim to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -1817,10 +1876,12 @@
         "tags": [
           "ClientClaims"
         ],
+        "summary": "Gets a single claim for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1831,6 +1892,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the claim.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1886,10 +1948,12 @@
         "tags": [
           "ClientClaims"
         ],
+        "summary": "Deletes a claim from the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1900,6 +1964,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the claim to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -1940,10 +2005,12 @@
         "tags": [
           "ClientCorsOrigins"
         ],
+        "summary": "Gets all allowed CORS origins for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2008,10 +2075,12 @@
         "tags": [
           "ClientCorsOrigins"
         ],
+        "summary": "Creates a new allowed CORS origin for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2021,6 +2090,7 @@
           }
         ],
         "requestBody": {
+          "description": "The CORS origin to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -2089,10 +2159,12 @@
         "tags": [
           "ClientCorsOrigins"
         ],
+        "summary": "Gets a single allowed CORS origin for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2103,6 +2175,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the CORS origin.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2158,10 +2231,12 @@
         "tags": [
           "ClientCorsOrigins"
         ],
+        "summary": "Deletes an allowed CORS origin from the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2172,6 +2247,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the CORS origin to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2212,10 +2288,12 @@
         "tags": [
           "ClientGrantTypes"
         ],
+        "summary": "Gets all allowed grant types for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2280,10 +2358,12 @@
         "tags": [
           "ClientGrantTypes"
         ],
+        "summary": "Creates a new allowed grant type for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2293,6 +2373,7 @@
           }
         ],
         "requestBody": {
+          "description": "The grant type to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -2361,10 +2442,12 @@
         "tags": [
           "ClientGrantTypes"
         ],
+        "summary": "Gets a single allowed grant type for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2375,6 +2458,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the grant type.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2430,10 +2514,12 @@
         "tags": [
           "ClientGrantTypes"
         ],
+        "summary": "Deletes an allowed grant type from the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2444,6 +2530,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the grant type to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2484,10 +2571,12 @@
         "tags": [
           "ClientIdpRestrictions"
         ],
+        "summary": "Gets all identity provider restrictions for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2552,10 +2641,12 @@
         "tags": [
           "ClientIdpRestrictions"
         ],
+        "summary": "Creates a new identity provider restriction for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2565,6 +2656,7 @@
           }
         ],
         "requestBody": {
+          "description": "The identity provider restriction to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -2633,10 +2725,12 @@
         "tags": [
           "ClientIdpRestrictions"
         ],
+        "summary": "Gets a single identity provider restriction for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2647,6 +2741,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the identity provider restriction.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2702,10 +2797,12 @@
         "tags": [
           "ClientIdpRestrictions"
         ],
+        "summary": "Deletes an identity provider restriction from the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2716,6 +2813,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the identity provider restriction to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2756,10 +2854,12 @@
         "tags": [
           "ClientPostLogoutRedirectUris"
         ],
+        "summary": "Gets all post-logout redirect URIs for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2824,10 +2924,12 @@
         "tags": [
           "ClientPostLogoutRedirectUris"
         ],
+        "summary": "Creates a new post-logout redirect URI for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2837,6 +2939,7 @@
           }
         ],
         "requestBody": {
+          "description": "The post-logout redirect URI to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -2905,10 +3008,12 @@
         "tags": [
           "ClientPostLogoutRedirectUris"
         ],
+        "summary": "Gets a single post-logout redirect URI for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2919,6 +3024,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the post-logout redirect URI.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2974,10 +3080,12 @@
         "tags": [
           "ClientPostLogoutRedirectUris"
         ],
+        "summary": "Deletes a post-logout redirect URI from the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -2988,6 +3096,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the post-logout redirect URI to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3028,10 +3137,12 @@
         "tags": [
           "ClientProperties"
         ],
+        "summary": "Gets all custom properties for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3096,10 +3207,12 @@
         "tags": [
           "ClientProperties"
         ],
+        "summary": "Creates a new custom property for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3109,6 +3222,7 @@
           }
         ],
         "requestBody": {
+          "description": "The property to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -3177,10 +3291,12 @@
         "tags": [
           "ClientProperties"
         ],
+        "summary": "Gets a single custom property for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3191,6 +3307,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the property.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3246,10 +3363,12 @@
         "tags": [
           "ClientProperties"
         ],
+        "summary": "Deletes a custom property from the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3260,6 +3379,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the property to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3300,10 +3420,12 @@
         "tags": [
           "ClientRedirectUris"
         ],
+        "summary": "Gets all redirect URIs for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3368,10 +3490,12 @@
         "tags": [
           "ClientRedirectUris"
         ],
+        "summary": "Creates a new redirect URI for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3381,6 +3505,7 @@
           }
         ],
         "requestBody": {
+          "description": "The redirect URI to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -3449,10 +3574,12 @@
         "tags": [
           "ClientRedirectUris"
         ],
+        "summary": "Gets a single redirect URI for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3463,6 +3590,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the redirect URI.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3518,10 +3646,12 @@
         "tags": [
           "ClientRedirectUris"
         ],
+        "summary": "Deletes a redirect URI from the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3532,6 +3662,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the redirect URI to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3572,10 +3703,12 @@
         "tags": [
           "ClientScopes"
         ],
+        "summary": "Gets all allowed scopes for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3640,10 +3773,12 @@
         "tags": [
           "ClientScopes"
         ],
+        "summary": "Creates a new allowed scope for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3653,6 +3788,7 @@
           }
         ],
         "requestBody": {
+          "description": "The scope to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -3721,10 +3857,12 @@
         "tags": [
           "ClientScopes"
         ],
+        "summary": "Gets a single allowed scope for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3735,6 +3873,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3790,10 +3929,12 @@
         "tags": [
           "ClientScopes"
         ],
+        "summary": "Deletes an allowed scope from the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3804,6 +3945,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the scope to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3844,10 +3986,12 @@
         "tags": [
           "ClientSecrets"
         ],
+        "summary": "Gets all secrets for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3912,10 +4056,12 @@
         "tags": [
           "ClientSecrets"
         ],
+        "summary": "Creates a new secret for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -3925,6 +4071,7 @@
           }
         ],
         "requestBody": {
+          "description": "The secret to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -3993,10 +4140,12 @@
         "tags": [
           "ClientSecrets"
         ],
+        "summary": "Gets a single secret for the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4007,6 +4156,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the secret.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4062,10 +4212,12 @@
         "tags": [
           "ClientSecrets"
         ],
+        "summary": "Deletes a secret from the specified client.",
         "parameters": [
           {
             "name": "clientId",
             "in": "path",
+            "description": "The identifier of the client.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4076,6 +4228,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the secret to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4116,9 +4269,10 @@
         "tags": [
           "IdentityResources"
         ],
+        "summary": "Gets a summary of all identity resources.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "A int StatusCodes.Status200OK response containing the collection of identity resource summaries.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4152,7 +4306,9 @@
         "tags": [
           "IdentityResources"
         ],
+        "summary": "Creates a new identity resource.",
         "requestBody": {
+          "description": "The identity resource details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -4221,10 +4377,12 @@
         "tags": [
           "IdentityResources"
         ],
+        "summary": "Gets the identity resource with the specified identifier.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the identity resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4280,10 +4438,12 @@
         "tags": [
           "IdentityResources"
         ],
+        "summary": "Updates the specified identity resource.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the identity resource to update.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4293,6 +4453,7 @@
           }
         ],
         "requestBody": {
+          "description": "The updated identity resource details.",
           "content": {
             "application/json": {
               "schema": {
@@ -4342,10 +4503,12 @@
         "tags": [
           "IdentityResources"
         ],
+        "summary": "Deletes the specified identity resource.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the identity resource to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4386,10 +4549,12 @@
         "tags": [
           "IdentityResourceClaims"
         ],
+        "summary": "Gets all user claims for the specified identity resource.",
         "parameters": [
           {
             "name": "identityResourceId",
             "in": "path",
+            "description": "The identifier of the parent identity resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4454,10 +4619,12 @@
         "tags": [
           "IdentityResourceClaims"
         ],
+        "summary": "Adds a new user claim to the specified identity resource.",
         "parameters": [
           {
             "name": "identityResourceId",
             "in": "path",
+            "description": "The identifier of the parent identity resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4467,6 +4634,7 @@
           }
         ],
         "requestBody": {
+          "description": "The claim details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -4535,10 +4703,12 @@
         "tags": [
           "IdentityResourceClaims"
         ],
+        "summary": "Gets the user claim with the specified identifier for the specified identity resource.",
         "parameters": [
           {
             "name": "identityResourceId",
             "in": "path",
+            "description": "The identifier of the parent identity resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4549,6 +4719,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the identity resource claim.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4604,10 +4775,12 @@
         "tags": [
           "IdentityResourceClaims"
         ],
+        "summary": "Deletes the specified user claim from the specified identity resource.",
         "parameters": [
           {
             "name": "identityResourceId",
             "in": "path",
+            "description": "The identifier of the parent identity resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4618,6 +4791,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the identity resource claim to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4658,10 +4832,12 @@
         "tags": [
           "IdentityResourceProperties"
         ],
+        "summary": "Gets all custom properties for the specified identity resource.",
         "parameters": [
           {
             "name": "identityResourceId",
             "in": "path",
+            "description": "The identifier of the parent identity resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4726,10 +4902,12 @@
         "tags": [
           "IdentityResourceProperties"
         ],
+        "summary": "Adds a new custom property to the specified identity resource.",
         "parameters": [
           {
             "name": "identityResourceId",
             "in": "path",
+            "description": "The identifier of the parent identity resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4739,6 +4917,7 @@
           }
         ],
         "requestBody": {
+          "description": "The property details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -4807,10 +4986,12 @@
         "tags": [
           "IdentityResourceProperties"
         ],
+        "summary": "Gets the custom property with the specified identifier for the specified identity resource.",
         "parameters": [
           {
             "name": "identityResourceId",
             "in": "path",
+            "description": "The identifier of the parent identity resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4821,6 +5002,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the identity resource property.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4876,10 +5058,12 @@
         "tags": [
           "IdentityResourceProperties"
         ],
+        "summary": "Deletes the specified custom property from the specified identity resource.",
         "parameters": [
           {
             "name": "identityResourceId",
             "in": "path",
+            "description": "The identifier of the parent identity resource.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4890,6 +5074,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the identity resource property to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -4930,9 +5115,10 @@
         "tags": [
           "Roles"
         ],
+        "summary": "Gets a summary list of all roles.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "A int StatusCodes.Status200OK response containing the collection of role summaries.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4966,7 +5152,9 @@
         "tags": [
           "Roles"
         ],
+        "summary": "Creates a new role.",
         "requestBody": {
+          "description": "The role details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -5035,10 +5223,12 @@
         "tags": [
           "Roles"
         ],
+        "summary": "Gets a single role by its identifier.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The unique identifier of the role.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5092,10 +5282,12 @@
         "tags": [
           "Roles"
         ],
+        "summary": "Updates an existing role.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The unique identifier of the role to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5103,6 +5295,7 @@
           }
         ],
         "requestBody": {
+          "description": "The updated role details.",
           "content": {
             "application/json": {
               "schema": {
@@ -5172,10 +5365,12 @@
         "tags": [
           "Roles"
         ],
+        "summary": "Deletes a role.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The unique identifier of the role to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5214,10 +5409,12 @@
         "tags": [
           "Roles"
         ],
+        "summary": "Gets the claims assigned to a role.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The unique identifier of the role.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5280,10 +5477,12 @@
         "tags": [
           "Roles"
         ],
+        "summary": "Adds a claim to a role.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The unique identifier of the role.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5291,6 +5490,7 @@
           }
         ],
         "requestBody": {
+          "description": "The claim type and value to add.",
           "content": {
             "application/json": {
               "schema": {
@@ -5362,10 +5562,12 @@
         "tags": [
           "Roles"
         ],
+        "summary": "Removes a claim of the specified type from a role.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The unique identifier of the role.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5374,6 +5576,7 @@
           {
             "name": "claimType",
             "in": "path",
+            "description": "The type of the claim to remove.",
             "required": true,
             "schema": {
               "type": "string"
@@ -5412,9 +5615,10 @@
         "tags": [
           "Scopes"
         ],
+        "summary": "Gets a summary of all API scopes.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "A int StatusCodes.Status200OK response containing the collection of scope summaries.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -5448,7 +5652,9 @@
         "tags": [
           "Scopes"
         ],
+        "summary": "Creates a new API scope.",
         "requestBody": {
+          "description": "The scope details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -5517,10 +5723,12 @@
         "tags": [
           "Scopes"
         ],
+        "summary": "Gets the API scope with the specified identifier.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -5576,10 +5784,12 @@
         "tags": [
           "Scopes"
         ],
+        "summary": "Updates the specified API scope.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the scope to update.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -5589,6 +5799,7 @@
           }
         ],
         "requestBody": {
+          "description": "The updated scope details.",
           "content": {
             "application/json": {
               "schema": {
@@ -5638,10 +5849,12 @@
         "tags": [
           "Scopes"
         ],
+        "summary": "Deletes the specified API scope.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the scope to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -5682,10 +5895,12 @@
         "tags": [
           "ScopeClaims"
         ],
+        "summary": "Gets all user claims for the specified scope.",
         "parameters": [
           {
             "name": "scopeId",
             "in": "path",
+            "description": "The identifier of the parent scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -5750,10 +5965,12 @@
         "tags": [
           "ScopeClaims"
         ],
+        "summary": "Adds a new user claim to the specified scope.",
         "parameters": [
           {
             "name": "scopeId",
             "in": "path",
+            "description": "The identifier of the parent scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -5763,6 +5980,7 @@
           }
         ],
         "requestBody": {
+          "description": "The claim details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -5831,10 +6049,12 @@
         "tags": [
           "ScopeClaims"
         ],
+        "summary": "Gets the user claim with the specified identifier for the specified scope.",
         "parameters": [
           {
             "name": "scopeId",
             "in": "path",
+            "description": "The identifier of the parent scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -5845,6 +6065,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the scope claim.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -5900,10 +6121,12 @@
         "tags": [
           "ScopeClaims"
         ],
+        "summary": "Deletes the specified user claim from the specified scope.",
         "parameters": [
           {
             "name": "scopeId",
             "in": "path",
+            "description": "The identifier of the parent scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -5914,6 +6137,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the scope claim to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -5954,10 +6178,12 @@
         "tags": [
           "ScopeProperties"
         ],
+        "summary": "Gets all custom properties for the specified scope.",
         "parameters": [
           {
             "name": "scopeId",
             "in": "path",
+            "description": "The identifier of the parent scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6022,10 +6248,12 @@
         "tags": [
           "ScopeProperties"
         ],
+        "summary": "Adds a new custom property to the specified scope.",
         "parameters": [
           {
             "name": "scopeId",
             "in": "path",
+            "description": "The identifier of the parent scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6035,6 +6263,7 @@
           }
         ],
         "requestBody": {
+          "description": "The property details to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -6103,10 +6332,12 @@
         "tags": [
           "ScopeProperties"
         ],
+        "summary": "Gets the custom property with the specified identifier for the specified scope.",
         "parameters": [
           {
             "name": "scopeId",
             "in": "path",
+            "description": "The identifier of the parent scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6117,6 +6348,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the scope property.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6172,10 +6404,12 @@
         "tags": [
           "ScopeProperties"
         ],
+        "summary": "Deletes the specified custom property from the specified scope.",
         "parameters": [
           {
             "name": "scopeId",
             "in": "path",
+            "description": "The identifier of the parent scope.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6186,6 +6420,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The identifier of the scope property to delete.",
             "required": true,
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6226,9 +6461,10 @@
         "tags": [
           "Users"
         ],
+        "summary": "Gets a summary list of all users.",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "A int StatusCodes.Status200OK response containing the collection of user summaries.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -6262,7 +6498,9 @@
         "tags": [
           "Users"
         ],
+        "summary": "Creates a new user.",
         "requestBody": {
+          "description": "The user details, including the initial password, to create.",
           "content": {
             "application/json": {
               "schema": {
@@ -6331,10 +6569,12 @@
         "tags": [
           "Users"
         ],
+        "summary": "Gets a single user by their identifier.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The GUID string identifier of the user.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6388,10 +6628,12 @@
         "tags": [
           "Users"
         ],
+        "summary": "Updates an existing user.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The GUID string identifier of the user to update.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6399,6 +6641,7 @@
           }
         ],
         "requestBody": {
+          "description": "The updated user details.",
           "content": {
             "application/json": {
               "schema": {
@@ -6468,10 +6711,12 @@
         "tags": [
           "Users"
         ],
+        "summary": "Deletes a user.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The GUID string identifier of the user to delete.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6510,10 +6755,12 @@
         "tags": [
           "Users"
         ],
+        "summary": "Gets the roles assigned to a user.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The GUID string identifier of the user.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6576,10 +6823,12 @@
         "tags": [
           "Users"
         ],
+        "summary": "Assigns a role to a user by role name.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The GUID string identifier of the user.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6587,6 +6836,7 @@
           }
         ],
         "requestBody": {
+          "description": "The name of the role to assign.",
           "content": {
             "application/json": {
               "schema": {
@@ -6658,10 +6908,12 @@
         "tags": [
           "Users"
         ],
+        "summary": "Removes a role from a user by role name.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The GUID string identifier of the user.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6670,6 +6922,7 @@
           {
             "name": "roleName",
             "in": "path",
+            "description": "The name of the role to remove.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6708,10 +6961,12 @@
         "tags": [
           "Users"
         ],
+        "summary": "Gets the claims assigned to a user.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
+            "description": "The GUID string identifier of the user.",
             "required": true,
             "schema": {
               "type": "string"
@@ -6783,10 +7038,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the owning API resource.",
             "format": "int32"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim type."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6797,7 +7054,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a user claim type associated with an API resource."
       },
       "ApiResourceDto": {
         "type": "object",
@@ -6806,17 +7064,21 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description of the API resource."
           },
           "nonEditable": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the API resource is non-editable."
           },
           "lastAccessed": {
             "type": "string",
+            "description": "Gets or sets the date and time the API resource was last accessed.",
             "format": "date-time"
           },
           "updated": {
             "type": "string",
+            "description": "Gets or sets the date and time the API resource was last updated.",
             "format": "date-time"
           },
           "id": {
@@ -6825,25 +7087,31 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier.",
             "format": "int32"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique name of the API resource."
           },
           "displayName": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name shown for the API resource."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the API resource is enabled."
           },
           "created": {
             "type": "string",
+            "description": "Gets or sets the date and time the API resource was created.",
             "format": "date-time"
           }
-        }
+        },
+        "description": "Detailed representation of an API resource."
       },
       "ApiResourcePropertyDto": {
         "type": "object",
@@ -6854,13 +7122,16 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the owning API resource.",
             "format": "int32"
           },
           "key": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property key."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property value."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6871,7 +7142,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a custom property (key/value pair) associated with an API resource."
       },
       "ApiResourceScopeDto": {
         "type": "object",
@@ -6882,10 +7154,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the owning API resource.",
             "format": "int32"
           },
           "scope": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the scope name."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6896,7 +7170,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a scope associated with an API resource."
       },
       "ApiResourceSecretDto": {
         "type": "object",
@@ -6907,22 +7182,26 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the owning API resource.",
             "format": "int32"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the secret type."
           },
           "description": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description of the secret."
           },
           "expiration": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the expiration of the secret."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -6933,7 +7212,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a secret associated with an API resource."
       },
       "ApiResourceSummaryDto": {
         "type": "object",
@@ -6944,25 +7224,31 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier.",
             "format": "int32"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique name of the API resource."
           },
           "displayName": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name shown for the API resource."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the API resource is enabled."
           },
           "created": {
             "type": "string",
+            "description": "Gets or sets the date and time the API resource was created.",
             "format": "date-time"
           }
-        }
+        },
+        "description": "Summary representation of an API resource."
       },
       "AssignUserRoleDto": {
         "required": [
@@ -6971,9 +7257,11 @@
         "type": "object",
         "properties": {
           "roleName": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the name of the role to assign."
           }
-        }
+        },
+        "description": "Data used to assign a role to a user."
       },
       "ClientClaimDto": {
         "type": "object",
@@ -6984,13 +7272,16 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the client that owns the claim.",
             "format": "int32"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the type of the claim."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the value of the claim."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7001,7 +7292,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a claim associated with a client."
       },
       "ClientCorsOriginDto": {
         "type": "object",
@@ -7012,10 +7304,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the client that owns the CORS origin.",
             "format": "int32"
           },
           "origin": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the allowed CORS origin."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7026,7 +7320,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents an allowed CORS origin for a client."
       },
       "ClientDto": {
         "type": "object",
@@ -7035,64 +7330,82 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the human-readable description of the client."
           },
           "clientUri": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the client home page URI."
           },
           "logoUri": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the URI to the client logo image."
           },
           "requireClientSecret": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether a client secret is required to obtain tokens."
           },
           "requireConsent": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the user must give consent before tokens are issued."
           },
           "requirePkce": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether Proof Key for Code Exchange (PKCE) is required for authorization code flow."
           },
           "allowPlainTextPkce": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether plain-text PKCE code challenges are allowed."
           },
           "allowOfflineAccess": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the client can request refresh tokens for offline access."
           },
           "allowAccessTokensViaBrowser": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether access tokens may be transmitted via the browser."
           },
           "allowRememberConsent": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether prior consent decisions can be remembered for this client."
           },
           "alwaysSendClientClaims": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether client claims are sent for every token request, not just client credentials flows."
           },
           "alwaysIncludeUserClaimsInIdToken": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether user claims are always included in the identity token."
           },
           "enableLocalLogin": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether local login is enabled for this client."
           },
           "includeJwtId": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether a unique JWT identifier (jti) is included in tokens."
           },
           "nonEditable": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the client is read-only and cannot be edited."
           },
           "updateAccessTokenClaimsOnRefresh": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether access token claims are refreshed when a refresh token is used."
           },
           "backChannelLogoutSessionRequired": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether a session identifier is sent on back-channel logout requests."
           },
           "frontChannelLogoutSessionRequired": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether a session identifier is sent on front-channel logout requests."
           },
           "absoluteRefreshTokenLifetime": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7100,6 +7413,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the maximum lifetime, in seconds, of a refresh token regardless of usage.",
             "format": "int32"
           },
           "accessTokenLifetime": {
@@ -7108,6 +7422,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the access token lifetime in seconds.",
             "format": "int32"
           },
           "accessTokenType": {
@@ -7116,6 +7431,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the access token type (0 = JWT, 1 = reference).",
             "format": "int32"
           },
           "authorizationCodeLifetime": {
@@ -7124,6 +7440,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the authorization code lifetime in seconds.",
             "format": "int32"
           },
           "deviceCodeLifetime": {
@@ -7132,6 +7449,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the device code lifetime in seconds.",
             "format": "int32"
           },
           "identityTokenLifetime": {
@@ -7140,6 +7458,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identity token lifetime in seconds.",
             "format": "int32"
           },
           "refreshTokenExpiration": {
@@ -7148,6 +7467,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the refresh token expiration type (0 = sliding, 1 = absolute).",
             "format": "int32"
           },
           "refreshTokenUsage": {
@@ -7156,6 +7476,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the refresh token usage type (0 = reuse, 1 = one-time only).",
             "format": "int32"
           },
           "slidingRefreshTokenLifetime": {
@@ -7164,6 +7485,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the sliding refresh token lifetime in seconds.",
             "format": "int32"
           },
           "consentLifetime": {
@@ -7173,6 +7495,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the lifetime of a remembered consent, in seconds, or `null` for no expiration.",
             "format": "int32"
           },
           "userSsoLifetime": {
@@ -7182,44 +7505,52 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the maximum single sign-on session lifetime for the user, in seconds, or `null` for the global default.",
             "format": "int32"
           },
           "backChannelLogoutUri": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the URI invoked to notify the client of a back-channel logout."
           },
           "clientClaimsPrefix": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the prefix applied to client claim types."
           },
           "frontChannelLogoutUri": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the URI invoked to notify the client of a front-channel logout."
           },
           "pairWiseSubjectSalt": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the salt used to generate a pairwise subject identifier."
           },
           "userCodeType": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the user code type used for device flow."
           },
           "updated": {
             "type": "string",
+            "description": "Gets or sets the timestamp of the last update.",
             "format": "date-time"
           },
           "lastAccessed": {
             "type": "string",
+            "description": "Gets or sets the timestamp the client was last accessed.",
             "format": "date-time"
           },
           "id": {
@@ -7267,10 +7598,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the client that owns the grant type.",
             "format": "int32"
           },
           "grantType": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the allowed grant type."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7281,7 +7614,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a grant type allowed for a client."
       },
       "ClientIdpRestrictionDto": {
         "type": "object",
@@ -7292,10 +7626,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the client that owns the identity provider restriction.",
             "format": "int32"
           },
           "provider": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the identity provider the client is restricted to."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7306,7 +7642,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents an identity provider restriction for a client."
       },
       "ClientPostLogoutRedirectUriDto": {
         "type": "object",
@@ -7317,10 +7654,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the client that owns the post-logout redirect URI.",
             "format": "int32"
           },
           "postLogoutRedirectUri": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the post-logout redirect URI."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7331,7 +7670,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a post-logout redirect URI for a client."
       },
       "ClientPropertyDto": {
         "type": "object",
@@ -7342,13 +7682,16 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the client that owns the property.",
             "format": "int32"
           },
           "key": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the key of the property."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the value of the property."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7359,7 +7702,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a custom property associated with a client."
       },
       "ClientRedirectUriDto": {
         "type": "object",
@@ -7370,10 +7714,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the client that owns the redirect URI.",
             "format": "int32"
           },
           "redirectUri": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the redirect URI."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7384,7 +7730,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a redirect URI for a client."
       },
       "ClientScopeDto": {
         "type": "object",
@@ -7395,10 +7742,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the client that owns the scope.",
             "format": "int32"
           },
           "scope": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the scope granted to the client."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7409,7 +7758,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a scope granted to a client."
       },
       "ClientSecretDto": {
         "type": "object",
@@ -7420,22 +7770,26 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the client that owns the secret.",
             "format": "int32"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the type of the secret."
           },
           "description": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description of the secret."
           },
           "expiration": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the expiration of the secret."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7446,7 +7800,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a secret associated with a client."
       },
       "ClientSummaryDto": {
         "type": "object",
@@ -7497,33 +7852,47 @@
         "properties": {
           "password": {
             "minLength": 8,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the initial password."
           },
           "userName": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the user name."
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the email address."
           },
           "name": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name."
           },
           "phoneNumber": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the phone number."
           },
           "twoFactorEnabled": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether two-factor authentication is enabled."
           },
           "lockoutEnabled": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the user can be locked out."
           }
-        }
+        },
+        "description": "Data used to create a new user."
       },
       "IdentityResourceClaimDto": {
         "type": "object",
@@ -7534,10 +7903,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the owning identity resource.",
             "format": "int32"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the user claim type."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7548,7 +7919,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a user claim type associated with an identity resource."
       },
       "IdentityResourceDto": {
         "type": "object",
@@ -7557,25 +7929,31 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description shown on the consent screen."
           },
           "emphasize": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the identity resource is emphasized on the consent screen."
           },
           "required": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the identity resource is required and cannot be deselected."
           },
           "showInDiscoveryDocument": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the identity resource is shown in the discovery document."
           },
           "nonEditable": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the identity resource is non-editable."
           },
           "updated": {
             "type": [
               "null",
               "string"
             ],
+            "description": "Gets or sets the date and time the identity resource was last updated.",
             "format": "date-time"
           },
           "id": {
@@ -7584,25 +7962,31 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier.",
             "format": "int32"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique name of the identity resource."
           },
           "displayName": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name shown on the consent screen."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the identity resource is enabled."
           },
           "created": {
             "type": "string",
+            "description": "Gets or sets the date and time the identity resource was created.",
             "format": "date-time"
           }
-        }
+        },
+        "description": "Detailed view of an identity resource, extending the summary with additional configuration."
       },
       "IdentityResourcePropertyDto": {
         "type": "object",
@@ -7613,13 +7997,16 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the owning identity resource.",
             "format": "int32"
           },
           "key": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property key."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property value."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7630,7 +8017,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Represents a key/value property associated with an identity resource."
       },
       "IdentityResourceSummaryDto": {
         "type": "object",
@@ -7641,25 +8029,31 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier.",
             "format": "int32"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique name of the identity resource."
           },
           "displayName": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name shown on the consent screen."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the identity resource is enabled."
           },
           "created": {
             "type": "string",
+            "description": "Gets or sets the date and time the identity resource was created.",
             "format": "date-time"
           }
-        }
+        },
+        "description": "Summary view of an identity resource, exposing its core display fields."
       },
       "ProblemDetails": {
         "type": "object",
@@ -7703,40 +8097,49 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim type."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim value."
           }
-        }
+        },
+        "description": "Representation of a claim associated with a role."
       },
       "RoleDto": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the identifier."
           },
           "name": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the role name."
           }
-        }
+        },
+        "description": "Full representation of an ASP.NET Core Identity role."
       },
       "RoleSummaryDto": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the identifier."
           },
           "name": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the role name."
           }
-        }
+        },
+        "description": "Summary representation of an ASP.NET Core Identity role."
       },
       "SaveApiResourceClaimDto": {
         "required": [
@@ -7747,9 +8150,11 @@
           "type": {
             "maxLength": 200,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim type."
           }
-        }
+        },
+        "description": "Data used to create or update an API resource claim."
       },
       "SaveApiResourceDto": {
         "required": [
@@ -7760,7 +8165,8 @@
           "name": {
             "maxLength": 200,
             "minLength": 2,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique name of the API resource."
           },
           "displayName": {
             "maxLength": 200,
@@ -7768,7 +8174,8 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name shown for the API resource."
           },
           "description": {
             "maxLength": 1000,
@@ -7776,15 +8183,22 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description of the API resource."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the API resource is enabled."
           },
           "nonEditable": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the API resource is non-editable."
           }
-        }
+        },
+        "description": "Data used to create or update an API resource."
       },
       "SaveApiResourcePropertyDto": {
         "required": [
@@ -7796,14 +8210,17 @@
           "key": {
             "maxLength": 250,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property key."
           },
           "value": {
             "maxLength": 2000,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property value."
           }
-        }
+        },
+        "description": "Data used to create or update an API resource property."
       },
       "SaveApiResourceScopeDto": {
         "required": [
@@ -7814,9 +8231,11 @@
           "scope": {
             "maxLength": 200,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the scope name."
           }
-        }
+        },
+        "description": "Data used to create or update an API resource scope."
       },
       "SaveApiResourceSecretDto": {
         "required": [
@@ -7828,26 +8247,31 @@
           "type": {
             "maxLength": 250,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the secret type."
           },
           "value": {
             "maxLength": 4000,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the secret value."
           },
           "description": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description of the secret."
           },
           "expiration": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the expiration of the secret."
           }
-        }
+        },
+        "description": "Data used to create or update an API resource secret."
       },
       "SaveClientClaimDto": {
         "required": [
@@ -7859,14 +8283,17 @@
           "type": {
             "maxLength": 250,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the type of the claim."
           },
           "value": {
             "maxLength": 250,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the value of the claim."
           }
-        }
+        },
+        "description": "Represents the data required to create or update a client claim."
       },
       "SaveClientCorsOriginDto": {
         "required": [
@@ -7877,9 +8304,11 @@
           "origin": {
             "maxLength": 150,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the allowed CORS origin."
           }
-        }
+        },
+        "description": "Represents the data required to create or update a client CORS origin."
       },
       "SaveClientDto": {
         "required": [
@@ -7892,78 +8321,123 @@
           "clientId": {
             "maxLength": 200,
             "minLength": 2,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the client identifier string."
           },
           "clientName": {
             "maxLength": 200,
             "minLength": 2,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the display name."
           },
           "description": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the human-readable description of the client."
           },
           "clientUri": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the client home page URI."
           },
           "logoUri": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the URI to the client logo image."
           },
           "requireClientSecret": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether a client secret is required to obtain tokens."
           },
           "requireConsent": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the user must give consent before tokens are issued."
           },
           "requirePkce": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether Proof Key for Code Exchange (PKCE) is required for authorization code flow."
           },
           "allowPlainTextPkce": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether plain-text PKCE code challenges are allowed."
           },
           "allowOfflineAccess": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the client can request refresh tokens for offline access."
           },
           "allowAccessTokensViaBrowser": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether access tokens may be transmitted via the browser."
           },
           "allowRememberConsent": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether prior consent decisions can be remembered for this client."
           },
           "alwaysSendClientClaims": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether client claims are sent for every token request, not just client credentials flows."
           },
           "alwaysIncludeUserClaimsInIdToken": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether user claims are always included in the identity token."
           },
           "enableLocalLogin": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether local login is enabled for this client."
           },
           "includeJwtId": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether a unique JWT identifier (jti) is included in tokens."
           },
           "nonEditable": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the client is read-only and cannot be edited."
           },
           "updateAccessTokenClaimsOnRefresh": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether access token claims are refreshed when a refresh token is used."
           },
           "backChannelLogoutSessionRequired": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether a session identifier is sent on back-channel logout requests."
           },
           "frontChannelLogoutSessionRequired": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether a session identifier is sent on front-channel logout requests."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether this client is enabled."
           },
           "absoluteRefreshTokenLifetime": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -7971,6 +8445,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the maximum lifetime, in seconds, of a refresh token regardless of usage.",
             "format": "int32"
           },
           "accessTokenLifetime": {
@@ -7979,14 +8454,17 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the access token lifetime in seconds.",
             "format": "int32"
           },
           "accessTokenType": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
+              "null",
               "integer",
               "string"
             ],
+            "description": "Gets or sets the access token type (0 = JWT, 1 = reference).",
             "format": "int32"
           },
           "authorizationCodeLifetime": {
@@ -7995,6 +8473,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the authorization code lifetime in seconds.",
             "format": "int32"
           },
           "deviceCodeLifetime": {
@@ -8003,6 +8482,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the device code lifetime in seconds.",
             "format": "int32"
           },
           "identityTokenLifetime": {
@@ -8011,22 +8491,27 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identity token lifetime in seconds.",
             "format": "int32"
           },
           "refreshTokenExpiration": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
+              "null",
               "integer",
               "string"
             ],
+            "description": "Gets or sets the refresh token expiration type (0 = sliding, 1 = absolute).",
             "format": "int32"
           },
           "refreshTokenUsage": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
             "type": [
+              "null",
               "integer",
               "string"
             ],
+            "description": "Gets or sets the refresh token usage type (0 = reuse, 1 = one-time only).",
             "format": "int32"
           },
           "slidingRefreshTokenLifetime": {
@@ -8035,6 +8520,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the sliding refresh token lifetime in seconds.",
             "format": "int32"
           },
           "consentLifetime": {
@@ -8044,6 +8530,7 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the lifetime of a remembered consent, in seconds, or `null` for no expiration.",
             "format": "int32"
           },
           "userSsoLifetime": {
@@ -8053,42 +8540,49 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the maximum single sign-on session lifetime for the user, in seconds, or `null` for the global default.",
             "format": "int32"
           },
           "backChannelLogoutUri": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the URI invoked to notify the client of a back-channel logout."
           },
           "clientClaimsPrefix": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the prefix applied to client claim types."
           },
           "frontChannelLogoutUri": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the URI invoked to notify the client of a front-channel logout."
           },
           "pairWiseSubjectSalt": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the salt used to generate a pairwise subject identifier."
           },
           "protocolType": {
             "maxLength": 200,
             "minLength": 2,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the protocol type."
           },
           "userCodeType": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the user code type used for device flow."
           }
         },
         "description": "Payload for creating or updating a client."
@@ -8102,9 +8596,11 @@
           "grantType": {
             "maxLength": 250,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the allowed grant type."
           }
-        }
+        },
+        "description": "Represents the data required to create or update a client grant type."
       },
       "SaveClientIdpRestrictionDto": {
         "required": [
@@ -8115,9 +8611,11 @@
           "provider": {
             "maxLength": 200,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the identity provider the client is restricted to."
           }
-        }
+        },
+        "description": "Represents the data required to create or update a client identity provider restriction."
       },
       "SaveClientPostLogoutRedirectUriDto": {
         "required": [
@@ -8128,9 +8626,11 @@
           "postLogoutRedirectUri": {
             "maxLength": 2000,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the post-logout redirect URI."
           }
-        }
+        },
+        "description": "Represents the data required to create or update a client post-logout redirect URI."
       },
       "SaveClientPropertyDto": {
         "required": [
@@ -8142,14 +8642,17 @@
           "key": {
             "maxLength": 250,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the key of the property."
           },
           "value": {
             "maxLength": 2000,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the value of the property."
           }
-        }
+        },
+        "description": "Represents the data required to create or update a client property."
       },
       "SaveClientRedirectUriDto": {
         "required": [
@@ -8160,9 +8663,11 @@
           "redirectUri": {
             "maxLength": 2000,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the redirect URI."
           }
-        }
+        },
+        "description": "Represents the data required to create or update a client redirect URI."
       },
       "SaveClientScopeDto": {
         "required": [
@@ -8173,9 +8678,11 @@
           "scope": {
             "maxLength": 200,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the scope granted to the client."
           }
-        }
+        },
+        "description": "Represents the data required to create or update a client scope."
       },
       "SaveClientSecretDto": {
         "required": [
@@ -8187,26 +8694,31 @@
           "type": {
             "maxLength": 250,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the type of the secret."
           },
           "value": {
             "maxLength": 4000,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the value of the secret."
           },
           "description": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description of the secret."
           },
           "expiration": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the expiration of the secret."
           }
-        }
+        },
+        "description": "Represents the data required to create or update a client secret."
       },
       "SaveIdentityResourceClaimDto": {
         "required": [
@@ -8217,9 +8729,11 @@
           "type": {
             "maxLength": 200,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the user claim type."
           }
-        }
+        },
+        "description": "Payload used to create or update an identity resource user claim."
       },
       "SaveIdentityResourceDto": {
         "required": [
@@ -8230,7 +8744,8 @@
           "name": {
             "maxLength": 200,
             "minLength": 2,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique name of the identity resource."
           },
           "displayName": {
             "maxLength": 200,
@@ -8238,7 +8753,8 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name shown on the consent screen."
           },
           "description": {
             "maxLength": 1000,
@@ -8246,24 +8762,40 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description shown on the consent screen."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the identity resource is enabled."
           },
           "emphasize": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the identity resource is emphasized on the consent screen."
           },
           "required": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the identity resource is required and cannot be deselected."
           },
           "showInDiscoveryDocument": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the identity resource is shown in the discovery document."
           },
           "nonEditable": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the identity resource is non-editable."
           }
-        }
+        },
+        "description": "Payload used to create or update an identity resource."
       },
       "SaveIdentityResourcePropertyDto": {
         "required": [
@@ -8275,14 +8807,17 @@
           "key": {
             "maxLength": 250,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property key."
           },
           "value": {
             "maxLength": 2000,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property value."
           }
-        }
+        },
+        "description": "Payload used to create or update an identity resource property."
       },
       "SaveRoleClaimDto": {
         "required": [
@@ -8291,12 +8826,15 @@
         "type": "object",
         "properties": {
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim type."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim value."
           }
-        }
+        },
+        "description": "Data used to create or update a claim on a role."
       },
       "SaveRoleDto": {
         "required": [
@@ -8305,9 +8843,11 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the role name."
           }
-        }
+        },
+        "description": "Data used to create or update an ASP.NET Core Identity role."
       },
       "SaveScopeClaimDto": {
         "required": [
@@ -8318,9 +8858,11 @@
           "type": {
             "maxLength": 200,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim type."
           }
-        }
+        },
+        "description": "Data used to create or update a user claim on an API scope."
       },
       "SaveScopeDto": {
         "required": [
@@ -8331,7 +8873,8 @@
           "name": {
             "maxLength": 200,
             "minLength": 2,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique name of the scope."
           },
           "displayName": {
             "maxLength": 200,
@@ -8339,7 +8882,8 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name shown to users."
           },
           "description": {
             "maxLength": 1000,
@@ -8347,21 +8891,33 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description of the scope."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the scope is enabled."
           },
           "emphasize": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the scope should be emphasized on the consent screen."
           },
           "required": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the scope is required and cannot be deselected on the consent screen."
           },
           "showInDiscoveryDocument": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the scope is shown in the discovery document."
           }
-        }
+        },
+        "description": "Data used to create or update an API scope."
       },
       "SaveScopePropertyDto": {
         "required": [
@@ -8373,14 +8929,17 @@
           "key": {
             "maxLength": 250,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property key."
           },
           "value": {
             "maxLength": 2000,
             "minLength": 1,
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property value."
           }
-        }
+        },
+        "description": "Data used to create or update a custom property on an API scope."
       },
       "SaveUserDto": {
         "required": [
@@ -8390,30 +8949,43 @@
         "type": "object",
         "properties": {
           "userName": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the user name."
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the email address."
           },
           "name": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name."
           },
           "phoneNumber": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the phone number."
           },
           "twoFactorEnabled": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether two-factor authentication is enabled."
           },
           "lockoutEnabled": {
-            "type": "boolean"
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Gets or sets a value indicating whether the user can be locked out."
           }
-        }
+        },
+        "description": "Data used to update an existing user."
       },
       "ScopeClaimDto": {
         "type": "object",
@@ -8424,10 +8996,12 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the scope that owns this claim.",
             "format": "int32"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim type."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -8438,7 +9012,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Representation of a user claim associated with an API scope."
       },
       "ScopeDto": {
         "type": "object",
@@ -8447,16 +9022,20 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the description of the scope."
           },
           "emphasize": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the scope should be emphasized on the consent screen."
           },
           "required": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the scope is required and cannot be deselected on the consent screen."
           },
           "showInDiscoveryDocument": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the scope is shown in the discovery document."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -8464,21 +9043,26 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier.",
             "format": "int32"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique name of the scope."
           },
           "displayName": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name shown to users."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the scope is enabled."
           }
-        }
+        },
+        "description": "Full representation of an API scope, including its detailed settings."
       },
       "ScopePropertyDto": {
         "type": "object",
@@ -8489,13 +9073,16 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier of the scope that owns this property.",
             "format": "int32"
           },
           "key": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property key."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the property value."
           },
           "id": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -8506,7 +9093,8 @@
             "description": "Gets or sets the identifier.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Representation of a custom property (key/value pair) associated with an API scope."
       },
       "ScopeSummaryDto": {
         "type": "object",
@@ -8517,32 +9105,40 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the identifier.",
             "format": "int32"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique name of the scope."
           },
           "displayName": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name shown to users."
           },
           "enabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the scope is enabled."
           }
-        }
+        },
+        "description": "Summary representation of an API scope."
       },
       "UserClaimDto": {
         "type": "object",
         "properties": {
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim type."
           },
           "value": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the claim value."
           }
-        }
+        },
+        "description": "Represents a claim associated with a user."
       },
       "UserDto": {
         "type": "object",
@@ -8551,40 +9147,49 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the phone number."
           },
           "phoneNumberConfirmed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the phone number has been confirmed."
           },
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique identifier (GUID string) of the user."
           },
           "userName": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the user name."
           },
           "email": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the email address."
           },
           "emailConfirmed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the email address has been confirmed."
           },
           "name": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name."
           },
           "twoFactorEnabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether two-factor authentication is enabled."
           },
           "lockoutEnabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the user can be locked out."
           },
           "accessFailedCount": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -8592,50 +9197,61 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the number of failed access attempts.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Detailed representation of an ASP.NET Core Identity user."
       },
       "UserRoleDto": {
         "type": "object",
         "properties": {
           "roleName": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the role name."
           }
-        }
+        },
+        "description": "Represents a role assigned to a user."
       },
       "UserSummaryDto": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "description": "Gets or sets the unique identifier (GUID string) of the user."
           },
           "userName": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the user name."
           },
           "email": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the email address."
           },
           "emailConfirmed": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the email address has been confirmed."
           },
           "name": {
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Gets or sets the display name."
           },
           "twoFactorEnabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether two-factor authentication is enabled."
           },
           "lockoutEnabled": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Gets or sets a value indicating whether the user can be locked out."
           },
           "accessFailedCount": {
             "pattern": "^-?(?:0|[1-9]\\d*)$",
@@ -8643,9 +9259,11 @@
               "integer",
               "string"
             ],
+            "description": "Gets or sets the number of failed access attempts.",
             "format": "int32"
           }
-        }
+        },
+        "description": "Summary representation of an ASP.NET Core Identity user."
       }
     }
   },

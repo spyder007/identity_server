@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-using Spydersoft.Identity.Core.Extensions;
 using Spydersoft.Identity.Extensions;
 using Spydersoft.Identity.Models.Consent;
 using Spydersoft.Identity.Options;
@@ -128,7 +127,7 @@ namespace Spydersoft.Identity.Pages.Consent
                     grantedConsent = new ConsentResponse
                     {
                         RememberConsent = model.RememberConsent,
-                        ScopesValuesConsented = scopes.ToArray(),
+                        ScopesValuesConsented = [.. scopes],
                         Description = model.Description
                     };
 
@@ -184,8 +183,7 @@ namespace Spydersoft.Identity.Pages.Consent
                 AllowRememberConsent = request.Client.AllowRememberConsent
             };
 
-            vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources
-                .Select(x => x.CreateScopeViewModel(vm.ScopesConsented.Contains(x.Name) || model == null)).ToArray();
+            vm.IdentityScopes = [.. request.ValidatedResources.Resources.IdentityResources.Select(x => x.CreateScopeViewModel(vm.ScopesConsented.Contains(x.Name) || model == null))];
 
             var apiScopes = new List<ScopeViewModel>();
             foreach (ParsedScopeValue parsedScope in request.ValidatedResources.ParsedScopes)

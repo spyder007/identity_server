@@ -37,6 +37,7 @@ namespace Spydersoft.Identity.Pages.Register
         /// <summary>Renders the registration form.</summary>
         public void OnGet()
         {
+            // No initialization required; the page renders with its default state.
         }
 
         /// <summary>Creates the account, sends a confirmation email, and signs the user in.</summary>

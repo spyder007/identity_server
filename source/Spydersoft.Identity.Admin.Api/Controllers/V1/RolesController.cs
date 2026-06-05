@@ -21,11 +21,16 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
     public class RolesController(RoleManager<ApplicationRole> roleManager, IMapper mapper)
         : BaseAdminApiController(mapper)
     {
+        /// <summary>Gets a summary list of all roles.</summary>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the collection of role summaries.</returns>
         [HttpGet]
         [ProducesResponseType<RoleSummaryDto[]>(StatusCodes.Status200OK)]
         public IActionResult GetAll()
             => Ok(Mapper.ProjectTo<RoleSummaryDto>(roleManager.Roles));
 
+        /// <summary>Gets a single role by its identifier.</summary>
+        /// <param name="id">The unique identifier of the role.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the role, or <see cref="StatusCodes.Status404NotFound"/> if it does not exist.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType<RoleDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -35,6 +40,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return role is null ? NotFound() : Ok(Mapper.Map<RoleDto>(role));
         }
 
+        /// <summary>Creates a new role.</summary>
+        /// <param name="dto">The role details to create.</param>
+        /// <returns>A <see cref="StatusCodes.Status201Created"/> response containing the created role, or <see cref="StatusCodes.Status400BadRequest"/> if validation fails.</returns>
         [HttpPost]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<RoleDto>(StatusCodes.Status201Created)]
@@ -50,6 +58,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return CreatedAtAction(nameof(GetById), new { id = role.Id }, Mapper.Map<RoleDto>(role));
         }
 
+        /// <summary>Updates an existing role.</summary>
+        /// <param name="id">The unique identifier of the role to update.</param>
+        /// <param name="dto">The updated role details.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, <see cref="StatusCodes.Status400BadRequest"/> if validation fails, or <see cref="StatusCodes.Status404NotFound"/> if the role does not exist.</returns>
         [HttpPut("{id}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -69,6 +81,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return NoContent();
         }
 
+        /// <summary>Deletes a role.</summary>
+        /// <param name="id">The unique identifier of the role to delete.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, or <see cref="StatusCodes.Status404NotFound"/> if the role does not exist.</returns>
         [HttpDelete("{id}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -88,6 +103,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
 
         // ---- Claims sub-resource ----
 
+        /// <summary>Gets the claims assigned to a role.</summary>
+        /// <param name="id">The unique identifier of the role.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the role's claims, or <see cref="StatusCodes.Status404NotFound"/> if the role does not exist.</returns>
         [HttpGet("{id}/claims")]
         [ProducesResponseType<RoleClaimDto[]>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -99,6 +117,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return Ok(claims.Select(c => new RoleClaimDto { Type = c.Type, Value = c.Value }));
         }
 
+        /// <summary>Adds a claim to a role.</summary>
+        /// <param name="id">The unique identifier of the role.</param>
+        /// <param name="dto">The claim type and value to add.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, <see cref="StatusCodes.Status400BadRequest"/> if validation fails, or <see cref="StatusCodes.Status404NotFound"/> if the role does not exist.</returns>
         [HttpPost("{id}/claims")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -117,6 +139,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return NoContent();
         }
 
+        /// <summary>Removes a claim of the specified type from a role.</summary>
+        /// <param name="id">The unique identifier of the role.</param>
+        /// <param name="claimType">The type of the claim to remove.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, or <see cref="StatusCodes.Status404NotFound"/> if the role or claim does not exist.</returns>
         [HttpDelete("{id}/claims/{claimType}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

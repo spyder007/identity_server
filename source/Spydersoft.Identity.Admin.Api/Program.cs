@@ -13,6 +13,7 @@ using Scalar.AspNetCore;
 
 using Serilog;
 
+using Spydersoft.Identity.Admin.Api;
 using Spydersoft.Identity.Admin.Api.Data;
 using Spydersoft.Identity.Core.Models.Identity;
 using Spydersoft.Identity.Data;
@@ -167,14 +168,4 @@ finally
 {
     Log.Information("Spydersoft.Identity.Admin.Api shut down complete.");
     await Log.CloseAndFlushAsync();
-}
-
-/// <summary>Authorization policy names for the Admin API.</summary>
-public static class AdminApiPolicies
-{
-    /// <summary>Policy for read-only operations (GET). Accepts read or write scope.</summary>
-    public const string Read = "identity:admin:read";
-
-    /// <summary>Policy for mutating operations (POST, PUT, DELETE). Requires write scope.</summary>
-    public const string Write = "identity:admin:write";
 }

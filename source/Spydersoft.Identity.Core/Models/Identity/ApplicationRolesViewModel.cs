@@ -11,6 +11,6 @@ namespace Spydersoft.Identity.Core.Models.Identity
         /// Gets or sets the roles.
         /// </summary>
         /// <value>The roles.</value>
-        public IQueryable<ApplicationRole> Roles { get; set; }
+        public IQueryable<ApplicationRole> Roles { get; set; } = Enumerable.Empty<ApplicationRole>().AsQueryable();
     }
 }

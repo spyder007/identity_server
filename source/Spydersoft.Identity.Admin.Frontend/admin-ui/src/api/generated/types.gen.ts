@@ -4,8 +4,17 @@ export type ClientOptions = {
   baseURL: "http://localhost:7030/" | (string & {});
 };
 
+/**
+ * Represents a user claim type associated with an API resource.
+ */
 export type ApiResourceClaimDto = {
+  /**
+   * Gets or sets the identifier of the owning API resource.
+   */
   apiResourceId?: number | string;
+  /**
+   * Gets or sets the claim type.
+   */
   type?: string;
   /**
    * Gets or sets the identifier.
@@ -13,21 +22,63 @@ export type ApiResourceClaimDto = {
   id?: number | string;
 };
 
+/**
+ * Detailed representation of an API resource.
+ */
 export type ApiResourceDto = {
+  /**
+   * Gets or sets the description of the API resource.
+   */
   description?: null | string;
+  /**
+   * Gets or sets a value indicating whether the API resource is non-editable.
+   */
   nonEditable?: boolean;
+  /**
+   * Gets or sets the date and time the API resource was last accessed.
+   */
   lastAccessed?: string;
+  /**
+   * Gets or sets the date and time the API resource was last updated.
+   */
   updated?: string;
+  /**
+   * Gets or sets the identifier.
+   */
   id?: number | string;
+  /**
+   * Gets or sets the unique name of the API resource.
+   */
   name?: string;
+  /**
+   * Gets or sets the display name shown for the API resource.
+   */
   displayName?: null | string;
+  /**
+   * Gets or sets a value indicating whether the API resource is enabled.
+   */
   enabled?: boolean;
+  /**
+   * Gets or sets the date and time the API resource was created.
+   */
   created?: string;
 };
 
+/**
+ * Represents a custom property (key/value pair) associated with an API resource.
+ */
 export type ApiResourcePropertyDto = {
+  /**
+   * Gets or sets the identifier of the owning API resource.
+   */
   apiResourceId?: number | string;
+  /**
+   * Gets or sets the property key.
+   */
   key?: string;
+  /**
+   * Gets or sets the property value.
+   */
   value?: string;
   /**
    * Gets or sets the identifier.
@@ -35,8 +86,17 @@ export type ApiResourcePropertyDto = {
   id?: number | string;
 };
 
+/**
+ * Represents a scope associated with an API resource.
+ */
 export type ApiResourceScopeDto = {
+  /**
+   * Gets or sets the identifier of the owning API resource.
+   */
   apiResourceId?: number | string;
+  /**
+   * Gets or sets the scope name.
+   */
   scope?: string;
   /**
    * Gets or sets the identifier.
@@ -44,10 +104,25 @@ export type ApiResourceScopeDto = {
   id?: number | string;
 };
 
+/**
+ * Represents a secret associated with an API resource.
+ */
 export type ApiResourceSecretDto = {
+  /**
+   * Gets or sets the identifier of the owning API resource.
+   */
   apiResourceId?: number | string;
+  /**
+   * Gets or sets the secret type.
+   */
   type?: string;
+  /**
+   * Gets or sets the description of the secret.
+   */
   description?: null | string;
+  /**
+   * Gets or sets the expiration of the secret.
+   */
   expiration?: null | string;
   /**
    * Gets or sets the identifier.
@@ -55,21 +130,57 @@ export type ApiResourceSecretDto = {
   id?: number | string;
 };
 
+/**
+ * Summary representation of an API resource.
+ */
 export type ApiResourceSummaryDto = {
+  /**
+   * Gets or sets the identifier.
+   */
   id?: number | string;
+  /**
+   * Gets or sets the unique name of the API resource.
+   */
   name?: string;
+  /**
+   * Gets or sets the display name shown for the API resource.
+   */
   displayName?: null | string;
+  /**
+   * Gets or sets a value indicating whether the API resource is enabled.
+   */
   enabled?: boolean;
+  /**
+   * Gets or sets the date and time the API resource was created.
+   */
   created?: string;
 };
 
+/**
+ * Data used to assign a role to a user.
+ */
 export type AssignUserRoleDto = {
+  /**
+   * Gets or sets the name of the role to assign.
+   */
   roleName: string;
 };
 
+/**
+ * Represents a claim associated with a client.
+ */
 export type ClientClaimDto = {
+  /**
+   * Gets or sets the identifier of the client that owns the claim.
+   */
   clientId?: number | string;
+  /**
+   * Gets or sets the type of the claim.
+   */
   type?: string;
+  /**
+   * Gets or sets the value of the claim.
+   */
   value?: string;
   /**
    * Gets or sets the identifier.
@@ -77,8 +188,17 @@ export type ClientClaimDto = {
   id?: number | string;
 };
 
+/**
+ * Represents an allowed CORS origin for a client.
+ */
 export type ClientCorsOriginDto = {
+  /**
+   * Gets or sets the identifier of the client that owns the CORS origin.
+   */
   clientId?: number | string;
+  /**
+   * Gets or sets the allowed CORS origin.
+   */
   origin?: string;
   /**
    * Gets or sets the identifier.
@@ -90,41 +210,149 @@ export type ClientCorsOriginDto = {
  * Full client detail DTO.
  */
 export type ClientDto = {
+  /**
+   * Gets or sets the human-readable description of the client.
+   */
   description?: null | string;
+  /**
+   * Gets or sets the client home page URI.
+   */
   clientUri?: null | string;
+  /**
+   * Gets or sets the URI to the client logo image.
+   */
   logoUri?: null | string;
+  /**
+   * Gets or sets a value indicating whether a client secret is required to obtain tokens.
+   */
   requireClientSecret?: boolean;
+  /**
+   * Gets or sets a value indicating whether the user must give consent before tokens are issued.
+   */
   requireConsent?: boolean;
+  /**
+   * Gets or sets a value indicating whether Proof Key for Code Exchange (PKCE) is required for authorization code flow.
+   */
   requirePkce?: boolean;
+  /**
+   * Gets or sets a value indicating whether plain-text PKCE code challenges are allowed.
+   */
   allowPlainTextPkce?: boolean;
+  /**
+   * Gets or sets a value indicating whether the client can request refresh tokens for offline access.
+   */
   allowOfflineAccess?: boolean;
+  /**
+   * Gets or sets a value indicating whether access tokens may be transmitted via the browser.
+   */
   allowAccessTokensViaBrowser?: boolean;
+  /**
+   * Gets or sets a value indicating whether prior consent decisions can be remembered for this client.
+   */
   allowRememberConsent?: boolean;
+  /**
+   * Gets or sets a value indicating whether client claims are sent for every token request, not just client credentials flows.
+   */
   alwaysSendClientClaims?: boolean;
+  /**
+   * Gets or sets a value indicating whether user claims are always included in the identity token.
+   */
   alwaysIncludeUserClaimsInIdToken?: boolean;
+  /**
+   * Gets or sets a value indicating whether local login is enabled for this client.
+   */
   enableLocalLogin?: boolean;
+  /**
+   * Gets or sets a value indicating whether a unique JWT identifier (jti) is included in tokens.
+   */
   includeJwtId?: boolean;
+  /**
+   * Gets or sets a value indicating whether the client is read-only and cannot be edited.
+   */
   nonEditable?: boolean;
+  /**
+   * Gets or sets a value indicating whether access token claims are refreshed when a refresh token is used.
+   */
   updateAccessTokenClaimsOnRefresh?: boolean;
+  /**
+   * Gets or sets a value indicating whether a session identifier is sent on back-channel logout requests.
+   */
   backChannelLogoutSessionRequired?: boolean;
+  /**
+   * Gets or sets a value indicating whether a session identifier is sent on front-channel logout requests.
+   */
   frontChannelLogoutSessionRequired?: boolean;
+  /**
+   * Gets or sets the maximum lifetime, in seconds, of a refresh token regardless of usage.
+   */
   absoluteRefreshTokenLifetime?: number | string;
+  /**
+   * Gets or sets the access token lifetime in seconds.
+   */
   accessTokenLifetime?: number | string;
+  /**
+   * Gets or sets the access token type (0 = JWT, 1 = reference).
+   */
   accessTokenType?: number | string;
+  /**
+   * Gets or sets the authorization code lifetime in seconds.
+   */
   authorizationCodeLifetime?: number | string;
+  /**
+   * Gets or sets the device code lifetime in seconds.
+   */
   deviceCodeLifetime?: number | string;
+  /**
+   * Gets or sets the identity token lifetime in seconds.
+   */
   identityTokenLifetime?: number | string;
+  /**
+   * Gets or sets the refresh token expiration type (0 = sliding, 1 = absolute).
+   */
   refreshTokenExpiration?: number | string;
+  /**
+   * Gets or sets the refresh token usage type (0 = reuse, 1 = one-time only).
+   */
   refreshTokenUsage?: number | string;
+  /**
+   * Gets or sets the sliding refresh token lifetime in seconds.
+   */
   slidingRefreshTokenLifetime?: number | string;
+  /**
+   * Gets or sets the lifetime of a remembered consent, in seconds, or `null` for no expiration.
+   */
   consentLifetime?: null | number | string;
+  /**
+   * Gets or sets the maximum single sign-on session lifetime for the user, in seconds, or `null` for the global default.
+   */
   userSsoLifetime?: null | number | string;
+  /**
+   * Gets or sets the URI invoked to notify the client of a back-channel logout.
+   */
   backChannelLogoutUri?: null | string;
+  /**
+   * Gets or sets the prefix applied to client claim types.
+   */
   clientClaimsPrefix?: null | string;
+  /**
+   * Gets or sets the URI invoked to notify the client of a front-channel logout.
+   */
   frontChannelLogoutUri?: null | string;
+  /**
+   * Gets or sets the salt used to generate a pairwise subject identifier.
+   */
   pairWiseSubjectSalt?: null | string;
+  /**
+   * Gets or sets the user code type used for device flow.
+   */
   userCodeType?: null | string;
+  /**
+   * Gets or sets the timestamp of the last update.
+   */
   updated?: string;
+  /**
+   * Gets or sets the timestamp the client was last accessed.
+   */
   lastAccessed?: string;
   /**
    * Gets or sets the identifier.
@@ -152,8 +380,17 @@ export type ClientDto = {
   created?: string;
 };
 
+/**
+ * Represents a grant type allowed for a client.
+ */
 export type ClientGrantTypeDto = {
+  /**
+   * Gets or sets the identifier of the client that owns the grant type.
+   */
   clientId?: number | string;
+  /**
+   * Gets or sets the allowed grant type.
+   */
   grantType?: string;
   /**
    * Gets or sets the identifier.
@@ -161,8 +398,17 @@ export type ClientGrantTypeDto = {
   id?: number | string;
 };
 
+/**
+ * Represents an identity provider restriction for a client.
+ */
 export type ClientIdpRestrictionDto = {
+  /**
+   * Gets or sets the identifier of the client that owns the identity provider restriction.
+   */
   clientId?: number | string;
+  /**
+   * Gets or sets the identity provider the client is restricted to.
+   */
   provider?: string;
   /**
    * Gets or sets the identifier.
@@ -170,8 +416,17 @@ export type ClientIdpRestrictionDto = {
   id?: number | string;
 };
 
+/**
+ * Represents a post-logout redirect URI for a client.
+ */
 export type ClientPostLogoutRedirectUriDto = {
+  /**
+   * Gets or sets the identifier of the client that owns the post-logout redirect URI.
+   */
   clientId?: number | string;
+  /**
+   * Gets or sets the post-logout redirect URI.
+   */
   postLogoutRedirectUri?: string;
   /**
    * Gets or sets the identifier.
@@ -179,9 +434,21 @@ export type ClientPostLogoutRedirectUriDto = {
   id?: number | string;
 };
 
+/**
+ * Represents a custom property associated with a client.
+ */
 export type ClientPropertyDto = {
+  /**
+   * Gets or sets the identifier of the client that owns the property.
+   */
   clientId?: number | string;
+  /**
+   * Gets or sets the key of the property.
+   */
   key?: string;
+  /**
+   * Gets or sets the value of the property.
+   */
   value?: string;
   /**
    * Gets or sets the identifier.
@@ -189,8 +456,17 @@ export type ClientPropertyDto = {
   id?: number | string;
 };
 
+/**
+ * Represents a redirect URI for a client.
+ */
 export type ClientRedirectUriDto = {
+  /**
+   * Gets or sets the identifier of the client that owns the redirect URI.
+   */
   clientId?: number | string;
+  /**
+   * Gets or sets the redirect URI.
+   */
   redirectUri?: string;
   /**
    * Gets or sets the identifier.
@@ -198,8 +474,17 @@ export type ClientRedirectUriDto = {
   id?: number | string;
 };
 
+/**
+ * Represents a scope granted to a client.
+ */
 export type ClientScopeDto = {
+  /**
+   * Gets or sets the identifier of the client that owns the scope.
+   */
   clientId?: number | string;
+  /**
+   * Gets or sets the scope granted to the client.
+   */
   scope?: string;
   /**
    * Gets or sets the identifier.
@@ -207,10 +492,25 @@ export type ClientScopeDto = {
   id?: number | string;
 };
 
+/**
+ * Represents a secret associated with a client.
+ */
 export type ClientSecretDto = {
+  /**
+   * Gets or sets the identifier of the client that owns the secret.
+   */
   clientId?: number | string;
+  /**
+   * Gets or sets the type of the secret.
+   */
   type?: string;
+  /**
+   * Gets or sets the description of the secret.
+   */
   description?: null | string;
+  /**
+   * Gets or sets the expiration of the secret.
+   */
   expiration?: null | string;
   /**
    * Gets or sets the identifier.
@@ -248,18 +548,51 @@ export type ClientSummaryDto = {
   created?: string;
 };
 
+/**
+ * Data used to create a new user.
+ */
 export type CreateUserDto = {
+  /**
+   * Gets or sets the initial password.
+   */
   password: string;
+  /**
+   * Gets or sets the user name.
+   */
   userName: string;
+  /**
+   * Gets or sets the email address.
+   */
   email: string;
+  /**
+   * Gets or sets the display name.
+   */
   name?: null | string;
+  /**
+   * Gets or sets the phone number.
+   */
   phoneNumber?: null | string;
-  twoFactorEnabled?: boolean;
-  lockoutEnabled?: boolean;
+  /**
+   * Gets or sets a value indicating whether two-factor authentication is enabled.
+   */
+  twoFactorEnabled?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether the user can be locked out.
+   */
+  lockoutEnabled?: null | boolean;
 };
 
+/**
+ * Represents a user claim type associated with an identity resource.
+ */
 export type IdentityResourceClaimDto = {
+  /**
+   * Gets or sets the identifier of the owning identity resource.
+   */
   identityResourceId?: number | string;
+  /**
+   * Gets or sets the user claim type.
+   */
   type?: string;
   /**
    * Gets or sets the identifier.
@@ -267,23 +600,71 @@ export type IdentityResourceClaimDto = {
   id?: number | string;
 };
 
+/**
+ * Detailed view of an identity resource, extending the summary with additional configuration.
+ */
 export type IdentityResourceDto = {
+  /**
+   * Gets or sets the description shown on the consent screen.
+   */
   description?: null | string;
+  /**
+   * Gets or sets a value indicating whether the identity resource is emphasized on the consent screen.
+   */
   emphasize?: boolean;
+  /**
+   * Gets or sets a value indicating whether the identity resource is required and cannot be deselected.
+   */
   required?: boolean;
+  /**
+   * Gets or sets a value indicating whether the identity resource is shown in the discovery document.
+   */
   showInDiscoveryDocument?: boolean;
+  /**
+   * Gets or sets a value indicating whether the identity resource is non-editable.
+   */
   nonEditable?: boolean;
+  /**
+   * Gets or sets the date and time the identity resource was last updated.
+   */
   updated?: null | string;
+  /**
+   * Gets or sets the identifier.
+   */
   id?: number | string;
+  /**
+   * Gets or sets the unique name of the identity resource.
+   */
   name?: string;
+  /**
+   * Gets or sets the display name shown on the consent screen.
+   */
   displayName?: null | string;
+  /**
+   * Gets or sets a value indicating whether the identity resource is enabled.
+   */
   enabled?: boolean;
+  /**
+   * Gets or sets the date and time the identity resource was created.
+   */
   created?: string;
 };
 
+/**
+ * Represents a key/value property associated with an identity resource.
+ */
 export type IdentityResourcePropertyDto = {
+  /**
+   * Gets or sets the identifier of the owning identity resource.
+   */
   identityResourceId?: number | string;
+  /**
+   * Gets or sets the property key.
+   */
   key?: string;
+  /**
+   * Gets or sets the property value.
+   */
   value?: string;
   /**
    * Gets or sets the identifier.
@@ -291,11 +672,29 @@ export type IdentityResourcePropertyDto = {
   id?: number | string;
 };
 
+/**
+ * Summary view of an identity resource, exposing its core display fields.
+ */
 export type IdentityResourceSummaryDto = {
+  /**
+   * Gets or sets the identifier.
+   */
   id?: number | string;
+  /**
+   * Gets or sets the unique name of the identity resource.
+   */
   name?: string;
+  /**
+   * Gets or sets the display name shown on the consent screen.
+   */
   displayName?: null | string;
+  /**
+   * Gets or sets a value indicating whether the identity resource is enabled.
+   */
   enabled?: boolean;
+  /**
+   * Gets or sets the date and time the identity resource was created.
+   */
   created?: string;
 };
 
@@ -307,55 +706,151 @@ export type ProblemDetails = {
   instance?: null | string;
 };
 
+/**
+ * Representation of a claim associated with a role.
+ */
 export type RoleClaimDto = {
+  /**
+   * Gets or sets the claim type.
+   */
   type?: string;
+  /**
+   * Gets or sets the claim value.
+   */
   value?: string;
 };
 
+/**
+ * Full representation of an ASP.NET Core Identity role.
+ */
 export type RoleDto = {
+  /**
+   * Gets or sets the identifier.
+   */
   id?: string;
+  /**
+   * Gets or sets the role name.
+   */
   name?: null | string;
 };
 
+/**
+ * Summary representation of an ASP.NET Core Identity role.
+ */
 export type RoleSummaryDto = {
+  /**
+   * Gets or sets the identifier.
+   */
   id?: string;
+  /**
+   * Gets or sets the role name.
+   */
   name?: null | string;
 };
 
+/**
+ * Data used to create or update an API resource claim.
+ */
 export type SaveApiResourceClaimDto = {
+  /**
+   * Gets or sets the claim type.
+   */
   type: string;
 };
 
+/**
+ * Data used to create or update an API resource.
+ */
 export type SaveApiResourceDto = {
+  /**
+   * Gets or sets the unique name of the API resource.
+   */
   name: string;
+  /**
+   * Gets or sets the display name shown for the API resource.
+   */
   displayName?: null | string;
+  /**
+   * Gets or sets the description of the API resource.
+   */
   description?: null | string;
+  /**
+   * Gets or sets a value indicating whether the API resource is enabled.
+   */
   enabled?: boolean;
-  nonEditable?: boolean;
+  /**
+   * Gets or sets a value indicating whether the API resource is non-editable.
+   */
+  nonEditable?: null | boolean;
 };
 
+/**
+ * Data used to create or update an API resource property.
+ */
 export type SaveApiResourcePropertyDto = {
+  /**
+   * Gets or sets the property key.
+   */
   key: string;
+  /**
+   * Gets or sets the property value.
+   */
   value: string;
 };
 
+/**
+ * Data used to create or update an API resource scope.
+ */
 export type SaveApiResourceScopeDto = {
+  /**
+   * Gets or sets the scope name.
+   */
   scope: string;
 };
 
+/**
+ * Data used to create or update an API resource secret.
+ */
 export type SaveApiResourceSecretDto = {
+  /**
+   * Gets or sets the secret type.
+   */
   type: string;
+  /**
+   * Gets or sets the secret value.
+   */
   value: string;
+  /**
+   * Gets or sets the description of the secret.
+   */
   description?: null | string;
+  /**
+   * Gets or sets the expiration of the secret.
+   */
   expiration?: null | string;
 };
 
+/**
+ * Represents the data required to create or update a client claim.
+ */
 export type SaveClientClaimDto = {
+  /**
+   * Gets or sets the type of the claim.
+   */
   type: string;
+  /**
+   * Gets or sets the value of the claim.
+   */
   value: string;
 };
 
+/**
+ * Represents the data required to create or update a client CORS origin.
+ */
 export type SaveClientCorsOriginDto = {
+  /**
+   * Gets or sets the allowed CORS origin.
+   */
   origin: string;
 };
 
@@ -363,137 +858,431 @@ export type SaveClientCorsOriginDto = {
  * Payload for creating or updating a client.
  */
 export type SaveClientDto = {
+  /**
+   * Gets or sets the client identifier string.
+   */
   clientId: string;
+  /**
+   * Gets or sets the display name.
+   */
   clientName: string;
+  /**
+   * Gets or sets the human-readable description of the client.
+   */
   description?: null | string;
+  /**
+   * Gets or sets the client home page URI.
+   */
   clientUri?: null | string;
+  /**
+   * Gets or sets the URI to the client logo image.
+   */
   logoUri?: null | string;
+  /**
+   * Gets or sets a value indicating whether a client secret is required to obtain tokens.
+   */
   requireClientSecret?: boolean;
+  /**
+   * Gets or sets a value indicating whether the user must give consent before tokens are issued.
+   */
   requireConsent?: boolean;
+  /**
+   * Gets or sets a value indicating whether Proof Key for Code Exchange (PKCE) is required for authorization code flow.
+   */
   requirePkce?: boolean;
-  allowPlainTextPkce?: boolean;
-  allowOfflineAccess?: boolean;
-  allowAccessTokensViaBrowser?: boolean;
+  /**
+   * Gets or sets a value indicating whether plain-text PKCE code challenges are allowed.
+   */
+  allowPlainTextPkce?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether the client can request refresh tokens for offline access.
+   */
+  allowOfflineAccess?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether access tokens may be transmitted via the browser.
+   */
+  allowAccessTokensViaBrowser?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether prior consent decisions can be remembered for this client.
+   */
   allowRememberConsent?: boolean;
-  alwaysSendClientClaims?: boolean;
-  alwaysIncludeUserClaimsInIdToken?: boolean;
+  /**
+   * Gets or sets a value indicating whether client claims are sent for every token request, not just client credentials flows.
+   */
+  alwaysSendClientClaims?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether user claims are always included in the identity token.
+   */
+  alwaysIncludeUserClaimsInIdToken?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether local login is enabled for this client.
+   */
   enableLocalLogin?: boolean;
-  includeJwtId?: boolean;
-  nonEditable?: boolean;
-  updateAccessTokenClaimsOnRefresh?: boolean;
+  /**
+   * Gets or sets a value indicating whether a unique JWT identifier (jti) is included in tokens.
+   */
+  includeJwtId?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether the client is read-only and cannot be edited.
+   */
+  nonEditable?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether access token claims are refreshed when a refresh token is used.
+   */
+  updateAccessTokenClaimsOnRefresh?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether a session identifier is sent on back-channel logout requests.
+   */
   backChannelLogoutSessionRequired?: boolean;
+  /**
+   * Gets or sets a value indicating whether a session identifier is sent on front-channel logout requests.
+   */
   frontChannelLogoutSessionRequired?: boolean;
+  /**
+   * Gets or sets a value indicating whether this client is enabled.
+   */
   enabled?: boolean;
+  /**
+   * Gets or sets the maximum lifetime, in seconds, of a refresh token regardless of usage.
+   */
   absoluteRefreshTokenLifetime?: number | string;
+  /**
+   * Gets or sets the access token lifetime in seconds.
+   */
   accessTokenLifetime?: number | string;
-  accessTokenType?: number | string;
+  /**
+   * Gets or sets the access token type (0 = JWT, 1 = reference).
+   */
+  accessTokenType?: null | number | string;
+  /**
+   * Gets or sets the authorization code lifetime in seconds.
+   */
   authorizationCodeLifetime?: number | string;
+  /**
+   * Gets or sets the device code lifetime in seconds.
+   */
   deviceCodeLifetime?: number | string;
+  /**
+   * Gets or sets the identity token lifetime in seconds.
+   */
   identityTokenLifetime?: number | string;
-  refreshTokenExpiration?: number | string;
-  refreshTokenUsage?: number | string;
+  /**
+   * Gets or sets the refresh token expiration type (0 = sliding, 1 = absolute).
+   */
+  refreshTokenExpiration?: null | number | string;
+  /**
+   * Gets or sets the refresh token usage type (0 = reuse, 1 = one-time only).
+   */
+  refreshTokenUsage?: null | number | string;
+  /**
+   * Gets or sets the sliding refresh token lifetime in seconds.
+   */
   slidingRefreshTokenLifetime?: number | string;
+  /**
+   * Gets or sets the lifetime of a remembered consent, in seconds, or `null` for no expiration.
+   */
   consentLifetime?: null | number | string;
+  /**
+   * Gets or sets the maximum single sign-on session lifetime for the user, in seconds, or `null` for the global default.
+   */
   userSsoLifetime?: null | number | string;
+  /**
+   * Gets or sets the URI invoked to notify the client of a back-channel logout.
+   */
   backChannelLogoutUri?: null | string;
+  /**
+   * Gets or sets the prefix applied to client claim types.
+   */
   clientClaimsPrefix?: null | string;
+  /**
+   * Gets or sets the URI invoked to notify the client of a front-channel logout.
+   */
   frontChannelLogoutUri?: null | string;
+  /**
+   * Gets or sets the salt used to generate a pairwise subject identifier.
+   */
   pairWiseSubjectSalt?: null | string;
+  /**
+   * Gets or sets the protocol type.
+   */
   protocolType: string;
+  /**
+   * Gets or sets the user code type used for device flow.
+   */
   userCodeType?: null | string;
 };
 
+/**
+ * Represents the data required to create or update a client grant type.
+ */
 export type SaveClientGrantTypeDto = {
+  /**
+   * Gets or sets the allowed grant type.
+   */
   grantType: string;
 };
 
+/**
+ * Represents the data required to create or update a client identity provider restriction.
+ */
 export type SaveClientIdpRestrictionDto = {
+  /**
+   * Gets or sets the identity provider the client is restricted to.
+   */
   provider: string;
 };
 
+/**
+ * Represents the data required to create or update a client post-logout redirect URI.
+ */
 export type SaveClientPostLogoutRedirectUriDto = {
+  /**
+   * Gets or sets the post-logout redirect URI.
+   */
   postLogoutRedirectUri: string;
 };
 
+/**
+ * Represents the data required to create or update a client property.
+ */
 export type SaveClientPropertyDto = {
+  /**
+   * Gets or sets the key of the property.
+   */
   key: string;
+  /**
+   * Gets or sets the value of the property.
+   */
   value: string;
 };
 
+/**
+ * Represents the data required to create or update a client redirect URI.
+ */
 export type SaveClientRedirectUriDto = {
+  /**
+   * Gets or sets the redirect URI.
+   */
   redirectUri: string;
 };
 
+/**
+ * Represents the data required to create or update a client scope.
+ */
 export type SaveClientScopeDto = {
+  /**
+   * Gets or sets the scope granted to the client.
+   */
   scope: string;
 };
 
+/**
+ * Represents the data required to create or update a client secret.
+ */
 export type SaveClientSecretDto = {
+  /**
+   * Gets or sets the type of the secret.
+   */
   type: string;
+  /**
+   * Gets or sets the value of the secret.
+   */
   value: string;
+  /**
+   * Gets or sets the description of the secret.
+   */
   description?: null | string;
+  /**
+   * Gets or sets the expiration of the secret.
+   */
   expiration?: null | string;
 };
 
+/**
+ * Payload used to create or update an identity resource user claim.
+ */
 export type SaveIdentityResourceClaimDto = {
+  /**
+   * Gets or sets the user claim type.
+   */
   type: string;
 };
 
+/**
+ * Payload used to create or update an identity resource.
+ */
 export type SaveIdentityResourceDto = {
+  /**
+   * Gets or sets the unique name of the identity resource.
+   */
   name: string;
+  /**
+   * Gets or sets the display name shown on the consent screen.
+   */
   displayName?: null | string;
+  /**
+   * Gets or sets the description shown on the consent screen.
+   */
   description?: null | string;
+  /**
+   * Gets or sets a value indicating whether the identity resource is enabled.
+   */
   enabled?: boolean;
-  emphasize?: boolean;
-  required?: boolean;
+  /**
+   * Gets or sets a value indicating whether the identity resource is emphasized on the consent screen.
+   */
+  emphasize?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether the identity resource is required and cannot be deselected.
+   */
+  required?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether the identity resource is shown in the discovery document.
+   */
   showInDiscoveryDocument?: boolean;
-  nonEditable?: boolean;
+  /**
+   * Gets or sets a value indicating whether the identity resource is non-editable.
+   */
+  nonEditable?: null | boolean;
 };
 
+/**
+ * Payload used to create or update an identity resource property.
+ */
 export type SaveIdentityResourcePropertyDto = {
+  /**
+   * Gets or sets the property key.
+   */
   key: string;
+  /**
+   * Gets or sets the property value.
+   */
   value: string;
 };
 
+/**
+ * Data used to create or update a claim on a role.
+ */
 export type SaveRoleClaimDto = {
+  /**
+   * Gets or sets the claim type.
+   */
   type: string;
+  /**
+   * Gets or sets the claim value.
+   */
   value?: string;
 };
 
+/**
+ * Data used to create or update an ASP.NET Core Identity role.
+ */
 export type SaveRoleDto = {
+  /**
+   * Gets or sets the role name.
+   */
   name: string;
 };
 
+/**
+ * Data used to create or update a user claim on an API scope.
+ */
 export type SaveScopeClaimDto = {
+  /**
+   * Gets or sets the claim type.
+   */
   type: string;
 };
 
+/**
+ * Data used to create or update an API scope.
+ */
 export type SaveScopeDto = {
+  /**
+   * Gets or sets the unique name of the scope.
+   */
   name: string;
+  /**
+   * Gets or sets the display name shown to users.
+   */
   displayName?: null | string;
+  /**
+   * Gets or sets the description of the scope.
+   */
   description?: null | string;
+  /**
+   * Gets or sets a value indicating whether the scope is enabled.
+   */
   enabled?: boolean;
-  emphasize?: boolean;
-  required?: boolean;
+  /**
+   * Gets or sets a value indicating whether the scope should be emphasized on the consent screen.
+   */
+  emphasize?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether the scope is required and cannot be deselected on the consent screen.
+   */
+  required?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether the scope is shown in the discovery document.
+   */
   showInDiscoveryDocument?: boolean;
 };
 
+/**
+ * Data used to create or update a custom property on an API scope.
+ */
 export type SaveScopePropertyDto = {
+  /**
+   * Gets or sets the property key.
+   */
   key: string;
+  /**
+   * Gets or sets the property value.
+   */
   value: string;
 };
 
+/**
+ * Data used to update an existing user.
+ */
 export type SaveUserDto = {
+  /**
+   * Gets or sets the user name.
+   */
   userName: string;
+  /**
+   * Gets or sets the email address.
+   */
   email: string;
+  /**
+   * Gets or sets the display name.
+   */
   name?: null | string;
+  /**
+   * Gets or sets the phone number.
+   */
   phoneNumber?: null | string;
-  twoFactorEnabled?: boolean;
-  lockoutEnabled?: boolean;
+  /**
+   * Gets or sets a value indicating whether two-factor authentication is enabled.
+   */
+  twoFactorEnabled?: null | boolean;
+  /**
+   * Gets or sets a value indicating whether the user can be locked out.
+   */
+  lockoutEnabled?: null | boolean;
 };
 
+/**
+ * Representation of a user claim associated with an API scope.
+ */
 export type ScopeClaimDto = {
+  /**
+   * Gets or sets the identifier of the scope that owns this claim.
+   */
   scopeId?: number | string;
+  /**
+   * Gets or sets the claim type.
+   */
   type?: string;
   /**
    * Gets or sets the identifier.
@@ -501,20 +1290,59 @@ export type ScopeClaimDto = {
   id?: number | string;
 };
 
+/**
+ * Full representation of an API scope, including its detailed settings.
+ */
 export type ScopeDto = {
+  /**
+   * Gets or sets the description of the scope.
+   */
   description?: null | string;
+  /**
+   * Gets or sets a value indicating whether the scope should be emphasized on the consent screen.
+   */
   emphasize?: boolean;
+  /**
+   * Gets or sets a value indicating whether the scope is required and cannot be deselected on the consent screen.
+   */
   required?: boolean;
+  /**
+   * Gets or sets a value indicating whether the scope is shown in the discovery document.
+   */
   showInDiscoveryDocument?: boolean;
+  /**
+   * Gets or sets the identifier.
+   */
   id?: number | string;
+  /**
+   * Gets or sets the unique name of the scope.
+   */
   name?: string;
+  /**
+   * Gets or sets the display name shown to users.
+   */
   displayName?: null | string;
+  /**
+   * Gets or sets a value indicating whether the scope is enabled.
+   */
   enabled?: boolean;
 };
 
+/**
+ * Representation of a custom property (key/value pair) associated with an API scope.
+ */
 export type ScopePropertyDto = {
+  /**
+   * Gets or sets the identifier of the scope that owns this property.
+   */
   scopeId?: number | string;
+  /**
+   * Gets or sets the property key.
+   */
   key?: string;
+  /**
+   * Gets or sets the property value.
+   */
   value?: string;
   /**
    * Gets or sets the identifier.
@@ -522,43 +1350,133 @@ export type ScopePropertyDto = {
   id?: number | string;
 };
 
+/**
+ * Summary representation of an API scope.
+ */
 export type ScopeSummaryDto = {
+  /**
+   * Gets or sets the identifier.
+   */
   id?: number | string;
+  /**
+   * Gets or sets the unique name of the scope.
+   */
   name?: string;
+  /**
+   * Gets or sets the display name shown to users.
+   */
   displayName?: null | string;
+  /**
+   * Gets or sets a value indicating whether the scope is enabled.
+   */
   enabled?: boolean;
 };
 
+/**
+ * Represents a claim associated with a user.
+ */
 export type UserClaimDto = {
+  /**
+   * Gets or sets the claim type.
+   */
   type?: string;
+  /**
+   * Gets or sets the claim value.
+   */
   value?: string;
 };
 
+/**
+ * Detailed representation of an ASP.NET Core Identity user.
+ */
 export type UserDto = {
+  /**
+   * Gets or sets the phone number.
+   */
   phoneNumber?: null | string;
+  /**
+   * Gets or sets a value indicating whether the phone number has been confirmed.
+   */
   phoneNumberConfirmed?: boolean;
+  /**
+   * Gets or sets the unique identifier (GUID string) of the user.
+   */
   id?: string;
+  /**
+   * Gets or sets the user name.
+   */
   userName?: null | string;
+  /**
+   * Gets or sets the email address.
+   */
   email?: null | string;
+  /**
+   * Gets or sets a value indicating whether the email address has been confirmed.
+   */
   emailConfirmed?: boolean;
+  /**
+   * Gets or sets the display name.
+   */
   name?: null | string;
+  /**
+   * Gets or sets a value indicating whether two-factor authentication is enabled.
+   */
   twoFactorEnabled?: boolean;
+  /**
+   * Gets or sets a value indicating whether the user can be locked out.
+   */
   lockoutEnabled?: boolean;
+  /**
+   * Gets or sets the number of failed access attempts.
+   */
   accessFailedCount?: number | string;
 };
 
+/**
+ * Represents a role assigned to a user.
+ */
 export type UserRoleDto = {
+  /**
+   * Gets or sets the role name.
+   */
   roleName?: string;
 };
 
+/**
+ * Summary representation of an ASP.NET Core Identity user.
+ */
 export type UserSummaryDto = {
+  /**
+   * Gets or sets the unique identifier (GUID string) of the user.
+   */
   id?: string;
+  /**
+   * Gets or sets the user name.
+   */
   userName?: null | string;
+  /**
+   * Gets or sets the email address.
+   */
   email?: null | string;
+  /**
+   * Gets or sets a value indicating whether the email address has been confirmed.
+   */
   emailConfirmed?: boolean;
+  /**
+   * Gets or sets the display name.
+   */
   name?: null | string;
+  /**
+   * Gets or sets a value indicating whether two-factor authentication is enabled.
+   */
   twoFactorEnabled?: boolean;
+  /**
+   * Gets or sets a value indicating whether the user can be locked out.
+   */
   lockoutEnabled?: boolean;
+  /**
+   * Gets or sets the number of failed access attempts.
+   */
   accessFailedCount?: number | string;
 };
 
@@ -571,7 +1489,7 @@ export type GetApiV1ApiResourcesData = {
 
 export type GetApiV1ApiResourcesResponses = {
   /**
-   * OK
+   * A int StatusCodes.Status200OK response containing the collection of API resource summaries.
    */
   200: Array<ApiResourceSummaryDto>;
 };
@@ -580,6 +1498,9 @@ export type GetApiV1ApiResourcesResponse =
   GetApiV1ApiResourcesResponses[keyof GetApiV1ApiResourcesResponses];
 
 export type PostApiV1ApiResourcesData = {
+  /**
+   * The API resource details to create.
+   */
   body: SaveApiResourceDto;
   path?: never;
   query?: never;
@@ -609,6 +1530,9 @@ export type PostApiV1ApiResourcesResponse =
 export type DeleteApiV1ApiResourcesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the API resource to delete.
+     */
     id: number;
   };
   query?: never;
@@ -638,6 +1562,9 @@ export type DeleteApiV1ApiResourcesByIdResponse =
 export type GetApiV1ApiResourcesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the API resource.
+     */
     id: number;
   };
   query?: never;
@@ -665,8 +1592,14 @@ export type GetApiV1ApiResourcesByIdResponse =
   GetApiV1ApiResourcesByIdResponses[keyof GetApiV1ApiResourcesByIdResponses];
 
 export type PutApiV1ApiResourcesByIdData = {
+  /**
+   * The updated API resource details.
+   */
   body: SaveApiResourceDto;
   path: {
+    /**
+     * The identifier of the API resource to update.
+     */
     id: number;
   };
   query?: never;
@@ -696,6 +1629,9 @@ export type PutApiV1ApiResourcesByIdResponse =
 export type GetApiV1ApiresourcesByApiResourceIdClaimsData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
   };
   query?: never;
@@ -723,8 +1659,14 @@ export type GetApiV1ApiresourcesByApiResourceIdClaimsResponse =
   GetApiV1ApiresourcesByApiResourceIdClaimsResponses[keyof GetApiV1ApiresourcesByApiResourceIdClaimsResponses];
 
 export type PostApiV1ApiresourcesByApiResourceIdClaimsData = {
+  /**
+   * The claim details to create.
+   */
   body: SaveApiResourceClaimDto;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
   };
   query?: never;
@@ -754,7 +1696,13 @@ export type PostApiV1ApiresourcesByApiResourceIdClaimsResponse =
 export type DeleteApiV1ApiresourcesByApiResourceIdClaimsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
+    /**
+     * The identifier of the API resource claim to delete.
+     */
     id: number;
   };
   query?: never;
@@ -784,7 +1732,13 @@ export type DeleteApiV1ApiresourcesByApiResourceIdClaimsByIdResponse =
 export type GetApiV1ApiresourcesByApiResourceIdClaimsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
+    /**
+     * The identifier of the API resource claim.
+     */
     id: number;
   };
   query?: never;
@@ -814,6 +1768,9 @@ export type GetApiV1ApiresourcesByApiResourceIdClaimsByIdResponse =
 export type GetApiV1ApiresourcesByApiResourceIdPropertiesData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
   };
   query?: never;
@@ -841,8 +1798,14 @@ export type GetApiV1ApiresourcesByApiResourceIdPropertiesResponse =
   GetApiV1ApiresourcesByApiResourceIdPropertiesResponses[keyof GetApiV1ApiresourcesByApiResourceIdPropertiesResponses];
 
 export type PostApiV1ApiresourcesByApiResourceIdPropertiesData = {
+  /**
+   * The property details to create.
+   */
   body: SaveApiResourcePropertyDto;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
   };
   query?: never;
@@ -872,7 +1835,13 @@ export type PostApiV1ApiresourcesByApiResourceIdPropertiesResponse =
 export type DeleteApiV1ApiresourcesByApiResourceIdPropertiesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
+    /**
+     * The identifier of the API resource property to delete.
+     */
     id: number;
   };
   query?: never;
@@ -902,7 +1871,13 @@ export type DeleteApiV1ApiresourcesByApiResourceIdPropertiesByIdResponse =
 export type GetApiV1ApiresourcesByApiResourceIdPropertiesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
+    /**
+     * The identifier of the API resource property.
+     */
     id: number;
   };
   query?: never;
@@ -932,6 +1907,9 @@ export type GetApiV1ApiresourcesByApiResourceIdPropertiesByIdResponse =
 export type GetApiV1ApiresourcesByApiResourceIdScopesData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
   };
   query?: never;
@@ -959,8 +1937,14 @@ export type GetApiV1ApiresourcesByApiResourceIdScopesResponse =
   GetApiV1ApiresourcesByApiResourceIdScopesResponses[keyof GetApiV1ApiresourcesByApiResourceIdScopesResponses];
 
 export type PostApiV1ApiresourcesByApiResourceIdScopesData = {
+  /**
+   * The scope details to create.
+   */
   body: SaveApiResourceScopeDto;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
   };
   query?: never;
@@ -990,7 +1974,13 @@ export type PostApiV1ApiresourcesByApiResourceIdScopesResponse =
 export type DeleteApiV1ApiresourcesByApiResourceIdScopesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
+    /**
+     * The identifier of the API resource scope to delete.
+     */
     id: number;
   };
   query?: never;
@@ -1020,7 +2010,13 @@ export type DeleteApiV1ApiresourcesByApiResourceIdScopesByIdResponse =
 export type GetApiV1ApiresourcesByApiResourceIdScopesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
+    /**
+     * The identifier of the API resource scope.
+     */
     id: number;
   };
   query?: never;
@@ -1050,6 +2046,9 @@ export type GetApiV1ApiresourcesByApiResourceIdScopesByIdResponse =
 export type GetApiV1ApiresourcesByApiResourceIdSecretsData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
   };
   query?: never;
@@ -1077,8 +2076,14 @@ export type GetApiV1ApiresourcesByApiResourceIdSecretsResponse =
   GetApiV1ApiresourcesByApiResourceIdSecretsResponses[keyof GetApiV1ApiresourcesByApiResourceIdSecretsResponses];
 
 export type PostApiV1ApiresourcesByApiResourceIdSecretsData = {
+  /**
+   * The secret details to create.
+   */
   body: SaveApiResourceSecretDto;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
   };
   query?: never;
@@ -1108,7 +2113,13 @@ export type PostApiV1ApiresourcesByApiResourceIdSecretsResponse =
 export type DeleteApiV1ApiresourcesByApiResourceIdSecretsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
+    /**
+     * The identifier of the API resource secret to delete.
+     */
     id: number;
   };
   query?: never;
@@ -1138,7 +2149,13 @@ export type DeleteApiV1ApiresourcesByApiResourceIdSecretsByIdResponse =
 export type GetApiV1ApiresourcesByApiResourceIdSecretsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent API resource.
+     */
     apiResourceId: number;
+    /**
+     * The identifier of the API resource secret.
+     */
     id: number;
   };
   query?: never;
@@ -1303,6 +2320,9 @@ export type PutApiV1ClientsByIdResponse =
 export type GetApiV1ClientsByClientIdClaimsData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1330,8 +2350,14 @@ export type GetApiV1ClientsByClientIdClaimsResponse =
   GetApiV1ClientsByClientIdClaimsResponses[keyof GetApiV1ClientsByClientIdClaimsResponses];
 
 export type PostApiV1ClientsByClientIdClaimsData = {
+  /**
+   * The claim to create.
+   */
   body: SaveClientClaimDto;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1361,7 +2387,13 @@ export type PostApiV1ClientsByClientIdClaimsResponse =
 export type DeleteApiV1ClientsByClientIdClaimsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the claim to delete.
+     */
     id: number;
   };
   query?: never;
@@ -1391,7 +2423,13 @@ export type DeleteApiV1ClientsByClientIdClaimsByIdResponse =
 export type GetApiV1ClientsByClientIdClaimsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the claim.
+     */
     id: number;
   };
   query?: never;
@@ -1421,6 +2459,9 @@ export type GetApiV1ClientsByClientIdClaimsByIdResponse =
 export type GetApiV1ClientsByClientIdCorsoriginsData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1448,8 +2489,14 @@ export type GetApiV1ClientsByClientIdCorsoriginsResponse =
   GetApiV1ClientsByClientIdCorsoriginsResponses[keyof GetApiV1ClientsByClientIdCorsoriginsResponses];
 
 export type PostApiV1ClientsByClientIdCorsoriginsData = {
+  /**
+   * The CORS origin to create.
+   */
   body: SaveClientCorsOriginDto;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1479,7 +2526,13 @@ export type PostApiV1ClientsByClientIdCorsoriginsResponse =
 export type DeleteApiV1ClientsByClientIdCorsoriginsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the CORS origin to delete.
+     */
     id: number;
   };
   query?: never;
@@ -1509,7 +2562,13 @@ export type DeleteApiV1ClientsByClientIdCorsoriginsByIdResponse =
 export type GetApiV1ClientsByClientIdCorsoriginsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the CORS origin.
+     */
     id: number;
   };
   query?: never;
@@ -1539,6 +2598,9 @@ export type GetApiV1ClientsByClientIdCorsoriginsByIdResponse =
 export type GetApiV1ClientsByClientIdGranttypesData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1566,8 +2628,14 @@ export type GetApiV1ClientsByClientIdGranttypesResponse =
   GetApiV1ClientsByClientIdGranttypesResponses[keyof GetApiV1ClientsByClientIdGranttypesResponses];
 
 export type PostApiV1ClientsByClientIdGranttypesData = {
+  /**
+   * The grant type to create.
+   */
   body: SaveClientGrantTypeDto;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1597,7 +2665,13 @@ export type PostApiV1ClientsByClientIdGranttypesResponse =
 export type DeleteApiV1ClientsByClientIdGranttypesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the grant type to delete.
+     */
     id: number;
   };
   query?: never;
@@ -1627,7 +2701,13 @@ export type DeleteApiV1ClientsByClientIdGranttypesByIdResponse =
 export type GetApiV1ClientsByClientIdGranttypesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the grant type.
+     */
     id: number;
   };
   query?: never;
@@ -1657,6 +2737,9 @@ export type GetApiV1ClientsByClientIdGranttypesByIdResponse =
 export type GetApiV1ClientsByClientIdIdprestrictionsData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1684,8 +2767,14 @@ export type GetApiV1ClientsByClientIdIdprestrictionsResponse =
   GetApiV1ClientsByClientIdIdprestrictionsResponses[keyof GetApiV1ClientsByClientIdIdprestrictionsResponses];
 
 export type PostApiV1ClientsByClientIdIdprestrictionsData = {
+  /**
+   * The identity provider restriction to create.
+   */
   body: SaveClientIdpRestrictionDto;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1715,7 +2804,13 @@ export type PostApiV1ClientsByClientIdIdprestrictionsResponse =
 export type DeleteApiV1ClientsByClientIdIdprestrictionsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the identity provider restriction to delete.
+     */
     id: number;
   };
   query?: never;
@@ -1745,7 +2840,13 @@ export type DeleteApiV1ClientsByClientIdIdprestrictionsByIdResponse =
 export type GetApiV1ClientsByClientIdIdprestrictionsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the identity provider restriction.
+     */
     id: number;
   };
   query?: never;
@@ -1775,6 +2876,9 @@ export type GetApiV1ClientsByClientIdIdprestrictionsByIdResponse =
 export type GetApiV1ClientsByClientIdPostlogoutredirecturisData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1802,8 +2906,14 @@ export type GetApiV1ClientsByClientIdPostlogoutredirecturisResponse =
   GetApiV1ClientsByClientIdPostlogoutredirecturisResponses[keyof GetApiV1ClientsByClientIdPostlogoutredirecturisResponses];
 
 export type PostApiV1ClientsByClientIdPostlogoutredirecturisData = {
+  /**
+   * The post-logout redirect URI to create.
+   */
   body: SaveClientPostLogoutRedirectUriDto;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1833,7 +2943,13 @@ export type PostApiV1ClientsByClientIdPostlogoutredirecturisResponse =
 export type DeleteApiV1ClientsByClientIdPostlogoutredirecturisByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the post-logout redirect URI to delete.
+     */
     id: number;
   };
   query?: never;
@@ -1863,7 +2979,13 @@ export type DeleteApiV1ClientsByClientIdPostlogoutredirecturisByIdResponse =
 export type GetApiV1ClientsByClientIdPostlogoutredirecturisByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the post-logout redirect URI.
+     */
     id: number;
   };
   query?: never;
@@ -1893,6 +3015,9 @@ export type GetApiV1ClientsByClientIdPostlogoutredirecturisByIdResponse =
 export type GetApiV1ClientsByClientIdPropertiesData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1920,8 +3045,14 @@ export type GetApiV1ClientsByClientIdPropertiesResponse =
   GetApiV1ClientsByClientIdPropertiesResponses[keyof GetApiV1ClientsByClientIdPropertiesResponses];
 
 export type PostApiV1ClientsByClientIdPropertiesData = {
+  /**
+   * The property to create.
+   */
   body: SaveClientPropertyDto;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -1951,7 +3082,13 @@ export type PostApiV1ClientsByClientIdPropertiesResponse =
 export type DeleteApiV1ClientsByClientIdPropertiesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the property to delete.
+     */
     id: number;
   };
   query?: never;
@@ -1981,7 +3118,13 @@ export type DeleteApiV1ClientsByClientIdPropertiesByIdResponse =
 export type GetApiV1ClientsByClientIdPropertiesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the property.
+     */
     id: number;
   };
   query?: never;
@@ -2011,6 +3154,9 @@ export type GetApiV1ClientsByClientIdPropertiesByIdResponse =
 export type GetApiV1ClientsByClientIdRedirecturisData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -2038,8 +3184,14 @@ export type GetApiV1ClientsByClientIdRedirecturisResponse =
   GetApiV1ClientsByClientIdRedirecturisResponses[keyof GetApiV1ClientsByClientIdRedirecturisResponses];
 
 export type PostApiV1ClientsByClientIdRedirecturisData = {
+  /**
+   * The redirect URI to create.
+   */
   body: SaveClientRedirectUriDto;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -2069,7 +3221,13 @@ export type PostApiV1ClientsByClientIdRedirecturisResponse =
 export type DeleteApiV1ClientsByClientIdRedirecturisByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the redirect URI to delete.
+     */
     id: number;
   };
   query?: never;
@@ -2099,7 +3257,13 @@ export type DeleteApiV1ClientsByClientIdRedirecturisByIdResponse =
 export type GetApiV1ClientsByClientIdRedirecturisByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the redirect URI.
+     */
     id: number;
   };
   query?: never;
@@ -2129,6 +3293,9 @@ export type GetApiV1ClientsByClientIdRedirecturisByIdResponse =
 export type GetApiV1ClientsByClientIdScopesData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -2156,8 +3323,14 @@ export type GetApiV1ClientsByClientIdScopesResponse =
   GetApiV1ClientsByClientIdScopesResponses[keyof GetApiV1ClientsByClientIdScopesResponses];
 
 export type PostApiV1ClientsByClientIdScopesData = {
+  /**
+   * The scope to create.
+   */
   body: SaveClientScopeDto;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -2187,7 +3360,13 @@ export type PostApiV1ClientsByClientIdScopesResponse =
 export type DeleteApiV1ClientsByClientIdScopesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the scope to delete.
+     */
     id: number;
   };
   query?: never;
@@ -2217,7 +3396,13 @@ export type DeleteApiV1ClientsByClientIdScopesByIdResponse =
 export type GetApiV1ClientsByClientIdScopesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the scope.
+     */
     id: number;
   };
   query?: never;
@@ -2247,6 +3432,9 @@ export type GetApiV1ClientsByClientIdScopesByIdResponse =
 export type GetApiV1ClientsByClientIdSecretsData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -2274,8 +3462,14 @@ export type GetApiV1ClientsByClientIdSecretsResponse =
   GetApiV1ClientsByClientIdSecretsResponses[keyof GetApiV1ClientsByClientIdSecretsResponses];
 
 export type PostApiV1ClientsByClientIdSecretsData = {
+  /**
+   * The secret to create.
+   */
   body: SaveClientSecretDto;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
   };
   query?: never;
@@ -2305,7 +3499,13 @@ export type PostApiV1ClientsByClientIdSecretsResponse =
 export type DeleteApiV1ClientsByClientIdSecretsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the secret to delete.
+     */
     id: number;
   };
   query?: never;
@@ -2335,7 +3535,13 @@ export type DeleteApiV1ClientsByClientIdSecretsByIdResponse =
 export type GetApiV1ClientsByClientIdSecretsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the client.
+     */
     clientId: number;
+    /**
+     * The identifier of the secret.
+     */
     id: number;
   };
   query?: never;
@@ -2371,7 +3577,7 @@ export type GetApiV1IdentityResourcesData = {
 
 export type GetApiV1IdentityResourcesResponses = {
   /**
-   * OK
+   * A int StatusCodes.Status200OK response containing the collection of identity resource summaries.
    */
   200: Array<IdentityResourceSummaryDto>;
 };
@@ -2380,6 +3586,9 @@ export type GetApiV1IdentityResourcesResponse =
   GetApiV1IdentityResourcesResponses[keyof GetApiV1IdentityResourcesResponses];
 
 export type PostApiV1IdentityResourcesData = {
+  /**
+   * The identity resource details to create.
+   */
   body: SaveIdentityResourceDto;
   path?: never;
   query?: never;
@@ -2409,6 +3618,9 @@ export type PostApiV1IdentityResourcesResponse =
 export type DeleteApiV1IdentityResourcesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the identity resource to delete.
+     */
     id: number;
   };
   query?: never;
@@ -2438,6 +3650,9 @@ export type DeleteApiV1IdentityResourcesByIdResponse =
 export type GetApiV1IdentityResourcesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the identity resource.
+     */
     id: number;
   };
   query?: never;
@@ -2465,8 +3680,14 @@ export type GetApiV1IdentityResourcesByIdResponse =
   GetApiV1IdentityResourcesByIdResponses[keyof GetApiV1IdentityResourcesByIdResponses];
 
 export type PutApiV1IdentityResourcesByIdData = {
+  /**
+   * The updated identity resource details.
+   */
   body: SaveIdentityResourceDto;
   path: {
+    /**
+     * The identifier of the identity resource to update.
+     */
     id: number;
   };
   query?: never;
@@ -2496,6 +3717,9 @@ export type PutApiV1IdentityResourcesByIdResponse =
 export type GetApiV1IdentityresourcesByIdentityResourceIdClaimsData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent identity resource.
+     */
     identityResourceId: number;
   };
   query?: never;
@@ -2523,8 +3747,14 @@ export type GetApiV1IdentityresourcesByIdentityResourceIdClaimsResponse =
   GetApiV1IdentityresourcesByIdentityResourceIdClaimsResponses[keyof GetApiV1IdentityresourcesByIdentityResourceIdClaimsResponses];
 
 export type PostApiV1IdentityresourcesByIdentityResourceIdClaimsData = {
+  /**
+   * The claim details to create.
+   */
   body: SaveIdentityResourceClaimDto;
   path: {
+    /**
+     * The identifier of the parent identity resource.
+     */
     identityResourceId: number;
   };
   query?: never;
@@ -2554,7 +3784,13 @@ export type PostApiV1IdentityresourcesByIdentityResourceIdClaimsResponse =
 export type DeleteApiV1IdentityresourcesByIdentityResourceIdClaimsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent identity resource.
+     */
     identityResourceId: number;
+    /**
+     * The identifier of the identity resource claim to delete.
+     */
     id: number;
   };
   query?: never;
@@ -2585,7 +3821,13 @@ export type DeleteApiV1IdentityresourcesByIdentityResourceIdClaimsByIdResponse =
 export type GetApiV1IdentityresourcesByIdentityResourceIdClaimsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent identity resource.
+     */
     identityResourceId: number;
+    /**
+     * The identifier of the identity resource claim.
+     */
     id: number;
   };
   query?: never;
@@ -2615,6 +3857,9 @@ export type GetApiV1IdentityresourcesByIdentityResourceIdClaimsByIdResponse =
 export type GetApiV1IdentityresourcesByIdentityResourceIdPropertiesData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent identity resource.
+     */
     identityResourceId: number;
   };
   query?: never;
@@ -2642,8 +3887,14 @@ export type GetApiV1IdentityresourcesByIdentityResourceIdPropertiesResponse =
   GetApiV1IdentityresourcesByIdentityResourceIdPropertiesResponses[keyof GetApiV1IdentityresourcesByIdentityResourceIdPropertiesResponses];
 
 export type PostApiV1IdentityresourcesByIdentityResourceIdPropertiesData = {
+  /**
+   * The property details to create.
+   */
   body: SaveIdentityResourcePropertyDto;
   path: {
+    /**
+     * The identifier of the parent identity resource.
+     */
     identityResourceId: number;
   };
   query?: never;
@@ -2675,7 +3926,13 @@ export type DeleteApiV1IdentityresourcesByIdentityResourceIdPropertiesByIdData =
   {
     body?: never;
     path: {
+      /**
+       * The identifier of the parent identity resource.
+       */
       identityResourceId: number;
+      /**
+       * The identifier of the identity resource property to delete.
+       */
       id: number;
     };
     query?: never;
@@ -2707,7 +3964,13 @@ export type DeleteApiV1IdentityresourcesByIdentityResourceIdPropertiesByIdRespon
 export type GetApiV1IdentityresourcesByIdentityResourceIdPropertiesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent identity resource.
+     */
     identityResourceId: number;
+    /**
+     * The identifier of the identity resource property.
+     */
     id: number;
   };
   query?: never;
@@ -2745,7 +4008,7 @@ export type GetApiV1RolesData = {
 
 export type GetApiV1RolesResponses = {
   /**
-   * OK
+   * A int StatusCodes.Status200OK response containing the collection of role summaries.
    */
   200: Array<RoleSummaryDto>;
 };
@@ -2754,6 +4017,9 @@ export type GetApiV1RolesResponse =
   GetApiV1RolesResponses[keyof GetApiV1RolesResponses];
 
 export type PostApiV1RolesData = {
+  /**
+   * The role details to create.
+   */
   body: SaveRoleDto;
   path?: never;
   query?: never;
@@ -2783,6 +4049,9 @@ export type PostApiV1RolesResponse =
 export type DeleteApiV1RolesByIdData = {
   body?: never;
   path: {
+    /**
+     * The unique identifier of the role to delete.
+     */
     id: string;
   };
   query?: never;
@@ -2812,6 +4081,9 @@ export type DeleteApiV1RolesByIdResponse =
 export type GetApiV1RolesByIdData = {
   body?: never;
   path: {
+    /**
+     * The unique identifier of the role.
+     */
     id: string;
   };
   query?: never;
@@ -2839,8 +4111,14 @@ export type GetApiV1RolesByIdResponse =
   GetApiV1RolesByIdResponses[keyof GetApiV1RolesByIdResponses];
 
 export type PutApiV1RolesByIdData = {
+  /**
+   * The updated role details.
+   */
   body: SaveRoleDto;
   path: {
+    /**
+     * The unique identifier of the role to update.
+     */
     id: string;
   };
   query?: never;
@@ -2874,6 +4152,9 @@ export type PutApiV1RolesByIdResponse =
 export type GetApiV1RolesByIdClaimsData = {
   body?: never;
   path: {
+    /**
+     * The unique identifier of the role.
+     */
     id: string;
   };
   query?: never;
@@ -2901,8 +4182,14 @@ export type GetApiV1RolesByIdClaimsResponse =
   GetApiV1RolesByIdClaimsResponses[keyof GetApiV1RolesByIdClaimsResponses];
 
 export type PostApiV1RolesByIdClaimsData = {
+  /**
+   * The claim type and value to add.
+   */
   body: SaveRoleClaimDto;
   path: {
+    /**
+     * The unique identifier of the role.
+     */
     id: string;
   };
   query?: never;
@@ -2936,7 +4223,13 @@ export type PostApiV1RolesByIdClaimsResponse =
 export type DeleteApiV1RolesByIdClaimsByClaimTypeData = {
   body?: never;
   path: {
+    /**
+     * The unique identifier of the role.
+     */
     id: string;
+    /**
+     * The type of the claim to remove.
+     */
     claimType: string;
   };
   query?: never;
@@ -2972,7 +4265,7 @@ export type GetApiV1ScopesData = {
 
 export type GetApiV1ScopesResponses = {
   /**
-   * OK
+   * A int StatusCodes.Status200OK response containing the collection of scope summaries.
    */
   200: Array<ScopeSummaryDto>;
 };
@@ -2981,6 +4274,9 @@ export type GetApiV1ScopesResponse =
   GetApiV1ScopesResponses[keyof GetApiV1ScopesResponses];
 
 export type PostApiV1ScopesData = {
+  /**
+   * The scope details to create.
+   */
   body: SaveScopeDto;
   path?: never;
   query?: never;
@@ -3010,6 +4306,9 @@ export type PostApiV1ScopesResponse =
 export type DeleteApiV1ScopesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the scope to delete.
+     */
     id: number;
   };
   query?: never;
@@ -3039,6 +4338,9 @@ export type DeleteApiV1ScopesByIdResponse =
 export type GetApiV1ScopesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the scope.
+     */
     id: number;
   };
   query?: never;
@@ -3066,8 +4368,14 @@ export type GetApiV1ScopesByIdResponse =
   GetApiV1ScopesByIdResponses[keyof GetApiV1ScopesByIdResponses];
 
 export type PutApiV1ScopesByIdData = {
+  /**
+   * The updated scope details.
+   */
   body: SaveScopeDto;
   path: {
+    /**
+     * The identifier of the scope to update.
+     */
     id: number;
   };
   query?: never;
@@ -3097,6 +4405,9 @@ export type PutApiV1ScopesByIdResponse =
 export type GetApiV1ScopesByScopeIdClaimsData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent scope.
+     */
     scopeId: number;
   };
   query?: never;
@@ -3124,8 +4435,14 @@ export type GetApiV1ScopesByScopeIdClaimsResponse =
   GetApiV1ScopesByScopeIdClaimsResponses[keyof GetApiV1ScopesByScopeIdClaimsResponses];
 
 export type PostApiV1ScopesByScopeIdClaimsData = {
+  /**
+   * The claim details to create.
+   */
   body: SaveScopeClaimDto;
   path: {
+    /**
+     * The identifier of the parent scope.
+     */
     scopeId: number;
   };
   query?: never;
@@ -3155,7 +4472,13 @@ export type PostApiV1ScopesByScopeIdClaimsResponse =
 export type DeleteApiV1ScopesByScopeIdClaimsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent scope.
+     */
     scopeId: number;
+    /**
+     * The identifier of the scope claim to delete.
+     */
     id: number;
   };
   query?: never;
@@ -3185,7 +4508,13 @@ export type DeleteApiV1ScopesByScopeIdClaimsByIdResponse =
 export type GetApiV1ScopesByScopeIdClaimsByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent scope.
+     */
     scopeId: number;
+    /**
+     * The identifier of the scope claim.
+     */
     id: number;
   };
   query?: never;
@@ -3215,6 +4544,9 @@ export type GetApiV1ScopesByScopeIdClaimsByIdResponse =
 export type GetApiV1ScopesByScopeIdPropertiesData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent scope.
+     */
     scopeId: number;
   };
   query?: never;
@@ -3242,8 +4574,14 @@ export type GetApiV1ScopesByScopeIdPropertiesResponse =
   GetApiV1ScopesByScopeIdPropertiesResponses[keyof GetApiV1ScopesByScopeIdPropertiesResponses];
 
 export type PostApiV1ScopesByScopeIdPropertiesData = {
+  /**
+   * The property details to create.
+   */
   body: SaveScopePropertyDto;
   path: {
+    /**
+     * The identifier of the parent scope.
+     */
     scopeId: number;
   };
   query?: never;
@@ -3273,7 +4611,13 @@ export type PostApiV1ScopesByScopeIdPropertiesResponse =
 export type DeleteApiV1ScopesByScopeIdPropertiesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent scope.
+     */
     scopeId: number;
+    /**
+     * The identifier of the scope property to delete.
+     */
     id: number;
   };
   query?: never;
@@ -3303,7 +4647,13 @@ export type DeleteApiV1ScopesByScopeIdPropertiesByIdResponse =
 export type GetApiV1ScopesByScopeIdPropertiesByIdData = {
   body?: never;
   path: {
+    /**
+     * The identifier of the parent scope.
+     */
     scopeId: number;
+    /**
+     * The identifier of the scope property.
+     */
     id: number;
   };
   query?: never;
@@ -3339,7 +4689,7 @@ export type GetApiV1UsersData = {
 
 export type GetApiV1UsersResponses = {
   /**
-   * OK
+   * A int StatusCodes.Status200OK response containing the collection of user summaries.
    */
   200: Array<UserSummaryDto>;
 };
@@ -3348,6 +4698,9 @@ export type GetApiV1UsersResponse =
   GetApiV1UsersResponses[keyof GetApiV1UsersResponses];
 
 export type PostApiV1UsersData = {
+  /**
+   * The user details, including the initial password, to create.
+   */
   body: CreateUserDto;
   path?: never;
   query?: never;
@@ -3377,6 +4730,9 @@ export type PostApiV1UsersResponse =
 export type DeleteApiV1UsersByIdData = {
   body?: never;
   path: {
+    /**
+     * The GUID string identifier of the user to delete.
+     */
     id: string;
   };
   query?: never;
@@ -3406,6 +4762,9 @@ export type DeleteApiV1UsersByIdResponse =
 export type GetApiV1UsersByIdData = {
   body?: never;
   path: {
+    /**
+     * The GUID string identifier of the user.
+     */
     id: string;
   };
   query?: never;
@@ -3433,8 +4792,14 @@ export type GetApiV1UsersByIdResponse =
   GetApiV1UsersByIdResponses[keyof GetApiV1UsersByIdResponses];
 
 export type PutApiV1UsersByIdData = {
+  /**
+   * The updated user details.
+   */
   body: SaveUserDto;
   path: {
+    /**
+     * The GUID string identifier of the user to update.
+     */
     id: string;
   };
   query?: never;
@@ -3468,6 +4833,9 @@ export type PutApiV1UsersByIdResponse =
 export type GetApiV1UsersByIdRolesData = {
   body?: never;
   path: {
+    /**
+     * The GUID string identifier of the user.
+     */
     id: string;
   };
   query?: never;
@@ -3495,8 +4863,14 @@ export type GetApiV1UsersByIdRolesResponse =
   GetApiV1UsersByIdRolesResponses[keyof GetApiV1UsersByIdRolesResponses];
 
 export type PostApiV1UsersByIdRolesData = {
+  /**
+   * The name of the role to assign.
+   */
   body: AssignUserRoleDto;
   path: {
+    /**
+     * The GUID string identifier of the user.
+     */
     id: string;
   };
   query?: never;
@@ -3530,7 +4904,13 @@ export type PostApiV1UsersByIdRolesResponse =
 export type DeleteApiV1UsersByIdRolesByRoleNameData = {
   body?: never;
   path: {
+    /**
+     * The GUID string identifier of the user.
+     */
     id: string;
+    /**
+     * The name of the role to remove.
+     */
     roleName: string;
   };
   query?: never;
@@ -3560,6 +4940,9 @@ export type DeleteApiV1UsersByIdRolesByRoleNameResponse =
 export type GetApiV1UsersByIdClaimsData = {
   body?: never;
   path: {
+    /**
+     * The GUID string identifier of the user.
+     */
     id: string;
   };
   query?: never;

@@ -18,12 +18,11 @@ using Npgsql;
 using Serilog;
 
 using Spydersoft.Identity.Attributes;
-using Spydersoft.Identity.Data;
-using Spydersoft.Identity.Core.Extensions;
-using Spydersoft.Identity.Extensions;
 using Spydersoft.Identity.Core.Models.Identity;
-using Spydersoft.Identity.Options;
 using Spydersoft.Identity.Core.Services;
+using Spydersoft.Identity.Data;
+using Spydersoft.Identity.Extensions;
+using Spydersoft.Identity.Options;
 using Spydersoft.Identity.Services;
 using Spydersoft.Platform.Hosting.Options;
 using Spydersoft.Platform.Hosting.StartupExtensions;
@@ -69,8 +68,8 @@ try
     // Configure forwarded headers for proxy scenarios
     _ = builder.Services.Configure<ForwardedHeadersOptions>(options =>
     {
-        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | 
-                                   ForwardedHeaders.XForwardedProto | 
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                                   ForwardedHeaders.XForwardedProto |
                                    ForwardedHeaders.XForwardedHost;
         // Clear known networks and proxies to accept any proxy
         options.KnownIPNetworks.Clear();
@@ -147,7 +146,7 @@ try
 
     // this adds the Configuration Store (clients, resources) and then
     // the Operation Store (codes, tokens, consents)
-    var identityServerBuilder = builder.Services.AddIdentityServer(options =>
+    _ = builder.Services.AddIdentityServer(options =>
     {
         // Configure Identity Server's announced issuer. Either IssuerUri or
         // PublicOrigin pins it; without one, the issuer is derived from the
@@ -206,13 +205,13 @@ try
     _ = builder.Services.AddHealthChecks();
 
     WebApplication app = builder.Build();
-    
+
     // Configure forwarded headers BEFORE any authentication/authorization middleware
     // This is critical for proper HTTPS scheme detection when behind a TLS termination proxy
     var forwardedHeadersOptions = new ForwardedHeadersOptions
     {
-        ForwardedHeaders = ForwardedHeaders.XForwardedFor | 
-                          ForwardedHeaders.XForwardedProto | 
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                          ForwardedHeaders.XForwardedProto |
                           ForwardedHeaders.XForwardedHost,
         // Required for proper scheme detection
         RequireHeaderSymmetry = false,
@@ -220,20 +219,20 @@ try
     };
     forwardedHeadersOptions.KnownIPNetworks.Clear();
     forwardedHeadersOptions.KnownProxies.Clear();
-    
+
     _ = app.UseForwardedHeaders(forwardedHeadersOptions);
-    
+
     // Log the scheme being used for debugging (can be removed in production)
     app.Use(async (context, next) =>
     {
-        Log.Debug("Request - Scheme: {Scheme}, Host: {Host}, Path: {Path}, Proto Header: {Proto}", 
-            context.Request.Scheme, 
-            context.Request.Host, 
+        Log.Debug("Request - Scheme: {Scheme}, Host: {Host}, Path: {Path}, Proto Header: {Proto}",
+            context.Request.Scheme,
+            context.Request.Host,
             context.Request.Path,
             context.Request.Headers["X-Forwarded-Proto"].ToString());
         await next();
     });
-    
+
     // this will do the initial DB population, but we only need to do it once
     // this is just in here as a easy, yet hacky, way to get our DB created/populated
     var dbInitialize = new DatabaseInitializer(app);

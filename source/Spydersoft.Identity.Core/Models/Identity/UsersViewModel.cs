@@ -11,6 +11,6 @@ namespace Spydersoft.Identity.Core.Models.Identity
         /// Gets or sets the users.
         /// </summary>
         /// <value>The users.</value>
-        public IQueryable<ApplicationUser> Users { get; set; }
+        public IQueryable<ApplicationUser> Users { get; set; } = Enumerable.Empty<ApplicationUser>().AsQueryable();
     }
 }

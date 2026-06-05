@@ -27,7 +27,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         [StringLength(2000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 2)]
         [Display(Name = "Description")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the expiration.
@@ -45,7 +45,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
             MinimumLength = 1)]
         [Display(Name = "Type")]
         [DefaultValue("SharedSecret")]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the value.
@@ -54,7 +54,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         [StringLength(4000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 1)]
         [Display(Name = "Description")]
-        public string Value { get; set; }
+        public string Value { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the created.

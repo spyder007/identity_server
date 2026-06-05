@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-using Spydersoft.Identity.Constants;
 using Spydersoft.Identity.Core.Exceptions;
 using Spydersoft.Identity.Core.Models.Identity;
 using Spydersoft.Identity.Models.ManageViewModels;
@@ -82,9 +81,7 @@ namespace Spydersoft.Identity.Pages.Manage
         {
             ApplicationUser user = await ValidateContextUser();
             View = new ExternalLoginsViewModel { CurrentLogins = await userManager.GetLoginsAsync(user) };
-            View.OtherLogins = (await signInManager.GetExternalAuthenticationSchemesAsync())
-                .Where(auth => View.CurrentLogins.All(ul => auth.Name != ul.LoginProvider))
-                .ToList();
+            View.OtherLogins = [.. (await signInManager.GetExternalAuthenticationSchemesAsync()).Where(auth => View.CurrentLogins.All(ul => auth.Name != ul.LoginProvider))];
             View.ShowRemoveButton = await userManager.HasPasswordAsync(user) || View.CurrentLogins.Count > 1;
             View.StatusMessage = StatusMessage;
         }

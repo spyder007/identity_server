@@ -12,16 +12,16 @@ namespace Spydersoft.Identity.Core.Models.Identity
         /// Gets or sets the role.
         /// </summary>
         /// <value>The role.</value>
-        public ApplicationRole Role { get; set; }
+        public ApplicationRole Role { get; set; } = new();
         /// <summary>
         /// Gets or sets the claims.
         /// </summary>
         /// <value>The claims.</value>
-        public IQueryable<Claim> Claims { get; set; }
+        public IQueryable<Claim> Claims { get; set; } = Enumerable.Empty<Claim>().AsQueryable();
         /// <summary>
         /// Creates new claim.
         /// </summary>
         /// <value>The new claim.</value>
-        public ClaimModel NewClaim { get; set; }
+        public ClaimModel NewClaim { get; set; } = new();
     }
 }

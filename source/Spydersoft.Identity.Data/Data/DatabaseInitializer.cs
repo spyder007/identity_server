@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -32,14 +33,14 @@ namespace Spydersoft.Identity.Data
         /// <summary>
         /// The log
         /// </summary>
-        private ILogger _log;
+        private ILogger _log = null!;
 
         /// <summary>
         /// Initializes the database.
         /// </summary>
         public void InitializeDatabase()
         {
-            using IServiceScope serviceScope = _app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            using IServiceScope serviceScope = _app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
             _log = serviceScope.ServiceProvider.GetRequiredService<ILogger<DatabaseInitializer>>();
 
             PerformDatabaseMigrations(serviceScope);
@@ -74,11 +75,11 @@ namespace Spydersoft.Identity.Data
         /// <returns>System.Threading.Tasks.Task.</returns>
         private async Task DoMigrationIfNeeded(DbContext context, string databaseName)
         {
-            _log.LogDebug("Checking {database} for pending migrations.", databaseName);
+            _log.LogDebug("Checking {Database} for pending migrations.", databaseName);
             var hasMigrations = (await context.Database.GetPendingMigrationsAsync()).Any();
             if (hasMigrations)
             {
-                _log.LogInformation("Migrating {database}.", databaseName);
+                _log.LogInformation("Migrating {Database}.", databaseName);
                 await context.Database.MigrateAsync();
             }
         }
@@ -117,24 +118,18 @@ namespace Spydersoft.Identity.Data
             }
 
             // Ensure all standard identity resources exist
-            foreach (IdentityResource resource in GetIdentityResources())
+            foreach (IdentityResource resource in GetIdentityResources().Where(resource => !context.IdentityResources.Any(ir => ir.Name == resource.Name)))
             {
-                if (!context.IdentityResources.Any(ir => ir.Name == resource.Name))
-                {
-                    _log.LogInformation("Identity Resource {ResourceName} not found. Creating it.", resource.Name);
-                    _ = context.IdentityResources.Add(resource.ToEntity());
-                }
+                _log.LogInformation("Identity Resource {ResourceName} not found. Creating it.", resource.Name);
+                _ = context.IdentityResources.Add(resource.ToEntity());
             }
             _ = context.SaveChanges();
 
             // Ensure all standard API resources exist
-            foreach (ApiResource resource in GetApiResources())
+            foreach (ApiResource resource in GetApiResources().Where(resource => !context.ApiResources.Any(ar => ar.Name == resource.Name)))
             {
-                if (!context.ApiResources.Any(ar => ar.Name == resource.Name))
-                {
-                    _log.LogInformation("API Resource {ResourceName} not found. Creating it.", resource.Name);
-                    _ = context.ApiResources.Add(resource.ToEntity());
-                }
+                _log.LogInformation("API Resource {ResourceName} not found. Creating it.", resource.Name);
+                _ = context.ApiResources.Add(resource.ToEntity());
             }
             _ = context.SaveChanges();
         }
@@ -152,7 +147,7 @@ namespace Spydersoft.Identity.Data
 
 
             UserManager<ApplicationUser> userMgr = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            ApplicationUser adminUser = userMgr.FindByNameAsync("admin").Result;
+            ApplicationUser? adminUser = userMgr.FindByNameAsync("admin").Result;
             if (adminUser == null)
             {
                 adminUser = new ApplicationUser
@@ -166,7 +161,9 @@ namespace Spydersoft.Identity.Data
                     throw new IdentityResultException(result);
                 }
 
-                adminUser = userMgr.FindByNameAsync("admin").Result;
+                ApplicationUser? createdUser = userMgr.FindByNameAsync("admin").Result;
+                ArgumentNullException.ThrowIfNull(createdUser);
+                adminUser = createdUser;
 
                 result = userMgr.AddClaimsAsync(adminUser, [
                                 new(JwtClaimTypes.Name, "System Administrator"),
@@ -199,7 +196,7 @@ namespace Spydersoft.Identity.Data
 
         private void SeedRoleIfMissing(RoleManager<ApplicationRole> roleMgr, string roleName)
         {
-            ApplicationRole existing = roleMgr.FindByNameAsync(roleName).Result;
+            ApplicationRole? existing = roleMgr.FindByNameAsync(roleName).Result;
             if (existing != null)
             {
                 return;
@@ -208,7 +205,7 @@ namespace Spydersoft.Identity.Data
             IdentityResult result = roleMgr.CreateAsync(new ApplicationRole { Name = roleName }).Result;
             if (!result.Succeeded)
             {
-                _log.LogError("Unable to create {role} role : {error}", roleName, result.ToString());
+                _log.LogError("Unable to create {Role} role : {Error}", roleName, result.ToString());
             }
         }
 
@@ -300,8 +297,11 @@ namespace Spydersoft.Identity.Data
                         new Secret("secret".Sha256())
                     },
 
+                    // Seed-data sample client URIs are intentionally hardcoded for the default MVC sample client.
+#pragma warning disable S1075 // URIs should not be hardcoded
                     RedirectUris = { "http://localhost:5002/signin-oidc" },
                     PostLogoutRedirectUris = { "http://localhost:5002" },
+#pragma warning restore S1075 // URIs should not be hardcoded
 
                     AllowedScopes =
                     {

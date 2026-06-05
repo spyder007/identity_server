@@ -332,6 +332,9 @@ export type Options<
   meta?: Record<string, unknown>;
 };
 
+/**
+ * Gets a summary of all API resources.
+ */
 export const getApiV1ApiResources = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1ApiResourcesData, ThrowOnError>,
 ) =>
@@ -345,6 +348,9 @@ export const getApiV1ApiResources = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Creates a new API resource.
+ */
 export const postApiV1ApiResources = <ThrowOnError extends boolean = false>(
   options: Options<PostApiV1ApiResourcesData, ThrowOnError>,
 ) =>
@@ -362,6 +368,9 @@ export const postApiV1ApiResources = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Deletes the specified API resource.
+ */
 export const deleteApiV1ApiResourcesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -373,6 +382,9 @@ export const deleteApiV1ApiResourcesById = <
     ThrowOnError
   >({ url: "/api/v1/ApiResources/{id}", ...options });
 
+/**
+ * Gets the API resource with the specified identifier.
+ */
 export const getApiV1ApiResourcesById = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1ApiResourcesByIdData, ThrowOnError>,
 ) =>
@@ -386,6 +398,9 @@ export const getApiV1ApiResourcesById = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Updates the specified API resource.
+ */
 export const putApiV1ApiResourcesById = <ThrowOnError extends boolean = false>(
   options: Options<PutApiV1ApiResourcesByIdData, ThrowOnError>,
 ) =>
@@ -402,6 +417,9 @@ export const putApiV1ApiResourcesById = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Gets all user claims for the specified API resource.
+ */
 export const getApiV1ApiresourcesByApiResourceIdClaims = <
   ThrowOnError extends boolean = false,
 >(
@@ -417,6 +435,9 @@ export const getApiV1ApiresourcesByApiResourceIdClaims = <
     ...options,
   });
 
+/**
+ * Adds a new user claim to the specified API resource.
+ */
 export const postApiV1ApiresourcesByApiResourceIdClaims = <
   ThrowOnError extends boolean = false,
 >(
@@ -439,6 +460,9 @@ export const postApiV1ApiresourcesByApiResourceIdClaims = <
     },
   });
 
+/**
+ * Deletes the specified user claim from the specified API resource.
+ */
 export const deleteApiV1ApiresourcesByApiResourceIdClaimsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -453,6 +477,9 @@ export const deleteApiV1ApiresourcesByApiResourceIdClaimsById = <
     ThrowOnError
   >({ url: "/api/v1/apiresources/{apiResourceId}/claims/{id}", ...options });
 
+/**
+ * Gets the user claim with the specified identifier for the specified API resource.
+ */
 export const getApiV1ApiresourcesByApiResourceIdClaimsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -471,6 +498,9 @@ export const getApiV1ApiresourcesByApiResourceIdClaimsById = <
     ...options,
   });
 
+/**
+ * Gets all custom properties for the specified API resource.
+ */
 export const getApiV1ApiresourcesByApiResourceIdProperties = <
   ThrowOnError extends boolean = false,
 >(
@@ -489,6 +519,9 @@ export const getApiV1ApiresourcesByApiResourceIdProperties = <
     ...options,
   });
 
+/**
+ * Adds a new custom property to the specified API resource.
+ */
 export const postApiV1ApiresourcesByApiResourceIdProperties = <
   ThrowOnError extends boolean = false,
 >(
@@ -511,6 +544,9 @@ export const postApiV1ApiresourcesByApiResourceIdProperties = <
     },
   });
 
+/**
+ * Deletes the specified custom property from the specified API resource.
+ */
 export const deleteApiV1ApiresourcesByApiResourceIdPropertiesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -528,6 +564,9 @@ export const deleteApiV1ApiresourcesByApiResourceIdPropertiesById = <
     ...options,
   });
 
+/**
+ * Gets the custom property with the specified identifier for the specified API resource.
+ */
 export const getApiV1ApiresourcesByApiResourceIdPropertiesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -546,6 +585,9 @@ export const getApiV1ApiresourcesByApiResourceIdPropertiesById = <
     ...options,
   });
 
+/**
+ * Gets all scopes for the specified API resource.
+ */
 export const getApiV1ApiresourcesByApiResourceIdScopes = <
   ThrowOnError extends boolean = false,
 >(
@@ -561,6 +603,9 @@ export const getApiV1ApiresourcesByApiResourceIdScopes = <
     ...options,
   });
 
+/**
+ * Adds a new scope to the specified API resource.
+ */
 export const postApiV1ApiresourcesByApiResourceIdScopes = <
   ThrowOnError extends boolean = false,
 >(
@@ -583,6 +628,9 @@ export const postApiV1ApiresourcesByApiResourceIdScopes = <
     },
   });
 
+/**
+ * Deletes the specified scope from the specified API resource.
+ */
 export const deleteApiV1ApiresourcesByApiResourceIdScopesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -597,6 +645,9 @@ export const deleteApiV1ApiresourcesByApiResourceIdScopesById = <
     ThrowOnError
   >({ url: "/api/v1/apiresources/{apiResourceId}/scopes/{id}", ...options });
 
+/**
+ * Gets the scope with the specified identifier for the specified API resource.
+ */
 export const getApiV1ApiresourcesByApiResourceIdScopesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -615,6 +666,9 @@ export const getApiV1ApiresourcesByApiResourceIdScopesById = <
     ...options,
   });
 
+/**
+ * Gets all secrets for the specified API resource.
+ */
 export const getApiV1ApiresourcesByApiResourceIdSecrets = <
   ThrowOnError extends boolean = false,
 >(
@@ -633,6 +687,9 @@ export const getApiV1ApiresourcesByApiResourceIdSecrets = <
     ...options,
   });
 
+/**
+ * Adds a new secret to the specified API resource.
+ */
 export const postApiV1ApiresourcesByApiResourceIdSecrets = <
   ThrowOnError extends boolean = false,
 >(
@@ -655,6 +712,9 @@ export const postApiV1ApiresourcesByApiResourceIdSecrets = <
     },
   });
 
+/**
+ * Deletes the specified secret from the specified API resource.
+ */
 export const deleteApiV1ApiresourcesByApiResourceIdSecretsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -669,6 +729,9 @@ export const deleteApiV1ApiresourcesByApiResourceIdSecretsById = <
     ThrowOnError
   >({ url: "/api/v1/apiresources/{apiResourceId}/secrets/{id}", ...options });
 
+/**
+ * Gets the secret with the specified identifier for the specified API resource.
+ */
 export const getApiV1ApiresourcesByApiResourceIdSecretsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -770,6 +833,9 @@ export const putApiV1ClientsById = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Gets all claims for the specified client.
+ */
 export const getApiV1ClientsByClientIdClaims = <
   ThrowOnError extends boolean = false,
 >(
@@ -785,6 +851,9 @@ export const getApiV1ClientsByClientIdClaims = <
     ...options,
   });
 
+/**
+ * Creates a new claim for the specified client.
+ */
 export const postApiV1ClientsByClientIdClaims = <
   ThrowOnError extends boolean = false,
 >(
@@ -804,6 +873,9 @@ export const postApiV1ClientsByClientIdClaims = <
     },
   });
 
+/**
+ * Deletes a claim from the specified client.
+ */
 export const deleteApiV1ClientsByClientIdClaimsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -815,6 +887,9 @@ export const deleteApiV1ClientsByClientIdClaimsById = <
     ThrowOnError
   >({ url: "/api/v1/clients/{clientId}/claims/{id}", ...options });
 
+/**
+ * Gets a single claim for the specified client.
+ */
 export const getApiV1ClientsByClientIdClaimsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -830,6 +905,9 @@ export const getApiV1ClientsByClientIdClaimsById = <
     ...options,
   });
 
+/**
+ * Gets all allowed CORS origins for the specified client.
+ */
 export const getApiV1ClientsByClientIdCorsorigins = <
   ThrowOnError extends boolean = false,
 >(
@@ -845,6 +923,9 @@ export const getApiV1ClientsByClientIdCorsorigins = <
     ...options,
   });
 
+/**
+ * Creates a new allowed CORS origin for the specified client.
+ */
 export const postApiV1ClientsByClientIdCorsorigins = <
   ThrowOnError extends boolean = false,
 >(
@@ -864,6 +945,9 @@ export const postApiV1ClientsByClientIdCorsorigins = <
     },
   });
 
+/**
+ * Deletes an allowed CORS origin from the specified client.
+ */
 export const deleteApiV1ClientsByClientIdCorsoriginsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -878,6 +962,9 @@ export const deleteApiV1ClientsByClientIdCorsoriginsById = <
     ThrowOnError
   >({ url: "/api/v1/clients/{clientId}/corsorigins/{id}", ...options });
 
+/**
+ * Gets a single allowed CORS origin for the specified client.
+ */
 export const getApiV1ClientsByClientIdCorsoriginsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -893,6 +980,9 @@ export const getApiV1ClientsByClientIdCorsoriginsById = <
     ...options,
   });
 
+/**
+ * Gets all allowed grant types for the specified client.
+ */
 export const getApiV1ClientsByClientIdGranttypes = <
   ThrowOnError extends boolean = false,
 >(
@@ -908,6 +998,9 @@ export const getApiV1ClientsByClientIdGranttypes = <
     ...options,
   });
 
+/**
+ * Creates a new allowed grant type for the specified client.
+ */
 export const postApiV1ClientsByClientIdGranttypes = <
   ThrowOnError extends boolean = false,
 >(
@@ -927,6 +1020,9 @@ export const postApiV1ClientsByClientIdGranttypes = <
     },
   });
 
+/**
+ * Deletes an allowed grant type from the specified client.
+ */
 export const deleteApiV1ClientsByClientIdGranttypesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -941,6 +1037,9 @@ export const deleteApiV1ClientsByClientIdGranttypesById = <
     ThrowOnError
   >({ url: "/api/v1/clients/{clientId}/granttypes/{id}", ...options });
 
+/**
+ * Gets a single allowed grant type for the specified client.
+ */
 export const getApiV1ClientsByClientIdGranttypesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -956,6 +1055,9 @@ export const getApiV1ClientsByClientIdGranttypesById = <
     ...options,
   });
 
+/**
+ * Gets all identity provider restrictions for the specified client.
+ */
 export const getApiV1ClientsByClientIdIdprestrictions = <
   ThrowOnError extends boolean = false,
 >(
@@ -971,6 +1073,9 @@ export const getApiV1ClientsByClientIdIdprestrictions = <
     ...options,
   });
 
+/**
+ * Creates a new identity provider restriction for the specified client.
+ */
 export const postApiV1ClientsByClientIdIdprestrictions = <
   ThrowOnError extends boolean = false,
 >(
@@ -990,6 +1095,9 @@ export const postApiV1ClientsByClientIdIdprestrictions = <
     },
   });
 
+/**
+ * Deletes an identity provider restriction from the specified client.
+ */
 export const deleteApiV1ClientsByClientIdIdprestrictionsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1004,6 +1112,9 @@ export const deleteApiV1ClientsByClientIdIdprestrictionsById = <
     ThrowOnError
   >({ url: "/api/v1/clients/{clientId}/idprestrictions/{id}", ...options });
 
+/**
+ * Gets a single identity provider restriction for the specified client.
+ */
 export const getApiV1ClientsByClientIdIdprestrictionsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1022,6 +1133,9 @@ export const getApiV1ClientsByClientIdIdprestrictionsById = <
     ...options,
   });
 
+/**
+ * Gets all post-logout redirect URIs for the specified client.
+ */
 export const getApiV1ClientsByClientIdPostlogoutredirecturis = <
   ThrowOnError extends boolean = false,
 >(
@@ -1040,6 +1154,9 @@ export const getApiV1ClientsByClientIdPostlogoutredirecturis = <
     ...options,
   });
 
+/**
+ * Creates a new post-logout redirect URI for the specified client.
+ */
 export const postApiV1ClientsByClientIdPostlogoutredirecturis = <
   ThrowOnError extends boolean = false,
 >(
@@ -1062,6 +1179,9 @@ export const postApiV1ClientsByClientIdPostlogoutredirecturis = <
     },
   });
 
+/**
+ * Deletes a post-logout redirect URI from the specified client.
+ */
 export const deleteApiV1ClientsByClientIdPostlogoutredirecturisById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1079,6 +1199,9 @@ export const deleteApiV1ClientsByClientIdPostlogoutredirecturisById = <
     ...options,
   });
 
+/**
+ * Gets a single post-logout redirect URI for the specified client.
+ */
 export const getApiV1ClientsByClientIdPostlogoutredirecturisById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1097,6 +1220,9 @@ export const getApiV1ClientsByClientIdPostlogoutredirecturisById = <
     ...options,
   });
 
+/**
+ * Gets all custom properties for the specified client.
+ */
 export const getApiV1ClientsByClientIdProperties = <
   ThrowOnError extends boolean = false,
 >(
@@ -1112,6 +1238,9 @@ export const getApiV1ClientsByClientIdProperties = <
     ...options,
   });
 
+/**
+ * Creates a new custom property for the specified client.
+ */
 export const postApiV1ClientsByClientIdProperties = <
   ThrowOnError extends boolean = false,
 >(
@@ -1131,6 +1260,9 @@ export const postApiV1ClientsByClientIdProperties = <
     },
   });
 
+/**
+ * Deletes a custom property from the specified client.
+ */
 export const deleteApiV1ClientsByClientIdPropertiesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1145,6 +1277,9 @@ export const deleteApiV1ClientsByClientIdPropertiesById = <
     ThrowOnError
   >({ url: "/api/v1/clients/{clientId}/properties/{id}", ...options });
 
+/**
+ * Gets a single custom property for the specified client.
+ */
 export const getApiV1ClientsByClientIdPropertiesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1160,6 +1295,9 @@ export const getApiV1ClientsByClientIdPropertiesById = <
     ...options,
   });
 
+/**
+ * Gets all redirect URIs for the specified client.
+ */
 export const getApiV1ClientsByClientIdRedirecturis = <
   ThrowOnError extends boolean = false,
 >(
@@ -1175,6 +1313,9 @@ export const getApiV1ClientsByClientIdRedirecturis = <
     ...options,
   });
 
+/**
+ * Creates a new redirect URI for the specified client.
+ */
 export const postApiV1ClientsByClientIdRedirecturis = <
   ThrowOnError extends boolean = false,
 >(
@@ -1194,6 +1335,9 @@ export const postApiV1ClientsByClientIdRedirecturis = <
     },
   });
 
+/**
+ * Deletes a redirect URI from the specified client.
+ */
 export const deleteApiV1ClientsByClientIdRedirecturisById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1208,6 +1352,9 @@ export const deleteApiV1ClientsByClientIdRedirecturisById = <
     ThrowOnError
   >({ url: "/api/v1/clients/{clientId}/redirecturis/{id}", ...options });
 
+/**
+ * Gets a single redirect URI for the specified client.
+ */
 export const getApiV1ClientsByClientIdRedirecturisById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1223,6 +1370,9 @@ export const getApiV1ClientsByClientIdRedirecturisById = <
     ...options,
   });
 
+/**
+ * Gets all allowed scopes for the specified client.
+ */
 export const getApiV1ClientsByClientIdScopes = <
   ThrowOnError extends boolean = false,
 >(
@@ -1238,6 +1388,9 @@ export const getApiV1ClientsByClientIdScopes = <
     ...options,
   });
 
+/**
+ * Creates a new allowed scope for the specified client.
+ */
 export const postApiV1ClientsByClientIdScopes = <
   ThrowOnError extends boolean = false,
 >(
@@ -1257,6 +1410,9 @@ export const postApiV1ClientsByClientIdScopes = <
     },
   });
 
+/**
+ * Deletes an allowed scope from the specified client.
+ */
 export const deleteApiV1ClientsByClientIdScopesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1268,6 +1424,9 @@ export const deleteApiV1ClientsByClientIdScopesById = <
     ThrowOnError
   >({ url: "/api/v1/clients/{clientId}/scopes/{id}", ...options });
 
+/**
+ * Gets a single allowed scope for the specified client.
+ */
 export const getApiV1ClientsByClientIdScopesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1283,6 +1442,9 @@ export const getApiV1ClientsByClientIdScopesById = <
     ...options,
   });
 
+/**
+ * Gets all secrets for the specified client.
+ */
 export const getApiV1ClientsByClientIdSecrets = <
   ThrowOnError extends boolean = false,
 >(
@@ -1298,6 +1460,9 @@ export const getApiV1ClientsByClientIdSecrets = <
     ...options,
   });
 
+/**
+ * Creates a new secret for the specified client.
+ */
 export const postApiV1ClientsByClientIdSecrets = <
   ThrowOnError extends boolean = false,
 >(
@@ -1317,6 +1482,9 @@ export const postApiV1ClientsByClientIdSecrets = <
     },
   });
 
+/**
+ * Deletes a secret from the specified client.
+ */
 export const deleteApiV1ClientsByClientIdSecretsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1328,6 +1496,9 @@ export const deleteApiV1ClientsByClientIdSecretsById = <
     ThrowOnError
   >({ url: "/api/v1/clients/{clientId}/secrets/{id}", ...options });
 
+/**
+ * Gets a single secret for the specified client.
+ */
 export const getApiV1ClientsByClientIdSecretsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1343,6 +1514,9 @@ export const getApiV1ClientsByClientIdSecretsById = <
     ...options,
   });
 
+/**
+ * Gets a summary of all identity resources.
+ */
 export const getApiV1IdentityResources = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1IdentityResourcesData, ThrowOnError>,
 ) =>
@@ -1356,6 +1530,9 @@ export const getApiV1IdentityResources = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Creates a new identity resource.
+ */
 export const postApiV1IdentityResources = <
   ThrowOnError extends boolean = false,
 >(
@@ -1375,6 +1552,9 @@ export const postApiV1IdentityResources = <
     },
   });
 
+/**
+ * Deletes the specified identity resource.
+ */
 export const deleteApiV1IdentityResourcesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1386,6 +1566,9 @@ export const deleteApiV1IdentityResourcesById = <
     ThrowOnError
   >({ url: "/api/v1/IdentityResources/{id}", ...options });
 
+/**
+ * Gets the identity resource with the specified identifier.
+ */
 export const getApiV1IdentityResourcesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1401,6 +1584,9 @@ export const getApiV1IdentityResourcesById = <
     ...options,
   });
 
+/**
+ * Updates the specified identity resource.
+ */
 export const putApiV1IdentityResourcesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1419,6 +1605,9 @@ export const putApiV1IdentityResourcesById = <
     },
   });
 
+/**
+ * Gets all user claims for the specified identity resource.
+ */
 export const getApiV1IdentityresourcesByIdentityResourceIdClaims = <
   ThrowOnError extends boolean = false,
 >(
@@ -1437,6 +1626,9 @@ export const getApiV1IdentityresourcesByIdentityResourceIdClaims = <
     ...options,
   });
 
+/**
+ * Adds a new user claim to the specified identity resource.
+ */
 export const postApiV1IdentityresourcesByIdentityResourceIdClaims = <
   ThrowOnError extends boolean = false,
 >(
@@ -1459,6 +1651,9 @@ export const postApiV1IdentityresourcesByIdentityResourceIdClaims = <
     },
   });
 
+/**
+ * Deletes the specified user claim from the specified identity resource.
+ */
 export const deleteApiV1IdentityresourcesByIdentityResourceIdClaimsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1476,6 +1671,9 @@ export const deleteApiV1IdentityresourcesByIdentityResourceIdClaimsById = <
     ...options,
   });
 
+/**
+ * Gets the user claim with the specified identifier for the specified identity resource.
+ */
 export const getApiV1IdentityresourcesByIdentityResourceIdClaimsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1494,6 +1692,9 @@ export const getApiV1IdentityresourcesByIdentityResourceIdClaimsById = <
     ...options,
   });
 
+/**
+ * Gets all custom properties for the specified identity resource.
+ */
 export const getApiV1IdentityresourcesByIdentityResourceIdProperties = <
   ThrowOnError extends boolean = false,
 >(
@@ -1512,6 +1713,9 @@ export const getApiV1IdentityresourcesByIdentityResourceIdProperties = <
     ...options,
   });
 
+/**
+ * Adds a new custom property to the specified identity resource.
+ */
 export const postApiV1IdentityresourcesByIdentityResourceIdProperties = <
   ThrowOnError extends boolean = false,
 >(
@@ -1534,6 +1738,9 @@ export const postApiV1IdentityresourcesByIdentityResourceIdProperties = <
     },
   });
 
+/**
+ * Deletes the specified custom property from the specified identity resource.
+ */
 export const deleteApiV1IdentityresourcesByIdentityResourceIdPropertiesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1551,6 +1758,9 @@ export const deleteApiV1IdentityresourcesByIdentityResourceIdPropertiesById = <
     ...options,
   });
 
+/**
+ * Gets the custom property with the specified identifier for the specified identity resource.
+ */
 export const getApiV1IdentityresourcesByIdentityResourceIdPropertiesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1569,6 +1779,9 @@ export const getApiV1IdentityresourcesByIdentityResourceIdPropertiesById = <
     ...options,
   });
 
+/**
+ * Gets a summary list of all roles.
+ */
 export const getApiV1Roles = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1RolesData, ThrowOnError>,
 ) =>
@@ -1582,6 +1795,9 @@ export const getApiV1Roles = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Creates a new role.
+ */
 export const postApiV1Roles = <ThrowOnError extends boolean = false>(
   options: Options<PostApiV1RolesData, ThrowOnError>,
 ) =>
@@ -1599,6 +1815,9 @@ export const postApiV1Roles = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Deletes a role.
+ */
 export const deleteApiV1RolesById = <ThrowOnError extends boolean = false>(
   options: Options<DeleteApiV1RolesByIdData, ThrowOnError>,
 ) =>
@@ -1608,6 +1827,9 @@ export const deleteApiV1RolesById = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({ url: "/api/v1/Roles/{id}", ...options });
 
+/**
+ * Gets a single role by its identifier.
+ */
 export const getApiV1RolesById = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1RolesByIdData, ThrowOnError>,
 ) =>
@@ -1621,6 +1843,9 @@ export const getApiV1RolesById = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Updates an existing role.
+ */
 export const putApiV1RolesById = <ThrowOnError extends boolean = false>(
   options: Options<PutApiV1RolesByIdData, ThrowOnError>,
 ) =>
@@ -1637,6 +1862,9 @@ export const putApiV1RolesById = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Gets the claims assigned to a role.
+ */
 export const getApiV1RolesByIdClaims = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1RolesByIdClaimsData, ThrowOnError>,
 ) =>
@@ -1650,6 +1878,9 @@ export const getApiV1RolesByIdClaims = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Adds a claim to a role.
+ */
 export const postApiV1RolesByIdClaims = <ThrowOnError extends boolean = false>(
   options: Options<PostApiV1RolesByIdClaimsData, ThrowOnError>,
 ) =>
@@ -1666,6 +1897,9 @@ export const postApiV1RolesByIdClaims = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Removes a claim of the specified type from a role.
+ */
 export const deleteApiV1RolesByIdClaimsByClaimType = <
   ThrowOnError extends boolean = false,
 >(
@@ -1677,6 +1911,9 @@ export const deleteApiV1RolesByIdClaimsByClaimType = <
     ThrowOnError
   >({ url: "/api/v1/Roles/{id}/claims/{claimType}", ...options });
 
+/**
+ * Gets a summary of all API scopes.
+ */
 export const getApiV1Scopes = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1ScopesData, ThrowOnError>,
 ) =>
@@ -1690,6 +1927,9 @@ export const getApiV1Scopes = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Creates a new API scope.
+ */
 export const postApiV1Scopes = <ThrowOnError extends boolean = false>(
   options: Options<PostApiV1ScopesData, ThrowOnError>,
 ) =>
@@ -1707,6 +1947,9 @@ export const postApiV1Scopes = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Deletes the specified API scope.
+ */
 export const deleteApiV1ScopesById = <ThrowOnError extends boolean = false>(
   options: Options<DeleteApiV1ScopesByIdData, ThrowOnError>,
 ) =>
@@ -1716,6 +1959,9 @@ export const deleteApiV1ScopesById = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({ url: "/api/v1/Scopes/{id}", ...options });
 
+/**
+ * Gets the API scope with the specified identifier.
+ */
 export const getApiV1ScopesById = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1ScopesByIdData, ThrowOnError>,
 ) =>
@@ -1729,6 +1975,9 @@ export const getApiV1ScopesById = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Updates the specified API scope.
+ */
 export const putApiV1ScopesById = <ThrowOnError extends boolean = false>(
   options: Options<PutApiV1ScopesByIdData, ThrowOnError>,
 ) =>
@@ -1745,6 +1994,9 @@ export const putApiV1ScopesById = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Gets all user claims for the specified scope.
+ */
 export const getApiV1ScopesByScopeIdClaims = <
   ThrowOnError extends boolean = false,
 >(
@@ -1760,6 +2012,9 @@ export const getApiV1ScopesByScopeIdClaims = <
     ...options,
   });
 
+/**
+ * Adds a new user claim to the specified scope.
+ */
 export const postApiV1ScopesByScopeIdClaims = <
   ThrowOnError extends boolean = false,
 >(
@@ -1779,6 +2034,9 @@ export const postApiV1ScopesByScopeIdClaims = <
     },
   });
 
+/**
+ * Deletes the specified user claim from the specified scope.
+ */
 export const deleteApiV1ScopesByScopeIdClaimsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1790,6 +2048,9 @@ export const deleteApiV1ScopesByScopeIdClaimsById = <
     ThrowOnError
   >({ url: "/api/v1/scopes/{scopeId}/claims/{id}", ...options });
 
+/**
+ * Gets the user claim with the specified identifier for the specified scope.
+ */
 export const getApiV1ScopesByScopeIdClaimsById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1805,6 +2066,9 @@ export const getApiV1ScopesByScopeIdClaimsById = <
     ...options,
   });
 
+/**
+ * Gets all custom properties for the specified scope.
+ */
 export const getApiV1ScopesByScopeIdProperties = <
   ThrowOnError extends boolean = false,
 >(
@@ -1820,6 +2084,9 @@ export const getApiV1ScopesByScopeIdProperties = <
     ...options,
   });
 
+/**
+ * Adds a new custom property to the specified scope.
+ */
 export const postApiV1ScopesByScopeIdProperties = <
   ThrowOnError extends boolean = false,
 >(
@@ -1839,6 +2106,9 @@ export const postApiV1ScopesByScopeIdProperties = <
     },
   });
 
+/**
+ * Deletes the specified custom property from the specified scope.
+ */
 export const deleteApiV1ScopesByScopeIdPropertiesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1850,6 +2120,9 @@ export const deleteApiV1ScopesByScopeIdPropertiesById = <
     ThrowOnError
   >({ url: "/api/v1/scopes/{scopeId}/properties/{id}", ...options });
 
+/**
+ * Gets the custom property with the specified identifier for the specified scope.
+ */
 export const getApiV1ScopesByScopeIdPropertiesById = <
   ThrowOnError extends boolean = false,
 >(
@@ -1865,6 +2138,9 @@ export const getApiV1ScopesByScopeIdPropertiesById = <
     ...options,
   });
 
+/**
+ * Gets a summary list of all users.
+ */
 export const getApiV1Users = <ThrowOnError extends boolean = false>(
   options?: Options<GetApiV1UsersData, ThrowOnError>,
 ) =>
@@ -1878,6 +2154,9 @@ export const getApiV1Users = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Creates a new user.
+ */
 export const postApiV1Users = <ThrowOnError extends boolean = false>(
   options: Options<PostApiV1UsersData, ThrowOnError>,
 ) =>
@@ -1895,6 +2174,9 @@ export const postApiV1Users = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Deletes a user.
+ */
 export const deleteApiV1UsersById = <ThrowOnError extends boolean = false>(
   options: Options<DeleteApiV1UsersByIdData, ThrowOnError>,
 ) =>
@@ -1904,6 +2186,9 @@ export const deleteApiV1UsersById = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({ url: "/api/v1/Users/{id}", ...options });
 
+/**
+ * Gets a single user by their identifier.
+ */
 export const getApiV1UsersById = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1UsersByIdData, ThrowOnError>,
 ) =>
@@ -1917,6 +2202,9 @@ export const getApiV1UsersById = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Updates an existing user.
+ */
 export const putApiV1UsersById = <ThrowOnError extends boolean = false>(
   options: Options<PutApiV1UsersByIdData, ThrowOnError>,
 ) =>
@@ -1933,6 +2221,9 @@ export const putApiV1UsersById = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Gets the roles assigned to a user.
+ */
 export const getApiV1UsersByIdRoles = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1UsersByIdRolesData, ThrowOnError>,
 ) =>
@@ -1946,6 +2237,9 @@ export const getApiV1UsersByIdRoles = <ThrowOnError extends boolean = false>(
     ...options,
   });
 
+/**
+ * Assigns a role to a user by role name.
+ */
 export const postApiV1UsersByIdRoles = <ThrowOnError extends boolean = false>(
   options: Options<PostApiV1UsersByIdRolesData, ThrowOnError>,
 ) =>
@@ -1962,6 +2256,9 @@ export const postApiV1UsersByIdRoles = <ThrowOnError extends boolean = false>(
     },
   });
 
+/**
+ * Removes a role from a user by role name.
+ */
 export const deleteApiV1UsersByIdRolesByRoleName = <
   ThrowOnError extends boolean = false,
 >(
@@ -1973,6 +2270,9 @@ export const deleteApiV1UsersByIdRolesByRoleName = <
     ThrowOnError
   >({ url: "/api/v1/Users/{id}/roles/{roleName}", ...options });
 
+/**
+ * Gets the claims assigned to a user.
+ */
 export const getApiV1UsersByIdClaims = <ThrowOnError extends boolean = false>(
   options: Options<GetApiV1UsersByIdClaimsData, ThrowOnError>,
 ) =>

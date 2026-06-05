@@ -149,7 +149,7 @@ namespace Spydersoft.Identity.Pages.Account
 
                     if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Count > 0)
                     {
-                        providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
+                        providers = [.. providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme))];
                     }
                 }
             }

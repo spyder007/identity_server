@@ -4,7 +4,6 @@
     var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? string.Empty;
 
     string Active(string page) => currentPage.Equals(page, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
-    string ActivePrefix(string prefix) => currentPage.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
 }
 
 <nav class="flex flex-1 flex-col overflow-y-auto px-3 py-3">

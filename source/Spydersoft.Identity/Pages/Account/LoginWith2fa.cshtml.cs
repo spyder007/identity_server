@@ -14,10 +14,9 @@ namespace Spydersoft.Identity.Pages.Account
 {
     /// <summary>Two-factor authenticator code entry during login.</summary>
     [AllowAnonymous]
-    public class LoginWith2faModel(
+    public class LoginWith2FaModel(
         SignInManager<ApplicationUser> signInManager,
-        UserManager<ApplicationUser> userManager,
-        ILogger<LoginWith2faModel> logger) : PageModel
+        ILogger<LoginWith2FaModel> logger) : PageModel
     {
         /// <summary>The submitted authenticator code and options.</summary>
         [BindProperty]

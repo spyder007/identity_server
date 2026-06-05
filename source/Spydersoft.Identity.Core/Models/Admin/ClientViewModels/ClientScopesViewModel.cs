@@ -40,7 +40,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
 
             child.Scopes = [.. child.Scopes.Distinct()];
 
-            Duende.IdentityServer.EntityFramework.Entities.Client client = configDbContext.Clients.Include(c => c.AllowedScopes).FirstOrDefault(c => c.Id == parent.Id);
+            Duende.IdentityServer.EntityFramework.Entities.Client? client = configDbContext.Clients.Include(c => c.AllowedScopes).FirstOrDefault(c => c.Id == parent.Id);
             if (client != null)
             {
                 foreach (Duende.IdentityServer.EntityFramework.Entities.ClientScope scope in client.AllowedScopes)
@@ -68,12 +68,12 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 2)]
         [Display(Name = "Scope")]
-        public string Scope { get; set; }
+        public string Scope { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the scopes.
         /// </summary>
         /// <value>The scopes.</value>
-        public List<string> Scopes { get; set; }
+        public List<string> Scopes { get; set; } = [];
     }
 }

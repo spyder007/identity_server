@@ -11,6 +11,6 @@ namespace Spydersoft.Identity.Core.Models.Admin.ScopeViewModels
         /// Gets or sets the scopes.
         /// </summary>
         /// <value>The scopes.</value>
-        public IQueryable<ScopeViewModel> Scopes { get; set; }
+        public IQueryable<ScopeViewModel> Scopes { get; set; } = null!;
     }
 }

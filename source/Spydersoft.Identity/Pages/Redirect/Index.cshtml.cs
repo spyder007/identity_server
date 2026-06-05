@@ -18,6 +18,7 @@ namespace Spydersoft.Identity.Pages.Redirect
         /// <summary>Renders the loading page.</summary>
         public void OnGet()
         {
+            // No initialization required; the page renders with its default state.
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ApiResourceViewModels
             ApiResourceScopeViewModel child = base.GetChild(parent, configDbContext);
             child.Scopes = [.. configDbContext.ApiScopes.Select(scope => scope.Name)];
 
-            Duende.IdentityServer.EntityFramework.Entities.ApiResource api = configDbContext.ApiResources.Include(api => api.Scopes).FirstOrDefault(api => api.Id == parent.Id);
+            Duende.IdentityServer.EntityFramework.Entities.ApiResource? api = configDbContext.ApiResources.Include(api => api.Scopes).FirstOrDefault(api => api.Id == parent.Id);
             if (api != null)
             {
                 foreach (Duende.IdentityServer.EntityFramework.Entities.ApiResourceScope scope in api.Scopes)
@@ -56,13 +56,13 @@ namespace Spydersoft.Identity.Core.Models.Admin.ApiResourceViewModels
         /// Gets or sets the scope.
         /// </summary>
         /// <value>The scope.</value>
-        public string Scope { get; set; }
+        public string Scope { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the scopes.
         /// </summary>
         /// <value>The scopes.</value>
-        public List<string> Scopes { get; set; }
+        public List<string> Scopes { get; set; } = [];
     }
 
 

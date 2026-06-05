@@ -23,6 +23,7 @@ namespace Spydersoft.Identity.Pages.Account
         /// <summary>Renders the forgot-password form.</summary>
         public void OnGet()
         {
+            // No initialization required; the page renders with its default state.
         }
 
         /// <summary>Sends a password reset link if the account exists and is confirmed.</summary>

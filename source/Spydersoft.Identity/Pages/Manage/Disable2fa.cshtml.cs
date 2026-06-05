@@ -11,9 +11,9 @@ using Spydersoft.Identity.Core.Models.Identity;
 namespace Spydersoft.Identity.Pages.Manage
 {
     /// <summary>Confirms and performs disabling of two-factor authentication.</summary>
-    public class Disable2faModel(
+    public class Disable2FaModel(
         UserManager<ApplicationUser> userManager,
-        ILogger<Disable2faModel> logger) : PageModel
+        ILogger<Disable2FaModel> logger) : PageModel
     {
         /// <summary>Shows the disable-2FA warning, validating 2FA is currently enabled.</summary>
         public async Task<IActionResult> OnGetAsync()

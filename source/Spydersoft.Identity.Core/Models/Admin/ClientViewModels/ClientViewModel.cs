@@ -44,7 +44,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.",
             MinimumLength = 2)]
         [Display(Name = "Client ID")]
-        public string ClientId { get; set; }
+        public string ClientId { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the name of the client.
@@ -53,7 +53,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         [Required]
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Client Name")]
-        public string ClientName { get; set; }
+        public string ClientName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the client URI.
@@ -61,7 +61,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// <value>The client URI.</value>
         [StringLength(2000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [Display(Name = "Client URI")]
-        public string ClientUri { get; set; }
+        public string ClientUri { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the absolute refresh token lifetime.
@@ -165,7 +165,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// <value>The logo URI.</value>
         [StringLength(2000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [Display(Name = "Logo URI")]
-        public string LogoUri { get; set; }
+        public string LogoUri { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the type of the protocol.
@@ -175,7 +175,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 2)]
         [Display(Name = "Protocol Type")]
         [DefaultValue("oidc")]
-        public string ProtocolType { get; set; }
+        public string ProtocolType { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the refresh token expiration.
@@ -253,7 +253,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// <value>The back channel logout URI.</value>
         [StringLength(2000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [Display(Name = "Backchannel Logout URI")]
-        public string BackChannelLogoutUri { get; set; }
+        public string BackChannelLogoutUri { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the client claims prefix.
@@ -261,7 +261,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// <value>The client claims prefix.</value>
         [StringLength(200, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [Display(Name = "Client claims prefix")]
-        public string ClientClaimsPrefix { get; set; }
+        public string ClientClaimsPrefix { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the consent lifetime.
@@ -277,7 +277,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// <value>The description.</value>
         [StringLength(1000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [Display(Name = "Description")]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether [front channel logout session required].
@@ -292,7 +292,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// <value>The front channel logout URI.</value>
         [StringLength(2000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [Display(Name = "Frontchannel Logout URI")]
-        public string FrontChannelLogoutUri { get; set; }
+        public string FrontChannelLogoutUri { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the pair wise subject salt.
@@ -300,7 +300,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// <value>The pair wise subject salt.</value>
         [StringLength(2000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [Display(Name = "Pairwise Subject Salt")]
-        public string PairWiseSubjectSalt { get; set; }
+        public string PairWiseSubjectSalt { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the device code lifetime.
@@ -324,7 +324,7 @@ namespace Spydersoft.Identity.Core.Models.Admin.ClientViewModels
         /// <value>The type of the user code.</value>
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [Display(Name = "User Code Type")]
-        public string UserCodeType { get; set; }
+        public string UserCodeType { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the user sso lifetime.

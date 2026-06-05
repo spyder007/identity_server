@@ -23,11 +23,16 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
     [ApiVersion("1.0")]
     public class IdentityResourcesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminApiController(mapper)
     {
+        /// <summary>Gets a summary of all identity resources.</summary>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the collection of identity resource summaries.</returns>
         [HttpGet]
         [ProducesResponseType<IdentityResourceSummaryDto[]>(StatusCodes.Status200OK)]
         public IActionResult GetAll()
             => Ok(Mapper.ProjectTo<IdentityResourceSummaryDto>(dbContext.IdentityResources.AsQueryable()));
 
+        /// <summary>Gets the identity resource with the specified identifier.</summary>
+        /// <param name="id">The identifier of the identity resource.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the identity resource, or <see cref="StatusCodes.Status404NotFound"/> if it does not exist.</returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType<IdentityResourceDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -37,6 +42,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return entity is null ? NotFound() : Ok(Mapper.Map<IdentityResourceDto>(entity));
         }
 
+        /// <summary>Creates a new identity resource.</summary>
+        /// <param name="dto">The identity resource details to create.</param>
+        /// <returns>A <see cref="StatusCodes.Status201Created"/> response containing the created identity resource, or <see cref="StatusCodes.Status400BadRequest"/> if the request is invalid.</returns>
         [HttpPost]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<IdentityResourceDto>(StatusCodes.Status201Created)]
@@ -50,13 +58,17 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return CreatedAtAction(nameof(GetById), new { id = entity.Id }, Mapper.Map<IdentityResourceDto>(entity));
         }
 
+        /// <summary>Updates the specified identity resource.</summary>
+        /// <param name="id">The identifier of the identity resource to update.</param>
+        /// <param name="dto">The updated identity resource details.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource does not exist.</returns>
         [HttpPut("{id:int}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] SaveIdentityResourceDto dto)
         {
-            var entity = dbContext.IdentityResources.FirstOrDefault(r => r.Id == id);
+            var entity = await dbContext.IdentityResources.FirstOrDefaultAsync(r => r.Id == id);
             if (entity is null) return NotFound();
             _ = Mapper.Map(dto, entity);
             entity.Updated = DateTime.UtcNow;
@@ -65,13 +77,16 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return NoContent();
         }
 
+        /// <summary>Deletes the specified identity resource.</summary>
+        /// <param name="id">The identifier of the identity resource to delete.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource does not exist.</returns>
         [HttpDelete("{id:int}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            var entity = dbContext.IdentityResources.FirstOrDefault(r => r.Id == id);
+            var entity = await dbContext.IdentityResources.FirstOrDefaultAsync(r => r.Id == id);
             if (entity is null) return NotFound();
             _ = dbContext.IdentityResources.Remove(entity);
             _ = await dbContext.SaveChangesAsync();
@@ -88,6 +103,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
     [Route("api/v{version:apiVersion}/identityresources/{identityResourceId:int}/claims")]
     public class IdentityResourceClaimsController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminApiController(mapper)
     {
+        /// <summary>Gets all user claims for the specified identity resource.</summary>
+        /// <param name="identityResourceId">The identifier of the parent identity resource.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the identity resource claims, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource does not exist.</returns>
         [HttpGet]
         [ProducesResponseType<IdentityResourceClaimDto[]>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -98,6 +116,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return Ok(Mapper.ProjectTo<IdentityResourceClaimDto>(resource.UserClaims.AsQueryable()));
         }
 
+        /// <summary>Gets the user claim with the specified identifier for the specified identity resource.</summary>
+        /// <param name="identityResourceId">The identifier of the parent identity resource.</param>
+        /// <param name="id">The identifier of the identity resource claim.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the identity resource claim, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource or claim does not exist.</returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType<IdentityResourceClaimDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -109,6 +131,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return Ok(Mapper.Map<IdentityResourceClaimDto>(item));
         }
 
+        /// <summary>Adds a new user claim to the specified identity resource.</summary>
+        /// <param name="identityResourceId">The identifier of the parent identity resource.</param>
+        /// <param name="dto">The claim details to create.</param>
+        /// <returns>A <see cref="StatusCodes.Status201Created"/> response containing the created claim, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource does not exist.</returns>
         [HttpPost]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<IdentityResourceClaimDto>(StatusCodes.Status201Created)]
@@ -124,6 +150,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return CreatedAtAction(nameof(GetById), new { identityResourceId, id = entity.Id }, Mapper.Map<IdentityResourceClaimDto>(entity));
         }
 
+        /// <summary>Deletes the specified user claim from the specified identity resource.</summary>
+        /// <param name="identityResourceId">The identifier of the parent identity resource.</param>
+        /// <param name="id">The identifier of the identity resource claim to delete.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource or claim does not exist.</returns>
         [HttpDelete("{id:int}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -148,6 +178,9 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
     [Route("api/v{version:apiVersion}/identityresources/{identityResourceId:int}/properties")]
     public class IdentityResourcePropertiesController(ConfigurationDbContext dbContext, IMapper mapper) : BaseAdminApiController(mapper)
     {
+        /// <summary>Gets all custom properties for the specified identity resource.</summary>
+        /// <param name="identityResourceId">The identifier of the parent identity resource.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the identity resource properties, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource does not exist.</returns>
         [HttpGet]
         [ProducesResponseType<IdentityResourcePropertyDto[]>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -158,6 +191,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return Ok(Mapper.ProjectTo<IdentityResourcePropertyDto>(resource.Properties.AsQueryable()));
         }
 
+        /// <summary>Gets the custom property with the specified identifier for the specified identity resource.</summary>
+        /// <param name="identityResourceId">The identifier of the parent identity resource.</param>
+        /// <param name="id">The identifier of the identity resource property.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the identity resource property, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource or property does not exist.</returns>
         [HttpGet("{id:int}")]
         [ProducesResponseType<IdentityResourcePropertyDto>(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -169,6 +206,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return Ok(Mapper.Map<IdentityResourcePropertyDto>(item));
         }
 
+        /// <summary>Adds a new custom property to the specified identity resource.</summary>
+        /// <param name="identityResourceId">The identifier of the parent identity resource.</param>
+        /// <param name="dto">The property details to create.</param>
+        /// <returns>A <see cref="StatusCodes.Status201Created"/> response containing the created property, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource does not exist.</returns>
         [HttpPost]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<IdentityResourcePropertyDto>(StatusCodes.Status201Created)]
@@ -184,6 +225,10 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return CreatedAtAction(nameof(GetById), new { identityResourceId, id = entity.Id }, Mapper.Map<IdentityResourcePropertyDto>(entity));
         }
 
+        /// <summary>Deletes the specified custom property from the specified identity resource.</summary>
+        /// <param name="identityResourceId">The identifier of the parent identity resource.</param>
+        /// <param name="id">The identifier of the identity resource property to delete.</param>
+        /// <returns>A <see cref="StatusCodes.Status204NoContent"/> response on success, or <see cref="StatusCodes.Status404NotFound"/> if the identity resource or property does not exist.</returns>
         [HttpDelete("{id:int}")]
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
