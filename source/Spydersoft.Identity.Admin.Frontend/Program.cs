@@ -54,13 +54,10 @@ forwardedHeadersOptions.KnownIPNetworks.Clear();
 forwardedHeadersOptions.KnownProxies.Clear();
 app.UseForwardedHeaders(forwardedHeadersOptions);
 
+app.UseSpydersoftHealthChecks(healthCheckOptions);
+
 app.UseRouting();
-app.UseWhen(
-    ctx => !ctx.Request.Path.StartsWithSegments("/livez")
-        && !ctx.Request.Path.StartsWithSegments("/readyz")
-        && !ctx.Request.Path.StartsWithSegments("/startup"),
-    branch => branch.UseOidcProxy()
-);
+app.UseOidcProxy();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -71,8 +68,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
-app.MapHealthChecks("/livez").AllowAnonymous();
-app.MapHealthChecks("/readyz").AllowAnonymous();
 
 if (app.Environment.IsDevelopment())
 {
