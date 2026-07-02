@@ -55,6 +55,7 @@ forwardedHeadersOptions.KnownProxies.Clear();
 app.UseForwardedHeaders(forwardedHeadersOptions);
 
 app.UseRouting();
+app.UseSpydersoftHealthChecks(healthCheckOptions);
 app.UseOidcProxy();
 app.UseDefaultFiles();
 app.UseStaticFiles();
