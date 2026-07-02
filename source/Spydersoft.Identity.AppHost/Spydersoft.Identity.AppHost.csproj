@@ -1,6 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <Sdk Name="Aspire.AppHost.Sdk" Version="13.2.2" />
+<Project Sdk="Aspire.AppHost.Sdk/13.4.3">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -12,16 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" />
     <PackageReference Include="Aspire.Hosting.JavaScript" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Spydersoft.Identity.DataSeeder\Spydersoft.Identity.DataSeeder.csproj" />
     <ProjectReference Include="..\Spydersoft.Identity\Spydersoft.Identity.csproj" />
     <ProjectReference Include="..\Spydersoft.Identity.Admin.Api\Spydersoft.Identity.Admin.Api.csproj" />
     <ProjectReference Include="..\Spydersoft.Identity.Admin.Frontend\Spydersoft.Identity.Admin.Frontend.csproj" />
-    <ProjectReference Include="..\Spydersoft.Identity.DataSeeder\Spydersoft.Identity.DataSeeder.csproj" />
   </ItemGroup>
 
 </Project>

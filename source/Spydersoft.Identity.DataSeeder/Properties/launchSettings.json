@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Spydersoft.Identity.DataSeeder": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development",
+        "ConnectionStrings__IdentityConnection": "Host=localhost;Port=7010;Database=identity;Username=postgres;Password=postgres",
+        "AdminFrontend__ClientSecret": "secret"
+      }
+    }
+  }
+}

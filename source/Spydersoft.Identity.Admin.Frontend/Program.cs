@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Logging;
 
@@ -19,7 +20,7 @@ var config = builder.Configuration
 
 if (config != null)
 {
-    builder.Services.AddOidcProxy(config);
+    builder.Services.AddOidcProxy(config, options => options.AllowAnonymousAccess = false);
 }
 else
 {
@@ -27,14 +28,28 @@ else
 }
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("RequireAuthenticatedUserPolicy", policy => policy.RequireAuthenticatedUser());
+    .AddPolicy("RequireAuthenticatedUserPolicy", policy => policy.RequireAuthenticatedUser())
+    .AddPolicy("RequireAdminRolePolicy", policy =>
+        policy.RequireAuthenticatedUser()
+              .RequireClaim("role", "authentication.admin"));
+
+builder.Services.PostConfigureAll<CookieAuthenticationOptions>(options =>
+{
+    options.AccessDeniedPath = "/forbidden.html";
+});
 
 builder.Services.AddControllers();
 builder.Services.AddHttpClient("diag");
 
 var app = builder.Build();
 
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+});
+
 app.UseRouting();
+app.UseOidcProxy();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -43,11 +58,6 @@ if (app.Environment.IsDevelopment())
     IdentityModelEventSource.ShowPII = true;
     IdentityModelEventSource.LogCompleteSecurityArtifact = true;
 }
-
-app.UseForwardedHeaders(new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-});
 
 app.MapControllers();
 app.UseSpydersoftHealthChecks(healthCheckOptions);
@@ -120,7 +130,6 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.MapFallbackToFile("/index.html");
-app.UseOidcProxy();
+app.MapFallbackToFile("/index.html").RequireAuthorization("RequireAdminRolePolicy");
 
 await app.RunAsync();

@@ -28,10 +28,7 @@ internal static class DatabaseSeeder
         var configDb = sp.GetRequiredService<ConfigurationDbContext>();
         var appConfig = sp.GetRequiredService<IConfiguration>();
 
-        var adminFrontendSecret = appConfig["AdminFrontend:ClientSecret"]
-            ?? throw new InvalidOperationException(
-                "AdminFrontend:ClientSecret is not configured. Under Aspire this is " +
-                "supplied automatically via the AppHost parameter resource.");
+        var adminFrontendSecret = appConfig["AdminFrontend:ClientSecret"] ?? "secret";
 
         await SeedIdentityResourcesAsync(configDb, logger);
         await SeedApiScopesAsync(configDb, logger);

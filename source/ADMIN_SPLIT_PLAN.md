@@ -347,12 +347,29 @@ cd identity_server/tests/admin-ui-e2e && npx playwright test
 
 ---
 
+## CI test wiring ✅ COMPLETE (2026-06-03)
+
+Both Playwright suites now run in CI. Rather than baking tests into the build template, `pipeline-ci.yml` **composes two stage templates** (this replaced the old single-`extends` model — Azure DevOps `extends:` allows only one template, so composing at the `stages:` level is what lets one pipeline use both):
+
+```yaml
+# identity_server/.devops/pipeline-ci.yml
+stages:
+  - template: pipelines/build-multi-container/v1.yml@templates   # Build + docker_publish + updateHelmConfig
+    parameters: { ... }
+  - template: stages/integration-tests/v1.yml@templates          # Playwright stage, parallel
+    parameters: { ... }
+```
+
+In `spydersoft-consulting/azure-devops-templates` (local clone `d:/ops/azure-devops-templates`):
+
+- **NEW `stages/integration-tests/v1.yml`** — reusable stage template. Params: `suites` (list of `{name, workingDirectory, installCommand?, installBrowsers?}`), `setupSteps`, `netCoreVersion`/`nodeVersion`/`pool`/`timeoutInMinutes`, and `dependsOn` (template default `[]`; pipeline-ci sets it to `[Build]`). One job runs all suites sequentially (they share pinned ports 7000–7050, so they can't overlap on one agent). Per suite: `npm ci` (overridable) → optional `npx playwright install chromium` → `npx playwright test --reporter=junit,html` → `PublishTestResults@2` (`failTaskOnFailedTests`, `succeededOrFailed()`).
+- **`pipelines/build-multi-container/v1.yml`** stayed a pure build template (the inline test stage first added there was reverted). Its one root `variables:` (DOCKER_BUILDKIT) moved onto the `docker_publish` stage, so the file is now a clean `parameters + stages` template — usable both via `extends:` and as a `- template:` stage include. It also gained **`dockerPublishDependsOn` / `updateHelmConfigDependsOn`** params (defaults `[Build]` / `[docker_publish]`) so a consumer can splice an externally-composed stage into the serial chain by re-pointing what the built-in stages wait on. (Azure DevOps `stageList` params can't carry `- template:` references, so dependency-rewiring — not literal stage injection — is how reusable stages get threaded in.)
+- `pipeline-ci.yml` drives the test stage with .NET `10.0.x` / Node `22.x`, a setup step that `corepack enable && yarn install --immutable`s the admin-ui SPA (the e2e suite spawns `yarn dev`), and the two suites: `tests/admin-api-integration` (`installBrowsers: false` — request-context only) and `tests/admin-ui-e2e`.
+
+**Stage order (serial, deploy gated):** `Build → integration_tests → docker_publish → updateHelmConfig`. pipeline-ci sets the test stage's `dependsOn: [Build]` and `dockerPublishDependsOn: [integration_tests]`, so images **and** the helm/deploy bump only happen when the Playwright suites pass. On PR/main builds only `Build` + `integration_tests` run (no image/deploy stages), so the suites are a pure gate there. To trade serial for speed — images in parallel with tests, gating only the deploy — set `dockerPublishDependsOn: [Build]` and `updateHelmConfigDependsOn: [docker_publish, integration_tests]`. Agent prereqs: .NET 10 SDK + Node 22 + a container runtime (Podman/Docker) + Chromium system libs.
+
 ## Next Immediate Actions
 
 1. **Cross-app visual consistency (optional, deferred).** The admin SPA uses PrimeReact `lara-light-indigo` (indigo brand) with brand tokens defined in `@theme`. The main app uses Tailwind v4 + DaisyUI v5 with an OKLCH "identity" theme (`Spydersoft.Identity/Styles/style.css`). Different libraries, different visual languages — full unification would require either bringing DaisyUI into the admin SPA (and dropping PrimeReact) or vice versa, neither of which is needed for functional parity. Brand color hex codes can be aligned cosmetically if desired.
 
-2. **Phase 3 cleanup** — strip the old MVC admin (Clients, ApiResources, IdentityResources, Scopes, Users, UserRoles controllers + views) from `Spydersoft.Identity` now that all pages have parity in the SPA and the e2e suite proves the flow end-to-end.
-
-3. **Expand the e2e coverage** as needed — currently we have one CRUD walkthrough (Roles); the same pattern can extend to Users password-on-create, Clients sub-resource tabs, etc.
-
-4. **Wire both test suites into CI** — they expect the Aspire/Podman/DotNet 10 toolchain to be available on the runner; no other external state required.
+2. **Expand the e2e coverage** as needed — currently we have one CRUD walkthrough (Roles); the same pattern can extend to Users password-on-create, Clients sub-resource tabs, etc.

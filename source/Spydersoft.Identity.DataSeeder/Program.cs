@@ -16,9 +16,7 @@ using Spydersoft.Identity.DataSeeder.Seeding;
 var builder = Host.CreateApplicationBuilder(args);
 
 var connString = builder.Configuration.GetConnectionString("IdentityConnection")
-    ?? throw new InvalidOperationException(
-        "ConnectionStrings:IdentityConnection is not configured. " +
-        "When run under Aspire this is supplied automatically via the postgres resource reference.");
+    ?? "Host=localhost;Port=7010;Database=identity;Username=postgres;Password=postgres";
 
 var migrationsAssembly = typeof(ApplicationDbContext).Assembly.GetName().Name!;
 

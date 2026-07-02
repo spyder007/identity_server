@@ -112,7 +112,7 @@ internal static class Clients
             },
             AllowedScopes =
             {
-                "openid", "profile", "email",
+                "openid", "profile", "email", "roles",
                 "identity:admin:read", "identity:admin:write",
             },
             AllowOfflineAccess = true,

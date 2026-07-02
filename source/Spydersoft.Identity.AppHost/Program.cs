@@ -46,15 +46,6 @@ else
 // below; databaseName="identity" keeps the actual Postgres DB name unchanged.
 var identityDb = postgres.AddDatabase("identitydb", "identity");
 
-// One-shot seeder: applies EF migrations, then seeds Clients/Resources/Identity
-// if not already present. Receives the cleartext admin-frontend secret and
-// hashes it before storing.
-var seeder = builder.AddProject<Projects.Spydersoft_Identity_DataSeeder>("seeder")
-    .WithReference(identityDb)
-    .WaitFor(identityDb)
-    .WithEnvironment("ConnectionStrings__IdentityConnection", identityDb)
-    .WithEnvironment("AdminFrontend__ClientSecret", adminFrontendClientSecret);
-
 // Main IdentityServer + MVC admin (existing site). The Telemetry__*__Type
 // overrides flip the dev config (which routes telemetry to console) back to
 // OTLP so that under Aspire the identity app emits to the dashboard. The
@@ -72,8 +63,27 @@ var identity = builder.AddProject<Projects.Spydersoft_Identity>("identity")
     .WithEnvironment("Telemetry__Log__Type", "otlp")
     .WithEnvironment("Telemetry__Metrics__Type", "otlp")
     .WithEnvironment("Telemetry__Trace__Type", "otlp")
-    .WaitForCompletion(seeder)
     .WithEndpoint("http", e => { e.Port = 7020; e.TargetPort = 7020; e.IsProxied = false; });
+
+// One-shot seeder: applies EF migrations then seeds Clients/Resources/Identity.
+// Under Testing it starts automatically and identity waits for it (clean DB on
+// every run). In dev it is registered but not started — use the Aspire dashboard
+// to trigger it manually on a fresh local instance.
+var seeder = builder.AddProject<Projects.Spydersoft_Identity_DataSeeder>("seeder")
+    .WithReference(identityDb)
+    .WaitFor(identityDb)
+    .WithEnvironment("ConnectionStrings__IdentityConnection", identityDb)
+    .WithEnvironment("AdminFrontend__ClientSecret", adminFrontendClientSecret);
+
+if (builder.Environment.EnvironmentName == "Testing")
+{
+    identity.WaitForCompletion(seeder);
+}
+else
+{
+    seeder.WithExplicitStart();
+    identity.WaitFor(identityDb);
+}
 
 // Admin REST API.
 var adminApi = builder.AddProject<Projects.Spydersoft_Identity_Admin_Api>("admin-api")

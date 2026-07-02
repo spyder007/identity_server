@@ -28,6 +28,7 @@ internal static class Resources
         {
             Scopes = { "identity:admin:read", "identity:admin:write" },
             ShowInDiscoveryDocument = false,
+            UserClaims = { JwtClaimTypes.Role },
         }
     };
 }

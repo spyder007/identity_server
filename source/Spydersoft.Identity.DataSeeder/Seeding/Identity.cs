@@ -12,7 +12,7 @@ namespace Spydersoft.Identity.DataSeeder.Seeding;
 
 internal static class Identity
 {
-    public static readonly string[] RoleNames = ["admin", "developer"];
+    public static readonly string[] RoleNames = ["authentication.admin", "developer"];
 
     public static async Task SeedAsync(
         RoleManager<ApplicationRole> roleMgr,
@@ -63,7 +63,7 @@ internal static class Identity
                 throw new IdentityResultException(claims);
             }
 
-            var roleAssign = await userMgr.AddToRoleAsync(admin!, "admin");
+            var roleAssign = await userMgr.AddToRoleAsync(admin!, "authentication.admin");
             if (!roleAssign.Succeeded)
             {
                 throw new IdentityResultException(roleAssign);
