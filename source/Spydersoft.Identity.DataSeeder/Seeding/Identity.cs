@@ -30,9 +30,10 @@ internal static class Identity
             }
         }
 
-        if (await userMgr.FindByNameAsync("admin") is null)
+        var admin = await userMgr.FindByNameAsync("admin");
+        if (admin is null)
         {
-            var admin = new ApplicationUser
+            admin = new ApplicationUser
             {
                 UserName = "admin",
                 Email = "admin@localhost.net",
@@ -62,7 +63,10 @@ internal static class Identity
             {
                 throw new IdentityResultException(claims);
             }
+        }
 
+        if (!await userMgr.IsInRoleAsync(admin!, "authentication.admin"))
+        {
             var roleAssign = await userMgr.AddToRoleAsync(admin!, "authentication.admin");
             if (!roleAssign.Succeeded)
             {

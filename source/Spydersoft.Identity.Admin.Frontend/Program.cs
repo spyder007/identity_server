@@ -20,7 +20,7 @@ var config = builder.Configuration
 
 if (config != null)
 {
-    builder.Services.AddOidcProxy(config, options => options.AllowAnonymousAccess = false);
+    builder.Services.AddOidcProxy(config, options => options.AllowAnonymousAccess = true);
 }
 else
 {
