@@ -20,7 +20,7 @@ var config = builder.Configuration
 
 if (config != null)
 {
-    builder.Services.AddOidcProxy(config, options => options.AllowAnonymousAccess = true);
+    builder.Services.AddOidcProxy(config, options => options.AllowAnonymousAccess = false);
 }
 else
 {
@@ -55,8 +55,12 @@ forwardedHeadersOptions.KnownProxies.Clear();
 app.UseForwardedHeaders(forwardedHeadersOptions);
 
 app.UseRouting();
-app.UseSpydersoftHealthChecks(healthCheckOptions);
-app.UseOidcProxy();
+app.UseWhen(
+    ctx => !ctx.Request.Path.StartsWithSegments("/livez")
+        && !ctx.Request.Path.StartsWithSegments("/readyz")
+        && !ctx.Request.Path.StartsWithSegments("/startup"),
+    branch => branch.UseOidcProxy()
+);
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
@@ -67,7 +71,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
-app.UseSpydersoftHealthChecks(healthCheckOptions);
+app.MapHealthChecks("/livez").AllowAnonymous();
+app.MapHealthChecks("/readyz").AllowAnonymous();
 
 if (app.Environment.IsDevelopment())
 {
