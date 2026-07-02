@@ -149,6 +149,15 @@ stages:
       netCoreVersion: '10.0.x'
       nodeVersion: '22.x'
       setupSteps:
+        # UseNode@1 (used by this template to set up Node) mis-resolves "22.x" to a
+        # stale cached Node 10 on our self-hosted agent, which breaks corepack. Force
+        # the PATH back to Node 22 with NodeTool@0, which resolves correctly here (as
+        # proven by the Build stage's "Set Node Version Explicitly" step).
+        - task: NodeTool@0
+          displayName: 'Force Node 22.x (UseNode@1 workaround)'
+          inputs:
+            versionSpec: '22.x'
+
         # The admin-ui-e2e suite spawns `yarn dev`, so the SPA's deps (yarn 4 via
         # corepack) must be restored first. The test suites themselves use npm.
         - task: Bash@3
