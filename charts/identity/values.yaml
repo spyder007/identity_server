@@ -16,6 +16,25 @@ controllers:
           pullPolicy: IfNotPresent
           tag: latest
         probes:
+          # Cold start does EF Core migration-history checks plus Duende
+          # IdentityServer's automatic signing-key generation (no cached
+          # keys on first-ever boot against a fresh secret) -- confirmed
+          # live during the test-environment cutover: with no startupProbe,
+          # liveness's old initialDelaySeconds: 0 / failureThreshold: 3
+          # (~30s) killed the container via SIGTERM mid-startup, cancelling
+          # Kestrel's own port bind (TaskCanceledException) and
+          # crash-looping indefinitely. startupProbe gives real boot time
+          # before liveness/readiness are evaluated at all.
+          startup:
+            enabled: true
+            custom: true
+            spec:
+              httpGet:
+                path: /livez
+                port: 8080
+              periodSeconds: 10
+              timeoutSeconds: 1
+              failureThreshold: 12
           liveness:
             enabled: true
             custom: true
@@ -23,7 +42,6 @@ controllers:
               httpGet:
                 path: /livez
                 port: 8080
-              initialDelaySeconds: 0
               periodSeconds: 10
               timeoutSeconds: 1
               failureThreshold: 3
@@ -34,7 +52,6 @@ controllers:
               httpGet:
                 path: /readyz
                 port: 8080
-              initialDelaySeconds: 0
               periodSeconds: 10
               timeoutSeconds: 1
               failureThreshold: 3
