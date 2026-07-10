@@ -1,0 +1,15 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="Spydersoft.Identity.Admin.Api/Spydersoft.Identity.Admin.Api.csproj" />
+  <Project Path="Spydersoft.Identity.Admin.Frontend/Spydersoft.Identity.Admin.Frontend.csproj" />
+  <Project Path="Spydersoft.Identity.AppHost/Spydersoft.Identity.AppHost.csproj" />
+  <Project Path="Spydersoft.Identity.Core/Spydersoft.Identity.Core.csproj" />
+  <Project Path="Spydersoft.Identity.Data/Spydersoft.Identity.Data.csproj" />
+  <Project Path="Spydersoft.Identity.DataSeeder/Spydersoft.Identity.DataSeeder.csproj" />
+  <Project Path="Spydersoft.Identity.Tests/Spydersoft.Identity.Tests.csproj" />
+  <Project Path="Spydersoft.Identity/Spydersoft.Identity.csproj" />
+</Solution>

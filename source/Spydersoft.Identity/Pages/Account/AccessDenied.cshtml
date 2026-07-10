@@ -1,0 +1,18 @@
+@page
+@{
+    ViewData["Title"] = "Access Denied";
+    Layout = "_AuthLayout";
+}
+
+<div class="card">
+    <div class="card-body text-center">
+        <span class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-danger/10 text-danger">
+            <i class="fas fa-ban text-2xl"></i>
+        </span>
+        <h1 class="text-xl font-semibold text-content">Access denied</h1>
+        <p class="mt-2 text-sm text-content-muted">You do not have permission to access this resource.</p>
+        <div class="card-actions mt-6 justify-center">
+            <a asp-page="/Index" class="btn btn-primary"><i class="fas fa-house"></i> Return home</a>
+        </div>
+    </div>
+</div>

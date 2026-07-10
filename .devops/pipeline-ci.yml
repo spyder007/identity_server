@@ -1,4 +1,9 @@
-## Build Pipeline - Build, publish container image, and update helmfile config
+## Build Pipeline - Build, publish three container images plus the combined
+## identity OCI chart, and update helmfile config
+##   1. Spydersoft.Identity                (spyder007/identity_server)
+##   2. Spydersoft.Identity.Admin.Api      (spyder007/identity_admin_api)
+##   3. Spydersoft.Identity.Admin.Frontend (spyder007/identity_admin_frontend)
+##   4. charts/identity                    (ghcr.io/spydersoft-consulting/charts/identity)
 resources:
   repositories:
     - repository: templates
@@ -26,50 +31,179 @@ pr:
 - main
 
 
-extends:
-  template: pipelines/build-api/v1.yml@templates
-  parameters:
-    gitVersionSpec: '6.0.x'
-    buildProject: source/Spydersoft.Identity.sln
-    publishProject: src/Spydersoft.Identity.csproj
-    netCoreVersion: '9.0.x'
-    artifactName: identityServer
-    artifactZipName: Spydersoft.Identity
-    dockerImageName: spyder007/identity_server
-    dockerFilePath: Dockerfile.simple
-    containerRegistryName: github-spydersoft-docker
-    imageTagVariableName: identity_server
-    helmfileRepoName: helmfileconfig
-    externalFeedCredentials: SpydersoftGithub
-    #if it's a PR or build from main, don't update helmfile config or build/publish docker image
-    ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
-      updateHelmConfig: false
-      buildAndPublishDockerImage: false
-      executeSonar: true
-    ${{ else }}:
-      updateHelmConfig: true
-      buildAndPublishDockerImage: true
-      executeSonar: false
-    sonarEndpointName: sonarcloud-spydersoft
-    sonarProjectKey: spyder007_identity_server
-    sonarProjectName: identity_server
-    executeTests: true
-    testProjects: '**/*.Tests/*.csproj'
-    useSonarCloud: true
-    sonarCloudOrganization: spydersoft-mjg
-    prebuildSteps:
-      - task: Npm@1
-        displayName: NPM Install
-        inputs:
-          workingDir: $(Build.SourcesDirectory)/source/Spydersoft.Identity
-          command: install
-      - task: CmdLine@2
-        displayName: 'Gulp Install'
-        inputs:
-          script: 'npm install gulp' 
-          workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
-      - task: CmdLine@2
-        displayName: 'Gulp Build'
-        inputs:
-          script: 'gulp'
-          workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
+# Composed from two stage templates: the multi-container build/publish stages
+# and the Playwright integration/E2E stage (run in parallel). Composition (not
+# `extends`) is what lets a single pipeline pull in both templates.
+stages:
+  - template: pipelines/build-multi-container/v1.yml@templates
+    parameters:
+      gitVersionSpec: '6.0.x'
+      # Build the whole solution so the single SonarCloud scope sees every C# project.
+      buildProject: source/Spydersoft.Identity.slnx
+      netCoreVersion: '10.0.x'
+      externalFeedCredentials: SpydersoftGithub
+      containerRegistryName: github-spydersoft-docker
+      helmfileRepoName: helmfileconfig
+
+      # .NET projects published as deployable artifacts (one per container image).
+      #   artifactName is consumed by the matching dockerImages entry below.
+      publishProjects:
+        - name: identity
+          project: source/Spydersoft.Identity/Spydersoft.Identity.csproj
+          artifactName: identityServer
+        - name: adminApi
+          project: source/Spydersoft.Identity.Admin.Api/Spydersoft.Identity.Admin.Api.csproj
+          artifactName: identityAdminApi
+        - name: adminFrontend
+          project: source/Spydersoft.Identity.Admin.Frontend/Spydersoft.Identity.Admin.Frontend.csproj
+          artifactName: identityAdminFrontend
+
+      # One container image per published artifact. artifactZipName matches the
+      # published .csproj name (DotNetCoreCLI zips the publish output as <csproj>.zip).
+      dockerImages:
+        - name: identity
+          dockerImageName: spyder007/identity_server
+          artifactName: identityServer
+          artifactZipName: Spydersoft.Identity
+          dockerFilePath: Dockerfile.simple
+          imageTagVariableName: identity_server
+        - name: admin_api
+          dockerImageName: spyder007/identity_admin_api
+          artifactName: identityAdminApi
+          artifactZipName: Spydersoft.Identity.Admin.Api
+          dockerFilePath: Dockerfile.admin-api
+          imageTagVariableName: identity_admin_api
+        - name: admin_frontend
+          dockerImageName: spyder007/identity_admin_frontend
+          artifactName: identityAdminFrontend
+          artifactZipName: Spydersoft.Identity.Admin.Frontend
+          dockerFilePath: Dockerfile.admin-frontend
+          imageTagVariableName: identity_admin_frontend
+
+      helmCharts:
+        - name: identity
+          chartPath: charts/identity
+
+      # A single commit bumps all four keys atomically in platform-helm-config.
+      # identity_chart_version, not the generic chart_version -- platform-helm-config
+      # hosts multiple independently-versioned OCI-chart apps sharing one flat
+      # imageTags map, so each app needs its own key to avoid one app's publish
+      # overwriting another's chart-version pin.
+      helmTagsCollection: 'identity_server=$(build.buildnumber),identity_admin_api=$(build.buildnumber),identity_admin_frontend=$(build.buildnumber),identity_chart_version=$(build.buildnumber)'
+
+      # Serial chain: Build -> integration_tests -> docker_publish/chart_publish -> updateHelmConfig.
+      # Images and the chart (and therefore the helm/deploy bump) only happen if
+      # the Playwright suites pass. (For images-in-parallel-with-tests instead,
+      # drop these back to [Build] and gate only the deploy via
+      # updateHelmConfigDependsOn: [docker_publish, chart_publish, integration_tests].)
+      dockerPublishDependsOn:
+        - integration_tests
+      chartPublishDependsOn:
+        - integration_tests
+      updateHelmConfigDependsOn:
+        - docker_publish
+        - chart_publish
+
+      # .NET unit tests + single SonarCloud scope over the solution.
+      executeTests: true
+      testProjects: '**/*.Tests/*.csproj'
+      sonarEndpointName: sonarcloud-spydersoft
+      sonarProjectKey: spyder007_identity_server
+      sonarProjectName: identity_server
+      useSonarCloud: true
+      sonarCloudOrganization: spydersoft-mjg
+
+      # admin-ui React SPA: yarn install/test/build (produces dist consumed by the
+      # Admin.Frontend publish) plus its own SonarCloud scope for the JS/TS code.
+      uiEnabled: true
+      uiSourceDirectory: source/Spydersoft.Identity.Admin.Frontend/admin-ui
+      uiNodeVersion: '22.x'
+      uiUseYarn2: true
+      uiUnitTestFile: source/Spydersoft.Identity.Admin.Frontend/admin-ui/output/test/junit.xml
+      uiCodeCoverageFile: source/Spydersoft.Identity.Admin.Frontend/admin-ui/output/coverage/cobertura-coverage.xml
+      uiUseSonarCloud: true
+      uiSonarEndpointName: sonarcloud-spydersoft
+      uiSonarCloudOrganization: spydersoft-mjg
+      uiSonarConfigFile: source/Spydersoft.Identity.Admin.Frontend/admin-ui/sonar-project.properties
+
+      # Three build shapes (matching the audit/pitstop/file-storage convention):
+      #  - PR: build/test/sonar only, no publish, no helm-config update.
+      #  - main: beta build (GitVersion tags X.Y.Z-beta.<n> per GitVersion.yml's
+      #    `main` branch config) -> publish images+chart, update helm-config's
+      #    test environment. Still runs sonar since this is a real build path.
+      #  - anything else (feature branch / a tag push): release build -> publish
+      #    images+chart, ALSO update helm-config's test environment -- helm-config's
+      #    own detect_version/deploy.yml decides from there whether to auto-promote
+      #    to stage (gated on the version being unlabeled, not on which branch
+      #    built it). No sonar re-analysis.
+      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+        updateHelmConfig: false
+        buildAndPublishDockerImages: false
+        buildAndPublishHelmCharts: false
+        executeSonar: true
+        uiExecuteSonar: true
+      ${{ elseif eq(variables['Build.SourceBranchName'], 'main') }}:
+        updateHelmConfig: true
+        buildAndPublishDockerImages: true
+        buildAndPublishHelmCharts: true
+        executeSonar: true
+        uiExecuteSonar: true
+      ${{ else }}:
+        updateHelmConfig: true
+        buildAndPublishDockerImages: true
+        buildAndPublishHelmCharts: true
+        executeSonar: false
+        uiExecuteSonar: false
+
+      # Build the main app's wwwroot assets (Tailwind v4 CLI + static copy) before publish.
+      prebuildSteps:
+        - task: Npm@1
+          displayName: NPM Install
+          inputs:
+            workingDir: $(Build.SourcesDirectory)/source/Spydersoft.Identity
+            command: install
+        - task: CmdLine@2
+          displayName: 'Build CSS + copy static assets'
+          inputs:
+            script: 'npm run build'
+            workingDirectory: $(Build.SourcesDirectory)/source/Spydersoft.Identity
+
+  # Playwright suites under tests/. Runs after Build, and docker_publish is
+  # pointed at it (above) so the images + deploy are gated on these passing.
+  # Each suite boots the full Aspire stack itself via Playwright's webServer
+  # (needs .NET 10 + a container runtime on the agent).
+  - template: stages/integration-tests/v1.yml@templates
+    parameters:
+      stageName: integration_tests
+      dependsOn:
+        - Build
+      netCoreVersion: '10.0.x'
+      nodeVersion: '22.x'
+      setupSteps:
+        # UseNode@1 (used by this template to set up Node) mis-resolves "22.x" to a
+        # stale cached Node 10 on our self-hosted agent, which breaks corepack. Force
+        # the PATH back to Node 22 with NodeTool@0, which resolves correctly here (as
+        # proven by the Build stage's "Set Node Version Explicitly" step).
+        - task: NodeTool@0
+          displayName: 'Force Node 22.x (UseNode@1 workaround)'
+          inputs:
+            versionSpec: '22.x'
+
+        # The admin-ui-e2e suite spawns `yarn dev`, so the SPA's deps (yarn 4 via
+        # corepack) must be restored first. The test suites themselves use npm.
+        - task: Bash@3
+          displayName: 'admin-ui: yarn install'
+          inputs:
+            targetType: inline
+            workingDirectory: source/Spydersoft.Identity.Admin.Frontend/admin-ui
+            script: |
+              set -euo pipefail
+              corepack enable
+              yarn install --immutable
+      suites:
+        - name: 'Admin API Integration'
+          workingDirectory: tests/admin-api-integration
+          # API suite uses Playwright's request context — no browser needed.
+          installBrowsers: false
+        - name: 'Admin UI E2E'
+          workingDirectory: tests/admin-ui-e2e

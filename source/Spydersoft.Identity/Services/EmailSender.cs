@@ -1,29 +1,34 @@
-﻿using System;
+using System;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-using SendGrid;
-using SendGrid.Helpers.Mail;
-
+using Spydersoft.Identity.Core.Services;
 using Spydersoft.Identity.Options;
 
 namespace Spydersoft.Identity.Services
 {
     // This class is used by the application to send email for account confirmation and password reset.
-    // For more details see https://go.microsoft.com/fwlink/?LinkID=532713
+    // It posts to the Resend transactional email API (https://resend.com).
     /// <summary>
     /// Class EmailSender.
     /// Implements the <see cref="IEmailSender" />
     /// </summary>
     /// <seealso cref="IEmailSender" />
-    public class EmailSender(IOptions<SendgridOptions> options) : IEmailSender
+    public class EmailSender(HttpClient httpClient, IOptions<ResendOptions> options, ILogger<EmailSender> logger) : IEmailSender
     {
+        /// <summary>The Resend "send email" endpoint.</summary>
+        private const string SendEndpoint = "https://api.resend.com/emails";
+
         /// <summary>
         /// The options
         /// </summary>
-        private readonly SendgridOptions _options = options.Value;
+        private readonly ResendOptions _options = options.Value;
 
         /// <summary>
         /// Sends the email asynchronous.
@@ -32,28 +37,34 @@ namespace Spydersoft.Identity.Services
         /// <param name="subject">The subject.</param>
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
-        public Task SendEmailAsync(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
-            return Task.Run(() => SendEmail(email, subject, message));
-        }
+            var payload = new
+            {
+                from = $"{_options.EmailFrom} <{_options.EmailFromAddress}>",
+                to = new[] { email },
+                subject,
+                html = message,
+                text = HtmlToPlainText(message)
+            };
 
+            using var request = new HttpRequestMessage(HttpMethod.Post, SendEndpoint)
+            {
+                Content = JsonContent.Create(payload)
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
 
-        /// <summary>
-        /// Sends the email.
-        /// </summary>
-        /// <param name="email">The email.</param>
-        /// <param name="subject">The subject.</param>
-        /// <param name="message">The message.</param>
-        private async Task SendEmail(string email, string subject, string message)
-        {
-            var client = new SendGridClient(_options.ApiKey);
-            var from = new EmailAddress(_options.EmailFromAddress, _options.EmailFrom);
-            var to = new EmailAddress(email);
-            var htmlContent = message;
-            var plainContent = HtmlToPlainText(message);
-            SendGridMessage msg = MailHelper.CreateSingleEmail(from, to, subject, plainContent, htmlContent);
-            msg.SetClickTracking(false, false);
-            _ = await client.SendEmailAsync(msg);
+            HttpResponseMessage response = await httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+                logger.LogError("Failed to send email to {Email} via Resend: {StatusCode} {Body}",
+                    email, (int)response.StatusCode, body);
+                throw new InvalidOperationException(
+                    $"Failed to send email via Resend (HTTP {(int)response.StatusCode}).");
+            }
+
+            logger.LogInformation("Sent email to {Email} via Resend.", email);
         }
 
         /// <summary>

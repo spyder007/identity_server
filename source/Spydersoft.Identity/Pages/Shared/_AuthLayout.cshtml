@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Spydersoft Identity</title>
+
+    <link rel="shortcut icon" href="~/images/favicon.svg">
+
+    <script src="~/js/theme-init.js" asp-append-version="true"></script>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/font-awesome/css/all.css" rel="stylesheet">
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/style.min.css" asp-append-version="true" />
+        <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet">
+    </environment>
+
+    <script src="~/js/main.js" asp-append-version="true" defer></script>
+</head>
+<body>
+    <div class="flex min-h-screen flex-col">
+        <header class="flex h-16 items-center px-4 sm:px-6">
+            <a asp-page="/Index" class="flex items-center" aria-label="Spydersoft Identity home">
+                <partial name="_Logo" />
+            </a>
+            <button data-toggle-theme type="button" class="btn btn-ghost btn-icon ml-auto" title="Toggle theme" aria-label="Toggle theme">
+                <span data-theme-icon="sun"><i class="fas fa-sun"></i></span>
+                <span data-theme-icon="moon"><i class="fas fa-moon"></i></span>
+            </button>
+        </header>
+
+        <main class="flex flex-1 items-center justify-center px-4 py-8">
+            <div class="w-full @(ViewData["AuthWidth"] as string ?? "max-w-md")">
+                @RenderBody()
+            </div>
+        </main>
+
+        <footer class="px-4 py-4 text-center text-xs text-content-subtle">
+            &copy; @DateTime.Now.Year Spydersoft LLC
+        </footer>
+    </div>
+
+    @await RenderSectionAsync("scripts", required: false)
+</body>
+</html>

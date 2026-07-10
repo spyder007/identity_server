@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-#nullable disable
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Spydersoft.Identity.Data.Migrations.DataProtection
 {

@@ -1,0 +1,26 @@
+@page
+@model Spydersoft.Identity.Pages.Manage.ResetAuthenticatorModel
+@{
+    ViewData["Title"] = "Reset Authenticator";
+}
+
+<partial name="_ManageNav" />
+
+<div class="mt-6">
+    <div class="card max-w-xl">
+        <div class="card-body">
+            <h2 class="card-title">Reset authenticator key</h2>
+            <div class="alert alert-warning mt-4">
+                <i class="fas fa-triangle-exclamation mt-0.5"></i>
+                <span>
+                    Resetting your authenticator key disables 2FA until you configure a new key, and invalidates
+                    your old authenticator app. This cannot be undone.
+                </span>
+            </div>
+            <form method="post" class="card-actions mt-4 justify-end">
+                <a asp-page="/Manage/TwoFactorAuthentication" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-danger"><i class="fas fa-rotate"></i> Reset key</button>
+            </form>
+        </div>
+    </div>
+</div>

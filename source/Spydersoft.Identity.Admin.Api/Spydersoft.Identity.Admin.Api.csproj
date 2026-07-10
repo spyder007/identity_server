@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+	<TargetFramework>net10.0</TargetFramework>
+	<Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	<GenerateDocumentationFile>True</GenerateDocumentationFile>
+	<UserSecretsId>a1b2c3d4-e5f6-7890-abcd-ef1234567890</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Asp.Versioning.Http" />
+	<PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" />
+	<PackageReference Include="AutoMapper" />
+	<PackageReference Include="Duende.IdentityServer.EntityFramework" />
+	<PackageReference Include="EFCore.NamingConventions" />
+	<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+	<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+	<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+	<PackageReference Include="Npgsql.OpenTelemetry" />
+	<PackageReference Include="Scalar.AspNetCore" />
+	<PackageReference Include="SonarAnalyzer.CSharp">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="Spydersoft.Platform.Hosting" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\Spydersoft.Identity.Core\Spydersoft.Identity.Core.csproj" />
+	<ProjectReference Include="..\Spydersoft.Identity.Data\Spydersoft.Identity.Data.csproj" />
+  </ItemGroup>
+
+</Project>

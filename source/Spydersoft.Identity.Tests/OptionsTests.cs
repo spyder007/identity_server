@@ -10,9 +10,9 @@ namespace Spydersoft.identity.tests
         }
 
         [Test]
-        public void SendgridOptionsPropertyTest()
+        public void ResendOptionsPropertyTest()
         {
-            var options = new SendgridOptions
+            var options = new ResendOptions
             {
                 ApiKey = "test",
                 EmailFrom = "test name",

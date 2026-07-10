@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Spydersoft Identity</title>
+
+    <link rel="shortcut icon" href="~/images/favicon.svg">
+
+    <!-- Set the theme before paint to avoid a flash of the wrong theme (CSP-safe external script). -->
+    <script src="~/js/theme-init.js" asp-append-version="true"></script>
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
+        <link href="~/lib/font-awesome/css/all.css" rel="stylesheet">
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/style.min.css" asp-append-version="true" />
+        <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet">
+    </environment>
+
+    <script src="~/js/main.js" asp-append-version="true" defer></script>
+</head>
+<body class="overflow-x-hidden">
+    <!-- Sidebar (fixed on lg+, slide-in on mobile) -->
+    <aside id="sidebar"
+           class="fixed inset-y-0 left-0 z-40 flex w-72 -translate-x-full flex-col border-r border-border bg-surface transition-transform duration-200 lg:translate-x-0">
+        <div class="flex h-16 items-center border-b border-border px-6">
+            <a asp-page="/Index" class="flex items-center" aria-label="Spydersoft Identity home">
+                <partial name="_Logo" />
+            </a>
+        </div>
+        <partial name="_SidebarNav" />
+    </aside>
+
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-black/40 lg:hidden"></div>
+
+    <!-- Content column (block + left padding for the fixed sidebar; no horizontal flex so it can't overflow) -->
+    <div class="flex min-h-screen flex-col lg:pl-72">
+        <partial name="_AppHeader" />
+
+        <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+            <div class="mx-auto w-full max-w-5xl">
+                @RenderBody()
+            </div>
+        </main>
+
+        <partial name="_Footer" />
+    </div>
+
+    @await RenderSectionAsync("scripts", required: false)
+</body>
+</html>

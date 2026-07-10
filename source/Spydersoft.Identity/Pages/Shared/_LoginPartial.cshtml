@@ -1,0 +1,51 @@
+@using Spydersoft.Identity.Extensions
+@using Spydersoft.Identity.Core.Models.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (User.Identity?.IsAuthenticated ?? false)
+{
+    var user = await UserManager.GetUserAsync(User);
+    var email = user?.Email ?? string.Empty;
+    var displayName = user?.Name ?? user?.UserName ?? "Account";
+
+    <div class="dropdown relative">
+        <button type="button" data-dropdown-trigger class="btn btn-ghost btn-circle overflow-hidden" aria-label="Account menu">
+            <img src="@email.ToGravatarUrl()" alt="Profile" class="h-9 w-9 rounded-full object-cover" />
+        </button>
+        <div data-dropdown-menu class="absolute right-0 z-30 mt-2 hidden w-56 rounded-lg border border-border bg-surface py-1 shadow-lg">
+            <div class="border-b border-border px-3 py-2">
+                <div class="truncate text-sm font-medium text-content">@displayName</div>
+                <div class="truncate text-xs text-content-subtle">@email</div>
+            </div>
+            <a asp-page="/Manage/Index" class="flex items-center gap-2 px-3 py-2 text-sm text-content-muted hover:bg-surface-muted hover:text-content">
+                <i class="fas fa-user w-4 text-brand"></i> View Profile
+            </a>
+            <a asp-page="/Grants/Index" class="flex items-center gap-2 px-3 py-2 text-sm text-content-muted hover:bg-surface-muted hover:text-content">
+                <i class="fas fa-table-cells-large w-4 text-brand"></i> My Applications
+            </a>
+            <div class="my-1 border-t border-border"></div>
+            <form asp-page="/Account/Logout" method="post">
+                <button type="submit" class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-content-muted hover:bg-danger/10 hover:text-danger">
+                    <i class="fas fa-right-from-bracket w-4"></i> Sign Out
+                </button>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <div class="dropdown relative">
+        <button type="button" data-dropdown-trigger class="btn btn-ghost btn-circle" aria-label="Account menu">
+            <i class="fas fa-circle-user text-xl"></i>
+        </button>
+        <div data-dropdown-menu class="absolute right-0 z-30 mt-2 hidden w-44 rounded-lg border border-border bg-surface py-1 shadow-lg">
+            <a asp-page="/Account/Login" class="flex items-center gap-2 px-3 py-2 text-sm text-content-muted hover:bg-surface-muted hover:text-content">
+                <i class="fas fa-right-to-bracket w-4 text-brand"></i> Sign In
+            </a>
+            <a asp-page="/Register/Index" class="flex items-center gap-2 px-3 py-2 text-sm text-content-muted hover:bg-surface-muted hover:text-content">
+                <i class="fas fa-user-plus w-4 text-success"></i> Register
+            </a>
+        </div>
+    </div>
+}

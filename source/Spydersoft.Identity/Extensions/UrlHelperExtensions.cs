@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-using Spydersoft.Identity.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Spydersoft.Identity.Extensions
 {
@@ -20,9 +18,9 @@ namespace Spydersoft.Identity.Extensions
         public static string ResetPasswordCallbackLink(this IUrlHelper urlHelper, string userId, string code,
             string scheme)
         {
-            return urlHelper.Action(
-                action: nameof(AccountController.ResetPassword),
-                controller: "Account",
+            return urlHelper.Page(
+                "/Account/ResetPassword",
+                pageHandler: null,
                 values: new { userId, code },
                 protocol: scheme);
         }

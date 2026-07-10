@@ -1,0 +1,55 @@
+@page
+@model ContactModel
+@{
+    ViewData["Title"] = "Contact";
+}
+
+<div class="mb-6">
+    <h1 class="text-2xl font-semibold text-content">Contact Us</h1>
+    <p class="mt-1 text-sm text-content-muted">Get in touch with the Spydersoft team.</p>
+</div>
+
+<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div class="card">
+        <div class="card-body">
+            <div class="flex items-center gap-3">
+                <span class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand">
+                    <i class="fas fa-user text-lg"></i>
+                </span>
+                <div>
+                    <h2 class="text-lg font-semibold text-content">Matt Gerega</h2>
+                    <p class="text-sm text-content-muted">Lead Developer &amp; Founder</p>
+                </div>
+            </div>
+            <div class="mt-4 flex flex-col gap-3 text-sm">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-envelope w-5 text-content-subtle"></i>
+                    <a href="mailto:geregam@gmail.com" class="link">geregam@gmail.com</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-globe w-5 text-content-subtle"></i>
+                    <a href="https://www.mattgerega.com" target="_blank" rel="noopener" class="link">mattgerega.com</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="fab fa-github w-5 text-content-subtle"></i>
+                    <a href="https://github.com/spyder007" target="_blank" rel="noopener" class="link">spyder007</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Spydersoft</h2>
+            <p class="mt-2 text-sm text-content-muted">
+                Spydersoft specializes in robust, scalable web applications and identity management
+                solutions &mdash; secure, modern software built for enterprise requirements.
+            </p>
+            <div class="card-actions">
+                <a href="mailto:geregam@gmail.com" class="btn btn-primary">
+                    <i class="fas fa-envelope"></i> Email Us
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

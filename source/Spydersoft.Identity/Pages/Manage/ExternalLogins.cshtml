@@ -1,0 +1,60 @@
+@page
+@model Spydersoft.Identity.Pages.Manage.ExternalLoginsModel
+@{
+    ViewData["Title"] = "External Logins";
+}
+
+<partial name="_ManageNav" />
+
+<div class="mt-6">
+    <partial name="_StatusMessage" model="Model.StatusMessage" />
+
+    <div class="card max-w-2xl">
+        <div class="card-body">
+            <h2 class="card-title">Linked accounts</h2>
+
+            @if (Model.View.CurrentLogins?.Count > 0)
+            {
+                <ul class="mt-4 flex flex-col gap-2">
+                    @foreach (var login in Model.View.CurrentLogins)
+                    {
+                        <li class="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+                            <span class="text-sm font-medium text-content">@login.ProviderDisplayName</span>
+                            @if (Model.View.ShowRemoveButton)
+                            {
+                                <form method="post" asp-page-handler="RemoveLogin">
+                                    <input type="hidden" name="loginProvider" value="@login.LoginProvider" />
+                                    <input type="hidden" name="providerKey" value="@login.ProviderKey" />
+                                    <button type="submit" class="btn btn-ghost btn-sm text-danger">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                                </form>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="mt-4 text-sm text-content-muted">You have no linked external logins.</p>
+            }
+
+            @if (Model.View.OtherLogins?.Count > 0)
+            {
+                <div class="divider"></div>
+                <h3 class="text-sm font-semibold text-content">Add another</h3>
+                <div class="mt-3 flex flex-wrap gap-2">
+                    @foreach (var provider in Model.View.OtherLogins)
+                    {
+                        <form method="post" asp-page-handler="LinkLogin">
+                            <input type="hidden" name="provider" value="@provider.Name" />
+                            <button type="submit" class="btn btn-outline btn-sm">
+                                <i class="fas fa-link"></i> @provider.DisplayName
+                            </button>
+                        </form>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+/* PrimeReact's lara theme wraps all of its rules in `@layer primereact { ... }`.
+   The cascade-layer priority is set by *first appearance* in the bundle, so we
+   need Tailwind's `@import "tailwindcss"` to land BEFORE the theme content
+   (which establishes the `primereact` layer last → highest priority).
+   This matches Pitstop's compiled layer order:
+     properties → theme → base → components → utilities → primereact
+   Without this, Tailwind preflight (@layer base) overrides PrimeReact's
+   button/input/dropdown styling. */
+@import "tailwindcss";
+
+/* PrimeReact theme — must come AFTER tailwindcss so `primereact` layer is the
+   last-declared layer (= highest priority). primereact.min.css is a deprecated
+   no-op in v10. PrimeIcons font is no longer used (FontAwesome covers icons). */
+@import "primereact/resources/themes/lara-light-indigo/theme.css";
+
+@plugin "@tailwindcss/forms" {
+  strategy: class;
+}
+@plugin "@tailwindcss/typography";
+
+@source "./**/*.{ts,tsx,js,jsx,html}";
+@source "../index.html";
+@source "../node_modules/primereact/**/*.{js,ts,jsx,tsx}";
+
+/* -------------------------------------------------------------------------- */
+/* Design tokens — used by our custom React components via Tailwind utilities */
+/* (e.g. bg-surface, text-content, border-border). PrimeReact components keep */
+/* the lara-light-indigo look out of the box; we do NOT override them here.   */
+/* -------------------------------------------------------------------------- */
+@theme {
+  /* Brand */
+  --color-brand: #4f46e5;
+  --color-brand-fg: #ffffff;
+  --color-brand-hover: #4338ca;
+  --color-brand-soft: #eef2ff;
+
+  /* Surfaces */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f5f6f8;
+  --color-surface-sunken: #eef0f3;
+  --color-surface-inverse: #0f1115;
+
+  /* Content */
+  --color-content: #14171c;
+  --color-content-muted: #5b6470;
+  --color-content-subtle: #8a929e;
+  --color-content-inverse: #f5f6f8;
+
+  /* Borders */
+  --color-border: #e3e6eb;
+  --color-border-strong: #c9ced6;
+
+  /* Status (used only by our own components) */
+  --color-success: #16a34a;
+  --color-danger: #dc2626;
+  --color-warning: #d97706;
+
+  /* Type families */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html,
+body {
+  background-color: var(--color-surface-muted);
+  color: var(--color-content);
+  font-family: var(--font-sans);
+}
+
+html body {
+  margin: 0;
+  padding: 0;
+}
+
+/* --- PrimeReact polish (kept minimal, mirroring Pitstop) --- */
+.p-card {
+  background-color: var(--color-surface);
+  border: none;
+  border-radius: 0.875rem;
+  box-shadow: 0 1px 2px rgba(15, 17, 21, 0.04);
+  transition: box-shadow 0.2s ease;
+}
+
+.p-card:hover {
+  box-shadow: 0 4px 12px rgba(15, 17, 21, 0.06);
+}
+
+.p-card .p-card-body {
+  padding: 1.25rem;
+}
+
+.p-card .p-card-content {
+  padding: 0;
+}

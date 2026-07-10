@@ -1,0 +1,30 @@
+@using Spydersoft.Identity.Core.Models.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+    var current = ViewContext.RouteData.Values["page"]?.ToString() ?? string.Empty;
+    bool In(params string[] pages) => pages.Any(p => current.Equals(p, StringComparison.OrdinalIgnoreCase));
+    string Tab(bool active) => active ? "tab tab-active" : "tab";
+}
+
+<div class="tabs">
+    <a asp-page="/Manage/Index" class="@Tab(In("/Manage/Index"))">
+        <i class="fas fa-user"></i> Profile
+    </a>
+    <a asp-page="/Manage/ChangePassword" class="@Tab(In("/Manage/ChangePassword", "/Manage/SetPassword"))">
+        <i class="fas fa-lock"></i> Password
+    </a>
+    @if (hasExternalLogins)
+    {
+        <a asp-page="/Manage/ExternalLogins" class="@Tab(In("/Manage/ExternalLogins"))">
+            <i class="fas fa-right-to-bracket"></i> External logins
+        </a>
+    }
+    <a asp-page="/Manage/TwoFactorAuthentication"
+       class="@Tab(In("/Manage/TwoFactorAuthentication", "/Manage/Disable2fa", "/Manage/EnableAuthenticator", "/Manage/ResetAuthenticator", "/Manage/GenerateRecoveryCodes"))">
+        <i class="fas fa-shield-halved"></i> Two-factor
+    </a>
+    <a asp-page="/Manage/UserClaimsInfo" class="@Tab(In("/Manage/UserClaimsInfo"))">
+        <i class="fas fa-circle-info"></i> Claims
+    </a>
+</div>

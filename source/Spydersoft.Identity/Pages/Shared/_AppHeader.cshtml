@@ -1,0 +1,19 @@
+<header class="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border bg-surface/90 px-4 backdrop-blur sm:px-6 lg:px-8">
+    <!-- Mobile sidebar toggle -->
+    <button id="sidebar-open" type="button"
+            class="btn btn-ghost btn-icon shrink-0 lg:hidden" aria-label="Open menu">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <h1 class="min-w-0 flex-1 truncate text-base font-semibold text-content sm:text-lg">@ViewData["Title"]</h1>
+
+    <div class="flex shrink-0 items-center gap-1">
+        <!-- Theme toggle -->
+        <button data-toggle-theme type="button" class="btn btn-ghost btn-icon" title="Toggle theme" aria-label="Toggle theme">
+            <span data-theme-icon="sun"><i class="fas fa-sun"></i></span>
+            <span data-theme-icon="moon"><i class="fas fa-moon"></i></span>
+        </button>
+
+        <partial name="_LoginPartial" />
+    </div>
+</header>

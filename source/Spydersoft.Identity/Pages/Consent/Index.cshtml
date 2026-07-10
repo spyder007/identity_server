@@ -1,0 +1,83 @@
+@page
+@model Spydersoft.Identity.Pages.Consent.IndexModel
+@{
+    ViewData["Title"] = "Consent";
+    ViewData["AuthWidth"] = "max-w-2xl";
+    Layout = "_AuthLayout";
+}
+
+<div class="card">
+    <div class="card-body">
+        <div class="flex items-center gap-4 border-b border-border pb-5">
+            @if (Model.View.ClientLogoUrl != null)
+            {
+                <img src="@Model.View.ClientLogoUrl" alt="@Model.View.ClientName" class="h-14 w-14 rounded-lg object-contain" />
+            }
+            else
+            {
+                <span class="flex h-14 w-14 items-center justify-center rounded-lg bg-brand-soft text-brand">
+                    <i class="fas fa-shield-halved text-xl"></i>
+                </span>
+            }
+            <div>
+                <h1 class="text-lg font-semibold text-content">@Model.View.ClientName</h1>
+                <p class="text-sm text-content-muted">is requesting permission to access your account.</p>
+            </div>
+        </div>
+
+        <form method="post" class="mt-5">
+            <partial name="_ValidationSummary" />
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            @if (Model.View.IdentityScopes.Any())
+            {
+                <h2 class="text-sm font-semibold text-content"><i class="fas fa-user mr-1 text-brand"></i> Personal information</h2>
+                <div class="mt-2 flex flex-col gap-2">
+                    @foreach (var scope in Model.View.IdentityScopes)
+                    {
+                        <partial name="_ScopeListItem" model="scope" />
+                    }
+                </div>
+            }
+
+            @if (Model.View.ApiScopes.Any())
+            {
+                <h2 class="mt-5 text-sm font-semibold text-content"><i class="fas fa-gears mr-1 text-brand"></i> Application access</h2>
+                <div class="mt-2 flex flex-col gap-2">
+                    @foreach (var scope in Model.View.ApiScopes)
+                    {
+                        <partial name="_ScopeListItem" model="scope" />
+                    }
+                </div>
+            }
+
+            <div class="form-field mt-5">
+                <label class="form-label" asp-for="Description">Device description</label>
+                <input class="input" asp-for="Description" placeholder="e.g. My laptop (optional)" />
+            </div>
+
+            @if (Model.View.AllowRememberConsent)
+            {
+                <label class="mb-2 flex items-center gap-2 text-sm text-content-muted">
+                    <input class="checkbox" asp-for="RememberConsent" />
+                    <span>Remember my decision</span>
+                </label>
+            }
+
+            <div class="mt-5 flex flex-wrap items-center gap-2">
+                <button type="submit" name="Button" value="yes" class="btn btn-primary"><i class="fas fa-check"></i> Allow</button>
+                <button type="submit" name="Button" value="no" class="btn btn-outline"><i class="fas fa-xmark"></i> Deny</button>
+                @if (Model.View.ClientUrl != null)
+                {
+                    <a href="@Model.View.ClientUrl" target="_blank" rel="noopener" class="link ml-auto text-sm">
+                        About @Model.View.ClientName <i class="fas fa-arrow-up-right-from-square text-xs"></i>
+                    </a>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

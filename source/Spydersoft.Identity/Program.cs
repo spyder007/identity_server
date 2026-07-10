@@ -1,5 +1,5 @@
-﻿using System;
-using System.Reflection;
+using System;
+using System.Linq;
 
 using Duende.IdentityServer;
 
@@ -17,9 +17,11 @@ using Npgsql;
 
 using Serilog;
 
+using Spydersoft.Identity.Attributes;
+using Spydersoft.Identity.Core.Models.Identity;
+using Spydersoft.Identity.Core.Services;
 using Spydersoft.Identity.Data;
 using Spydersoft.Identity.Extensions;
-using Spydersoft.Identity.Models.Identity;
 using Spydersoft.Identity.Options;
 using Spydersoft.Identity.Services;
 using Spydersoft.Platform.Hosting.Options;
@@ -58,16 +60,16 @@ try
 
     var connString = builder.Configuration.GetConnectionString("IdentityConnection");
     var cacheConnection = builder.Configuration.GetConnectionString("RedisCache");
-    var migrationsAssembly = typeof(Program).GetTypeInfo().Assembly.GetName().Name;
+    var migrationsAssembly = typeof(Spydersoft.Identity.Data.ApplicationDbContext).Assembly.GetName().Name;
 
-    _ = builder.Services.Configure<SendgridOptions>(builder.Configuration.GetSection(SendgridOptions.Name));
+    _ = builder.Services.Configure<ResendOptions>(builder.Configuration.GetSection(ResendOptions.Name));
     _ = builder.Services.Configure<ConsentOptions>(builder.Configuration.GetSection(ConsentOptions.SettingsKey));
 
     // Configure forwarded headers for proxy scenarios
     _ = builder.Services.Configure<ForwardedHeadersOptions>(options =>
     {
-        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | 
-                                   ForwardedHeaders.XForwardedProto | 
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                                   ForwardedHeaders.XForwardedProto |
                                    ForwardedHeaders.XForwardedHost;
         // Clear known networks and proxies to accept any proxy
         options.KnownIPNetworks.Clear();
@@ -94,7 +96,10 @@ try
 
     var automapperLicense = builder.Configuration.GetValue<string>("AutoMapper:License");
 
-    _ = builder.Services.AddAutoMapper(cfg => cfg.LicenseKey = automapperLicense, typeof(Program));
+    _ = builder.Services.AddAutoMapper(
+        cfg => cfg.LicenseKey = automapperLicense,
+        typeof(Program),
+        typeof(Spydersoft.Identity.Core.Data.AutoMapper));
     _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
         {
             options.User.RequireUniqueEmail = true;
@@ -112,11 +117,27 @@ try
         .AddDefaultTokenProviders();
 
     // Add application builder.Services.
-    _ = builder.Services.AddTransient<IEmailSender, EmailSender>();
+    _ = builder.Services.AddHttpClient<IEmailSender, EmailSender>();
 
-    _ = builder.Services.AddControllersWithViews(options =>
+    // Razor Pages host the interactive identity UI (login, consent, device, grants,
+    // account management).
+    _ = builder.Services.AddRazorPages(options =>
     {
-        options.SuppressAsyncSuffixInActionNames = false;
+        // Apply the SecurityHeaders (CSP, X-Frame-Options, etc.) to all page responses.
+        options.Conventions.ConfigureFilter(new SecurityHeadersAttribute());
+        // Pages are anonymous by default; lock down the authenticated areas.
+        options.Conventions.AuthorizeFolder("/Manage");
+        options.Conventions.AuthorizeFolder("/Consent");
+        options.Conventions.AuthorizeFolder("/Device");
+        options.Conventions.AuthorizeFolder("/Grants");
+    })
+    .AddMvcOptions(options =>
+    {
+        // ViewModels live in Spydersoft.Identity.Core which has Nullable=enable.
+        // Without this, every non-nullable reference type property is treated as
+        // implicitly [Required], causing legit submissions to fail ModelState
+        // validation. Only explicit [Required] attributes should drive validation.
+        options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
     });
 
     // Get configured public origin from configuration
@@ -125,17 +146,30 @@ try
 
     // this adds the Configuration Store (clients, resources) and then
     // the Operation Store (codes, tokens, consents)
-    var identityServerBuilder = builder.Services.AddIdentityServer(options =>
+    _ = builder.Services.AddIdentityServer(options =>
     {
-        // Configure Identity Server to use the correct public-facing URL when behind a proxy
-        // This ensures all generated URLs use HTTPS instead of HTTP
-        if (!string.IsNullOrEmpty(publicOrigin))
+        // Configure Identity Server's announced issuer. Either IssuerUri or
+        // PublicOrigin pins it; without one, the issuer is derived from the
+        // incoming request URL which is fragile when the same host is reached
+        // via multiple names (e.g. localhost vs 127.0.0.1 in the test harness).
+        if (!string.IsNullOrEmpty(issuerUri))
         {
-            options.IssuerUri = issuerUri ?? publicOrigin;
-            Log.Information("IdentityServer IssuerUri configured: {IssuerUri}", options.IssuerUri);
+            options.IssuerUri = issuerUri;
         }
-        
-        // Additional logging for debugging
+        else if (!string.IsNullOrEmpty(publicOrigin))
+        {
+            options.IssuerUri = publicOrigin;
+        }
+
+        // Pin the interactive UI URLs to the Razor Pages routes. These match Duende's
+        // defaults but are set explicitly so the page-folder structure and the
+        // IdentityServer redirect contract can't drift apart.
+        options.UserInteraction.LoginUrl = "/Account/Login";
+        options.UserInteraction.LogoutUrl = "/Account/Logout";
+        options.UserInteraction.ConsentUrl = "/Consent";
+        options.UserInteraction.ErrorUrl = "/Home/Error";
+        options.UserInteraction.DeviceVerificationUrl = "/Device";
+
         Log.Information("IdentityServer configuration - IssuerUri: {IssuerUri}", options.IssuerUri ?? "not set");
     })
     .AddAspNetIdentity<ApplicationUser>()
@@ -171,13 +205,13 @@ try
     _ = builder.Services.AddHealthChecks();
 
     WebApplication app = builder.Build();
-    
+
     // Configure forwarded headers BEFORE any authentication/authorization middleware
     // This is critical for proper HTTPS scheme detection when behind a TLS termination proxy
     var forwardedHeadersOptions = new ForwardedHeadersOptions
     {
-        ForwardedHeaders = ForwardedHeaders.XForwardedFor | 
-                          ForwardedHeaders.XForwardedProto | 
+        ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                          ForwardedHeaders.XForwardedProto |
                           ForwardedHeaders.XForwardedHost,
         // Required for proper scheme detection
         RequireHeaderSymmetry = false,
@@ -185,24 +219,34 @@ try
     };
     forwardedHeadersOptions.KnownIPNetworks.Clear();
     forwardedHeadersOptions.KnownProxies.Clear();
-    
+
     _ = app.UseForwardedHeaders(forwardedHeadersOptions);
-    
+
     // Log the scheme being used for debugging (can be removed in production)
     app.Use(async (context, next) =>
     {
-        Log.Debug("Request - Scheme: {Scheme}, Host: {Host}, Path: {Path}, Proto Header: {Proto}", 
-            context.Request.Scheme, 
-            context.Request.Host, 
+        Log.Debug("Request - Scheme: {Scheme}, Host: {Host}, Path: {Path}, Proto Header: {Proto}",
+            context.Request.Scheme,
+            context.Request.Host,
             context.Request.Path,
             context.Request.Headers["X-Forwarded-Proto"].ToString());
         await next();
     });
-    
+
     // this will do the initial DB population, but we only need to do it once
     // this is just in here as a easy, yet hacky, way to get our DB created/populated
     var dbInitialize = new DatabaseInitializer(app);
     dbInitialize.InitializeDatabase();
+
+    // Migrate the DataProtection DB (identity-server only context — not shared with the API)
+    using (var scope = app.Services.CreateScope())
+    {
+        var dpContext = scope.ServiceProvider.GetRequiredService<DataProtectionDbContext>();
+        if ((await dpContext.Database.GetPendingMigrationsAsync()).Any())
+        {
+            await dpContext.Database.MigrateAsync();
+        }
+    }
 
     _ = builder.Environment.IsDevelopment() ? app.UseDeveloperExceptionPage() : app.UseExceptionHandler("/Home/Error");
 
@@ -214,9 +258,7 @@ try
             .UseIdentityServer()
             .UseAuthorization();
 
-    _ = app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+    _ = app.MapRazorPages();
 
     await app.RunAsync();
 }

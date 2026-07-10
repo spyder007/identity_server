@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.128-alpha">
+  <PropertyGroup>
+	<StartupCommand>yarn dev</StartupCommand>
+	<JavaScriptTestRoot>src\</JavaScriptTestRoot>
+	<JavaScriptTestFramework>vitest</JavaScriptTestFramework>
+	<ShouldRunBuildScript>false</ShouldRunBuildScript>
+	<PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist</PublishAssetsDirectory>
+	<BuildCommand>yarn build</BuildCommand>
+	<ShouldRunNpmInstall>false</ShouldRunNpmInstall>
+  </PropertyGroup>
+</Project>

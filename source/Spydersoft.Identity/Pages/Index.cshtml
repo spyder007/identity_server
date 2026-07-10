@@ -1,0 +1,72 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="py-8 text-center">
+    <span class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-brand-soft text-brand">
+        <i class="fas fa-shield-halved text-3xl"></i>
+    </span>
+    <h1 class="text-3xl font-bold text-content sm:text-4xl">Spydersoft Identity</h1>
+    <p class="mx-auto mt-3 max-w-xl text-content-muted">
+        Secure authentication and single sign-on for all Spydersoft applications.
+    </p>
+
+    <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <a asp-page="/Manage/Index" class="btn btn-primary btn-lg">
+                <i class="fas fa-user"></i> Manage Profile
+            </a>
+            <a asp-page="/Grants/Index" class="btn btn-outline btn-lg">
+                <i class="fas fa-table-cells-large"></i> My Applications
+            </a>
+        }
+        else
+        {
+            <a asp-page="/Account/Login" class="btn btn-primary btn-lg">
+                <i class="fas fa-right-to-bracket"></i> Sign In
+            </a>
+            <a asp-page="/Register/Index" class="btn btn-outline btn-lg">
+                <i class="fas fa-user-plus"></i> Create Account
+            </a>
+        }
+    </div>
+</section>
+
+<section class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="card">
+        <div class="card-body">
+            <span class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand">
+                <i class="fas fa-lock"></i>
+            </span>
+            <h3 class="text-base font-semibold text-content">Enterprise Security</h3>
+            <p class="mt-1 text-sm text-content-muted">
+                Industry-standard OAuth 2.0 and OpenID Connect keep your applications secure.
+            </p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <span class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand">
+                <i class="fas fa-key"></i>
+            </span>
+            <h3 class="text-base font-semibold text-content">Single Sign-On</h3>
+            <p class="mt-1 text-sm text-content-muted">
+                One login across the entire ecosystem for a seamless experience.
+            </p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <span class="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand">
+                <i class="fas fa-plug"></i>
+            </span>
+            <h3 class="text-base font-semibold text-content">Modern Integration</h3>
+            <p class="mt-1 text-sm text-content-muted">
+                Easy integration with web, mobile, and API applications using standard protocols.
+            </p>
+        </div>
+    </div>
+</section>
