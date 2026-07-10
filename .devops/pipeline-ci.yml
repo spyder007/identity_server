@@ -1,7 +1,9 @@
-## Build Pipeline - Build, publish three container images, and update helmfile config
+## Build Pipeline - Build, publish three container images plus the combined
+## identity OCI chart, and update helmfile config
 ##   1. Spydersoft.Identity                (spyder007/identity_server)
 ##   2. Spydersoft.Identity.Admin.Api      (spyder007/identity_admin_api)
 ##   3. Spydersoft.Identity.Admin.Frontend (spyder007/identity_admin_frontend)
+##   4. charts/identity                    (ghcr.io/spydersoft-consulting/charts/identity)
 resources:
   repositories:
     - repository: templates
@@ -78,16 +80,29 @@ stages:
           dockerFilePath: Dockerfile.admin-frontend
           imageTagVariableName: identity_admin_frontend
 
-      # A single commit bumps all three image tags atomically in id-helm-config.
-      helmTagsCollection: 'identity_server=$(build.buildnumber),identity_admin_api=$(build.buildnumber),identity_admin_frontend=$(build.buildnumber)'
+      helmCharts:
+        - name: identity
+          chartPath: charts/identity
 
-      # Serial chain: Build -> integration_tests -> docker_publish -> updateHelmConfig.
-      # Images (and therefore the helm/deploy bump) only happen if the Playwright
-      # suites pass. (For images-in-parallel-with-tests instead, drop this back to
-      # [Build] and gate only the deploy via updateHelmConfigDependsOn:
-      # [docker_publish, integration_tests].)
+      # A single commit bumps all four keys atomically in platform-helm-config.
+      # identity_chart_version, not the generic chart_version -- platform-helm-config
+      # hosts multiple independently-versioned OCI-chart apps sharing one flat
+      # imageTags map, so each app needs its own key to avoid one app's publish
+      # overwriting another's chart-version pin.
+      helmTagsCollection: 'identity_server=$(build.buildnumber),identity_admin_api=$(build.buildnumber),identity_admin_frontend=$(build.buildnumber),identity_chart_version=$(build.buildnumber)'
+
+      # Serial chain: Build -> integration_tests -> docker_publish/chart_publish -> updateHelmConfig.
+      # Images and the chart (and therefore the helm/deploy bump) only happen if
+      # the Playwright suites pass. (For images-in-parallel-with-tests instead,
+      # drop these back to [Build] and gate only the deploy via
+      # updateHelmConfigDependsOn: [docker_publish, chart_publish, integration_tests].)
       dockerPublishDependsOn:
         - integration_tests
+      chartPublishDependsOn:
+        - integration_tests
+      updateHelmConfigDependsOn:
+        - docker_publish
+        - chart_publish
 
       # .NET unit tests + single SonarCloud scope over the solution.
       executeTests: true
@@ -111,16 +126,32 @@ stages:
       uiSonarCloudOrganization: spydersoft-mjg
       uiSonarConfigFile: source/Spydersoft.Identity.Admin.Frontend/admin-ui/sonar-project.properties
 
-      # If it's a PR or a build from main, run Sonar but don't push images or bump helm config.
-      # On feature branches / tags, build & publish the images and update helm config (skip Sonar).
-      ${{ if or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'main')) }}:
+      # Three build shapes (matching the audit/pitstop/file-storage convention):
+      #  - PR: build/test/sonar only, no publish, no helm-config update.
+      #  - main: beta build (GitVersion tags X.Y.Z-beta.<n> per GitVersion.yml's
+      #    `main` branch config) -> publish images+chart, update helm-config's
+      #    test environment. Still runs sonar since this is a real build path.
+      #  - anything else (feature branch / a tag push): release build -> publish
+      #    images+chart, ALSO update helm-config's test environment -- helm-config's
+      #    own detect_version/deploy.yml decides from there whether to auto-promote
+      #    to stage (gated on the version being unlabeled, not on which branch
+      #    built it). No sonar re-analysis.
+      ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
         updateHelmConfig: false
         buildAndPublishDockerImages: false
+        buildAndPublishHelmCharts: false
+        executeSonar: true
+        uiExecuteSonar: true
+      ${{ elseif eq(variables['Build.SourceBranchName'], 'main') }}:
+        updateHelmConfig: true
+        buildAndPublishDockerImages: true
+        buildAndPublishHelmCharts: true
         executeSonar: true
         uiExecuteSonar: true
       ${{ else }}:
         updateHelmConfig: true
         buildAndPublishDockerImages: true
+        buildAndPublishHelmCharts: true
         executeSonar: false
         uiExecuteSonar: false
 
