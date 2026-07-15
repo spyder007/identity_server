@@ -112,6 +112,12 @@ stages:
       sonarProjectName: identity_server
       useSonarCloud: true
       sonarCloudOrganization: spydersoft-mjg
+      # bin/obj carry copied build artifacts (e.g. stray tsconfig.json files from
+      # the TypeScript asset build) that the bundled JS/TS analyzer otherwise
+      # tries and fails to parse as real TS projects, even though the C#
+      # analyzer itself never looks at build output.
+      sonarExtraProperties: |
+        sonar.exclusions=**/bin/**,**/obj/**
 
       # admin-ui React SPA: yarn install/test/build (produces dist consumed by the
       # Admin.Frontend publish) plus its own SonarCloud scope for the JS/TS code.
