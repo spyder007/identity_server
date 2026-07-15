@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 import SubResourceList, { type SubResourceColumn } from "../../components/SubResourceList";
 import {
@@ -24,6 +28,8 @@ import {
   getApiV1ClientsByClientIdRedirecturis,
   getApiV1ClientsByClientIdScopes,
   getApiV1ClientsByClientIdSecrets,
+  getApiV1IdentityResources,
+  getApiV1Scopes,
   postApiV1ClientsByClientIdClaims,
   postApiV1ClientsByClientIdCorsorigins,
   postApiV1ClientsByClientIdGranttypes,
@@ -46,6 +52,10 @@ import type {
   ClientSecretDto,
   SaveClientSecretDto,
 } from "../../api/generated/types.gen";
+
+// Scopes are drawn from existing API scopes / identity resources plus the
+// standard "offline_access" scope, since clients can't define new scopes here.
+const STANDARD_SCOPES = ["offline_access"];
 
 interface PanelProps {
   clientId: number;
@@ -366,25 +376,125 @@ export function RedirectUrisPanel({ clientId }: PanelProps) {
 }
 
 export function ScopesPanel({ clientId }: PanelProps) {
+  const [assigned, setAssigned] = useState<ClientScopeDto[]>([]);
+  const [allScopeNames, setAllScopeNames] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
+
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    const [assignedResult, apiScopesResult, identityResourcesResult] = await Promise.all([
+      getApiV1ClientsByClientIdScopes({ path: { clientId } }),
+      getApiV1Scopes(),
+      getApiV1IdentityResources(),
+    ]);
+    if (!assignedResult.error) setAssigned(assignedResult.data ?? []);
+    const names = new Set(STANDARD_SCOPES);
+    for (const s of apiScopesResult.data ?? []) if (s.name) names.add(s.name);
+    for (const r of identityResourcesResult.data ?? []) if (r.name) names.add(r.name);
+    setAllScopeNames([...names].sort((a, b) => a.localeCompare(b)));
+    setLoading(false);
+  }, [clientId]);
+
+  useEffect(() => {
+    void refresh();
+  }, [refresh]);
+
+  const assignedNames = new Set(assigned.map((s) => s.scope));
+  const available = allScopeNames
+    .filter((name) => !assignedNames.has(name))
+    .map((name) => ({ label: name, value: name }));
+
+  const handleDelete = (row: ClientScopeDto) => {
+    confirmDialog({
+      message: (
+        <span>
+          Remove scope <strong>{row.scope}</strong>?
+        </span>
+      ),
+      header: "Confirm removal",
+      acceptClassName: "p-button-danger",
+      acceptLabel: "Remove",
+      rejectLabel: "Cancel",
+      accept: async () => {
+        await deleteApiV1ClientsByClientIdScopesById({ path: { clientId, id: Number(row.id) } });
+        await refresh();
+      },
+    });
+  };
+
+  const handleAdd = async () => {
+    if (!selected) return;
+    setAdding(true);
+    try {
+      await postApiV1ClientsByClientIdScopes({ path: { clientId }, body: { scope: selected } });
+      setSelected(null);
+      await refresh();
+    } finally {
+      setAdding(false);
+    }
+  };
+
   return (
-    <SingleValuePanel<ClientScopeDto>
-      title="Allowed scopes"
-      emptyMessage="No scopes configured."
-      field="scope"
-      header="Scope"
-      placeholder="openid"
-      load={async () => {
-        const r = await getApiV1ClientsByClientIdScopes({ path: { clientId } });
-        return r.error ? [] : (r.data ?? []);
-      }}
-      create={async (scope) => {
-        await postApiV1ClientsByClientIdScopes({ path: { clientId }, body: { scope } });
-      }}
-      remove={async (id) => {
-        await deleteApiV1ClientsByClientIdScopesById({ path: { clientId, id } });
-      }}
-      describe={(row) => row.scope ?? ""}
-    />
+    <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
+      <ConfirmDialog />
+
+      <header className="flex items-baseline justify-between gap-3 border-b border-border px-5 py-3.5">
+        <div>
+          <h3 className="text-sm font-semibold text-content">Allowed scopes</h3>
+          <p className="mt-0.5 text-xs text-content-muted">
+            {loading ? "Loading…" : `${assigned.length} ${assigned.length === 1 ? "entry" : "entries"}`}
+          </p>
+        </div>
+      </header>
+
+      <DataTable value={assigned} loading={loading} dataKey="id" emptyMessage="No scopes configured." size="small">
+        <Column field="scope" header="Scope" />
+        <Column
+          header=""
+          style={{ width: "4.5rem" }}
+          body={(row: ClientScopeDto) => (
+            <div className="flex justify-end">
+              <Button
+                text
+                rounded
+                size="small"
+                severity="danger"
+                aria-label="Delete"
+                icon={<FontAwesomeIcon icon={faTrash} />}
+                onClick={() => handleDelete(row)}
+              />
+            </div>
+          )}
+        />
+      </DataTable>
+
+      <div className="border-t border-border bg-surface-muted px-5 py-4">
+        <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-content-muted">
+          Add new
+        </h4>
+        <div className="flex gap-2">
+          <Dropdown
+            value={selected}
+            options={available}
+            onChange={(e) => setSelected(e.value as string)}
+            placeholder={available.length === 0 ? "All scopes already added" : "Select a scope"}
+            disabled={available.length === 0}
+            filter
+            className="flex-1"
+          />
+          <Button
+            type="button"
+            onClick={handleAdd}
+            label="Add"
+            icon={<FontAwesomeIcon icon={faPlus} />}
+            disabled={!selected || adding}
+            loading={adding}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
 
