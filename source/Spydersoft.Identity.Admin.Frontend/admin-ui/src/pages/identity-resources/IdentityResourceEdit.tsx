@@ -79,8 +79,7 @@ export default function IdentityResourceEdit() {
     value: SaveIdentityResourceDto[K],
   ) => setDraft((d) => ({ ...d, [key]: value }));
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async () => {
     setSaving(true);
     try {
       if (isNew) {
@@ -119,8 +118,7 @@ export default function IdentityResourceEdit() {
         }
       />
 
-      <form onSubmit={submit}>
-        <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
+      <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
           <TabPanel header="Settings">
             <div className="space-y-8">
               <Section
@@ -206,14 +204,14 @@ export default function IdentityResourceEdit() {
               <Button type="button" outlined label="Cancel" />
             </Link>
             <Button
-              type="submit"
+              type="button"
+              onClick={submit}
               loading={saving}
               label={isNew ? "Create identity resource" : "Save changes"}
               icon={<FontAwesomeIcon icon={faSave} />}
             />
           </div>
         </div>
-      </form>
     </div>
   );
 }

@@ -44,33 +44,34 @@ export function ClaimsPanel({ identityResourceId }: PanelProps) {
       describe={(row) => row.type ?? ""}
       columns={columns}
       emptyCreateDraft={{ value: "" }}
-      renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => (
-        <form
-          className="flex gap-2"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!createDraft.value.trim()) return;
-            await postApiV1IdentityresourcesByIdentityResourceIdClaims({
-              path: { identityResourceId },
-              body: { type: createDraft.value.trim() },
-            });
-            onCreated();
-          }}
-        >
-          <InputText
-            className="flex-1"
-            value={createDraft.value}
-            placeholder="email"
-            onChange={(e) => setCreateDraft({ value: e.target.value })}
-          />
-          <Button
-            type="submit"
-            label="Add"
-            icon={<FontAwesomeIcon icon={faPlus} />}
-            disabled={!createDraft.value.trim()}
-          />
-        </form>
-      )}
+      renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => {
+        const submit = async () => {
+          if (!createDraft.value.trim()) return;
+          await postApiV1IdentityresourcesByIdentityResourceIdClaims({
+            path: { identityResourceId },
+            body: { type: createDraft.value.trim() },
+          });
+          onCreated();
+        };
+        return (
+          <div className="flex gap-2">
+            <InputText
+              className="flex-1"
+              value={createDraft.value}
+              placeholder="email"
+              onChange={(e) => setCreateDraft({ value: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+            />
+            <Button
+              type="button"
+              onClick={submit}
+              label="Add"
+              icon={<FontAwesomeIcon icon={faPlus} />}
+              disabled={!createDraft.value.trim()}
+            />
+          </div>
+        );
+      }}
     />
   );
 }
@@ -97,39 +98,41 @@ export function PropertiesPanel({ identityResourceId }: PanelProps) {
         { field: "value", header: "Value" },
       ]}
       emptyCreateDraft={{ key: "", value: "" }}
-      renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => (
-        <form
-          className="flex gap-2"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!createDraft.key.trim() || !createDraft.value.trim()) return;
-            await postApiV1IdentityresourcesByIdentityResourceIdProperties({
-              path: { identityResourceId },
-              body: { key: createDraft.key.trim(), value: createDraft.value.trim() },
-            });
-            onCreated();
-          }}
-        >
-          <InputText
-            className="flex-1"
-            value={createDraft.key}
-            placeholder="key"
-            onChange={(e) => setCreateDraft({ ...createDraft, key: e.target.value })}
-          />
-          <InputText
-            className="flex-1"
-            value={createDraft.value}
-            placeholder="value"
-            onChange={(e) => setCreateDraft({ ...createDraft, value: e.target.value })}
-          />
-          <Button
-            type="submit"
-            label="Add"
-            icon={<FontAwesomeIcon icon={faPlus} />}
-            disabled={!createDraft.key.trim() || !createDraft.value.trim()}
-          />
-        </form>
-      )}
+      renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => {
+        const submit = async () => {
+          if (!createDraft.key.trim() || !createDraft.value.trim()) return;
+          await postApiV1IdentityresourcesByIdentityResourceIdProperties({
+            path: { identityResourceId },
+            body: { key: createDraft.key.trim(), value: createDraft.value.trim() },
+          });
+          onCreated();
+        };
+        return (
+          <div className="flex gap-2">
+            <InputText
+              className="flex-1"
+              value={createDraft.key}
+              placeholder="key"
+              onChange={(e) => setCreateDraft({ ...createDraft, key: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+            />
+            <InputText
+              className="flex-1"
+              value={createDraft.value}
+              placeholder="value"
+              onChange={(e) => setCreateDraft({ ...createDraft, value: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+            />
+            <Button
+              type="button"
+              onClick={submit}
+              label="Add"
+              icon={<FontAwesomeIcon icon={faPlus} />}
+              disabled={!createDraft.key.trim() || !createDraft.value.trim()}
+            />
+          </div>
+        );
+      }}
     />
   );
 }

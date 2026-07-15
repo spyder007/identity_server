@@ -80,8 +80,7 @@ export default function UserEdit() {
   const update = <K extends keyof Draft>(key: K, value: Draft[K]) =>
     setDraft((d) => ({ ...d, [key]: value }));
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async () => {
     setSaving(true);
     try {
       if (isNew) {
@@ -147,8 +146,7 @@ export default function UserEdit() {
         }
       />
 
-      <form onSubmit={submit}>
-        <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
+      <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
           <TabPanel header="Settings">
             <div className="space-y-8">
               <Section
@@ -236,14 +234,14 @@ export default function UserEdit() {
               <Button type="button" outlined label="Cancel" />
             </Link>
             <Button
-              type="submit"
+              type="button"
+              onClick={submit}
               loading={saving}
               label={isNew ? "Create user" : "Save changes"}
               icon={<FontAwesomeIcon icon={faSave} />}
             />
           </div>
         </div>
-      </form>
     </div>
   );
 }

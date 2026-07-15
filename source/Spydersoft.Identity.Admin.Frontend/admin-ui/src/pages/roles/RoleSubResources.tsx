@@ -58,8 +58,7 @@ export function ClaimsPanel({ roleId }: PanelProps) {
     });
   };
 
-  const handleAdd = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAdd = async () => {
     if (!type.trim()) return;
     setAdding(true);
     try {
@@ -120,27 +119,30 @@ export function ClaimsPanel({ roleId }: PanelProps) {
         <h4 className="mb-3 text-xs font-semibold uppercase tracking-wider text-content-muted">
           Add claim
         </h4>
-        <form className="flex gap-2" onSubmit={handleAdd}>
+        <div className="flex gap-2">
           <InputText
             className="flex-1"
             value={type}
             placeholder="type"
             onChange={(e) => setType(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
           />
           <InputText
             className="flex-1"
             value={value}
             placeholder="value"
             onChange={(e) => setValue(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
           />
           <Button
-            type="submit"
+            type="button"
+            onClick={handleAdd}
             label="Add"
             icon={<FontAwesomeIcon icon={faPlus} />}
             disabled={!type.trim() || adding}
             loading={adding}
           />
-        </form>
+        </div>
       </div>
     </div>
   );

@@ -73,8 +73,7 @@ export default function ApiResourceEdit() {
   const update = <K extends keyof SaveApiResourceDto>(key: K, value: SaveApiResourceDto[K]) =>
     setDraft((d) => ({ ...d, [key]: value }));
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async () => {
     setSaving(true);
     try {
       if (isNew) {
@@ -113,8 +112,7 @@ export default function ApiResourceEdit() {
         }
       />
 
-      <form onSubmit={submit}>
-        <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
+      <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
           <TabPanel header="Settings">
             <div className="space-y-8">
               <Section
@@ -176,14 +174,14 @@ export default function ApiResourceEdit() {
               <Button type="button" outlined label="Cancel" />
             </Link>
             <Button
-              type="submit"
+              type="button"
+              onClick={submit}
               loading={saving}
               label={isNew ? "Create API resource" : "Save changes"}
               icon={<FontAwesomeIcon icon={faSave} />}
             />
           </div>
         </div>
-      </form>
     </div>
   );
 }
