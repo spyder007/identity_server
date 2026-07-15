@@ -72,8 +72,7 @@ export default function ScopeEdit() {
   const update = <K extends keyof SaveScopeDto>(key: K, value: SaveScopeDto[K]) =>
     setDraft((d) => ({ ...d, [key]: value }));
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async () => {
     setSaving(true);
     try {
       if (isNew) {
@@ -112,8 +111,7 @@ export default function ScopeEdit() {
         }
       />
 
-      <form onSubmit={submit}>
-        <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
+      <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
           <TabPanel header="Settings">
             <div className="space-y-8">
               <Section
@@ -193,14 +191,14 @@ export default function ScopeEdit() {
               <Button type="button" outlined label="Cancel" />
             </Link>
             <Button
-              type="submit"
+              type="button"
+              onClick={submit}
               loading={saving}
               label={isNew ? "Create scope" : "Save changes"}
               icon={<FontAwesomeIcon icon={faSave} />}
             />
           </div>
         </div>
-      </form>
     </div>
   );
 }

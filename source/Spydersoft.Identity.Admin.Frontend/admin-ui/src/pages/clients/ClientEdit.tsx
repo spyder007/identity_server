@@ -121,8 +121,7 @@ export default function ClientEdit() {
   const update = <K extends keyof SaveClientDto>(key: K, value: SaveClientDto[K]) =>
     setDraft((d) => ({ ...d, [key]: value }));
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async () => {
     setSaving(true);
     try {
       if (isNew) {
@@ -161,10 +160,9 @@ export default function ClientEdit() {
         }
       />
 
-      <form onSubmit={submit}>
-        <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
-          <TabPanel header="Settings">
-            <div className="space-y-8">
+      <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
+        <TabPanel header="Settings">
+          <div className="space-y-8">
               <Section
                 title="Basic information"
                 description="Identity and display details for this client."
@@ -302,34 +300,34 @@ export default function ClientEdit() {
                   <SwitchRow label="Non-editable" checked={draft.nonEditable ?? false} onChange={(v) => update("nonEditable", v)} />
                 </SwitchList>
               </Section>
-            </div>
-          </TabPanel>
-
-          {!isNew && <TabPanel header="Scopes"><ScopesPanel clientId={numericId} /></TabPanel>}
-          {!isNew && <TabPanel header="Grant types"><GrantTypesPanel clientId={numericId} /></TabPanel>}
-          {!isNew && <TabPanel header="Redirect URIs"><RedirectUrisPanel clientId={numericId} /></TabPanel>}
-          {!isNew && <TabPanel header="Post-logout URIs"><PostLogoutRedirectUrisPanel clientId={numericId} /></TabPanel>}
-          {!isNew && <TabPanel header="CORS origins"><CorsOriginsPanel clientId={numericId} /></TabPanel>}
-          {!isNew && <TabPanel header="Claims"><ClaimsPanel clientId={numericId} /></TabPanel>}
-          {!isNew && <TabPanel header="Secrets"><SecretsPanel clientId={numericId} /></TabPanel>}
-          {!isNew && <TabPanel header="Properties"><PropertiesPanel clientId={numericId} /></TabPanel>}
-          {!isNew && <TabPanel header="IdP restrictions"><IdpRestrictionsPanel clientId={numericId} /></TabPanel>}
-        </TabView>
-
-        <div className="fixed inset-x-0 bottom-0 left-60 z-10 border-t border-border bg-surface/95 backdrop-blur">
-          <div className="mx-auto flex w-full max-w-6xl items-center justify-end gap-2 px-6 py-3 md:px-8">
-            <Link to="/clients">
-              <Button type="button" outlined label="Cancel" />
-            </Link>
-            <Button
-              type="submit"
-              loading={saving}
-              label={isNew ? "Create client" : "Save changes"}
-              icon={<FontAwesomeIcon icon={faSave} />}
-            />
           </div>
+        </TabPanel>
+
+        {!isNew && <TabPanel header="Scopes"><ScopesPanel clientId={numericId} /></TabPanel>}
+        {!isNew && <TabPanel header="Grant types"><GrantTypesPanel clientId={numericId} /></TabPanel>}
+        {!isNew && <TabPanel header="Redirect URIs"><RedirectUrisPanel clientId={numericId} /></TabPanel>}
+        {!isNew && <TabPanel header="Post-logout URIs"><PostLogoutRedirectUrisPanel clientId={numericId} /></TabPanel>}
+        {!isNew && <TabPanel header="CORS origins"><CorsOriginsPanel clientId={numericId} /></TabPanel>}
+        {!isNew && <TabPanel header="Claims"><ClaimsPanel clientId={numericId} /></TabPanel>}
+        {!isNew && <TabPanel header="Secrets"><SecretsPanel clientId={numericId} /></TabPanel>}
+        {!isNew && <TabPanel header="Properties"><PropertiesPanel clientId={numericId} /></TabPanel>}
+        {!isNew && <TabPanel header="IdP restrictions"><IdpRestrictionsPanel clientId={numericId} /></TabPanel>}
+      </TabView>
+
+      <div className="fixed inset-x-0 bottom-0 left-60 z-10 border-t border-border bg-surface/95 backdrop-blur">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-end gap-2 px-6 py-3 md:px-8">
+          <Link to="/clients">
+            <Button type="button" outlined label="Cancel" />
+          </Link>
+          <Button
+            type="button"
+            onClick={submit}
+            loading={saving}
+            label={isNew ? "Create client" : "Save changes"}
+            icon={<FontAwesomeIcon icon={faSave} />}
+          />
         </div>
-      </form>
+      </div>
     </div>
   );
 }

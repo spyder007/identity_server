@@ -51,8 +51,7 @@ export default function RoleEdit() {
     void load();
   }, [load]);
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async () => {
     setSaving(true);
     try {
       if (isNew) {
@@ -101,8 +100,7 @@ export default function RoleEdit() {
         }
       />
 
-      <form onSubmit={submit}>
-        <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
+      <TabView scrollable activeIndex={activeTab} onTabChange={(e) => setActiveTab(e.index)}>
           <TabPanel header="Settings">
             <section className="rounded-xl border border-border bg-surface p-5 shadow-sm md:p-6">
               <header className="mb-5">
@@ -139,14 +137,14 @@ export default function RoleEdit() {
               <Button type="button" outlined label="Cancel" />
             </Link>
             <Button
-              type="submit"
+              type="button"
+              onClick={submit}
               loading={saving}
               label={isNew ? "Create role" : "Save changes"}
               icon={<FontAwesomeIcon icon={faSave} />}
             />
           </div>
         </div>
-      </form>
     </div>
   );
 }

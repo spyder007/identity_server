@@ -86,31 +86,32 @@ function SingleValuePanel<T extends { id?: number | string }>({
       describe={describe}
       columns={columns}
       emptyCreateDraft={{ value: "" }}
-      renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => (
-        <form
-          className="flex gap-2"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!createDraft.value.trim()) return;
-            await create(createDraft.value.trim());
-            onCreated();
-          }}
-        >
-          <InputText
-            type={fieldType}
-            className="flex-1"
-            value={createDraft.value}
-            placeholder={placeholder}
-            onChange={(e) => setCreateDraft({ value: e.target.value })}
-          />
-          <Button
-            type="submit"
-            label="Add"
-            icon={<FontAwesomeIcon icon={faPlus} />}
-            disabled={!createDraft.value.trim()}
-          />
-        </form>
-      )}
+      renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => {
+        const submit = async () => {
+          if (!createDraft.value.trim()) return;
+          await create(createDraft.value.trim());
+          onCreated();
+        };
+        return (
+          <div className="flex gap-2">
+            <InputText
+              type={fieldType}
+              className="flex-1"
+              value={createDraft.value}
+              placeholder={placeholder}
+              onChange={(e) => setCreateDraft({ value: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+            />
+            <Button
+              type="button"
+              onClick={submit}
+              label="Add"
+              icon={<FontAwesomeIcon icon={faPlus} />}
+              disabled={!createDraft.value.trim()}
+            />
+          </div>
+        );
+      }}
     />
   );
 }
@@ -157,36 +158,38 @@ function KeyValuePanel<T extends { id?: number | string }>({
       describe={describe}
       columns={columns}
       emptyCreateDraft={{ key: "", value: "" }}
-      renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => (
-        <form
-          className="flex gap-2"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!createDraft.key.trim() || !createDraft.value.trim()) return;
-            await create(createDraft.key.trim(), createDraft.value.trim());
-            onCreated();
-          }}
-        >
-          <InputText
-            className="flex-1"
-            value={createDraft.key}
-            placeholder={keyPlaceholder}
-            onChange={(e) => setCreateDraft({ ...createDraft, key: e.target.value })}
-          />
-          <InputText
-            className="flex-1"
-            value={createDraft.value}
-            placeholder={valuePlaceholder}
-            onChange={(e) => setCreateDraft({ ...createDraft, value: e.target.value })}
-          />
-          <Button
-            type="submit"
-            label="Add"
-            icon={<FontAwesomeIcon icon={faPlus} />}
-            disabled={!createDraft.key.trim() || !createDraft.value.trim()}
-          />
-        </form>
-      )}
+      renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => {
+        const submit = async () => {
+          if (!createDraft.key.trim() || !createDraft.value.trim()) return;
+          await create(createDraft.key.trim(), createDraft.value.trim());
+          onCreated();
+        };
+        return (
+          <div className="flex gap-2">
+            <InputText
+              className="flex-1"
+              value={createDraft.key}
+              placeholder={keyPlaceholder}
+              onChange={(e) => setCreateDraft({ ...createDraft, key: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+            />
+            <InputText
+              className="flex-1"
+              value={createDraft.value}
+              placeholder={valuePlaceholder}
+              onChange={(e) => setCreateDraft({ ...createDraft, value: e.target.value })}
+              onKeyDown={(e) => e.key === "Enter" && submit()}
+            />
+            <Button
+              type="button"
+              onClick={submit}
+              label="Add"
+              icon={<FontAwesomeIcon icon={faPlus} />}
+              disabled={!createDraft.key.trim() || !createDraft.value.trim()}
+            />
+          </div>
+        );
+      }}
     />
   );
 }
@@ -408,43 +411,43 @@ export function SecretsPanel({ clientId }: PanelProps) {
         { field: "expiration", header: "Expires" },
       ]}
       emptyCreateDraft={emptyDraft}
-      renderCreateForm={({ onCreated }) => (
-        <form
-          className="grid grid-cols-1 gap-3 md:grid-cols-2"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (!draft.type.trim() || !draft.value.trim()) return;
-            await postApiV1ClientsByClientIdSecrets({ path: { clientId }, body: draft });
-            setDraft(emptyDraft);
-            onCreated();
-          }}
-        >
-          <div>
-            <label className="mb-1 block text-xs text-content-muted">Type</label>
-            <InputText className="w-full" value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value })} />
+      renderCreateForm={({ onCreated }) => {
+        const submit = async () => {
+          if (!draft.type.trim() || !draft.value.trim()) return;
+          await postApiV1ClientsByClientIdSecrets({ path: { clientId }, body: draft });
+          setDraft(emptyDraft);
+          onCreated();
+        };
+        return (
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-xs text-content-muted">Type</label>
+              <InputText className="w-full" value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value })} />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-content-muted">Value (will be SHA-256 hashed)</label>
+              <InputText className="w-full" value={draft.value} onChange={(e) => setDraft({ ...draft, value: e.target.value })} />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-content-muted">Description (optional)</label>
+              <InputText className="w-full" value={draft.description ?? ""} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
+            </div>
+            <div>
+              <label className="mb-1 block text-xs text-content-muted">Expires (ISO date, optional)</label>
+              <InputText className="w-full" value={draft.expiration ?? ""} onChange={(e) => setDraft({ ...draft, expiration: e.target.value })} placeholder="2027-01-01T00:00:00Z" />
+            </div>
+            <div className="md:col-span-2">
+              <Button
+                type="button"
+                onClick={submit}
+                label="Add secret"
+                icon={<FontAwesomeIcon icon={faPlus} />}
+                disabled={!draft.type.trim() || !draft.value.trim()}
+              />
+            </div>
           </div>
-          <div>
-            <label className="mb-1 block text-xs text-content-muted">Value (will be SHA-256 hashed)</label>
-            <InputText className="w-full" value={draft.value} onChange={(e) => setDraft({ ...draft, value: e.target.value })} />
-          </div>
-          <div>
-            <label className="mb-1 block text-xs text-content-muted">Description (optional)</label>
-            <InputText className="w-full" value={draft.description ?? ""} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
-          </div>
-          <div>
-            <label className="mb-1 block text-xs text-content-muted">Expires (ISO date, optional)</label>
-            <InputText className="w-full" value={draft.expiration ?? ""} onChange={(e) => setDraft({ ...draft, expiration: e.target.value })} placeholder="2027-01-01T00:00:00Z" />
-          </div>
-          <div className="md:col-span-2">
-            <Button
-              type="submit"
-              label="Add secret"
-              icon={<FontAwesomeIcon icon={faPlus} />}
-              disabled={!draft.type.trim() || !draft.value.trim()}
-            />
-          </div>
-        </form>
-      )}
+        );
+      }}
     />
   );
 }
