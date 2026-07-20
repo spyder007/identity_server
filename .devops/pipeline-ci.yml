@@ -37,6 +37,7 @@ pr:
 stages:
   - template: pipelines/build-multi-container/v1.yml@templates
     parameters:
+      vmImage: ubuntu-latest
       gitVersionSpec: '6.0.x'
       # Build the whole solution so the single SonarCloud scope sees every C# project.
       buildProject: source/Spydersoft.Identity.slnx
@@ -180,6 +181,7 @@ stages:
   # (needs .NET 10 + a container runtime on the agent).
   - template: stages/integration-tests/v1.yml@templates
     parameters:
+      vmImage: ubuntu-latest
       stageName: integration_tests
       dependsOn:
         - Build
