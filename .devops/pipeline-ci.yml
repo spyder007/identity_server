@@ -187,6 +187,11 @@ stages:
         - Build
       netCoreVersion: '10.0.x'
       nodeVersion: '22.x'
+      # Admin API Integration's webServer boots via `dotnet run`, which triggers
+      # an implicit restore against the private spydersoft GitHub Packages feed
+      # (see nuget.config) -- same service connection as the Build stage's
+      # externalFeedCredentials, above.
+      externalFeedCredentials: SpydersoftGithub
       setupSteps:
         # UseNode@1 (used by this template to set up Node) mis-resolves "22.x" to a
         # stale cached Node 10 on our self-hosted agent, which breaks corepack. Force
