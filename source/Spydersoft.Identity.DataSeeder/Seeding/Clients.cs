@@ -18,6 +18,13 @@ internal static class Clients
     // real /connect/token endpoint. Do not reuse outside the tests project.
     public const string AdminTestsClientSecret = "local-tests-only-do-not-deploy";
 
+    // Cleartext secret for the `terraform-provider` client_credentials client.
+    // Committed deliberately — local-only dev fixture so the Terraform provider
+    // has a working client out of the box against a locally seeded instance.
+    // Production usage requires registering an equivalent client with its own
+    // secret via the admin API/UI; do not reuse this value outside local dev.
+    public const string TerraformProviderClientSecret = "local-dev-only-do-not-deploy";
+
     private static Secret Hashed(string hash) => new(hash) { Type = IdentityServerConstants.SecretTypes.SharedSecret };
 
     /// <param name="adminFrontendClientSecret">
@@ -126,6 +133,17 @@ internal static class Clients
             ClientName = "Identity Admin Tests",
             AllowedGrantTypes = { GrantType.ClientCredentials },
             ClientSecrets = { Hashed(AdminTestsClientSecret.Sha256()) },
+            AllowedScopes = { "identity:admin:read", "identity:admin:write" },
+        },
+        // Client_credentials client used by the Terraform/OpenTofu provider to
+        // manage clients/resources/scopes via the admin API. Secret is committed
+        // in source for local dev — see TerraformProviderClientSecret above.
+        new Client
+        {
+            ClientId = "terraform-provider",
+            ClientName = "Terraform Provider",
+            AllowedGrantTypes = { GrantType.ClientCredentials },
+            ClientSecrets = { Hashed(TerraformProviderClientSecret.Sha256()) },
             AllowedScopes = { "identity:admin:read", "identity:admin:write" },
         },
     };

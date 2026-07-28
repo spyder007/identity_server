@@ -62,10 +62,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ClientClaimDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int clientId, [FromBody] SaveClientClaimDto dto)
         {
             var client = await dbContext.Clients.Include(c => c.Claims).FirstOrDefaultAsync(c => c.Id == clientId);
             if (client is null) return NotFound();
+            if (client.Claims.Any(x => x.Type == dto.Type && x.Value == dto.Value))
+                return Conflict($"A claim with type '{dto.Type}' and value '{dto.Value}' already exists for this client.");
             var entity = Mapper.Map<ClientClaim>(dto);
             entity.ClientId = clientId;
             client.Claims.Add(entity);
@@ -137,10 +140,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ClientCorsOriginDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int clientId, [FromBody] SaveClientCorsOriginDto dto)
         {
             var client = await dbContext.Clients.Include(c => c.AllowedCorsOrigins).FirstOrDefaultAsync(c => c.Id == clientId);
             if (client is null) return NotFound();
+            if (client.AllowedCorsOrigins.Any(x => x.Origin == dto.Origin))
+                return Conflict($"A CORS origin '{dto.Origin}' already exists for this client.");
             var entity = Mapper.Map<ClientCorsOrigin>(dto);
             entity.ClientId = clientId;
             client.AllowedCorsOrigins.Add(entity);
@@ -212,10 +218,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ClientGrantTypeDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int clientId, [FromBody] SaveClientGrantTypeDto dto)
         {
             var client = await dbContext.Clients.Include(c => c.AllowedGrantTypes).FirstOrDefaultAsync(c => c.Id == clientId);
             if (client is null) return NotFound();
+            if (client.AllowedGrantTypes.Any(x => x.GrantType == dto.GrantType))
+                return Conflict($"A grant type '{dto.GrantType}' already exists for this client.");
             var entity = Mapper.Map<ClientGrantType>(dto);
             entity.ClientId = clientId;
             client.AllowedGrantTypes.Add(entity);
@@ -287,10 +296,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ClientIdpRestrictionDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int clientId, [FromBody] SaveClientIdpRestrictionDto dto)
         {
             var client = await dbContext.Clients.Include(c => c.IdentityProviderRestrictions).FirstOrDefaultAsync(c => c.Id == clientId);
             if (client is null) return NotFound();
+            if (client.IdentityProviderRestrictions.Any(x => x.Provider == dto.Provider))
+                return Conflict($"An identity provider restriction '{dto.Provider}' already exists for this client.");
             var entity = Mapper.Map<ClientIdPRestriction>(dto);
             entity.ClientId = clientId;
             client.IdentityProviderRestrictions.Add(entity);
@@ -362,10 +374,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ClientPostLogoutRedirectUriDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int clientId, [FromBody] SaveClientPostLogoutRedirectUriDto dto)
         {
             var client = await dbContext.Clients.Include(c => c.PostLogoutRedirectUris).FirstOrDefaultAsync(c => c.Id == clientId);
             if (client is null) return NotFound();
+            if (client.PostLogoutRedirectUris.Any(x => x.PostLogoutRedirectUri == dto.PostLogoutRedirectUri))
+                return Conflict($"A post-logout redirect URI '{dto.PostLogoutRedirectUri}' already exists for this client.");
             var entity = Mapper.Map<ClientPostLogoutRedirectUri>(dto);
             entity.ClientId = clientId;
             client.PostLogoutRedirectUris.Add(entity);
@@ -437,10 +452,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ClientPropertyDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int clientId, [FromBody] SaveClientPropertyDto dto)
         {
             var client = await dbContext.Clients.Include(c => c.Properties).FirstOrDefaultAsync(c => c.Id == clientId);
             if (client is null) return NotFound();
+            if (client.Properties.Any(x => x.Key == dto.Key))
+                return Conflict($"A property with key '{dto.Key}' already exists for this client.");
             var entity = Mapper.Map<ClientProperty>(dto);
             entity.ClientId = clientId;
             client.Properties.Add(entity);
@@ -512,10 +530,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ClientRedirectUriDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int clientId, [FromBody] SaveClientRedirectUriDto dto)
         {
             var client = await dbContext.Clients.Include(c => c.RedirectUris).FirstOrDefaultAsync(c => c.Id == clientId);
             if (client is null) return NotFound();
+            if (client.RedirectUris.Any(x => x.RedirectUri == dto.RedirectUri))
+                return Conflict($"A redirect URI '{dto.RedirectUri}' already exists for this client.");
             var entity = Mapper.Map<ClientRedirectUri>(dto);
             entity.ClientId = clientId;
             client.RedirectUris.Add(entity);
@@ -587,10 +608,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ClientScopeDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int clientId, [FromBody] SaveClientScopeDto dto)
         {
             var client = await dbContext.Clients.Include(c => c.AllowedScopes).FirstOrDefaultAsync(c => c.Id == clientId);
             if (client is null) return NotFound();
+            if (client.AllowedScopes.Any(x => x.Scope == dto.Scope))
+                return Conflict($"A scope '{dto.Scope}' already exists for this client.");
             var entity = Mapper.Map<ClientScope>(dto);
             entity.ClientId = clientId;
             client.AllowedScopes.Add(entity);

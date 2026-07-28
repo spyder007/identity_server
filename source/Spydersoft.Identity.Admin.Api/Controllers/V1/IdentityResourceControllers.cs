@@ -42,6 +42,18 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return entity is null ? NotFound() : Ok(Mapper.Map<IdentityResourceDto>(entity));
         }
 
+        /// <summary>Gets the identity resource with the specified natural <c>Name</c> key.</summary>
+        /// <param name="name">The name of the identity resource.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the identity resource, or <see cref="StatusCodes.Status404NotFound"/> if it does not exist.</returns>
+        [HttpGet("by-name/{name}")]
+        [ProducesResponseType<IdentityResourceDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetByName(string name)
+        {
+            var entity = dbContext.IdentityResources.FirstOrDefault(r => r.Name == name);
+            return entity is null ? NotFound() : Ok(Mapper.Map<IdentityResourceDto>(entity));
+        }
+
         /// <summary>Creates a new identity resource.</summary>
         /// <param name="dto">The identity resource details to create.</param>
         /// <returns>A <see cref="StatusCodes.Status201Created"/> response containing the created identity resource, or <see cref="StatusCodes.Status400BadRequest"/> if the request is invalid.</returns>
@@ -139,10 +151,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<IdentityResourceClaimDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int identityResourceId, [FromBody] SaveIdentityResourceClaimDto dto)
         {
             var resource = await dbContext.IdentityResources.Include(r => r.UserClaims).FirstOrDefaultAsync(r => r.Id == identityResourceId);
             if (resource is null) return NotFound();
+            if (resource.UserClaims.Any(x => x.Type == dto.Type))
+                return Conflict($"A claim with type '{dto.Type}' already exists for this identity resource.");
             var entity = Mapper.Map<Duende.IdentityServer.EntityFramework.Entities.IdentityResourceClaim>(dto);
             entity.IdentityResourceId = identityResourceId;
             resource.UserClaims.Add(entity);
@@ -214,10 +229,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<IdentityResourcePropertyDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int identityResourceId, [FromBody] SaveIdentityResourcePropertyDto dto)
         {
             var resource = await dbContext.IdentityResources.Include(r => r.Properties).FirstOrDefaultAsync(r => r.Id == identityResourceId);
             if (resource is null) return NotFound();
+            if (resource.Properties.Any(x => x.Key == dto.Key))
+                return Conflict($"A property with key '{dto.Key}' already exists for this identity resource.");
             var entity = Mapper.Map<Duende.IdentityServer.EntityFramework.Entities.IdentityResourceProperty>(dto);
             entity.IdentityResourceId = identityResourceId;
             resource.Properties.Add(entity);

@@ -45,6 +45,19 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return Ok(Mapper.Map<ClientDto>(client));
         }
 
+        /// <summary>Returns the full detail of a single client, looked up by its natural <c>ClientId</c> key.</summary>
+        [HttpGet("by-client-id/{clientId}")]
+        [ProducesResponseType<ClientDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetByClientId(string clientId)
+        {
+            var client = dbContext.Clients.FirstOrDefault(c => c.ClientId == clientId);
+            if (client is null)
+                return NotFound();
+
+            return Ok(Mapper.Map<ClientDto>(client));
+        }
+
         /// <summary>Creates a new client.</summary>
         [HttpPost]
         [Authorize(Policy = AdminApiPolicies.Write)]
