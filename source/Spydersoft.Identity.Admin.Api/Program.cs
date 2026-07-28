@@ -38,7 +38,9 @@ try
     builder.AddSpydersoftTelemetry(typeof(Program).Assembly,
         new ConfigurationFunctions
         {
-            MetricsConfiguration = metrics => metrics.AddNpgsqlInstrumentation()
+            MetricsConfiguration = metrics => metrics.AddNpgsqlInstrumentation(),
+            // Kubernetes probes hit these every few seconds; they add nothing but noise to traces.
+            AspNetFilterFunction = context => !IsHealthCheckPath(context.Request.Path.Value)
         })
         .AddSpydersoftSerilog(true);
 
@@ -170,3 +172,7 @@ finally
     Log.Information("Spydersoft.Identity.Admin.Api shut down complete.");
     await Log.CloseAndFlushAsync();
 }
+
+static bool IsHealthCheckPath(string? path) =>
+    string.Equals(path, "/livez", StringComparison.OrdinalIgnoreCase) ||
+    string.Equals(path, "/readyz", StringComparison.OrdinalIgnoreCase);
