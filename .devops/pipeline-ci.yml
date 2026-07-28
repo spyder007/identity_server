@@ -119,6 +119,8 @@ stages:
       # analyzer itself never looks at build output.
       sonarExtraProperties: |
         sonar.exclusions=**/bin/**,**/obj/**
+        sonar.typescript.tsconfigPaths=
+        sonar.javascript.tsconfigPaths=
 
       # admin-ui React SPA: yarn install/test/build (produces dist consumed by the
       # Admin.Frontend publish) plus its own SonarCloud scope for the JS/TS code.
