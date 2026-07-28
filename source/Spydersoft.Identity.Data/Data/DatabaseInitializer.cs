@@ -31,9 +31,9 @@ namespace Spydersoft.Identity.Data
         /// </summary>
         private readonly IApplicationBuilder _app = app;
         /// <summary>
-        /// The log
+        /// The logger
         /// </summary>
-        private ILogger _log = null!;
+        private ILogger _logger = null!;
 
         /// <summary>
         /// Initializes the database.
@@ -41,7 +41,7 @@ namespace Spydersoft.Identity.Data
         public void InitializeDatabase()
         {
             using IServiceScope serviceScope = _app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
-            _log = serviceScope.ServiceProvider.GetRequiredService<ILogger<DatabaseInitializer>>();
+            _logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<DatabaseInitializer>>();
 
             PerformDatabaseMigrations(serviceScope);
             SeedDatabase(serviceScope);
@@ -75,11 +75,11 @@ namespace Spydersoft.Identity.Data
         /// <returns>System.Threading.Tasks.Task.</returns>
         private async Task DoMigrationIfNeeded(DbContext context, string databaseName)
         {
-            _log.LogDebug("Checking {Database} for pending migrations.", databaseName);
+            _logger.LogDebug("Checking {Database} for pending migrations.", databaseName);
             var hasMigrations = (await context.Database.GetPendingMigrationsAsync()).Any();
             if (hasMigrations)
             {
-                _log.LogInformation("Migrating {Database}.", databaseName);
+                _logger.LogInformation("Migrating {Database}.", databaseName);
                 await context.Database.MigrateAsync();
             }
         }
@@ -108,7 +108,7 @@ namespace Spydersoft.Identity.Data
 
             if (!context.Clients.Any())
             {
-                _log.LogInformation("No Clients Found. Creating sample Clients");
+                _logger.LogInformation("No Clients Found. Creating sample Clients");
                 foreach (Client client in GetClients())
                 {
                     _ = context.Clients.Add(client.ToEntity());
@@ -120,7 +120,7 @@ namespace Spydersoft.Identity.Data
             // Ensure all standard identity resources exist
             foreach (IdentityResource resource in GetIdentityResources().Where(resource => !context.IdentityResources.Any(ir => ir.Name == resource.Name)))
             {
-                _log.LogInformation("Identity Resource {ResourceName} not found. Creating it.", resource.Name);
+                _logger.LogInformation("Identity Resource {ResourceName} not found. Creating it.", resource.Name);
                 _ = context.IdentityResources.Add(resource.ToEntity());
             }
             _ = context.SaveChanges();
@@ -128,7 +128,7 @@ namespace Spydersoft.Identity.Data
             // Ensure all standard API resources exist
             foreach (ApiResource resource in GetApiResources().Where(resource => !context.ApiResources.Any(ar => ar.Name == resource.Name)))
             {
-                _log.LogInformation("API Resource {ResourceName} not found. Creating it.", resource.Name);
+                _logger.LogInformation("API Resource {ResourceName} not found. Creating it.", resource.Name);
                 _ = context.ApiResources.Add(resource.ToEntity());
             }
             _ = context.SaveChanges();
@@ -185,11 +185,11 @@ namespace Spydersoft.Identity.Data
                     throw new IdentityResultException(result);
                 }
 
-                _log.LogInformation("admin created");
+                _logger.LogInformation("admin created");
             }
             else
             {
-                _log.LogDebug("admin already exists");
+                _logger.LogDebug("admin already exists");
             }
 
         }
@@ -205,7 +205,7 @@ namespace Spydersoft.Identity.Data
             IdentityResult result = roleMgr.CreateAsync(new ApplicationRole { Name = roleName }).Result;
             if (!result.Succeeded)
             {
-                _log.LogError("Unable to create {Role} role : {Error}", roleName, result.ToString());
+                _logger.LogError("Unable to create {Role} role : {Error}", roleName, result.ToString());
             }
         }
 
