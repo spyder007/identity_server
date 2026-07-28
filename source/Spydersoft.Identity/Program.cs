@@ -52,7 +52,9 @@ try
                 .AddSource(IdentityServerConstants.Tracing.Validation)
                 .AddNpgsql(),
             MetricsConfiguration = metrics => metrics
-                .AddNpgsqlInstrumentation()
+                .AddNpgsqlInstrumentation(),
+            // Kubernetes probes hit these every few seconds; they add nothing but noise to traces.
+            AspNetFilterFunction = context => !IsHealthCheckPath(context.Request.Path.Value)
         })
         .AddSpydersoftSerilog(true);
 
@@ -261,3 +263,7 @@ finally
     Log.Information("identityServer shut down complete");
     await Log.CloseAndFlushAsync();
 }
+
+static bool IsHealthCheckPath(string path) =>
+    string.Equals(path, "/livez", StringComparison.OrdinalIgnoreCase) ||
+    string.Equals(path, "/readyz", StringComparison.OrdinalIgnoreCase);
