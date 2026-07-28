@@ -57,6 +57,7 @@ app.UseForwardedHeaders(forwardedHeadersOptions);
 app.UseSpydersoftHealthChecks(healthCheckOptions);
 
 app.UseRouting();
+app.UseSpydersoftRequestLogging();
 app.UseOidcProxy();
 app.UseDefaultFiles();
 app.UseStaticFiles();

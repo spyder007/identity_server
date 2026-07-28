@@ -153,6 +153,7 @@ try
 
     _ = app.UseSpydersoftHealthChecks(healthCheckOptions)
             .UseRouting()
+            .UseSpydersoftRequestLogging()
             .UseAuthentication()
             .UseAuthorization();
 
