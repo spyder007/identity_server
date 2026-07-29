@@ -27,6 +27,24 @@ export interface SaveClient {
   protocolType: string;
 }
 
+export interface ClientSecretDetail {
+  id: number;
+  clientId: number;
+  type: string;
+  description: string | null;
+  expiration: string | null;
+}
+
+export interface SaveClientSecret {
+  type: string;
+  value: string;
+  description?: string | null;
+  expiration?: string | null;
+}
+
+export type ApiResourceSecretDetail = Omit<ClientSecretDetail, 'clientId'> & { apiResourceId: number };
+export type SaveApiResourceSecret = SaveClientSecret;
+
 export interface ApiResourceSummary {
   id: number;
   name: string;

@@ -5,15 +5,15 @@
   "description": "Identity Server 5 Implementation",
   "type": "module",
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^7.2.0",
+    "@fortawesome/fontawesome-free": "^7.3.1",
     "davidshimjs-qrcodejs": "^0.0.2",
     "moment": "^2.30.1",
-    "tailwindcss": "^4.2.4"
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@tailwindcss/cli": "^4.2.4",
+    "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/forms": "^0.5.11",
-    "@tailwindcss/typography": "^0.5.19"
+    "@tailwindcss/typography": "^0.5.20"
   },
   "scripts": {
     "copy": "node ./tools/copy-static.mjs",

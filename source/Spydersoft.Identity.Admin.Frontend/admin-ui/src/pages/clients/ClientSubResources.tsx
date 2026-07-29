@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
+import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,23 +54,12 @@ import type {
   ClientSecretDto,
   SaveClientSecretDto,
 } from "../../api/generated/types.gen";
+import { SECRET_TYPES, validateSecretValue } from "../../utils/secretTypes";
+import { problemMessage } from "../../utils/apiError";
 
 // Scopes are drawn from existing API scopes / identity resources plus the
 // standard "offline_access" scope, since clients can't define new scopes here.
 const STANDARD_SCOPES = ["offline_access"];
-
-// Extracts a human-readable message from an ASP.NET ProblemDetails/ValidationProblemDetails
-// error body so failed creates can be surfaced instead of failing silently.
-function problemMessage(error: unknown, fallback: string): string {
-  if (error && typeof error === "object") {
-    const e = error as { detail?: string; title?: string; errors?: Record<string, string[]> };
-    const firstValidationError = e.errors && Object.values(e.errors)[0]?.[0];
-    if (firstValidationError) return firstValidationError;
-    if (e.detail) return e.detail;
-    if (e.title) return e.title;
-  }
-  return fallback;
-}
 
 interface PanelProps {
   clientId: number;
@@ -545,8 +536,9 @@ export function ScopesPanel({ clientId }: PanelProps) {
 
 // Secrets get their own panel — the create form has more fields (type, value, description, expiration).
 export function SecretsPanel({ clientId }: PanelProps) {
-  const [draft, setDraft] = useState<SaveClientSecretDto>({ type: "SharedSecret", value: "" });
   const emptyDraft: SaveClientSecretDto = { type: "SharedSecret", value: "" };
+  const [draft, setDraft] = useState<SaveClientSecretDto>(emptyDraft);
+  const [expiresAt, setExpiresAt] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   return (
@@ -568,34 +560,88 @@ export function SecretsPanel({ clientId }: PanelProps) {
       ]}
       emptyCreateDraft={emptyDraft}
       renderCreateForm={({ onCreated }) => {
+        const selectedType = SECRET_TYPES.find((t) => t.value === draft.type) ?? SECRET_TYPES[0];
         const submit = async () => {
           if (!draft.type.trim() || !draft.value.trim()) return;
+          const validationError = validateSecretValue(draft.type, draft.value);
+          if (validationError) {
+            setError(validationError);
+            return;
+          }
           setError(null);
-          const r = await postApiV1ClientsByClientIdSecrets({ path: { clientId }, body: draft });
+          const body: SaveClientSecretDto = { ...draft, expiration: expiresAt ? expiresAt.toISOString() : undefined };
+          const r = await postApiV1ClientsByClientIdSecrets({ path: { clientId }, body });
           if (r.error) {
             setError(problemMessage(r.error, "Failed to add secret."));
             return;
           }
           setDraft(emptyDraft);
+          setExpiresAt(null);
           onCreated();
         };
         return (
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs text-content-muted">Type</label>
-              <InputText className="w-full" value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value })} />
+              <label htmlFor="client-secret-type" className="mb-1 block text-xs text-content-muted">
+                Type
+              </label>
+              <Dropdown
+                inputId="client-secret-type"
+                className="w-full"
+                options={SECRET_TYPES}
+                value={draft.type}
+                onChange={(e) => setDraft({ ...draft, type: e.value })}
+              />
+            </div>
+            <div className={selectedType.multiline ? "md:col-span-2" : undefined}>
+              <label htmlFor="client-secret-value" className="mb-1 block text-xs text-content-muted">
+                Value{selectedType.valueHint}
+              </label>
+              {selectedType.multiline ? (
+                <InputTextarea
+                  id="client-secret-value"
+                  className="w-full"
+                  rows={4}
+                  value={draft.value}
+                  placeholder={selectedType.placeholder}
+                  onChange={(e) => setDraft({ ...draft, value: e.target.value })}
+                />
+              ) : (
+                <InputText
+                  id="client-secret-value"
+                  className="w-full"
+                  value={draft.value}
+                  placeholder={selectedType.placeholder}
+                  onChange={(e) => setDraft({ ...draft, value: e.target.value })}
+                />
+              )}
             </div>
             <div>
-              <label className="mb-1 block text-xs text-content-muted">Value (will be SHA-256 hashed)</label>
-              <InputText className="w-full" value={draft.value} onChange={(e) => setDraft({ ...draft, value: e.target.value })} />
+              <label htmlFor="client-secret-description" className="mb-1 block text-xs text-content-muted">
+                Description (optional)
+              </label>
+              <InputText
+                id="client-secret-description"
+                className="w-full"
+                value={draft.description ?? ""}
+                onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+              />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-content-muted">Description (optional)</label>
-              <InputText className="w-full" value={draft.description ?? ""} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-content-muted">Expires (ISO date, optional)</label>
-              <InputText className="w-full" value={draft.expiration ?? ""} onChange={(e) => setDraft({ ...draft, expiration: e.target.value })} placeholder="2027-01-01T00:00:00Z" />
+              <label htmlFor="client-secret-expires" className="mb-1 block text-xs text-content-muted">
+                Expires (optional)
+              </label>
+              <Calendar
+                inputId="client-secret-expires"
+                className="w-full"
+                value={expiresAt}
+                onChange={(e) => setExpiresAt((e.value as Date | null) ?? null)}
+                showTime
+                showIcon
+                hourFormat="24"
+                dateFormat="yy-mm-dd"
+                showButtonBar
+              />
             </div>
             <div className="md:col-span-2">
               <Button

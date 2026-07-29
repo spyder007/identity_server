@@ -74,7 +74,7 @@ namespace Spydersoft.Identity.Pages.Consent
 
             if (result.IsRedirect)
             {
-                AuthorizationRequest context = await interaction.GetAuthorizationContextAsync(ReturnUrl);
+                AuthorizationRequest context = await interaction.GetAuthorizationContextAsync(ReturnUrl, HttpContext.RequestAborted);
                 if (context?.IsNativeClient() == true)
                 {
                     return RedirectToPage("/Redirect/Index", new { redirectUri = result.RedirectUri });
@@ -101,7 +101,7 @@ namespace Spydersoft.Identity.Pages.Consent
         {
             var result = new ProcessConsentResult();
 
-            AuthorizationRequest request = await interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+            AuthorizationRequest request = await interaction.GetAuthorizationContextAsync(model.ReturnUrl, HttpContext.RequestAborted);
             if (request == null)
             {
                 return result;
@@ -111,8 +111,8 @@ namespace Spydersoft.Identity.Pages.Consent
 
             if (model.Button == "no")
             {
-                grantedConsent = new ConsentResponse { Error = AuthorizationError.AccessDenied };
-                await events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues));
+                grantedConsent = new ConsentResponse { Error = InteractionError.AccessDenied };
+                await events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues), HttpContext.RequestAborted);
             }
             else if (model.Button == "yes")
             {
@@ -131,7 +131,7 @@ namespace Spydersoft.Identity.Pages.Consent
                         Description = model.Description
                     };
 
-                    await events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues, grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent));
+                    await events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues, grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent), HttpContext.RequestAborted);
                 }
                 else
                 {
@@ -145,7 +145,7 @@ namespace Spydersoft.Identity.Pages.Consent
 
             if (grantedConsent != null)
             {
-                await interaction.GrantConsentAsync(request, grantedConsent);
+                await interaction.GrantConsentAsync(request, grantedConsent, HttpContext.RequestAborted);
                 result.RedirectUri = model.ReturnUrl;
                 result.Client = request.Client;
             }
@@ -159,7 +159,7 @@ namespace Spydersoft.Identity.Pages.Consent
 
         private async Task<ConsentViewModel> BuildViewModelAsync(string returnUrl, ConsentInputModel model = null)
         {
-            AuthorizationRequest request = await interaction.GetAuthorizationContextAsync(returnUrl);
+            AuthorizationRequest request = await interaction.GetAuthorizationContextAsync(returnUrl, HttpContext.RequestAborted);
             if (request != null)
             {
                 return CreateConsentViewModel(model, returnUrl, request);

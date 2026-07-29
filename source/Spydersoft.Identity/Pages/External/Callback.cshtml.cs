@@ -81,8 +81,8 @@ namespace Spydersoft.Identity.Pages.External
             var returnUrl = result.Properties.Items["returnUrl"] ?? "~/";
 
             // check if external login is in the context of an OIDC request
-            Duende.IdentityServer.Models.AuthorizationRequest context = await interaction.GetAuthorizationContextAsync(returnUrl);
-            await events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.Id, name, true, context?.Client.ClientId));
+            Duende.IdentityServer.Models.AuthorizationRequest context = await interaction.GetAuthorizationContextAsync(returnUrl, HttpContext.RequestAborted);
+            await events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.Id, name, true, context?.Client.ClientId), HttpContext.RequestAborted);
 
             if (context != null && Spydersoft.Identity.Extensions.Extensions.IsNativeClient(context))
             {

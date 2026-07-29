@@ -56,7 +56,7 @@ namespace Spydersoft.Identity.Pages.Account
         /// <summary>Handles postback from username/password login.</summary>
         public async Task<IActionResult> OnPostAsync()
         {
-            AuthorizationRequest context = await interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
+            AuthorizationRequest context = await interaction.GetAuthorizationContextAsync(Input.ReturnUrl, HttpContext.RequestAborted);
 
             if (!ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace Spydersoft.Identity.Pages.Account
 
             if (!result.Succeeded)
             {
-                await events.RaiseAsync(new UserLoginFailureEvent(Input.Username, "invalid credentials", clientId: context?.Client.ClientId));
+                await events.RaiseAsync(new UserLoginFailureEvent(Input.Username, "invalid credentials", clientId: context?.Client.ClientId), HttpContext.RequestAborted);
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
                 View = await BuildLoginViewModelAsync(Input);
                 return Page();
@@ -81,7 +81,7 @@ namespace Spydersoft.Identity.Pages.Account
             }
 
             ApplicationUser user = await userManager.FindByNameAsync(Input.Username);
-            await events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId));
+            await events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName, clientId: context?.Client.ClientId), HttpContext.RequestAborted);
 
             if (context != null)
             {
@@ -109,7 +109,7 @@ namespace Spydersoft.Identity.Pages.Account
 
         private async Task<LoginViewModel> BuildLoginViewModelAsync(string returnUrl)
         {
-            AuthorizationRequest context = await interaction.GetAuthorizationContextAsync(returnUrl);
+            AuthorizationRequest context = await interaction.GetAuthorizationContextAsync(returnUrl, HttpContext.RequestAborted);
             if (context?.IdP != null && await schemeProvider.GetSchemeAsync(context.IdP) != null)
             {
                 var local = context.IdP == Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider;
@@ -142,7 +142,7 @@ namespace Spydersoft.Identity.Pages.Account
             var allowLocal = true;
             if (context?.Client.ClientId != null)
             {
-                Client client = await clientStore.FindEnabledClientByIdAsync(context.Client.ClientId);
+                Client client = await clientStore.FindEnabledClientByIdAsync(context.Client.ClientId, HttpContext.RequestAborted);
                 if (client != null)
                 {
                     allowLocal = client.EnableLocalLogin;
