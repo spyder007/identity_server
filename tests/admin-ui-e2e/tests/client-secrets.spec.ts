@@ -1,7 +1,16 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 function uniqueClientId(): string {
   return `e2e.client.${crypto.randomUUID().replaceAll('-', '').slice(0, 8)}`;
+}
+
+// PrimeReact's Dropdown renders both a visually-hidden native <select> (for
+// accessibility/forms) and a visible ".p-dropdown-label" span with the same
+// text, so a plain getByText() match is ambiguous. Scope to the visible
+// label's class instead.
+async function selectSecretType(page: Page, currentLabel: string, nextLabel: string) {
+  await page.locator('.p-dropdown-label', { hasText: currentLabel }).click();
+  await page.getByRole('option', { name: nextLabel }).click();
 }
 
 // Regression coverage for the Secrets panel rework: Type is now a dropdown
@@ -29,9 +38,10 @@ test('client secrets: type dropdown, expiration picker, and X509 value validatio
   await expect(page.getByRole('heading', { name: 'Client secrets' })).toBeVisible();
 
   // 1. Default type (SharedSecret) round-trips, including setting an
-  //    expiration via the date/time picker's "Today" shortcut.
+  //    expiration via the date/time picker's "Now" shortcut (showButtonBar
+  //    swaps in "Now" instead of "Today" because showTime is enabled).
   await page.getByRole('button', { name: 'Choose Date' }).click();
-  await page.getByRole('button', { name: 'Today' }).click();
+  await page.getByRole('button', { name: 'Now' }).click();
   await page.getByPlaceholder('Plaintext secret value').fill(`s3cret-${clientId}`);
   await page.getByRole('button', { name: 'Add secret' }).click();
 
@@ -41,8 +51,7 @@ test('client secrets: type dropdown, expiration picker, and X509 value validatio
 
   // 2. Switching to the X509 thumbprint type updates the placeholder and
   //    rejects an obviously malformed value before it reaches the API.
-  await page.getByText('Shared secret', { exact: true }).click();
-  await page.getByRole('option', { name: 'X509 certificate thumbprint' }).click();
+  await selectSecretType(page, 'Shared secret', 'X509 certificate thumbprint');
   await page.getByPlaceholder(/SHA-1 thumbprint/).fill('not-a-thumbprint');
   await page.getByRole('button', { name: 'Add secret' }).click();
   await expect(page.getByText(/Thumbprint must be exactly 40 hexadecimal characters/)).toBeVisible();
@@ -54,8 +63,9 @@ test('client secrets: type dropdown, expiration picker, and X509 value validatio
   await expect(page.getByRole('row').filter({ hasText: 'X509Thumbprint' })).toBeVisible();
 
   // 3. The base64 certificate type switches Value to a multi-line textarea.
-  await page.getByText('X509 certificate thumbprint', { exact: true }).click();
-  await page.getByRole('option', { name: 'X509 certificate (base64)' }).click();
+  //    (The dropdown resets to "Shared secret" after each successful add —
+  //    onCreated() resets the whole create-draft, not just the value.)
+  await selectSecretType(page, 'Shared secret', 'X509 certificate (base64)');
   const valueField = page.getByPlaceholder(/Base64-encoded DER certificate/);
   await expect(valueField).toBeVisible();
   await expect(await valueField.evaluate((el) => el.tagName)).toBe('TEXTAREA');
