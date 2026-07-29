@@ -41,7 +41,10 @@ export const SECRET_TYPES: SecretTypeOption[] = [
 ];
 
 const THUMBPRINT_PATTERN = /^[0-9A-Fa-f]{40}$/;
-const DISTINGUISHED_NAME_PATTERN = /^[^=,]+=[^=,]+(\s*,\s*[^=,]+=[^=,]+)*$/;
+// A single "key=value" segment, checked once per comma-separated part rather than via a
+// repeated group over the whole string, to avoid the exponential backtracking a
+// `(...)*`-wrapped `[^=,]+=[^=,]+` pattern is vulnerable to (ReDoS).
+const DN_SEGMENT_PATTERN = /^[^=,]+=[^=,]+$/;
 
 // Fast client-side pre-check so obviously-bad values don't round-trip to the server.
 // The Admin API re-validates authoritatively (it's the only thing that provisions secrets),
@@ -53,10 +56,11 @@ export function validateSecretValue(type: string, value: string): string | null 
       return THUMBPRINT_PATTERN.test(trimmed)
         ? null
         : "Thumbprint must be exactly 40 hexadecimal characters (the certificate's SHA-1 thumbprint).";
-    case "X509Name":
-      return DISTINGUISHED_NAME_PATTERN.test(trimmed)
-        ? null
-        : "Name must be a distinguished name, e.g. CN=MyClient, O=MyOrg.";
+    case "X509Name": {
+      const segments = trimmed.split(",").map((segment) => segment.trim());
+      const isValid = segments.length > 0 && segments.every((segment) => DN_SEGMENT_PATTERN.test(segment));
+      return isValid ? null : "Name must be a distinguished name, e.g. CN=MyClient, O=MyOrg.";
+    }
     case "X509CertificateBase64":
       try {
         atob(trimmed);

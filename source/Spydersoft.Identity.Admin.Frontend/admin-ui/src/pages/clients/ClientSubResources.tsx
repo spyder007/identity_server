@@ -582,8 +582,11 @@ export function SecretsPanel({ clientId }: PanelProps) {
         return (
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs text-content-muted">Type</label>
+              <label htmlFor="client-secret-type" className="mb-1 block text-xs text-content-muted">
+                Type
+              </label>
               <Dropdown
+                inputId="client-secret-type"
                 className="w-full"
                 options={SECRET_TYPES}
                 value={draft.type}
@@ -591,9 +594,12 @@ export function SecretsPanel({ clientId }: PanelProps) {
               />
             </div>
             <div className={selectedType.multiline ? "md:col-span-2" : undefined}>
-              <label className="mb-1 block text-xs text-content-muted">Value{selectedType.valueHint}</label>
+              <label htmlFor="client-secret-value" className="mb-1 block text-xs text-content-muted">
+                Value{selectedType.valueHint}
+              </label>
               {selectedType.multiline ? (
                 <InputTextarea
+                  id="client-secret-value"
                   className="w-full"
                   rows={4}
                   value={draft.value}
@@ -602,6 +608,7 @@ export function SecretsPanel({ clientId }: PanelProps) {
                 />
               ) : (
                 <InputText
+                  id="client-secret-value"
                   className="w-full"
                   value={draft.value}
                   placeholder={selectedType.placeholder}
@@ -610,12 +617,22 @@ export function SecretsPanel({ clientId }: PanelProps) {
               )}
             </div>
             <div>
-              <label className="mb-1 block text-xs text-content-muted">Description (optional)</label>
-              <InputText className="w-full" value={draft.description ?? ""} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
+              <label htmlFor="client-secret-description" className="mb-1 block text-xs text-content-muted">
+                Description (optional)
+              </label>
+              <InputText
+                id="client-secret-description"
+                className="w-full"
+                value={draft.description ?? ""}
+                onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+              />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-content-muted">Expires (optional)</label>
+              <label htmlFor="client-secret-expires" className="mb-1 block text-xs text-content-muted">
+                Expires (optional)
+              </label>
               <Calendar
+                inputId="client-secret-expires"
                 className="w-full"
                 value={expiresAt}
                 onChange={(e) => setExpiresAt((e.value as Date | null) ?? null)}
