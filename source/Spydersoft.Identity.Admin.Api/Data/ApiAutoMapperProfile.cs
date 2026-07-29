@@ -1,5 +1,6 @@
 using AutoMapper;
 
+using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.Entities;
 
 using Spydersoft.Identity.Admin.Api.Models.ApiResources;
@@ -126,8 +127,29 @@ namespace Spydersoft.Identity.Admin.Api.Data
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.Ignore())
                 .ForMember(d => d.Created, opt => opt.Ignore())
-                .ForMember(d => d.Expiration, opt => opt.Ignore());
+                .ForMember(d => d.Value, opt => opt.MapFrom(src => HashIfSharedSecret(src.Type, src.Value)))
+                .ForMember(d => d.Expiration, opt => opt.MapFrom(src => ParseExpiration(src.Expiration)));
         }
+
+        // Shared secrets must be stored as their Base64-encoded SHA-256 hash — IdentityServer's
+        // HashedSharedSecretValidator otherwise rejects them at token time as "invalid hashing algorithm".
+        // X509 secret types store the raw thumbprint/name/certificate value, so they're left untouched.
+        private static string HashIfSharedSecret(string type, string value)
+        {
+            if (type != IdentityServerConstants.SecretTypes.SharedSecret)
+            {
+                return value;
+            }
+
+            var hash = System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(value));
+            return Convert.ToBase64String(hash);
+        }
+
+        private static DateTime? ParseExpiration(string? value) =>
+            !string.IsNullOrWhiteSpace(value) &&
+            DateTime.TryParse(value, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal | System.Globalization.DateTimeStyles.AssumeUniversal, out var parsed)
+                ? parsed
+                : null;
 
         private void CreateApiResourceMappings()
         {
@@ -177,7 +199,8 @@ namespace Spydersoft.Identity.Admin.Api.Data
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.Ignore())
                 .ForMember(d => d.Created, opt => opt.Ignore())
-                .ForMember(d => d.Expiration, opt => opt.Ignore());
+                .ForMember(d => d.Value, opt => opt.MapFrom(src => HashIfSharedSecret(src.Type, src.Value)))
+                .ForMember(d => d.Expiration, opt => opt.MapFrom(src => ParseExpiration(src.Expiration)));
         }
 
         private void CreateIdentityResourceMappings()

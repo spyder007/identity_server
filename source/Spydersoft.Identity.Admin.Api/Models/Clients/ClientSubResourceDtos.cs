@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+using Spydersoft.Identity.Admin.Api.Models;
+
 namespace Spydersoft.Identity.Admin.Api.Models.Clients
 {
     // ---- Claims ----
@@ -197,7 +199,7 @@ namespace Spydersoft.Identity.Admin.Api.Models.Clients
     /// <summary>
     /// Represents the data required to create or update a client secret.
     /// </summary>
-    public class SaveClientSecretDto
+    public class SaveClientSecretDto : IValidatableObject
     {
         /// <summary>Gets or sets the type of the secret.</summary>
         [Required][StringLength(250, MinimumLength = 1)] public string Type { get; set; } = "SharedSecret";
@@ -207,5 +209,9 @@ namespace Spydersoft.Identity.Admin.Api.Models.Clients
         public string? Description { get; set; }
         /// <summary>Gets or sets the expiration of the secret.</summary>
         public string? Expiration { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
+            SecretValueValidation.Validate(Type, Value);
     }
 }
