@@ -110,7 +110,7 @@ namespace Spydersoft.Identity.Pages.Device
         {
             var result = new ProcessConsentResult();
 
-            DeviceFlowAuthorizationRequest request = await interaction.GetAuthorizationContextAsync(model.UserCode);
+            DeviceFlowAuthorizationRequest request = await interaction.GetAuthorizationContextAsync(model.UserCode, HttpContext.RequestAborted);
             if (request == null)
             {
                 return result;
@@ -120,8 +120,8 @@ namespace Spydersoft.Identity.Pages.Device
 
             if (model.Button == "no")
             {
-                grantedConsent = new ConsentResponse { Error = AuthorizationError.AccessDenied };
-                await events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues));
+                grantedConsent = new ConsentResponse { Error = InteractionError.AccessDenied };
+                await events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues), HttpContext.RequestAborted);
             }
             else if (model.Button == "yes")
             {
@@ -140,7 +140,7 @@ namespace Spydersoft.Identity.Pages.Device
                         Description = model.Description
                     };
 
-                    await events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues, grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent));
+                    await events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues, grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent), HttpContext.RequestAborted);
                 }
                 else
                 {
@@ -154,7 +154,7 @@ namespace Spydersoft.Identity.Pages.Device
 
             if (grantedConsent != null)
             {
-                _ = await interaction.HandleRequestAsync(model.UserCode, grantedConsent);
+                _ = await interaction.HandleRequestAsync(model.UserCode, grantedConsent, HttpContext.RequestAborted);
                 result.RedirectUri = model.ReturnUrl;
                 result.Client = request.Client;
             }
@@ -168,7 +168,7 @@ namespace Spydersoft.Identity.Pages.Device
 
         private async Task<DeviceAuthorizationViewModel> BuildViewModelAsync(string userCode, DeviceAuthorizationInputModel model = null)
         {
-            DeviceFlowAuthorizationRequest request = await interaction.GetAuthorizationContextAsync(userCode);
+            DeviceFlowAuthorizationRequest request = await interaction.GetAuthorizationContextAsync(userCode, HttpContext.RequestAborted);
             return request != null ? CreateConsentViewModel(userCode, model, request) : null;
         }
 
