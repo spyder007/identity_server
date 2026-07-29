@@ -55,16 +55,20 @@ namespace Spydersoft.Identity.Data
         /// <param name="serviceScope">The service scope.</param>
         private void PerformDatabaseMigrations(IServiceScope serviceScope)
         {
-            Task persistedGrantTask =
-                DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>(), "ASP Net Grants Database");
+            // These three contexts all point at the same physical database (see
+            // Program.cs), so they share one __EFMigrationsHistory table. Running
+            // them concurrently races on that table's creation on a fresh database --
+            // Postgres's CREATE TABLE IF NOT EXISTS isn't atomic across concurrent
+            // transactions, so two contexts can both pass the "not exists" check and
+            // then collide creating it. Migrate sequentially instead.
+            DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>(), "ASP Net Grants Database")
+                .GetAwaiter().GetResult();
 
-            Task appDbTask =
-                DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>(), "ASP Net User Database ");
+            DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>(), "ASP Net User Database ")
+                .GetAwaiter().GetResult();
 
-            Task configTask =
-                DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>(), "Identity Server 4 Configuration Database");
-
-            Task.WaitAll(persistedGrantTask, appDbTask, configTask);
+            DoMigrationIfNeeded(serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>(), "Identity Server 4 Configuration Database")
+                .GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -142,7 +146,6 @@ namespace Spydersoft.Identity.Data
         private void SeedAspNetIdentityDatabase(IServiceScope serviceScope)
         {
             RoleManager<ApplicationRole> roleMgr = serviceScope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
-            SeedRoleIfMissing(roleMgr, "admin");
             SeedRoleIfMissing(roleMgr, "developer");
 
 
@@ -174,12 +177,6 @@ namespace Spydersoft.Identity.Data
                     new(JwtClaimTypes.WebSite, "123 NoWhere"),
                     new(JwtClaimTypes.Address, /*lang=json*/ @"{ 'street_address': 'One Hacker Way', 'locality': 'Heidelberg', 'postal_code': 69118, 'country': 'Germany' }", IdentityServerConstants.ClaimValueTypes.Json)
                             ]).Result;
-                if (!result.Succeeded)
-                {
-                    throw new IdentityResultException(result);
-                }
-
-                result = userMgr.AddToRoleAsync(adminUser, "admin").Result;
                 if (!result.Succeeded)
                 {
                     throw new IdentityResultException(result);
