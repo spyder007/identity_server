@@ -55,6 +55,7 @@ import type {
   SaveClientSecretDto,
 } from "../../api/generated/types.gen";
 import { SECRET_TYPES, validateSecretValue } from "../../utils/secretTypes";
+import { GRANT_TYPES, IDP_PROVIDERS } from "../../utils/knownValues";
 import { problemMessage } from "../../utils/apiError";
 
 // Scopes are drawn from existing API scopes / identity resources plus the
@@ -73,6 +74,7 @@ function SingleValuePanel<T extends { id?: number | string }>({
   header,
   fieldType = "text",
   placeholder,
+  options,
   load,
   create,
   remove,
@@ -84,6 +86,8 @@ function SingleValuePanel<T extends { id?: number | string }>({
   header: string;
   fieldType?: "text" | "url";
   placeholder?: string;
+  /** When provided, renders an editable dropdown of known values instead of a plain text input. */
+  options?: string[];
   load: () => Promise<T[]>;
   create: (value: string) => Promise<void>;
   remove: (id: number) => Promise<void>;
@@ -115,14 +119,25 @@ function SingleValuePanel<T extends { id?: number | string }>({
         return (
           <div>
             <div className="flex gap-2">
-              <InputText
-                type={fieldType}
-                className="flex-1"
-                value={createDraft.value}
-                placeholder={placeholder}
-                onChange={(e) => setCreateDraft({ value: e.target.value })}
-                onKeyDown={(e) => e.key === "Enter" && submit()}
-              />
+              {options ? (
+                <Dropdown
+                  editable
+                  className="flex-1"
+                  value={createDraft.value}
+                  options={options}
+                  placeholder={placeholder}
+                  onChange={(e) => setCreateDraft({ value: e.value ?? "" })}
+                />
+              ) : (
+                <InputText
+                  type={fieldType}
+                  className="flex-1"
+                  value={createDraft.value}
+                  placeholder={placeholder}
+                  onChange={(e) => setCreateDraft({ value: e.target.value })}
+                  onKeyDown={(e) => e.key === "Enter" && submit()}
+                />
+              )}
               <Button
                 type="button"
                 onClick={submit}
@@ -286,6 +301,7 @@ export function GrantTypesPanel({ clientId }: PanelProps) {
       field="grantType"
       header="Grant type"
       placeholder="authorization_code"
+      options={GRANT_TYPES}
       load={async () => {
         const r = await getApiV1ClientsByClientIdGranttypes({ path: { clientId } });
         return r.error ? [] : (r.data ?? []);
@@ -310,6 +326,7 @@ export function IdpRestrictionsPanel({ clientId }: PanelProps) {
       field="provider"
       header="Provider"
       placeholder="Google"
+      options={IDP_PROVIDERS}
       load={async () => {
         const r = await getApiV1ClientsByClientIdIdprestrictions({ path: { clientId } });
         return r.error ? [] : (r.data ?? []);
