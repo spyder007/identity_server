@@ -107,6 +107,7 @@ stages:
 
       # .NET unit tests + single SonarCloud scope over the solution.
       executeTests: true
+      testRunner: mtp
       testProjects: '**/*.Tests/*.csproj'
       sonarEndpointName: sonarcloud-spydersoft
       sonarProjectKey: spyder007_identity_server
