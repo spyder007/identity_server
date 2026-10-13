@@ -127,12 +127,8 @@ namespace Spydersoft.Identity.Admin.Api.Data
                 .ForMember(d => d.Client, opt => opt.Ignore())
                 .ForMember(d => d.ClientId, opt => opt.Ignore())
                 .ForMember(d => d.Created, opt => opt.Ignore())
-<<<<<<< HEAD
-                .ForMember(d => d.Expiration, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.Expiration) ? (DateTime?)null : DateTime.Parse(src.Expiration, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind)));
-=======
                 .ForMember(d => d.Value, opt => opt.MapFrom(src => HashIfSharedSecret(src.Type, src.Value)))
                 .ForMember(d => d.Expiration, opt => opt.MapFrom(src => ParseExpiration(src.Expiration)));
->>>>>>> origin/main
         }
 
         // Shared secrets must be stored as their Base64-encoded SHA-256 hash — IdentityServer's
@@ -203,12 +199,8 @@ namespace Spydersoft.Identity.Admin.Api.Data
                 .ForMember(d => d.ApiResource, opt => opt.Ignore())
                 .ForMember(d => d.ApiResourceId, opt => opt.Ignore())
                 .ForMember(d => d.Created, opt => opt.Ignore())
-<<<<<<< HEAD
-                .ForMember(d => d.Expiration, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.Expiration) ? (DateTime?)null : DateTime.Parse(src.Expiration, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind)));
-=======
                 .ForMember(d => d.Value, opt => opt.MapFrom(src => HashIfSharedSecret(src.Type, src.Value)))
                 .ForMember(d => d.Expiration, opt => opt.MapFrom(src => ParseExpiration(src.Expiration)));
->>>>>>> origin/main
         }
 
         private void CreateIdentityResourceMappings()
