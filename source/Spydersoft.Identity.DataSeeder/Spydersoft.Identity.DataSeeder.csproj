@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Spydersoft.Identity.Data\Spydersoft.Identity.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="Spydersoft.Identity.Tests" />
+  </ItemGroup>
+
 </Project>

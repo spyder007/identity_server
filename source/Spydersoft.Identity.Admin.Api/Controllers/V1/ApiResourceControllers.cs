@@ -42,6 +42,18 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
             return entity is null ? NotFound() : Ok(Mapper.Map<ApiResourceDto>(entity));
         }
 
+        /// <summary>Gets the API resource with the specified natural <c>Name</c> key.</summary>
+        /// <param name="name">The name of the API resource.</param>
+        /// <returns>A <see cref="StatusCodes.Status200OK"/> response containing the API resource, or <see cref="StatusCodes.Status404NotFound"/> if it does not exist.</returns>
+        [HttpGet("by-name/{name}")]
+        [ProducesResponseType<ApiResourceDto>(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult GetByName(string name)
+        {
+            var entity = dbContext.ApiResources.FirstOrDefault(r => r.Name == name);
+            return entity is null ? NotFound() : Ok(Mapper.Map<ApiResourceDto>(entity));
+        }
+
         /// <summary>Creates a new API resource.</summary>
         /// <param name="dto">The API resource details to create.</param>
         /// <returns>A <see cref="StatusCodes.Status201Created"/> response containing the created API resource, or <see cref="StatusCodes.Status400BadRequest"/> if the request is invalid.</returns>
@@ -139,10 +151,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ApiResourceClaimDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int apiResourceId, [FromBody] SaveApiResourceClaimDto dto)
         {
             var resource = await dbContext.ApiResources.Include(r => r.UserClaims).FirstOrDefaultAsync(r => r.Id == apiResourceId);
             if (resource is null) return NotFound();
+            if (resource.UserClaims.Any(x => x.Type == dto.Type))
+                return Conflict($"A claim with type '{dto.Type}' already exists for this API resource.");
             var entity = Mapper.Map<Duende.IdentityServer.EntityFramework.Entities.ApiResourceClaim>(dto);
             entity.ApiResourceId = apiResourceId;
             resource.UserClaims.Add(entity);
@@ -214,10 +229,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ApiResourcePropertyDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int apiResourceId, [FromBody] SaveApiResourcePropertyDto dto)
         {
             var resource = await dbContext.ApiResources.Include(r => r.Properties).FirstOrDefaultAsync(r => r.Id == apiResourceId);
             if (resource is null) return NotFound();
+            if (resource.Properties.Any(x => x.Key == dto.Key))
+                return Conflict($"A property with key '{dto.Key}' already exists for this API resource.");
             var entity = Mapper.Map<Duende.IdentityServer.EntityFramework.Entities.ApiResourceProperty>(dto);
             entity.ApiResourceId = apiResourceId;
             resource.Properties.Add(entity);
@@ -289,10 +307,13 @@ namespace Spydersoft.Identity.Admin.Api.Controllers.V1
         [Authorize(Policy = AdminApiPolicies.Write)]
         [ProducesResponseType<ApiResourceScopeDto>(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         public async Task<IActionResult> Create(int apiResourceId, [FromBody] SaveApiResourceScopeDto dto)
         {
             var resource = await dbContext.ApiResources.Include(r => r.Scopes).FirstOrDefaultAsync(r => r.Id == apiResourceId);
             if (resource is null) return NotFound();
+            if (resource.Scopes.Any(x => x.Scope == dto.Scope))
+                return Conflict($"A scope '{dto.Scope}' already exists for this API resource.");
             var entity = Mapper.Map<Duende.IdentityServer.EntityFramework.Entities.ApiResourceScope>(dto);
             entity.ApiResourceId = apiResourceId;
             resource.Scopes.Add(entity);

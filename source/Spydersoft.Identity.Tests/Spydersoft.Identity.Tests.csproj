@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="NUnit.Analyzers">
@@ -28,6 +29,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Spydersoft.Identity\Spydersoft.Identity.csproj" />
+    <ProjectReference Include="..\Spydersoft.Identity.Admin.Api\Spydersoft.Identity.Admin.Api.csproj" />
+    <ProjectReference Include="..\Spydersoft.Identity.DataSeeder\Spydersoft.Identity.DataSeeder.csproj" />
   </ItemGroup>
 
 </Project>
