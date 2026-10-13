@@ -1,4 +1,5 @@
 import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -16,12 +17,13 @@ import type {
   IdentityResourceClaimDto,
   IdentityResourcePropertyDto,
 } from "../../api/generated/types.gen";
+import { CLAIM_TYPES } from "../../utils/knownValues";
 
 interface PanelProps {
   identityResourceId: number;
 }
 
-export function ClaimsPanel({ identityResourceId }: PanelProps) {
+export function ClaimsPanel({ identityResourceId }: Readonly<PanelProps>) {
   const columns: SubResourceColumn<IdentityResourceClaimDto>[] = [
     { field: "type", header: "Type" },
   ];
@@ -55,12 +57,13 @@ export function ClaimsPanel({ identityResourceId }: PanelProps) {
         };
         return (
           <div className="flex gap-2">
-            <InputText
+            <Dropdown
+              editable
               className="flex-1"
               value={createDraft.value}
+              options={CLAIM_TYPES}
               placeholder="email"
-              onChange={(e) => setCreateDraft({ value: e.target.value })}
-              onKeyDown={(e) => e.key === "Enter" && submit()}
+              onChange={(e) => setCreateDraft({ value: e.value ?? "" })}
             />
             <Button
               type="button"
@@ -76,7 +79,7 @@ export function ClaimsPanel({ identityResourceId }: PanelProps) {
   );
 }
 
-export function PropertiesPanel({ identityResourceId }: PanelProps) {
+export function PropertiesPanel({ identityResourceId }: Readonly<PanelProps>) {
   return (
     <SubResourceList<IdentityResourcePropertyDto, { key: string; value: string }>
       title="Custom properties"

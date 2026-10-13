@@ -57,7 +57,7 @@ namespace Spydersoft.Identity.Pages.Account
             if (User?.Identity?.IsAuthenticated == true)
             {
                 await signInManager.SignOutAsync();
-                await events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+                await events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()), HttpContext.RequestAborted);
             }
 
             if (vm.TriggerExternalSignout)
@@ -81,7 +81,7 @@ namespace Spydersoft.Identity.Pages.Account
                 return vm;
             }
 
-            LogoutRequest context = await interaction.GetLogoutContextAsync(logoutId);
+            LogoutRequest context = await interaction.GetLogoutContextAsync(logoutId, HttpContext.RequestAborted);
             if (context?.ShowSignoutPrompt == false)
             {
                 vm.ShowLogoutPrompt = false;
@@ -93,7 +93,7 @@ namespace Spydersoft.Identity.Pages.Account
 
         private async Task<LoggedOutViewModel> BuildLoggedOutViewModelAsync(string logoutId)
         {
-            LogoutRequest logout = await interaction.GetLogoutContextAsync(logoutId);
+            LogoutRequest logout = await interaction.GetLogoutContextAsync(logoutId, HttpContext.RequestAborted);
 
             var vm = new LoggedOutViewModel
             {
@@ -112,7 +112,7 @@ namespace Spydersoft.Identity.Pages.Account
                     IAuthenticationHandler handler = await authenticationHandler.GetHandlerAsync(HttpContext, idp);
                     if (handler is IAuthenticationSignOutHandler)
                     {
-                        vm.LogoutId ??= await interaction.CreateLogoutContextAsync();
+                        vm.LogoutId ??= await interaction.CreateLogoutContextAsync(HttpContext.RequestAborted);
                         vm.ExternalAuthenticationScheme = idp;
                     }
                 }

@@ -52,7 +52,9 @@ try
                 .AddSource(IdentityServerConstants.Tracing.Validation)
                 .AddNpgsql(),
             MetricsConfiguration = metrics => metrics
-                .AddNpgsqlInstrumentation()
+                .AddNpgsqlInstrumentation(),
+            // Kubernetes probes hit these every few seconds; they add nothing but noise to traces.
+            AspNetFilterFunction = context => !IsHealthCheckPath(context.Request.Path.Value)
         })
         .AddSpydersoftSerilog(true);
 
@@ -222,17 +224,6 @@ try
 
     _ = app.UseForwardedHeaders(forwardedHeadersOptions);
 
-    // Log the scheme being used for debugging (can be removed in production)
-    app.Use(async (context, next) =>
-    {
-        Log.Debug("Request - Scheme: {Scheme}, Host: {Host}, Path: {Path}, Proto Header: {Proto}",
-            context.Request.Scheme,
-            context.Request.Host,
-            context.Request.Path,
-            context.Request.Headers["X-Forwarded-Proto"].ToString());
-        await next();
-    });
-
     // this will do the initial DB population, but we only need to do it once
     // this is just in here as a easy, yet hacky, way to get our DB created/populated
     var dbInitialize = new DatabaseInitializer(app);
@@ -254,6 +245,7 @@ try
             .UseCookiePolicy()
             .UseStaticFiles()
             .UseRouting()
+            .UseSpydersoftRequestLogging()
             .UseAuthentication()
             .UseIdentityServer()
             .UseAuthorization();
@@ -271,3 +263,7 @@ finally
     Log.Information("identityServer shut down complete");
     await Log.CloseAndFlushAsync();
 }
+
+static bool IsHealthCheckPath(string path) =>
+    string.Equals(path, "/livez", StringComparison.OrdinalIgnoreCase) ||
+    string.Equals(path, "/readyz", StringComparison.OrdinalIgnoreCase);

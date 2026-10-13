@@ -2,7 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
+import { Calendar } from "primereact/calendar";
 import { Button } from "primereact/button";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,6 +54,9 @@ import type {
   ClientSecretDto,
   SaveClientSecretDto,
 } from "../../api/generated/types.gen";
+import { SECRET_TYPES, validateSecretValue } from "../../utils/secretTypes";
+import { GRANT_TYPES, IDP_PROVIDERS } from "../../utils/knownValues";
+import { problemMessage } from "../../utils/apiError";
 
 // Scopes are drawn from existing API scopes / identity resources plus the
 // standard "offline_access" scope, since clients can't define new scopes here.
@@ -69,6 +74,7 @@ function SingleValuePanel<T extends { id?: number | string }>({
   header,
   fieldType = "text",
   placeholder,
+  options,
   load,
   create,
   remove,
@@ -80,12 +86,15 @@ function SingleValuePanel<T extends { id?: number | string }>({
   header: string;
   fieldType?: "text" | "url";
   placeholder?: string;
+  /** When provided, renders an editable dropdown of known values instead of a plain text input. */
+  options?: string[];
   load: () => Promise<T[]>;
   create: (value: string) => Promise<void>;
   remove: (id: number) => Promise<void>;
   describe: (row: T) => string;
 }) {
   const columns: SubResourceColumn<T>[] = [{ field, header }];
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <SubResourceList<T, { value: string }>
@@ -99,26 +108,45 @@ function SingleValuePanel<T extends { id?: number | string }>({
       renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => {
         const submit = async () => {
           if (!createDraft.value.trim()) return;
-          await create(createDraft.value.trim());
-          onCreated();
+          setError(null);
+          try {
+            await create(createDraft.value.trim());
+            onCreated();
+          } catch (e) {
+            setError(problemMessage(e, "Failed to add."));
+          }
         };
         return (
-          <div className="flex gap-2">
-            <InputText
-              type={fieldType}
-              className="flex-1"
-              value={createDraft.value}
-              placeholder={placeholder}
-              onChange={(e) => setCreateDraft({ value: e.target.value })}
-              onKeyDown={(e) => e.key === "Enter" && submit()}
-            />
-            <Button
-              type="button"
-              onClick={submit}
-              label="Add"
-              icon={<FontAwesomeIcon icon={faPlus} />}
-              disabled={!createDraft.value.trim()}
-            />
+          <div>
+            <div className="flex gap-2">
+              {options ? (
+                <Dropdown
+                  editable
+                  className="flex-1"
+                  value={createDraft.value}
+                  options={options}
+                  placeholder={placeholder}
+                  onChange={(e) => setCreateDraft({ value: e.value ?? "" })}
+                />
+              ) : (
+                <InputText
+                  type={fieldType}
+                  className="flex-1"
+                  value={createDraft.value}
+                  placeholder={placeholder}
+                  onChange={(e) => setCreateDraft({ value: e.target.value })}
+                  onKeyDown={(e) => e.key === "Enter" && submit()}
+                />
+              )}
+              <Button
+                type="button"
+                onClick={submit}
+                label="Add"
+                icon={<FontAwesomeIcon icon={faPlus} />}
+                disabled={!createDraft.value.trim()}
+              />
+            </div>
+            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
           </div>
         );
       }}
@@ -158,6 +186,7 @@ function KeyValuePanel<T extends { id?: number | string }>({
     { field: keyField, header: keyHeader },
     { field: valueField, header: valueHeader },
   ];
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <SubResourceList<T, { key: string; value: string }>
@@ -171,32 +200,40 @@ function KeyValuePanel<T extends { id?: number | string }>({
       renderCreateForm={({ onCreated, createDraft, setCreateDraft }) => {
         const submit = async () => {
           if (!createDraft.key.trim() || !createDraft.value.trim()) return;
-          await create(createDraft.key.trim(), createDraft.value.trim());
-          onCreated();
+          setError(null);
+          try {
+            await create(createDraft.key.trim(), createDraft.value.trim());
+            onCreated();
+          } catch (e) {
+            setError(problemMessage(e, "Failed to add."));
+          }
         };
         return (
-          <div className="flex gap-2">
-            <InputText
-              className="flex-1"
-              value={createDraft.key}
-              placeholder={keyPlaceholder}
-              onChange={(e) => setCreateDraft({ ...createDraft, key: e.target.value })}
-              onKeyDown={(e) => e.key === "Enter" && submit()}
-            />
-            <InputText
-              className="flex-1"
-              value={createDraft.value}
-              placeholder={valuePlaceholder}
-              onChange={(e) => setCreateDraft({ ...createDraft, value: e.target.value })}
-              onKeyDown={(e) => e.key === "Enter" && submit()}
-            />
-            <Button
-              type="button"
-              onClick={submit}
-              label="Add"
-              icon={<FontAwesomeIcon icon={faPlus} />}
-              disabled={!createDraft.key.trim() || !createDraft.value.trim()}
-            />
+          <div>
+            <div className="flex gap-2">
+              <InputText
+                className="flex-1"
+                value={createDraft.key}
+                placeholder={keyPlaceholder}
+                onChange={(e) => setCreateDraft({ ...createDraft, key: e.target.value })}
+                onKeyDown={(e) => e.key === "Enter" && submit()}
+              />
+              <InputText
+                className="flex-1"
+                value={createDraft.value}
+                placeholder={valuePlaceholder}
+                onChange={(e) => setCreateDraft({ ...createDraft, value: e.target.value })}
+                onKeyDown={(e) => e.key === "Enter" && submit()}
+              />
+              <Button
+                type="button"
+                onClick={submit}
+                label="Add"
+                icon={<FontAwesomeIcon icon={faPlus} />}
+                disabled={!createDraft.key.trim() || !createDraft.value.trim()}
+              />
+            </div>
+            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
           </div>
         );
       }}
@@ -220,7 +257,8 @@ export function ClaimsPanel({ clientId }: PanelProps) {
         return r.error ? [] : (r.data ?? []);
       }}
       create={async (type, value) => {
-        await postApiV1ClientsByClientIdClaims({ path: { clientId }, body: { type, value } });
+        const r = await postApiV1ClientsByClientIdClaims({ path: { clientId }, body: { type, value } });
+        if (r.error) throw r.error;
       }}
       remove={async (id) => {
         await deleteApiV1ClientsByClientIdClaimsById({ path: { clientId, id } });
@@ -244,7 +282,8 @@ export function CorsOriginsPanel({ clientId }: PanelProps) {
         return r.error ? [] : (r.data ?? []);
       }}
       create={async (origin) => {
-        await postApiV1ClientsByClientIdCorsorigins({ path: { clientId }, body: { origin } });
+        const r = await postApiV1ClientsByClientIdCorsorigins({ path: { clientId }, body: { origin } });
+        if (r.error) throw r.error;
       }}
       remove={async (id) => {
         await deleteApiV1ClientsByClientIdCorsoriginsById({ path: { clientId, id } });
@@ -262,12 +301,14 @@ export function GrantTypesPanel({ clientId }: PanelProps) {
       field="grantType"
       header="Grant type"
       placeholder="authorization_code"
+      options={GRANT_TYPES}
       load={async () => {
         const r = await getApiV1ClientsByClientIdGranttypes({ path: { clientId } });
         return r.error ? [] : (r.data ?? []);
       }}
       create={async (grantType) => {
-        await postApiV1ClientsByClientIdGranttypes({ path: { clientId }, body: { grantType } });
+        const r = await postApiV1ClientsByClientIdGranttypes({ path: { clientId }, body: { grantType } });
+        if (r.error) throw r.error;
       }}
       remove={async (id) => {
         await deleteApiV1ClientsByClientIdGranttypesById({ path: { clientId, id } });
@@ -285,12 +326,14 @@ export function IdpRestrictionsPanel({ clientId }: PanelProps) {
       field="provider"
       header="Provider"
       placeholder="Google"
+      options={IDP_PROVIDERS}
       load={async () => {
         const r = await getApiV1ClientsByClientIdIdprestrictions({ path: { clientId } });
         return r.error ? [] : (r.data ?? []);
       }}
       create={async (provider) => {
-        await postApiV1ClientsByClientIdIdprestrictions({ path: { clientId }, body: { provider } });
+        const r = await postApiV1ClientsByClientIdIdprestrictions({ path: { clientId }, body: { provider } });
+        if (r.error) throw r.error;
       }}
       remove={async (id) => {
         await deleteApiV1ClientsByClientIdIdprestrictionsById({ path: { clientId, id } });
@@ -314,10 +357,11 @@ export function PostLogoutRedirectUrisPanel({ clientId }: PanelProps) {
         return r.error ? [] : (r.data ?? []);
       }}
       create={async (postLogoutRedirectUri) => {
-        await postApiV1ClientsByClientIdPostlogoutredirecturis({
+        const r = await postApiV1ClientsByClientIdPostlogoutredirecturis({
           path: { clientId },
           body: { postLogoutRedirectUri },
         });
+        if (r.error) throw r.error;
       }}
       remove={async (id) => {
         await deleteApiV1ClientsByClientIdPostlogoutredirecturisById({ path: { clientId, id } });
@@ -341,7 +385,8 @@ export function PropertiesPanel({ clientId }: PanelProps) {
         return r.error ? [] : (r.data ?? []);
       }}
       create={async (key, value) => {
-        await postApiV1ClientsByClientIdProperties({ path: { clientId }, body: { key, value } });
+        const r = await postApiV1ClientsByClientIdProperties({ path: { clientId }, body: { key, value } });
+        if (r.error) throw r.error;
       }}
       remove={async (id) => {
         await deleteApiV1ClientsByClientIdPropertiesById({ path: { clientId, id } });
@@ -365,7 +410,8 @@ export function RedirectUrisPanel({ clientId }: PanelProps) {
         return r.error ? [] : (r.data ?? []);
       }}
       create={async (redirectUri) => {
-        await postApiV1ClientsByClientIdRedirecturis({ path: { clientId }, body: { redirectUri } });
+        const r = await postApiV1ClientsByClientIdRedirecturis({ path: { clientId }, body: { redirectUri } });
+        if (r.error) throw r.error;
       }}
       remove={async (id) => {
         await deleteApiV1ClientsByClientIdRedirecturisById({ path: { clientId, id } });
@@ -381,6 +427,7 @@ export function ScopesPanel({ clientId }: PanelProps) {
   const [selected, setSelected] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [adding, setAdding] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     setLoading(true);
@@ -427,8 +474,13 @@ export function ScopesPanel({ clientId }: PanelProps) {
   const handleAdd = async () => {
     if (!selected) return;
     setAdding(true);
+    setError(null);
     try {
-      await postApiV1ClientsByClientIdScopes({ path: { clientId }, body: { scope: selected } });
+      const r = await postApiV1ClientsByClientIdScopes({ path: { clientId }, body: { scope: selected } });
+      if (r.error) {
+        setError(problemMessage(r.error, "Failed to add scope."));
+        return;
+      }
       setSelected(null);
       await refresh();
     } finally {
@@ -493,6 +545,7 @@ export function ScopesPanel({ clientId }: PanelProps) {
             loading={adding}
           />
         </div>
+        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
       </div>
     </div>
   );
@@ -500,8 +553,10 @@ export function ScopesPanel({ clientId }: PanelProps) {
 
 // Secrets get their own panel — the create form has more fields (type, value, description, expiration).
 export function SecretsPanel({ clientId }: PanelProps) {
-  const [draft, setDraft] = useState<SaveClientSecretDto>({ type: "SharedSecret", value: "" });
   const emptyDraft: SaveClientSecretDto = { type: "SharedSecret", value: "" };
+  const [draft, setDraft] = useState<SaveClientSecretDto>(emptyDraft);
+  const [expiresAt, setExpiresAt] = useState<Date | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   return (
     <SubResourceList<ClientSecretDto, SaveClientSecretDto>
@@ -522,29 +577,88 @@ export function SecretsPanel({ clientId }: PanelProps) {
       ]}
       emptyCreateDraft={emptyDraft}
       renderCreateForm={({ onCreated }) => {
+        const selectedType = SECRET_TYPES.find((t) => t.value === draft.type) ?? SECRET_TYPES[0];
         const submit = async () => {
           if (!draft.type.trim() || !draft.value.trim()) return;
-          await postApiV1ClientsByClientIdSecrets({ path: { clientId }, body: draft });
+          const validationError = validateSecretValue(draft.type, draft.value);
+          if (validationError) {
+            setError(validationError);
+            return;
+          }
+          setError(null);
+          const body: SaveClientSecretDto = { ...draft, expiration: expiresAt ? expiresAt.toISOString() : undefined };
+          const r = await postApiV1ClientsByClientIdSecrets({ path: { clientId }, body });
+          if (r.error) {
+            setError(problemMessage(r.error, "Failed to add secret."));
+            return;
+          }
           setDraft(emptyDraft);
+          setExpiresAt(null);
           onCreated();
         };
         return (
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             <div>
-              <label className="mb-1 block text-xs text-content-muted">Type</label>
-              <InputText className="w-full" value={draft.type} onChange={(e) => setDraft({ ...draft, type: e.target.value })} />
+              <label htmlFor="client-secret-type" className="mb-1 block text-xs text-content-muted">
+                Type
+              </label>
+              <Dropdown
+                inputId="client-secret-type"
+                className="w-full"
+                options={SECRET_TYPES}
+                value={draft.type}
+                onChange={(e) => setDraft({ ...draft, type: e.value })}
+              />
+            </div>
+            <div className={selectedType.multiline ? "md:col-span-2" : undefined}>
+              <label htmlFor="client-secret-value" className="mb-1 block text-xs text-content-muted">
+                Value{selectedType.valueHint}
+              </label>
+              {selectedType.multiline ? (
+                <InputTextarea
+                  id="client-secret-value"
+                  className="w-full"
+                  rows={4}
+                  value={draft.value}
+                  placeholder={selectedType.placeholder}
+                  onChange={(e) => setDraft({ ...draft, value: e.target.value })}
+                />
+              ) : (
+                <InputText
+                  id="client-secret-value"
+                  className="w-full"
+                  value={draft.value}
+                  placeholder={selectedType.placeholder}
+                  onChange={(e) => setDraft({ ...draft, value: e.target.value })}
+                />
+              )}
             </div>
             <div>
-              <label className="mb-1 block text-xs text-content-muted">Value (will be SHA-256 hashed)</label>
-              <InputText className="w-full" value={draft.value} onChange={(e) => setDraft({ ...draft, value: e.target.value })} />
+              <label htmlFor="client-secret-description" className="mb-1 block text-xs text-content-muted">
+                Description (optional)
+              </label>
+              <InputText
+                id="client-secret-description"
+                className="w-full"
+                value={draft.description ?? ""}
+                onChange={(e) => setDraft({ ...draft, description: e.target.value })}
+              />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-content-muted">Description (optional)</label>
-              <InputText className="w-full" value={draft.description ?? ""} onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
-            </div>
-            <div>
-              <label className="mb-1 block text-xs text-content-muted">Expires (ISO date, optional)</label>
-              <InputText className="w-full" value={draft.expiration ?? ""} onChange={(e) => setDraft({ ...draft, expiration: e.target.value })} placeholder="2027-01-01T00:00:00Z" />
+              <label htmlFor="client-secret-expires" className="mb-1 block text-xs text-content-muted">
+                Expires (optional)
+              </label>
+              <Calendar
+                inputId="client-secret-expires"
+                className="w-full"
+                value={expiresAt}
+                onChange={(e) => setExpiresAt((e.value as Date | null) ?? null)}
+                showTime
+                showIcon
+                hourFormat="24"
+                dateFormat="yy-mm-dd"
+                showButtonBar
+              />
             </div>
             <div className="md:col-span-2">
               <Button
@@ -555,6 +669,7 @@ export function SecretsPanel({ clientId }: PanelProps) {
                 disabled={!draft.type.trim() || !draft.value.trim()}
               />
             </div>
+            {error && <p className="text-sm text-red-600 md:col-span-2">{error}</p>}
           </div>
         );
       }}

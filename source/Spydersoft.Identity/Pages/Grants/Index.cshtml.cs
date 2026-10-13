@@ -34,22 +34,22 @@ namespace Spydersoft.Identity.Pages.Grants
         /// <summary>Revokes the user's consent for a client.</summary>
         public async Task<IActionResult> OnPostRevokeAsync(string clientId)
         {
-            await interaction.RevokeUserConsentAsync(clientId);
-            await events.RaiseAsync(new GrantsRevokedEvent(User.GetSubjectId(), clientId));
+            await interaction.RevokeUserConsentAsync(clientId, HttpContext.RequestAborted);
+            await events.RaiseAsync(new GrantsRevokedEvent(User.GetSubjectId(), clientId), HttpContext.RequestAborted);
             return RedirectToPage();
         }
 
         private async Task<GrantsViewModel> BuildViewModelAsync()
         {
-            IEnumerable<Duende.IdentityServer.Models.Grant> grants = await interaction.GetAllUserGrantsAsync();
+            IEnumerable<Duende.IdentityServer.Models.Grant> grants = await interaction.GetAllUserGrantsAsync(HttpContext.RequestAborted);
 
             var list = new List<GrantViewModel>();
             foreach (Duende.IdentityServer.Models.Grant grant in grants)
             {
-                Duende.IdentityServer.Models.Client client = await clients.FindClientByIdAsync(grant.ClientId);
+                Duende.IdentityServer.Models.Client client = await clients.FindClientByIdAsync(grant.ClientId, HttpContext.RequestAborted);
                 if (client != null)
                 {
-                    Duende.IdentityServer.Models.Resources resourcesByScope = await resources.FindResourcesByScopeAsync(grant.Scopes);
+                    Duende.IdentityServer.Models.Resources resourcesByScope = await resources.FindResourcesByScopeAsync(grant.Scopes, HttpContext.RequestAborted);
 
                     list.Add(new GrantViewModel
                     {

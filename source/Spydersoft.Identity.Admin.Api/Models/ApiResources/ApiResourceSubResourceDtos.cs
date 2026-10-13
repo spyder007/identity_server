@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+using Spydersoft.Identity.Admin.Api.Models;
+
 namespace Spydersoft.Identity.Admin.Api.Models.ApiResources
 {
     // ---- Claims ----
@@ -88,7 +90,7 @@ namespace Spydersoft.Identity.Admin.Api.Models.ApiResources
     /// <summary>
     /// Data used to create or update an API resource secret.
     /// </summary>
-    public class SaveApiResourceSecretDto
+    public class SaveApiResourceSecretDto : IValidatableObject
     {
         /// <summary>Gets or sets the secret type.</summary>
         [Required][StringLength(250, MinimumLength = 1)] public string Type { get; set; } = "SharedSecret";
@@ -98,5 +100,9 @@ namespace Spydersoft.Identity.Admin.Api.Models.ApiResources
         public string? Description { get; set; }
         /// <summary>Gets or sets the expiration of the secret.</summary>
         public string? Expiration { get; set; }
+
+        /// <inheritdoc />
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) =>
+            SecretValueValidation.Validate(Type, Value);
     }
 }

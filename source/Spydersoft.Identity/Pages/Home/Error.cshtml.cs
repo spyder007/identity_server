@@ -29,7 +29,7 @@ namespace Spydersoft.Identity.Pages.Home
             }
 
             // retrieve error details from identityserver
-            ErrorMessage message = await interaction.GetErrorContextAsync(ErrorId);
+            ErrorMessage message = await interaction.GetErrorContextAsync(ErrorId, HttpContext.RequestAborted);
             View.Error = message ?? new ErrorMessage { Error = ErrorId };
         }
     }

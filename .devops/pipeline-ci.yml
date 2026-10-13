@@ -37,6 +37,7 @@ pr:
 stages:
   - template: pipelines/build-multi-container/v1.yml@templates
     parameters:
+      vmImage: ubuntu-latest
       gitVersionSpec: '6.0.x'
       # Build the whole solution so the single SonarCloud scope sees every C# project.
       buildProject: source/Spydersoft.Identity.slnx
@@ -106,12 +107,21 @@ stages:
 
       # .NET unit tests + single SonarCloud scope over the solution.
       executeTests: true
+      testRunner: mtp
       testProjects: '**/*.Tests/*.csproj'
       sonarEndpointName: sonarcloud-spydersoft
       sonarProjectKey: spyder007_identity_server
       sonarProjectName: identity_server
       useSonarCloud: true
       sonarCloudOrganization: spydersoft-mjg
+      # bin/obj carry copied build artifacts (e.g. stray tsconfig.json files from
+      # the TypeScript asset build) that the bundled JS/TS analyzer otherwise
+      # tries and fails to parse as real TS projects, even though the C#
+      # analyzer itself never looks at build output.
+      sonarExtraProperties: |
+        sonar.exclusions=**/bin/**,**/obj/**
+        sonar.typescript.tsconfigPaths=
+        sonar.javascript.tsconfigPaths=
 
       # admin-ui React SPA: yarn install/test/build (produces dist consumed by the
       # Admin.Frontend publish) plus its own SonarCloud scope for the JS/TS code.
@@ -174,11 +184,17 @@ stages:
   # (needs .NET 10 + a container runtime on the agent).
   - template: stages/integration-tests/v1.yml@templates
     parameters:
+      vmImage: ubuntu-latest
       stageName: integration_tests
       dependsOn:
         - Build
       netCoreVersion: '10.0.x'
       nodeVersion: '22.x'
+      # Admin API Integration's webServer boots via `dotnet run`, which triggers
+      # an implicit restore against the private spydersoft GitHub Packages feed
+      # (see nuget.config) -- same service connection as the Build stage's
+      # externalFeedCredentials, above.
+      externalFeedCredentials: SpydersoftGithub
       setupSteps:
         # UseNode@1 (used by this template to set up Node) mis-resolves "22.x" to a
         # stale cached Node 10 on our self-hosted agent, which breaks corepack. Force
