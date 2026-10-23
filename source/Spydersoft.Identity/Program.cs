@@ -17,6 +17,7 @@ using Npgsql;
 
 using Serilog;
 
+using Spydersoft.Email.Client;
 using Spydersoft.Identity.Attributes;
 using Spydersoft.Identity.Core.Models.Identity;
 using Spydersoft.Identity.Core.Services;
@@ -118,8 +119,17 @@ try
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddDefaultTokenProviders();
 
-    // Add application builder.Services.
-    _ = builder.Services.AddHttpClient<IEmailSender, EmailSender>();
+    // Account email goes through the email platform service when it is configured; otherwise
+    // fall back to calling Resend directly.
+    if (!string.IsNullOrWhiteSpace(builder.Configuration["EmailClient:BaseUrl"]))
+    {
+        _ = builder.Services.AddSpydersoftEmailClient(builder.Configuration);
+        _ = builder.Services.AddTransient<IEmailSender, EmailServiceSender>();
+    }
+    else
+    {
+        _ = builder.Services.AddHttpClient<IEmailSender, EmailSender>();
+    }
 
     // Razor Pages host the interactive identity UI (login, consent, device, grants,
     // account management).

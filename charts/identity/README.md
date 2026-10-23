@@ -19,6 +19,7 @@ The caller must create a secret named **`identity-server-secrets`** (consumed by
 - `ConnectionStrings__RedisCache` — Redis connection string.
 - `ProviderSettings__GoogleClientId` / `ProviderSettings__GoogleClientSecret`
 - `Resend__ApiKey` / `Resend__EmailFromAddress`
+- `EmailClient__ClientSecret` — optional; when `EmailClient__BaseUrl` is configured, account email is sent through the email platform service instead of directly to Resend
 - `Automapper__License`
 
 The caller must create a secret named **`identity-server-admin-api-secrets`** (consumed by `admin-api`) containing:
