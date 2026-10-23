@@ -23,9 +23,6 @@ namespace Spydersoft.Identity.Services
         /// <param name="subject">The subject.</param>
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
-        [LoggerMessage(Level = LogLevel.Information, Message = "Sent email {EmailId} through the email service.")]
-        private partial void LogSent(Guid emailId);
-
         public async Task SendEmailAsync(string email, string subject, string message)
         {
             var result = await emailClient.SendAsync(new EmailMessage
@@ -39,5 +36,8 @@ namespace Spydersoft.Identity.Services
 
             LogSent(result.Id);
         }
+
+        [LoggerMessage(Level = LogLevel.Information, Message = "Sent email {EmailId} through the email service.")]
+        private partial void LogSent(Guid emailId);
     }
 }
