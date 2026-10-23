@@ -12,6 +12,8 @@ namespace Spydersoft.identity.tests
 {
     public class EmailServiceSenderTests
     {
+        private static readonly string[] Recipients = ["user@example.com"];
+
         private sealed class RecordingEmailClient : IEmailClient
         {
             public List<EmailMessage> Sent { get; } = [];
@@ -22,8 +24,8 @@ namespace Spydersoft.identity.tests
                 return Task.FromResult(new EmailSendResult(Guid.NewGuid(), "re_fake", EmailStatus.Sent, DateTimeOffset.UtcNow));
             }
 
-            public Task<EmailStatusView> GetStatusAsync(Guid id, CancellationToken cancellationToken = default) =>
-                Task.FromResult<EmailStatusView>(null);
+            public Task<EmailStatusView?> GetStatusAsync(Guid id, CancellationToken cancellationToken = default) =>
+                Task.FromResult<EmailStatusView?>(null);
 
             public Task<IReadOnlyList<EmailEventView>> GetEventsAsync(Guid id, CancellationToken cancellationToken = default) =>
                 Task.FromResult<IReadOnlyList<EmailEventView>>([]);
@@ -42,14 +44,14 @@ namespace Spydersoft.identity.tests
 
             var message = client.Sent[0];
             Assert.That(client.Sent, Has.Count.EqualTo(1));
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(message.To, Is.EqualTo(new[] { "user@example.com" }));
+                Assert.That(message.To, Is.EqualTo(Recipients));
                 Assert.That(message.Subject, Is.EqualTo("Confirm your email"));
                 Assert.That(message.Html, Is.EqualTo("<p>Hello<br/>there</p>"));
                 Assert.That(message.Text, Does.Contain("Hello").And.Not.Contain("<p>"));
-                Assert.That(message.Tags["app"], Is.EqualTo("identity"));
-            });
+                Assert.That(message.Tags!["app"], Is.EqualTo("identity"));
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,7 +14,7 @@ namespace Spydersoft.Identity.Services
     /// Implements the <see cref="IEmailSender" />
     /// </summary>
     /// <seealso cref="IEmailSender" />
-    public class EmailServiceSender(IEmailClient emailClient, ILogger<EmailServiceSender> logger) : IEmailSender
+    public partial class EmailServiceSender(IEmailClient emailClient, ILogger<EmailServiceSender> logger) : IEmailSender
     {
         /// <summary>
         /// Sends the email asynchronous.
@@ -22,6 +23,9 @@ namespace Spydersoft.Identity.Services
         /// <param name="subject">The subject.</param>
         /// <param name="message">The message.</param>
         /// <returns>Task.</returns>
+        [LoggerMessage(Level = LogLevel.Information, Message = "Sent email {EmailId} through the email service.")]
+        private partial void LogSent(Guid emailId);
+
         public async Task SendEmailAsync(string email, string subject, string message)
         {
             var result = await emailClient.SendAsync(new EmailMessage
@@ -33,7 +37,7 @@ namespace Spydersoft.Identity.Services
                 Tags = new Dictionary<string, string> { ["app"] = "identity" },
             });
 
-            logger.LogInformation("Sent email {EmailId} through the email service.", result.Id);
+            LogSent(result.Id);
         }
     }
 }

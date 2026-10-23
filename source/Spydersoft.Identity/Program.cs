@@ -19,11 +19,9 @@ using Serilog;
 
 using Spydersoft.Identity.Attributes;
 using Spydersoft.Identity.Core.Models.Identity;
-using Spydersoft.Identity.Core.Services;
 using Spydersoft.Identity.Data;
 using Spydersoft.Identity.Extensions;
 using Spydersoft.Identity.Options;
-using Spydersoft.Identity.Services;
 using Spydersoft.Platform.Hosting.Options;
 using Spydersoft.Platform.Hosting.StartupExtensions;
 using Spydersoft.Platform.Hosting.Telemetry;

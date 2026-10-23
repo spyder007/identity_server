@@ -13,7 +13,7 @@ namespace Spydersoft.identity.tests
 {
     public class EmailSenderRegistrationTests
     {
-        private static ServiceProvider Build(Dictionary<string, string> settings)
+        private static ServiceProvider Build(Dictionary<string, string?> settings)
         {
             var configuration = new ConfigurationBuilder().AddInMemoryCollection(settings).Build();
             var services = new ServiceCollection();
@@ -25,13 +25,13 @@ namespace Spydersoft.identity.tests
         [Test]
         public void WithEmailClientBaseUrl_UsesEmailService()
         {
-            using var provider = Build(new Dictionary<string, string> { ["EmailClient:BaseUrl"] = "http://email.test" });
+            using var provider = Build(new Dictionary<string, string?> { ["EmailClient:BaseUrl"] = "http://email.test" });
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(provider.GetRequiredService<IEmailSender>(), Is.TypeOf<EmailServiceSender>());
                 Assert.That(provider.GetService<IEmailClient>(), Is.Not.Null);
-            });
+            }
         }
 
         [Test]
@@ -39,11 +39,11 @@ namespace Spydersoft.identity.tests
         {
             using var provider = Build([]);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(provider.GetRequiredService<IEmailSender>(), Is.TypeOf<EmailSender>());
                 Assert.That(provider.GetServices<IEmailClient>().Any(), Is.False);
-            });
+            }
         }
     }
 }
