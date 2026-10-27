@@ -26,14 +26,14 @@ namespace Spydersoft.identity.tests
             new SecurityHeadersAttribute().OnResultExecuting(context);
 
             var headers = httpContext.Response.Headers;
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(headers["X-Content-Type-Options"].ToString(), Is.EqualTo("nosniff"));
-                Assert.That(headers["X-Frame-Options"].ToString(), Is.EqualTo("SAMEORIGIN"));
+                Assert.That(headers.XContentTypeOptions.ToString(), Is.EqualTo("nosniff"));
+                Assert.That(headers.XFrameOptions.ToString(), Is.EqualTo("SAMEORIGIN"));
                 Assert.That(headers["Referrer-Policy"].ToString(), Is.EqualTo("no-referrer"));
-                Assert.That(headers["Content-Security-Policy"].ToString(), Does.Contain("allow-popups-to-escape-sandbox"));
+                Assert.That(headers.ContentSecurityPolicy.ToString(), Does.Contain("allow-popups-to-escape-sandbox"));
                 Assert.That(headers["X-Content-Security-Policy"].ToString(), Does.Contain("allow-popups"));
-            });
+            }
         }
 
         [Test]
@@ -41,23 +41,23 @@ namespace Spydersoft.identity.tests
         {
             var httpContext = new DefaultHttpContext();
             var headers = httpContext.Response.Headers;
-            headers["X-Content-Type-Options"] = "custom";
-            headers["X-Frame-Options"] = "custom";
-            headers["Content-Security-Policy"] = "custom";
+            headers.XContentTypeOptions = "custom";
+            headers.XFrameOptions = "custom";
+            headers.ContentSecurityPolicy = "custom";
             headers["X-Content-Security-Policy"] = "custom";
             headers["Referrer-Policy"] = "custom";
             var context = CreateContext(new PageResult(), httpContext);
 
             new SecurityHeadersAttribute().OnResultExecuting(context);
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
-                Assert.That(headers["X-Content-Type-Options"].ToString(), Is.EqualTo("custom"));
-                Assert.That(headers["X-Frame-Options"].ToString(), Is.EqualTo("custom"));
-                Assert.That(headers["Content-Security-Policy"].ToString(), Is.EqualTo("custom"));
+                Assert.That(headers.XContentTypeOptions.ToString(), Is.EqualTo("custom"));
+                Assert.That(headers.XFrameOptions.ToString(), Is.EqualTo("custom"));
+                Assert.That(headers.ContentSecurityPolicy.ToString(), Is.EqualTo("custom"));
                 Assert.That(headers["X-Content-Security-Policy"].ToString(), Is.EqualTo("custom"));
                 Assert.That(headers["Referrer-Policy"].ToString(), Is.EqualTo("custom"));
-            });
+            }
         }
 
         [Test]

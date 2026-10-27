@@ -19,10 +19,10 @@ const readStored = (): Theme => {
 };
 
 const currentTheme = (): Theme =>
-  document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 
 export const setTheme = (theme: Theme): void => {
-  document.documentElement.setAttribute("data-theme", theme);
+  document.documentElement.dataset.theme = theme;
 
   let link = document.getElementById(LINK_ID) as HTMLLinkElement | null;
   if (!link) {
