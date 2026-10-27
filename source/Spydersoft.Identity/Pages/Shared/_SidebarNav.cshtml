@@ -1,7 +1,7 @@
 @inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
-    var isAdmin = User.IsInRole("admin");
+    var isAdmin = User.IsInRole("authentication.admin");
     var adminUrl = Configuration["IdentityServer:AdminUrl"];
     var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? string.Empty;
 
