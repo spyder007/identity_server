@@ -64,9 +64,9 @@ app.UseSpydersoftHealthChecks(healthCheckOptions);
 
 app.UseRouting();
 app.UseSpydersoftRequestLogging();
-app.UseOidcProxy();
 app.UseDefaultFiles();
 app.UseStaticFiles();
+app.UseOidcProxy();
 
 if (app.Environment.IsDevelopment())
 {
