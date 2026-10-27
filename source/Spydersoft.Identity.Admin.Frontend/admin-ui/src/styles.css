@@ -8,10 +8,9 @@
    button/input/dropdown styling. */
 @import "tailwindcss";
 
-/* PrimeReact theme — must come AFTER tailwindcss so `primereact` layer is the
-   last-declared layer (= highest priority). primereact.min.css is a deprecated
-   no-op in v10. PrimeIcons font is no longer used (FontAwesome covers icons). */
-@import "primereact/resources/themes/lara-light-indigo/theme.css";
+/* The PrimeReact theme (lara light/dark) is loaded at runtime by src/theme.ts
+   as a <link> appended after this stylesheet, so its `primereact` layer is
+   still declared last (= highest priority). */
 
 @plugin "@tailwindcss/forms" {
   strategy: class;
@@ -58,6 +57,27 @@
   /* Type families */
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --color-brand: #818cf8;
+  --color-brand-fg: #0b0e14;
+  --color-brand-hover: #a5b4fc;
+  --color-brand-soft: #1e2030;
+  --color-surface: #14171f;
+  --color-surface-muted: #0e1117;
+  --color-surface-sunken: #0a0c11;
+  --color-surface-inverse: #e6e8ec;
+  --color-content: #e6e8ec;
+  --color-content-muted: #a0a7b4;
+  --color-content-subtle: #6b7280;
+  --color-content-inverse: #0e1117;
+  --color-border: #262b36;
+  --color-border-strong: #38404e;
+  --color-success: #4ade80;
+  --color-danger: #f87171;
+  --color-warning: #fbbf24;
 }
 
 html,

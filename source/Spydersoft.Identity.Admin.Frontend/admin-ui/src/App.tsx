@@ -3,10 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faIdBadge,
   faKey,
+  faMoon,
   faRightFromBracket,
   faServer,
   faShield,
   faShieldHalved,
+  faSun,
   faUsers,
   faUserShield,
 } from "@fortawesome/free-solid-svg-icons";
@@ -20,6 +22,7 @@ import Roles from "./pages/Roles";
 import GlobalToast from "./components/GlobalToast";
 import SignInPage from "./components/SignInPage";
 import { useAuth } from "./context";
+import { useTheme } from "./theme";
 
 interface NavItem {
   to: string;
@@ -48,6 +51,7 @@ const navGroups: { heading: string; items: NavItem[] }[] = [
 
 export default function App() {
   const { isAuthenticated, user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   if (!isAuthenticated) {
     return <SignInPage />;
@@ -111,6 +115,15 @@ export default function App() {
               <div className="truncate text-sm font-medium text-content">{userName}</div>
               <div className="text-[0.7rem] text-content-subtle">Administrator</div>
             </div>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              title="Toggle theme"
+              className="rounded-md p-2 text-content-subtle transition-colors hover:bg-surface-muted hover:text-content"
+            >
+              <FontAwesomeIcon icon={theme === "dark" ? faMoon : faSun} />
+            </button>
             <button
               type="button"
               onClick={logout}

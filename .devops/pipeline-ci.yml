@@ -119,7 +119,8 @@ stages:
       # tries and fails to parse as real TS projects, even though the C#
       # analyzer itself never looks at build output.
       sonarExtraProperties: |
-        sonar.exclusions=**/bin/**,**/obj/**
+        sonar.exclusions=**/bin/**,**/obj/**,**/admin-ui/**
+        sonar.coverage.exclusions=**/Spydersoft.Identity.Admin.Frontend/Program.cs
         sonar.typescript.tsconfigPaths=
         sonar.javascript.tsconfigPaths=
 

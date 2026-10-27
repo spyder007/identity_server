@@ -1,6 +1,8 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 @{
     var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
-    var isAdmin = User.IsInRole("admin");
+    var isAdmin = User.IsInRole("authentication.admin");
+    var adminUrl = Configuration["IdentityServer:AdminUrl"];
     var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? string.Empty;
 
     string Active(string page) => currentPage.Equals(page, StringComparison.OrdinalIgnoreCase) ? "active" : string.Empty;
@@ -31,6 +33,16 @@
             <i class="fas fa-table-cells-large w-4"></i>
             <span>Applications</span>
         </a>
+
+        @if (isAdmin && !string.IsNullOrWhiteSpace(adminUrl))
+        {
+            <div class="nav-section">Administration</div>
+            <a href="@adminUrl" target="_blank" rel="noopener" class="nav-link">
+                <i class="fas fa-user-gear w-4"></i>
+                <span>Admin Console</span>
+                <i class="fas fa-arrow-up-right-from-square ml-auto text-xs"></i>
+            </a>
+        }
     }
     else
     {

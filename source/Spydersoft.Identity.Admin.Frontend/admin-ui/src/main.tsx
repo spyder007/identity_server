@@ -6,7 +6,9 @@ import "./styles.css";
 import App from "./App";
 import { configureApi } from "./api/client";
 import { AuthProvider } from "./context";
+import { initTheme } from "./theme";
 
+initTheme();
 configureApi();
 
 createRoot(document.getElementById("root")!).render(
